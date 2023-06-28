@@ -1,4 +1,7 @@
 
+using Microsoft.EntityFrameworkCore;
+using TurismoGlobalArandas.Context;
+
 namespace TurismoGlobalArandas
 {
     public class Program
@@ -7,8 +10,13 @@ namespace TurismoGlobalArandas
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
+            //CONECTION DATABASE
+            builder.Services.AddDbContext<TurismoGlobalContext>(options =>
+            {
+                options.UseSqlServer(
+                    builder.Configuration.GetConnectionString("DefaultConnection")
+                );
+            });
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
