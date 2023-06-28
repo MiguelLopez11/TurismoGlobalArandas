@@ -20,6 +20,6 @@ namespace TurismoGlobalArandas.Models
         [StringLength(50)]
         public string PhoneNumber { get; set; }
         public decimal Salary { get; set; }
-
+        public bool IsDeleted { get; set; } =  false;
     }
 }
