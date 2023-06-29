@@ -1,13 +1,11 @@
 <template>
-holi
+  <n-button>naive-ui</n-button>
 </template>
 
 <script>
 export default {
   setup() {
-    const holi = () => {
-
-    };
+    const holi = () => {};
     return {
       holi,
     };
@@ -15,6 +13,4 @@ export default {
 };
 </script>
 
-<style>
-
-</style>
+<style></style>
