@@ -218,7 +218,10 @@ namespace TurismoGlobalArandas.Controllers
                 return BadRequest("Invalid access token or refresh token");
             }
             string username = principal.Identity.Name;
-
+            if(username == null || username.Length == 0)
+            {
+                return BadRequest();
+            }
             var user = await _userManager.FindByNameAsync(username);
 
             if (
