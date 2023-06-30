@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Models;
+using UConnect.Entities;
 
 namespace TurismoGlobalArandas.Context
 {
-    public class TurismoGlobalContext :DbContext
+    public class TurismoGlobalContext : IdentityDbContext<User>
     {
         public TurismoGlobalContext(DbContextOptions<TurismoGlobalContext> options) : base(options)
         {
