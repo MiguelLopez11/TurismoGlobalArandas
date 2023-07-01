@@ -23,8 +23,8 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+const Token = window.localStorage.getItem('Token')
 router.beforeEach(async (to, from, next) => {
-  const Token = window.window.sessionStorage.getItem('Token')
   if (['Login'].includes(to.name) && Token) {
     next({ name: 'Home' })
   } else if (to.meta.requiresAuth && !Token) {
