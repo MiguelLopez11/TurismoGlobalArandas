@@ -1,17 +1,20 @@
 <template>
-  <div>
-    <Navbar @toggleSidebar="toggleSidebar" />
-    <div class="container-fluid">
-      <div class="row">
-          <Sidebar :showSidebar="showSidebar" />
-          <main class="col">
-            <!-- Contenido principal -->
-            <h1>Bienvenido a mi sitio</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          </main>
-      </div>
-    </div>
-  </div>
+  <el-container>
+    <el-aside v-if="Token" width="300px">
+      <Sidebar :showSidebar="showSidebar" />
+    </el-aside>
+    <el-container>
+      <el-header v-if="Token" class="p-2">
+        <Navbar @toggleSidebar="toggleSidebar" />
+      </el-header>
+      <el-main class="p-5">
+        <router-view />
+      </el-main>
+      <!-- <el-footer v-if="Token">
+        <el-row justify="center"> Miguel López SA de CV </el-row>
+      </el-footer> -->
+    </el-container>
+  </el-container>
 </template>
 
 <script>
@@ -26,13 +29,14 @@ export default {
   },
   setup () {
     const showSidebar = ref(true)
-
+    const Token = window.sessionStorage.getItem('Token')
     const toggleSidebar = () => {
       showSidebar.value = !showSidebar.value
     }
 
     return {
       showSidebar,
+      Token,
       toggleSidebar
     }
   }
@@ -40,16 +44,16 @@ export default {
 </script>
 
 <style>
-.container-fluid {
-  padding-top: 0px;
-}
 html {
   background-color: #f8f7fa;
 }
 body {
   background-color: #f8f7fa;
 }
-.flex-grow {
-  flex-grow: 1;
+.el-aside {
+  height: 100vh;
+  background-color: #fff;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
+
 </style>
