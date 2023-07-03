@@ -22,7 +22,8 @@
     "vee-validate": "^4.10.3",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
-    "vue-sweetalert2": "^5.0.5"
+    "vue-sweetalert2": "^5.0.5",
+    "vue3-easy-data-table": "^1.5.47"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

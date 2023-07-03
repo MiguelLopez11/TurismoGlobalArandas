@@ -1,13 +1,13 @@
 <template>
   <el-container>
-    <el-aside v-if="Token" width="300px">
+    <el-aside v-if="Token">
       <Sidebar :showSidebar="showSidebar" />
     </el-aside>
     <el-container>
-      <el-header v-if="Token" class="p-2">
+      <el-header v-if="Token" class="p-3">
         <Navbar @toggleSidebar="toggleSidebar" />
       </el-header>
-      <el-main class="p-5">
+      <el-main class="p-3 mt-5">
         <router-view />
       </el-main>
       <!-- <el-footer v-if="Token">
@@ -44,6 +44,10 @@ export default {
 </script>
 
 <style>
+/* Option 2: Import via CSS */
+@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css");
+@import '@/Css/Easy-data-table.css';
+
 html {
   background-color: #f8f7fa;
 }
@@ -52,6 +56,7 @@ body {
 }
 .el-aside {
   height: 100vh;
+  width: 15% !important;
   background-color: #fff;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }

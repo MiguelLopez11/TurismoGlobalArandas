@@ -1,8 +1,7 @@
 <template>
-  <el-containe>
     <div class="login-container">
-      <el-row  :gutter="25" justify="end">
-        <el-col  :xs="23" :sm="10" :md="14" :lg="20" :xl="15">
+      <el-row  :gutter="25" justify="center">
+        <el-col  :xs="23" :sm="10" :md="14" :lg="15" :xl="14">
           <el-card>
             <el-col :xs="15" :sm="10" :md="14" :lg="15" :xl="15">
               <el-row style="flex-wrap: nowrap" align-content="center">
@@ -76,7 +75,6 @@
         </el-col>
       </el-row>
     </div>
-  </el-containe>
 </template>
 
 <script>
@@ -127,7 +125,7 @@ export default {
 
 <style scoped>
 .login-container {
-  height: 98vh;
+  height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;

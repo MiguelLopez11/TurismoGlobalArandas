@@ -1,14 +1,9 @@
 <template>
   <el-card>
     <div class="card-header">
-      <el-button
-        class="right-button"
-        color="#7367f0"
-        :icon="icon"
-        @click="closeSession"
-      >
-        Cerrar sesion</el-button
-      >
+      <el-button class="right-button" color="#7367f0" @click="closeSession">
+        <i class="bi bi-box-arrow-in-right"></i
+      ></el-button>
     </div>
   </el-card>
 </template>

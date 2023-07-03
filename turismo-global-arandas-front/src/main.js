@@ -1,15 +1,14 @@
 /* eslint-disable vue/multi-word-component-names */
 import { createApp } from 'vue'
 import App from './App.vue'
-import './registerServiceWorker'
 import router from './router'
 import ElementPlus from 'element-plus'
 import VueSweetalert2 from 'vue-sweetalert2'
 import { defineRule, Field, ErrorMessage, Form } from 'vee-validate'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faUserSecret, faUser } from '@fortawesome/free-solid-svg-icons'
+import Vue3EasyDataTable from 'vue3-easy-data-table'
+import 'vue3-easy-data-table/dist/style.css'
+import './registerServiceWorker'
 import 'element-plus/dist/index.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
 const app = createApp(App)
@@ -27,12 +26,10 @@ defineRule('required', value => {
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component)
 }
-library.add(faUserSecret, faUser)
-
-app.component('font-awesome-icon', FontAwesomeIcon)
 app.component('Field', Field)
 app.component('ErrorMessage', ErrorMessage)
 app.component('Form', Form)
+app.component('EasyDataTable', Vue3EasyDataTable)
 
 app.use(VueSweetalert2, options)
 app.use(router)

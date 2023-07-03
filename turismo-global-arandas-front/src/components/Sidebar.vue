@@ -1,16 +1,13 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <el-menu
-    :default-active="activeMenu"
-    text-color="#7A7782"
-    active-text-color="#fff"
-    class="p-3"
-  >
+  <el-menu text-color="#7A7782" active-text-color="#fff" class="p-3">
     <el-header>
-      <el-row style="gap: 30px; align-content: center;" justify="center">
-        <el-image style="width: 50px; height: 50px" :src="logo" />
-        <el-col :span="15">
-          <span>Turismo Global Arandas</span>
+      <el-row :gutter="25" justify="center">
+        <el-col :xs="6" :sm="6" :md="6" :xl="24" :lg="24">
+          <div>
+            <el-image style="width: 50px; height: 50px" :src="logo" />
+            <label>Turismo Global Arandas</label>
+          </div>
         </el-col>
       </el-row>
     </el-header>
@@ -54,26 +51,18 @@ import Logo from '@/Images/logo.jpg'
 export default {
   setup () {
     const activeMenu = ref('1')
-    const sidebarWidth = ref('250px')
     const sidebarStyle = ref({})
     const logo = ref(Logo)
     const menuItems = ref([
       {
         index: '1',
-        title: 'Home',
+        title: 'Empleados',
         path: '/Empleados',
-        icon: 'fa-solid fa-user',
-        submenu: [
-          {
-            index: '1',
-            title: 'holi',
-            path: '/Empleados'
-          }
-        ]
+        icon: 'fa-solid fa-user'
       },
       {
         index: '2',
-        title: 'Empleados',
+        title: 'Usuarios',
         path: '/Empleados',
         icon: 'fa-solid fa-user'
       },
@@ -104,7 +93,6 @@ export default {
     }
     return {
       activeMenu,
-      sidebarWidth,
       sidebarStyle,
       menuItems,
       logo,
@@ -123,5 +111,14 @@ li {
 }
 .el-menu {
   border-right: #fff;
+}
+.el-sub-menu.is-opened {
+  background-color: #f7f7f7;
+}
+.el-sub-menu__title {
+  border-radius: 5px;
+}
+.el-sub-menu__title:hover {
+  background-color: #faf9f9;
 }
 </style>

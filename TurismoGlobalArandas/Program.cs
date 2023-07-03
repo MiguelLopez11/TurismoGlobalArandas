@@ -67,7 +67,7 @@ namespace TurismoGlobalArandas
                     policy =>
                     {
                         policy.WithOrigins("http://localhost:8080");
-                        policy.WithOrigins("http://localhost:8081");
+                        policy.WithOrigins("https://digital.atogobmx.com");
                         policy.AllowAnyHeader();
                         policy.AllowCredentials();
                         policy.AllowAnyMethod();
@@ -120,10 +120,9 @@ namespace TurismoGlobalArandas
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
             }
-
+            app.UseSwagger();
+            app.UseSwaggerUI();
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
