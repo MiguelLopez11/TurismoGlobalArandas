@@ -1,5 +1,7 @@
 <!-- eslint-disable vue/multi-word-component-names -->
-<template>holi</template>
+<template>
+    <h1></h1>
+</template>
 
 <script>
 export default {}

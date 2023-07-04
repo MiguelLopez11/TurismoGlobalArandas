@@ -1,84 +1,152 @@
 <template>
-  <div class="container">
-    <el-row justify="start" :gutter="5">
-      <el-col :ofset="5" :xs="20" :sm="24" :md="24" :lg="24" :xl="24">
-        <el-card class="form-card" shadow="always">
-          <template #header>
-            <el-row justify="center">
-              <el-image
-                style="
-                  width: 300px;
-                  height: 300px;
-                  border-radius: 20%;
-                  margin-bottom: 30px;
-                "
-                src="https://cdn-icons-png.flaticon.com/512/826/826070.png"
-                fit="fill"
-              />
-            </el-row>
-            <el-row justify="center">
-              <span>¡Bienvenido a Turismo Global Arandas!</span>
-            </el-row>
-            <el-row justify="center">
-              <span>
-                Por favor ingrese su usuario y contraseña para iniciar sesion.
-              </span>
-            </el-row>
-          </template>
-          <el-form label-position="top" label-width="150px" size="large">
-            <el-form-item label="Usuario">
-              <el-input />
-            </el-form-item>
-            <el-form-item label="Contraseña">
-              <el-input />
-            </el-form-item>
-            <el-form-item>
-              <el-button size="large" class="w-100" type="primary"
-                >Iniciar sesion</el-button
-              >
-            </el-form-item>
-          </el-form>
-        </el-card>
-      </el-col>
-    </el-row>
-  </div>
+    <div class="login-container">
+      <el-row  :gutter="25" justify="center">
+        <el-col  :xs="23" :sm="10" :md="14" :lg="15" :xl="14">
+          <el-card>
+            <el-col :xs="15" :sm="10" :md="14" :lg="15" :xl="15">
+              <el-row style="flex-wrap: nowrap" align-content="center">
+                <el-col
+                  :xs="18"
+                  :sm="10"
+                  :md="14"
+                  :lg="15"
+                  :xl="15"
+                  style="display: flex"
+                >
+                  <div class="login-image">
+                    <img
+                      src="https://demos.pixinvent.com/vuexy-vuejs-admin-template/demo-1/assets/auth-v2-login-illustration-light-d1fd488d.png"
+                      alt="Imagen de login"
+                    />
+                  </div>
+                </el-col>
+                <el-col :span="24">
+                  <div class="login-form">
+                    <el-card>
+                      <template #header>
+                        <el-row justify="center">
+                          <span>¡Bienvenido a Turismo Global Arandas!</span>
+                        </el-row>
+                        <el-row justify="center">
+                          <span>
+                            Por favor ingrese su usuario y contraseña para
+                            iniciar sesion.
+                          </span>
+                        </el-row>
+                      </template>
+                      <el-form label-position="top">
+                        <el-row justify="center" :gutter="24">
+                          <el-col :span="24">
+                            <Field name="username" rules="required" as="text">
+                              <el-form-item label="Usuario" size="large">
+                                <el-input v-model="user.username"></el-input>
+                              </el-form-item>
+                            </Field>
+                          </el-col>
+                          <el-col :span="24">
+                            <Field name="password" rules="required" as="text">
+                              <el-form-item label="Contraseña" size="large">
+                                <el-input
+                                  type="password"
+                                  v-model="user.password"
+                                ></el-input>
+                              </el-form-item>
+                            </Field>
+                          </el-col>
+                        </el-row>
+                        <el-col :span="24">
+                          <el-button
+                            size="large"
+                            color="#675ABA"
+                            class="w-100"
+                            @click="onAuthenticate()"
+                          >
+                            <el-icon><User /></el-icon>
+                            Iniciar sesion
+                          </el-button>
+                        </el-col>
+                      </el-form>
+                    </el-card>
+                  </div>
+                </el-col>
+              </el-row>
+            </el-col>
+          </el-card>
+        </el-col>
+      </el-row>
+    </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
+import { User } from '@element-plus/icons-vue'
+import { useRouter } from 'vue-router'
 import AuthenticationServices from '@/Services/Authentication.Services'
 export default {
+  components: {
+    User
+  },
   setup () {
+    const swal = inject('$swal')
+    const redirect = useRouter()
+    const { LogIn } = AuthenticationServices()
     const user = ref({
-      userName: '',
+      username: '',
       password: ''
     })
-    const { LogIn } = AuthenticationServices()
 
-    const AuthenticateUser = () => {
+    const onAuthenticate = () => {
+      console.log('holi')
       LogIn(user.value, data => {
-        console.log(data)
+        if (data.status === 200) {
+          swal
+            .fire({
+              title: 'Inicio de sesión correcto',
+              text: `Bienvenido ${data.userName} a UConnect.`,
+              icon: 'success'
+            })
+            .then(result => {
+              if (result.isConfirmed) {
+                window.sessionStorage.setItem('Token', data.token)
+                redirect.go('/')
+              }
+            })
+        }
       })
     }
+
     return {
       user,
-      AuthenticateUser
+      onAuthenticate
     }
   }
 }
 </script>
 
 <style scoped>
-.form-card {
-  width: 150%;
-}
-.container {
+.login-container {
+  height: 90vh;
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 98vh;
-  background-image: url('https://scontent-hou1-1.xx.fbcdn.net/v/t39.30808-6/305960510_498834395582315_2152758621421830000_n.jpg?_nc_cat=109&cb=99be929b-3346023f&ccb=1-7&_nc_sid=09cbfe&_nc_eui2=AeFYc2Rmu8jvhXOkhVTYG54USdOF4FJuDVdJ04XgUm4NV9Zs9DWgnl1yfLGz8wxqzQUlVG2ZEmyDctXXSv_ldZFQ&_nc_ohc=P4v6-0RKKQEAX86seDb&_nc_ht=scontent-hou1-1.xx&oh=00_AfCYeFOTVJv0U4RQz5bumbmw2mgu4kgPY_TxECAI5C35BA&oe=64A3B2E0');
+  justify-content: center;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   background-size: cover;
   background-position: center;
+  z-index: -1;
+}
+
+.login-image img {
+  max-width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+}
+
+.login-form {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 4px;
 }
 </style>
