@@ -59,7 +59,7 @@ namespace UConnect.Controllers
             employee.Name = employees.Name;
             employee.Lastname = employees.Lastname;
             employee.WorkStation = employees.WorkStation;
-            employee.Email = employees.Email;
+            employee.Address = employees.Address;
             employee.PhoneNumber = employees.PhoneNumber;
             employee.Salary = employees.Salary;
             employee.IsDeleted = employees.IsDeleted;

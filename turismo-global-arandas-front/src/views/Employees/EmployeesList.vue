@@ -1,11 +1,12 @@
 <template>
+  <employees-add-new />
   <el-card header="Empleados">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input size="large" placeholder="Buscar empleado..." />
       </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
-        <el-button class="w-100" size="large" color="#7367F0">
+        <el-button class="w-100" size="large" color="#7367F0" @click="isAddedEmployee = !isAddedEmployee">
           <i> Agregar empleado </i>
         </el-button>
       </el-col>
@@ -45,43 +46,6 @@
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
-            <!-- <v-menu>
-                <template v-slot:activator="{ props }">
-                  <v-btn icon="mdi-dots-vertical" v-bind="props"></v-btn>
-                </template>
-
-                <v-list>
-                  <v-list-item>
-                    <v-list-item
-                      @click="
-                        () => {
-                          $router.push({
-                            name: 'edit-Routers',
-                            params: { RouterId: items.routerId }
-                          })
-                        }
-                      "
-                    >
-                      <template v-slot:prepend>
-                        <v-icon icon="mdi mdi-square-edit-outline"></v-icon>
-                      </template>
-                      Editar
-                    </v-list-item>
-                    <v-list-item @click="onDeleteRouter(items.routerId)">
-                      <template v-slot:prepend>
-                        <v-icon icon="mdi mdi-trash-can-outline"></v-icon>
-                      </template>
-                      Eliminar
-                    </v-list-item>
-                    <v-list-item @click="() => (chatsOpen = !chatsOpen)">
-                      <template v-slot:prepend>
-                        <v-icon icon="mdi mdi-chart-areaspline"></v-icon>
-                      </template>
-                      Gráfica
-                    </v-list-item>
-                  </v-list-item>
-                </v-list>
-              </v-menu> -->
           </template>
         </EasyDataTable>
       </el-col>
@@ -90,9 +54,12 @@
 </template>
 
 <script>
-import { ref, watch } from 'vue'
+import { ref, watch, provide } from 'vue'
 import EmployeeServices from '@/Services/Employees.Services'
+import EmployeesAddNew from './EmployeesAddNew.vue'
+
 export default {
+  components: { EmployeesAddNew },
   setup () {
     const { getEmployees } = EmployeeServices()
     const employees = ref([])
@@ -103,6 +70,8 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
+    const isAddedEmployee = ref(false)
+    provide('AddEmployee', isAddedEmployee)
     const fields = ref([
       { value: 'name', text: 'Nombre' },
       { value: 'lastname', text: 'Apellidos' },
@@ -129,7 +98,8 @@ export default {
       searchValue,
       searchField,
       fields,
-      employees
+      employees,
+      isAddedEmployee
     }
   }
 }
