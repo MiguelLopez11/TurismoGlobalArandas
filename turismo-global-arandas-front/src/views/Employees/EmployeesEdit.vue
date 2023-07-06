@@ -1,14 +1,14 @@
 <template>
-  <el-dialog v-model="isOpenedDialog" title="Nuevo Empleado" width="80%" center>
+  <el-card>
     <Form
       ref="EmployeeForm"
       as="el-form"
-      :validation-schema="validationSchema"
-      @submit="onSubmit"
+      :validation-schema="editValidationSchema"
+      @submit="onUpdateEmployee"
     >
       <el-row :gutter="35">
         <el-col :span="8">
-          <Field name="name" v-slot="{ value, field, errorMessage }">
+          <Field name="name" v-slot="{ errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
                 <label> Nombre </label>
@@ -16,16 +16,14 @@
               <el-input
                 placeholder="Ingresa el nombre del empleado"
                 size="large"
-                v-bind="field"
-                v-model="EmployeesFields.name"
+                v-model="employee.name"
                 :validate-event="false"
-                :model-value="value"
               />
             </el-form-item>
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="lastname" v-slot="{ value, field, errorMessage }">
+          <Field name="lastname" v-slot="{ errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
                 <label> Apellidos </label>
@@ -33,16 +31,14 @@
               <el-input
                 placeholder="Ingresa los apellidos del empleado"
                 size="large"
-                v-bind="field"
-                v-model="EmployeesFields.lastname"
+                v-model="employee.lastname"
                 :validate-event="false"
-                :model-value="value"
               />
             </el-form-item>
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="workStation" v-slot="{ value, field, errorMessage }">
+          <Field name="workStation" v-slot="{  errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
                 <label>Puesto de trabajo</label>
@@ -50,16 +46,14 @@
               <el-input
                 placeholder="Ingresa el puesto de trabajo del empleado"
                 size="large"
-                v-bind="field"
-                v-model="EmployeesFields.workStation"
+                v-model="employee.workStation"
                 :validate-event="false"
-                :model-value="value"
               />
             </el-form-item>
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="address" v-slot="{ value, field, errorMessage }">
+          <Field name="address" v-slot="{ errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
                 <label>Dirección</label>
@@ -67,16 +61,14 @@
               <el-input
                 placeholder="Ingresa la dirección del empleado"
                 size="large"
-                v-bind="field"
-                v-model="EmployeesFields.address"
+                v-model="employee.address"
                 :validate-event="false"
-                :model-value="value"
               />
             </el-form-item>
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="phoneNumber" v-slot="{ value, field, errorMessage }">
+          <Field name="phoneNumber" v-slot="{ errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
                 <label>Numero de telefono</label>
@@ -84,17 +76,15 @@
               <el-input
                 placeholder="Ingresa el numero de telefono del empleado"
                 size="large"
-                v-bind="field"
-                v-model="EmployeesFields.phoneNumber"
+                v-model="employee.phoneNumber"
                 :validate-event="false"
-                :model-value="value"
                 type="number"
               />
             </el-form-item>
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="salary" v-slot="{ value, field, errorMessage }">
+          <Field name="salary" v-slot="{ errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
                 <label>Salario</label>
@@ -102,10 +92,8 @@
               <el-input
                 placeholder="Ingresa el salario del empleado"
                 size="large"
-                v-bind="field"
-                v-model="EmployeesFields.salary"
+                v-model="employee.salary"
                 :validate-event="false"
-                :model-value="value"
                 type="number"
               />
             </el-form-item>
@@ -138,71 +126,43 @@
         </el-col>
       </el-row>
     </Form>
-  </el-dialog>
+  </el-card>
 </template>
 
 <script>
-import { ref, inject } from 'vue'
-import { Field, Form } from 'vee-validate'
 import EmployeeServices from '@/Services/Employees.Services'
-import * as yup from 'yup'
+import { useRoute, useRouter } from 'vue-router'
+import { ref, inject } from 'vue'
 
 export default {
-  name: 'App',
-  components: {
-    Form,
-    Field
-  },
   setup () {
-    const isOpenedDialog = inject('AddEmployee')
+    const { getEmployee, updateEmployee } = EmployeeServices()
+    const employee = ref({})
+    const router = useRoute()
+    const redirect = useRouter()
     const swal = inject('$swal')
-    const { createEmployee } = EmployeeServices()
-    const validationSchema = yup.object({
-      name: yup.string().required().label('Nombre'),
-      lastname: yup.string().required().label('Apellidos'),
-      workStation: yup.string().required().label('Puesto de trabajo'),
-      address: yup.string().required().label('Direccion'),
-      phoneNumber: yup.string().required().label('Numero ded telefono'),
-      salary: yup.string().required().label('Salario')
+    getEmployee(router.params.EmployeeId, data => {
+      employee.value = data
     })
-    const EmployeesFields = ref({
-      employeeId: 0,
-      name: '',
-      lastname: '',
-      workStation: '',
-      address: '',
-      phoneNumber: '',
-      salary: null,
-      isDeleted: false
-    })
-    const EmployeesFieldsBlank = ref(
-      JSON.parse(JSON.stringify(EmployeesFields))
-    )
-
-    const onSubmit = () => {
-      createEmployee(EmployeesFields.value, data => {
+    const onUpdateEmployee = () => {
+      updateEmployee(employee.value, data => {
         swal
           .fire({
-            title: '¡Nuevo empleado registrado!',
-            text: 'El empleado se ha registrado correctamente',
+            title: 'Empleado modificado correctamente',
+            text: 'El empleado se ha modificado satisfactoriamente.',
             icon: 'success'
           })
           .then(result => {
             if (result.isConfirmed) {
-              EmployeesFields.value = JSON.parse(
-                JSON.stringify(EmployeesFieldsBlank)
-              )
-              isOpenedDialog.value = !isOpenedDialog.value
+              redirect.push('/Empleados')
             }
           })
       })
     }
 
     return {
-      isOpenedDialog,
-      onSubmit,
-      validationSchema,
-      EmployeesFields
+      employee,
+      onUpdateEmployee
     }
   }
 }

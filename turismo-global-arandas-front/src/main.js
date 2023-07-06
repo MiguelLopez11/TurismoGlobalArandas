@@ -6,6 +6,7 @@ import ElementPlus from 'element-plus'
 import VueSweetalert2 from 'vue-sweetalert2'
 import { defineRule, Field, ErrorMessage, Form } from 'vee-validate'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
+import { required } from '@vee-validate/rules'
 
 import 'vue3-easy-data-table/dist/style.css'
 import './registerServiceWorker'
@@ -16,12 +17,9 @@ const options = {
   confirmButtonColor: '#6366F1',
   cancelButtonColor: '#ff7674'
 }
-defineRule('required', value => {
-  if (!value || !value.length) {
-    return 'Este campo es requerido'
-  }
-  return true
-})
+
+// Definir regla global 'required'
+defineRule('required', required)
 app.component('Field', Field)
 app.component('ErrorMessage', ErrorMessage)
 app.component('Form', Form)
