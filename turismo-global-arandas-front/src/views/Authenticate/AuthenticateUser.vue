@@ -102,7 +102,7 @@ export default {
           swal
             .fire({
               title: 'Inicio de sesión correcto',
-              text: `Bienvenido ${data.userName} a UConnect.`,
+              text: `Bienvenido ${data.userName}.`,
               icon: 'success'
             })
             .then(result => {

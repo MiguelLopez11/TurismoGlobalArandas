@@ -19,8 +19,32 @@ const routes = [
   },
   {
     path: '/Empleados',
-    name: 'Empleados',
+    name: 'Employees',
     component: () => import('../views/Employees/EmployeesList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Empleados/:EmployeeId',
+    name: 'Edit-Employees',
+    component: () => import('../views/Employees/EmployeesEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Usuarios',
+    name: 'Users',
+    component: () => import('../views/Users/UserList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Usuarios/:UserId',
+    name: 'Edit-User',
+    component: () => import('../views/Users/UserEdit.vue'),
     meta: {
       requiresAuth: true
     }

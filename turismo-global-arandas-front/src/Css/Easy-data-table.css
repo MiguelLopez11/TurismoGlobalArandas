@@ -34,3 +34,8 @@
     --easy-table-rows-per-page-selector-z-index: 1;
   
   }
+  label.label-top {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }

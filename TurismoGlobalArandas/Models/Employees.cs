@@ -16,7 +16,7 @@ namespace TurismoGlobalArandas.Models
         [StringLength(50)]
         public string? WorkStation { get; set; }
         [StringLength(50)]
-        public string? Email { get; set; }
+        public string? Address { get; set; }
         [StringLength(50)]
         public string PhoneNumber { get; set; }
         public decimal Salary { get; set; }
