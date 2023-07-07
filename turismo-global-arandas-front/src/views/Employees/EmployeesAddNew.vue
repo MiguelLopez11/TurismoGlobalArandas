@@ -162,7 +162,7 @@ export default {
       lastname: yup.string().required().label('Apellidos'),
       workStation: yup.string().required().label('Puesto de trabajo'),
       address: yup.string().required().label('Direccion'),
-      phoneNumber: yup.string().required().label('Numero ded telefono'),
+      phoneNumber: yup.string().required().min(10).label('Numero de telefono'),
       salary: yup.string().required().label('Salario')
     })
     const EmployeesFields = ref({

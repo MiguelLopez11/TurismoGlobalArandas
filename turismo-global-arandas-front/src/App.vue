@@ -47,6 +47,7 @@ export default {
 /* Option 2: Import via CSS */
 @import url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css');
 @import '@/Css/Easy-data-table.css';
+@import "vue-select/dist/vue-select.css";
 
 html {
   background-color: #f8f7fa;

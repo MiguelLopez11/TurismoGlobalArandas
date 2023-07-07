@@ -42,7 +42,9 @@ namespace TurismoGlobalArandas.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
-            var users = await _userManager.Users.ToListAsync();
+            var users = await _userManager.Users
+                .Include(i => i.Employee)
+                .ToListAsync();
             return Ok(users);
         }
 
@@ -126,8 +128,8 @@ namespace TurismoGlobalArandas.Controllers
                 {
                     SecurityStamp = Guid.NewGuid().ToString(),
                     UserName = model.Username,
-                    PhoneNumber = model.PhoneNumber,
-                    Email = model.Email
+                    Email = model.Email,
+                    EmployeeId = model.EmployeeId,
                 };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
@@ -167,7 +169,6 @@ namespace TurismoGlobalArandas.Controllers
             }
 
             user.UserName = model.Username;
-            user.PhoneNumber = model.PhoneNumber;
             user.Email = model.Email;
             user.EmployeeId = model.EmployeeId;
             var role = await _userManager.GetRolesAsync(user);
@@ -199,7 +200,6 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [Route("refresh-token")]
         public async Task<IActionResult> RefreshToken(TokenModel tokenModel)
@@ -278,7 +278,6 @@ namespace TurismoGlobalArandas.Controllers
             return NoContent();
         }
 
-        [Authorize]
         [HttpDelete("{userName}")]
         public async Task<IActionResult> DeleteUser(string userName)
         {

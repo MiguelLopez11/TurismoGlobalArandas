@@ -1,18 +1,22 @@
 <template>
-  <employees-add-new />
-  <el-card header="Empleados">
+  <user-add-new />
+  <el-card header="Usuarios">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
-        <el-input v-model="searchValue" size="large" placeholder="Buscar empleado..." />
+        <el-input
+          v-model="searchValue"
+          size="large"
+          placeholder="Buscar usuario..."
+        />
       </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
         <el-button
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddedEmployee = !isAddedEmployee"
+          @click="isAddedUser = !isAddedUser"
         >
-          <i> Agregar empleado </i>
+          <i> Agregar usuario </i>
         </el-button>
       </el-col>
     </el-row>
@@ -26,7 +30,7 @@
           border-cell
           :loading="isloading"
           :headers="fields"
-          :items="employees"
+          :items="users"
           :rows-per-page="5"
           :search-field="searchField"
           :search-value="searchValue"
@@ -39,16 +43,22 @@
             <el-dropdown>
               <span class="bi bi-three-dots-vertical"> </span>
               <template #dropdown>
-              <el-dropdown-menu>
-                <el-dropdown-item @click="() => {
-                          $router.push({
-                            name: 'Edit-Employees',
-                            params: { EmployeeId: items.employeeId }
-                          })
-                        }
-                      ">Editar</el-dropdown-item>
-                <el-dropdown-item @click="onDeleteEmployee(items.employeeId)">Eliminar</el-dropdown-item>
-              </el-dropdown-menu>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    @click="
+                      () => {
+                        $router.push({
+                          name: 'Edit-User',
+                          params: { UserId: items.id }
+                        })
+                      }
+                    "
+                    >Editar</el-dropdown-item
+                  >
+                  <el-dropdown-item @click="onDeleteUser(items.userName)"
+                    >Eliminar</el-dropdown-item
+                  >
+                </el-dropdown-menu>
               </template>
             </el-dropdown>
           </template>
@@ -60,14 +70,14 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import EmployeeServices from '@/Services/Employees.Services'
-import EmployeesAddNew from './EmployeesAddNew.vue'
+import UserServices from '@/Services/User.Services'
+import UserAddNew from './UserAddNew.vue'
 
 export default {
-  components: { EmployeesAddNew },
+  components: { UserAddNew },
   setup () {
-    const { getEmployees, deleteEmployee } = EmployeeServices()
-    const employees = ref([])
+    const { getUsers, deleteUser } = UserServices()
+    const users = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -76,53 +86,49 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
-    const isAddedEmployee = ref(false)
-    provide('AddEmployee', isAddedEmployee)
+    const isAddedUser = ref(false)
+    provide('AddUser', isAddedUser)
     const fields = ref([
-      { value: 'name', text: 'Nombre' },
-      { value: 'lastname', text: 'Apellidos' },
-      { value: 'workStation', text: 'Puesto de trabajo' },
-      { value: 'address', text: 'Dirección' },
-      { value: 'phoneNumber', text: 'Telefono' },
-      { value: 'salary', text: 'Salario' },
+      { value: 'employee.name', text: 'Empleado' },
+      { value: 'employee.workStation', text: 'Puesto de trabajo' },
+      { value: 'userName', text: 'nombre de usuario' },
+      { value: 'employee.phoneNumber', text: 'Telefono' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getEmployees(data => {
-      employees.value = data
+    getUsers(data => {
+      users.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getEmployees(data => {
-        employees.value = data
+      getUsers(data => {
+        users.value = data
         isloading.value = false
       })
     }
-    watch(isAddedEmployee, (newValue) => {
+    watch(isAddedUser, newValue => {
+      console.log(newValue)
       if (!newValue) {
         refreshTable()
-        // getEmployees(data => {
-        //   employees.value = data
-        // })
       }
     })
-    const onDeleteEmployee = employeeId => {
+    const onDeleteUser = employeeId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar un Empleado, ¿Estas seguro?',
+          title: 'Estás a punto de eliminar un usuario, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar empleado',
+          confirmButtonText: 'Si, eliminar usuario',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteEmployee(employeeId, data => {
+            deleteUser(employeeId, data => {
               refreshTable()
               swal.fire({
-                title: 'Empleado eliminado!',
-                text: 'El Empleado ha sido eliminado satisfactoriamente .',
+                title: 'Usuario eliminado!',
+                text: 'El usuario ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
             })
@@ -140,10 +146,10 @@ export default {
       searchValue,
       searchField,
       fields,
-      employees,
-      isAddedEmployee,
+      users,
+      isAddedUser,
       refreshTable,
-      onDeleteEmployee
+      onDeleteUser
     }
   }
 }

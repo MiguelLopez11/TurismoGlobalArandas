@@ -195,7 +195,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("EmployeeId");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("UConnect.Entities.User", b =>

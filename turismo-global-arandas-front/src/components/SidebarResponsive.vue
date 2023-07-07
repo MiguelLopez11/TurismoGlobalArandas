@@ -70,6 +70,12 @@ export default {
             title: 'Empleados',
             path: '/Empleados',
             icon: 'bi bi-person'
+          },
+          {
+            index: '2',
+            title: 'Usuarios',
+            path: '/Usuarios',
+            icon: 'bi bi-person'
           }
         ]
       },
