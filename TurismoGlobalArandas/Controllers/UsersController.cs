@@ -11,6 +11,7 @@ using UConnect.Entities.Identity;
 using UConnect.Entities;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
+using TurismoGlobalArandas.Migrations;
 
 namespace TurismoGlobalArandas.Controllers
 {
@@ -48,15 +49,28 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(users);
         }
 
-        [HttpGet("{UserName}")]
-        public async Task<IActionResult> GetUser(string UserName)
+        [HttpGet("{UserId}")]
+        public async Task<IActionResult> GetUser(string UserId)
         {
-            var user = await _userManager.FindByNameAsync(UserName);
+            var user = await _userManager.FindByIdAsync(UserId);
+            var password =  _userManager.PasswordHasher.ToString();
+            var userRole = await _userManager.GetRolesAsync(user);
+            var roleId = await _roleManager.FindByNameAsync(userRole[0]);
             if (user == null)
             {
                 return NotFound("No se encuentran usuario");
             }
-            return Ok(user);
+            return Ok(new
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber,
+                Role = userRole[0],
+                RoleId = roleId.Id,
+                EmployeeId = user.EmployeeId,
+                Password = password,
+                Status = 200
+            });
         }
 
         [HttpPost("Login")]

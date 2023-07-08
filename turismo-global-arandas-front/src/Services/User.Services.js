@@ -17,7 +17,7 @@ export default function UserServices () {
     })
   }
   const updateUser = (data, callback) => {
-    axiosPrivate.put(`/Authenticate/Users/${data.userName}`, data).then((response) => {
+    axiosPrivate.put(`/Users/${data.userName}`, data).then((response) => {
       callback(response.data)
     })
   }

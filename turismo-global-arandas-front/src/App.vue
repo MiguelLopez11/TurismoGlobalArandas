@@ -50,15 +50,15 @@ export default {
 @import "vue-select/dist/vue-select.css";
 
 html {
-  background-color: #f8f7fa;
+  background-color: #E6EEF9;
 }
 body {
-  background-color: #f8f7fa;
+  background-color: #E6EEF9;
 }
 .el-aside {
   height: 100vh;
-  width: 18% !important;
-  background-color: #2f3349;
+  width: 25% !important;
+  background-color: #FFF;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
 }
 .el-header.header-home {

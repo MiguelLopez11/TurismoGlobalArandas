@@ -1,7 +1,7 @@
 <template>
   <el-menu
-    background-color="#2F3349"
-    text-color="#9498B3"
+    background-color="#FFF"
+    text-color="#85838D"
     active-text-color="#F2F1FC"
     class="menu"
   >
@@ -62,17 +62,17 @@ export default {
       },
       {
         index: '2',
-        title: 'Gestor administrativo',
+        title: 'Gestor Administrativo',
         icon: 'bi bi-card-checklist',
         submenu: [
           {
-            index: '1',
+            index: '2-1',
             title: 'Empleados',
             path: '/Empleados',
-            icon: 'bi bi-person'
+            icon: 'bi bi-file-person'
           },
           {
-            index: '2',
+            index: '2-2',
             title: 'Usuarios',
             path: '/Usuarios',
             icon: 'bi bi-person'
@@ -81,9 +81,21 @@ export default {
       },
       {
         index: '3',
-        title: 'Servicios',
-        path: '/servicios',
-        icon: 'el-icon-service'
+        title: 'Gestion operativo',
+        icon: 'bi bi-clipboard-data',
+        submenu: [{
+          index: '3-1',
+          title: 'Clientes',
+          path: '/Clientes',
+          icon: 'bi bi-people'
+        },
+        {
+          index: '3-2',
+          title: 'Proveedores',
+          path: '/Proveedores',
+          icon: 'bi bi-arrow-left-right'
+        }
+        ]
       },
       {
         index: '4',
@@ -128,6 +140,9 @@ export default {
 .el-menu {
   border-right: none;
 }
+.el-menu-item {
+  border-radius: 5px;
+}
 
 .menu-icon {
   margin-right: 15px;
@@ -154,8 +169,11 @@ export default {
   font-weight: bold;
   letter-spacing: 0.15px;
 }
+li.el-menu-item.is-active{
+  background-image: linear-gradient(to right, #7367F0, #9C94F4)
+}
 p {
-  color: #9498b3;
+  color: #85838D;
   font-size: 16px;
   font-weight: bold;
 }

@@ -20,6 +20,20 @@ const options = {
 
 // Definir regla global 'required'
 defineRule('required', required)
+defineRule('userPassword', value => {
+  if (!value || !value.length) {
+    return 'Este campo es requerido '
+  }
+  if (
+    !/^(?=.*\d)(?=.*[\u0021-\u002b\u003c-\u0040])(?=.*[A-Z])(?=.*[a-z])\S{8,16}$/.test(
+      value
+    )
+  ) {
+    return 'La contraseña debe de contener minimo 8 Caracteres, minusculas y mayusculas y mínimo un simbolo '
+  }
+  return true
+})
+
 app.component('Field', Field)
 app.component('ErrorMessage', ErrorMessage)
 app.component('Form', Form)
