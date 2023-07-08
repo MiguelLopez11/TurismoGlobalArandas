@@ -79,7 +79,7 @@ namespace TurismoGlobalArandas
             {
                 option.SwaggerDoc(
                     "v1",
-                    new OpenApiInfo { Title = "UConnect_WebServices", Version = "v1" }
+                    new OpenApiInfo { Title = "TurismoGlobalArandas_WebServices", Version = "v1" }
                 );
                 option.AddSecurityDefinition(
                     "Bearer",
