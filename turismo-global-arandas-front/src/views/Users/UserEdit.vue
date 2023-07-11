@@ -103,7 +103,7 @@
             size="large"
             @click="
               () => {
-                isOpenDialog = !isOpenDialog
+                $router.push('/Usuarios')
               }
             "
             >Cancelar</el-button

@@ -169,6 +169,9 @@ export default {
   font-weight: bold;
   letter-spacing: 0.15px;
 }
+.sub-menu-title:hover{
+  background-color: #7367F0;
+}
 li.el-menu-item.is-active{
   background-image: linear-gradient(to right, #7367F0, #9C94F4)
 }

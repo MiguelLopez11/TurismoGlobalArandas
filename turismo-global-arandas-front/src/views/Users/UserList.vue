@@ -58,6 +58,14 @@
                   <el-dropdown-item @click="onDeleteUser(items.userName)"
                     >Eliminar</el-dropdown-item
                   >
+                  <el-dropdown-item
+                    @click="
+                      () => {
+                        onOpenDialog(items.userName)
+                      }
+                    "
+                    >Actualizar contraseña</el-dropdown-item
+                  >
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -66,17 +74,81 @@
       </el-col>
     </el-row>
   </el-card>
+  <el-dialog
+    v-model="isChangePassword"
+    title="Actualizar contraseña"
+    width="80%"
+    center
+  >
+    <Form @submit="onUpdatePassword" v-slot="{ errors }">
+      <el-row :gutter="35" justify="center">
+        <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
+          <Field name="passwordOld" as="text">
+            <el-form-item :error="errors.passwordOld" required>
+              <div>
+                <label>Contraseña Actual</label>
+              </div>
+              <el-input
+                placeholder="Ingresa la contraseña"
+                size="large"
+                v-model="PasswordFields.passwordOld"
+                type="password"
+                show-password
+              />
+            </el-form-item>
+          </Field>
+        </el-col>
+        <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
+          <Field name="passwordNew" as="text">
+            <el-form-item :error="errors.passwordNew" required>
+              <div>
+                <label>Nueva contraseña</label>
+              </div>
+              <el-input
+                placeholder="Ingresa la nueva contraseña"
+                size="large"
+                v-model="PasswordFields.passwordNew"
+                type="password"
+                show-password
+              />
+            </el-form-item>
+          </Field>
+        </el-col>
+      </el-row>
+      <el-row :gutter="25" justify="end">
+        <el-col :span="3">
+          <el-button
+            color="#7367F0"
+            class="w-100"
+            native-type="submit"
+            size="large"
+            >Guardar</el-button
+          >
+        </el-col>
+        <el-col :span="3">
+          <el-button
+            class="w-100"
+            color="#F1F1F2"
+            size="large"
+            @click="isChangePassword = !isChangePassword"
+            >Cancelar</el-button
+          >
+        </el-col>
+      </el-row>
+    </Form>
+  </el-dialog>
 </template>
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
 import UserServices from '@/Services/User.Services'
 import UserAddNew from './UserAddNew.vue'
-
+import { useRouter } from 'vue-router'
 export default {
   components: { UserAddNew },
   setup () {
-    const { getUsers, deleteUser } = UserServices()
+    const { getUsers, deleteUser, updatePasswordUser } = UserServices()
+    const redirect = useRouter()
     const users = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
@@ -87,12 +159,16 @@ export default {
     const searchValue = ref('')
     const searchField = ref('name')
     const isAddedUser = ref(false)
+    const isChangePassword = ref(false)
+    const userNamePassword = ref()
+    const userName = window.sessionStorage.getItem('UserName')
     provide('AddUser', isAddedUser)
     const fields = ref([
       { value: 'employee.name', text: 'Empleado' },
       { value: 'employee.workStation', text: 'Puesto de trabajo' },
       { value: 'userName', text: 'nombre de usuario' },
       { value: 'employee.phoneNumber', text: 'Telefono' },
+      { value: 'email', text: 'Correo electronico' },
       { value: 'actions', text: 'Acciones' }
     ])
     getUsers(data => {
@@ -107,11 +183,58 @@ export default {
       })
     }
     watch(isAddedUser, newValue => {
-      console.log(newValue)
       if (!newValue) {
         refreshTable()
       }
     })
+    const PasswordFields = ref({
+      passwordOld: null,
+      passwordNew: null
+    })
+    const onOpenDialog = UserName => {
+      isChangePassword.value = !isChangePassword.value
+      userNamePassword.value = UserName
+    }
+    const PasswordFieldsBlank = ref(JSON.parse(JSON.stringify(PasswordFields)))
+    const onUpdatePassword = () => {
+      updatePasswordUser(userNamePassword.value, PasswordFields.value, data => {
+        isChangePassword.value = false
+        if (data.succeeded) {
+          PasswordFields.value = JSON.parse(JSON.stringify(PasswordFieldsBlank))
+          swal
+            .fire({
+              title: 'Contraseña actualizada!',
+              text: 'El usuario ha cambiado su contraseña satisfactoriamente.',
+              icon: 'success'
+            })
+            .then(result => {
+              if (result.isConfirmed) {
+                if (userName === userNamePassword.value) {
+                  window.sessionStorage.removeItem('Token')
+                  swal
+                    .fire({
+                      title: 'Has modificado tu propia contraseña!',
+                      text: 'Se redireccionará al login para ingresar con tu nueva contraseña.',
+                      icon: 'warning'
+                    })
+                    .then(result => {
+                      if (result.isConfirmed) {
+                        redirect.go('/Authenticate')
+                      }
+                    })
+                }
+              }
+            })
+        } else {
+          PasswordFields.value = JSON.parse(JSON.stringify(PasswordFieldsBlank))
+          swal.fire({
+            title: 'Contraseña incorrecta!',
+            text: 'Ha ingresado una contraseña que no es su actual, o no es válida.',
+            icon: 'error'
+          })
+        }
+      })
+    }
     const onDeleteUser = employeeId => {
       swal
         .fire({
@@ -148,8 +271,12 @@ export default {
       fields,
       users,
       isAddedUser,
+      isChangePassword,
+      PasswordFields,
       refreshTable,
-      onDeleteUser
+      onDeleteUser,
+      onOpenDialog,
+      onUpdatePassword
     }
   }
 }

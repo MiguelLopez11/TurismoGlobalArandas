@@ -64,7 +64,7 @@
                           <Field name="password" v-slot="{ value, field, errorMessage }" as="text">
                             <el-form-item :error="errorMessage" size="large">
                               <div>
-                                <label> Usuario </label>
+                                <label> Contraseña </label>
                               </div>
                               <el-input
                                 placeholder="Ingresa el nombre de usuario"
@@ -148,9 +148,16 @@ export default {
             .then(result => {
               if (result.isConfirmed) {
                 window.sessionStorage.setItem('Token', data.token)
+                window.sessionStorage.setItem('User', data.userName)
                 redirect.go('/')
               }
             })
+        } else {
+          swal.fire({
+            title: 'No fue posible iniciar sesión',
+            text: 'Compruebe el usuario y contraseña sean correctos y vuelva a intentarlo.',
+            icon: 'error'
+          })
         }
       })
     }
