@@ -17,12 +17,12 @@ export default function UserServices () {
     })
   }
   const updateUser = (data, callback) => {
-    axiosPrivate.put(`/Authenticate/Users/${data.userName}`, data).then((response) => {
+    axiosPrivate.put(`/Users/${data.userName}`, data).then((response) => {
       callback(response.data)
     })
   }
   const updatePasswordUser = (userName, data, callback) => {
-    axiosPrivate.put(`/Users/${userName}/Password/${data.oldPassword}/${data.newPassword}`).then((response) => {
+    axiosPrivate.put(`/Users/${userName}/Password/${data.passwordOld}/${data.passwordNew}`).then((response) => {
       callback(response.data)
     })
   }

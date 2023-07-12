@@ -37,6 +37,8 @@
                 v-model="usersFields.password"
                 :validate-event="false"
                 :model-value="value"
+                type="password"
+                show-password
               />
             </el-form-item>
           </Field>
@@ -144,13 +146,11 @@ import UserServices from '@/Services/User.Services'
 import EmployeeServices from '@/Services/Employees.Services'
 import RoleServices from '@/Services/Roles.Services'
 import * as yup from 'yup'
-import { useRouter } from 'vue-router'
 
 export default {
   setup () {
     const isOpenDialog = inject('AddUser')
     const swal = inject('$swal')
-    const router = useRouter()
     const { createUser } = UserServices()
     const { getEmployees } = EmployeeServices()
     const { getRoles } = RoleServices()
@@ -163,8 +163,15 @@ export default {
       roles.value = data
     })
     const validationSchema = yup.object({
-      username: yup.string().required('este campo es requerido').label('Nombre de usuario'),
-      email: yup.string().required('este campo es requerido').email('ingresa un correo electronico válido').label('Correo electronico'),
+      username: yup
+        .string()
+        .required('este campo es requerido')
+        .label('Nombre de usuario'),
+      email: yup
+        .string()
+        .required('este campo es requerido')
+        .email('ingresa un correo electronico válido')
+        .label('Correo electronico'),
       password: yup
         .string()
         .required('este campo es requerido')
@@ -186,7 +193,7 @@ export default {
     const usersFieldsBlank = ref(JSON.parse(JSON.stringify(usersFields)))
 
     const onSubmit = () => {
-      isOpenDialog.value = !isOpenDialog.value
+      isOpenDialog.value = false
       createUser(usersFields.value, data => {
         swal
           .fire({
@@ -197,7 +204,6 @@ export default {
           .then(result => {
             if (result.isConfirmed) {
               usersFields.value = JSON.parse(JSON.stringify(usersFieldsBlank))
-              router.go(0)
             }
           })
       })

@@ -180,6 +180,7 @@ export default {
     )
 
     const onSubmit = () => {
+      isOpenedDialog.value = false
       createEmployee(EmployeesFields.value, data => {
         swal
           .fire({
@@ -192,7 +193,6 @@ export default {
               EmployeesFields.value = JSON.parse(
                 JSON.stringify(EmployeesFieldsBlank)
               )
-              isOpenedDialog.value = !isOpenedDialog.value
             }
           })
       })
