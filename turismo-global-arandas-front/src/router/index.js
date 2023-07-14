@@ -48,7 +48,40 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/Clientes',
+    name: 'Customers',
+    component: () => import('../views/Customers/CustomersList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Clientes/:CustomerId',
+    name: 'Edit-Customer',
+    component: () => import('../views/Customers/CustomersEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Proveedores',
+    name: 'Providers',
+    component: () => import('../views/Providers/ProviderList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Proveedores/:ProviderId',
+    name: 'Edit-Provider',
+    component: () => import('../views/Providers/ProviderEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
+
 ]
 
 const router = createRouter({

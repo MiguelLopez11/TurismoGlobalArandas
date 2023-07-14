@@ -1,106 +1,101 @@
 <template>
-  <div class="login-container">
-    <el-row :gutter="25" justify="center">
-      <el-col :xs="23" :sm="10" :md="14" :lg="15" :xl="14">
-        <el-card>
-          <el-col :xs="15" :sm="10" :md="14" :lg="15" :xl="15">
-            <el-row style="flex-wrap: nowrap" align-content="center">
-              <el-col
-                :xs="18"
-                :sm="10"
-                :md="14"
-                :lg="15"
-                :xl="15"
-                style="display: flex"
-              >
-                <div class="login-image">
-                  <img
-                    src="https://demos.pixinvent.com/vuexy-vuejs-admin-template/demo-1/assets/auth-v2-login-illustration-light-d1fd488d.png"
-                    alt="Imagen de login"
-                  />
-                </div>
-              </el-col>
-              <el-col :span="24">
-                <div class="login-form">
-                  <el-card>
-                    <template #header>
-                      <el-row justify="center">
-                        <span>¡Bienvenido a Turismo Global Arandas!</span>
-                      </el-row>
-                      <el-row justify="center">
-                        <span>
-                          Por favor ingrese su usuario y contraseña para iniciar
-                          sesion.
-                        </span>
-                      </el-row>
-                    </template>
-                    <Form
-                      :validation-schema="validationSchema"
-                      @submit="onAuthenticate"
-                    >
-                      <el-row justify="center" :gutter="24">
-                        <el-col :span="24">
-                          <Field
-                            name="username"
-                            v-slot="{ value, field, errorMessage }"
-                            as="text"
-                          >
-                            <el-form-item :error="errorMessage" size="large">
-                              <div>
-                                <label> Usuario </label>
-                              </div>
-                              <el-input
-                                placeholder="Ingresa el nombre de usuario"
-                                size="large"
-                                v-bind="field"
-                                v-model="user.username"
-                                :validate-event="false"
-                                :model-value="value"
-                              />
-                            </el-form-item>
-                          </Field>
-                        </el-col>
-                        <el-col :span="24">
-                          <Field name="password" v-slot="{ value, field, errorMessage }" as="text">
-                            <el-form-item :error="errorMessage" size="large">
-                              <div>
-                                <label> Contraseña </label>
-                              </div>
-                              <el-input
-                                placeholder="Ingresa el nombre de usuario"
-                                size="large"
-                                v-bind="field"
-                                v-model="user.password"
-                                :validate-event="false"
-                                :model-value="value"
-                                type="password"
-                                show-password
-                              />
-                            </el-form-item>
-                          </Field>
-                        </el-col>
-                      </el-row>
-                      <el-col :span="24">
-                        <el-button
-                          size="large"
-                          color="#675ABA"
-                          class="w-100"
-                          native-type="submit"
-                        >
-                          <el-icon><User /></el-icon>
-                          Iniciar sesion
-                        </el-button>
-                      </el-col>
-                    </Form>
-                  </el-card>
-                </div>
-              </el-col>
-            </el-row>
+  <el-row align="middle" justify="center">
+    <el-col :span="12">
+      <el-card>
+        <el-row align="middle" :gutter="25" justify="center">
+          <el-col :xs="8" :sm="10" :md="12" :lg="12" :xl="12">
+            <div class="login-image">
+              <img
+                src="https://demos.pixinvent.com/vuexy-vuejs-admin-template/demo-1/assets/auth-v2-login-illustration-light-d1fd488d.png"
+                alt="Imagen de login"
+              />
+            </div>
           </el-col>
-        </el-card>
-      </el-col>
-    </el-row>
-  </div>
+          <el-col :xs="15" :sm="14" :md="12" :lg="12" :xl="12">
+            <div class="login-form">
+              <el-card>
+                <template #header>
+                  <el-row justify="center">
+                    <span>¡Bienvenido a Turismo Global Arandas!</span>
+                  </el-row>
+                  <el-row justify="center">
+                    <span>
+                      Por favor ingrese su usuario y contraseña para iniciar
+                      sesion.
+                    </span>
+                  </el-row>
+                </template>
+                <Form
+                  :validation-schema="validationSchema"
+                  @submit="onAuthenticate"
+                >
+                  <el-row justify="center" :gutter="24">
+                    <el-col :span="24">
+                      <Field
+                        name="username"
+                        v-slot="{ value, field, errorMessage }"
+                        as="text"
+                      >
+                        <el-form-item :error="errorMessage" size="large">
+                          <div>
+                            <label> Usuario </label>
+                          </div>
+                          <el-input
+                            placeholder="Ingresa el nombre de usuario"
+                            size="large"
+                            v-bind="field"
+                            v-model="user.username"
+                            :validate-event="false"
+                            :model-value="value"
+                          />
+                        </el-form-item>
+                      </Field>
+                    </el-col>
+                    <el-col :span="24">
+                      <Field
+                        name="password"
+                        v-slot="{ value, field, errorMessage }"
+                        as="text"
+                      >
+                        <el-form-item :error="errorMessage" size="large">
+                          <div>
+                            <label> Contraseña </label>
+                          </div>
+                          <el-input
+                            placeholder="Ingresa el nombre de usuario"
+                            size="large"
+                            v-bind="field"
+                            v-model="user.password"
+                            :validate-event="false"
+                            :model-value="value"
+                            type="password"
+                            show-password
+                          />
+                        </el-form-item>
+                      </Field>
+                    </el-col>
+                  </el-row>
+                  <el-row>
+                    <el-col :span="24">
+                      <el-button
+                        size="large"
+                        color="#675ABA"
+                        class="w-100"
+                        native-type="submit"
+                      >
+                        <el-icon><User /></el-icon>
+                        Iniciar sesion
+                      </el-button>
+                    </el-col>
+                  </el-row>
+                </Form>
+              </el-card>
+            </div>
+          </el-col>
+        </el-row>
+      </el-card>
+    </el-col>
+  </el-row>
 </template>
 
 <script>
@@ -171,21 +166,7 @@ export default {
 }
 </script>
 
-<style scoped>
-.login-container {
-  height: 90vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-size: cover;
-  background-position: center;
-  z-index: -1;
-}
-
+<style>
 .login-image img {
   max-width: 100%;
   height: 100%;
