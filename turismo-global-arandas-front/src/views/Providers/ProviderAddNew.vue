@@ -1,9 +1,6 @@
 <template>
-  <el-dialog v-model="isOpenDialog" title="Nuevo cliente" width="80%" center>
-    <Form
-      :validation-schema="validationSchema"
-      @submit="onSubmit"
-    >
+  <el-dialog v-model="isOpenDialog" title="Nuevo Proveedor" width="80%" center>
+    <Form :validation-schema="validationSchema" @submit="onSubmit">
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="name" v-slot="{ value, field, errorMessage }">
@@ -12,10 +9,10 @@
                 <label> Nombre </label>
               </div>
               <el-input
-                placeholder="Ingresa el nombre del empleado"
+                placeholder="Ingresa el nombre del proveedor"
                 size="large"
                 v-bind="field"
-                v-model="customerFields.name"
+                v-model="providerFields.name"
                 :validate-event="false"
                 :model-value="value"
               />
@@ -23,16 +20,16 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="lastname" v-slot="{ value, field, errorMessage }">
+          <Field name="email" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
-                <label> Apellidos </label>
+                <label> Email </label>
               </div>
               <el-input
-                placeholder="Ingresa los apellidos del empleado"
+                placeholder="Ingresa el email del proveedor"
                 size="large"
                 v-bind="field"
-                v-model="customerFields.lastname"
+                v-model="providerFields.email"
                 :validate-event="false"
                 :model-value="value"
               />
@@ -46,10 +43,10 @@
                 <label>Numero de telefono</label>
               </div>
               <el-input
-                placeholder="Ingresa el numero de telefono del empleado"
+                placeholder="Ingresa el numero de telefono del proveedor"
                 size="large"
                 v-bind="field"
-                v-model="customerFields.phoneNumber"
+                v-model="providerFields.phoneNumber"
                 :validate-event="false"
                 :model-value="value"
                 type="number"
@@ -90,7 +87,7 @@
 <script>
 import { ref, inject } from 'vue'
 import { Field, Form } from 'vee-validate'
-import CustomerServices from '@/Services/Customers.Services'
+import ProviderServices from '@/Services/Provider.Services'
 import * as yup from 'yup'
 
 export default {
@@ -99,42 +96,40 @@ export default {
     Field
   },
   setup () {
-    const isOpenDialog = inject('addCustomer')
+    const isOpenDialog = inject('addProvider')
     const swal = inject('$swal')
-    const { createCustomer } = CustomerServices()
+    const { createProvider } = ProviderServices()
     const validationSchema = yup.object({
       name: yup.string().required('Este campo es requerido').label('Nombre'),
-      lastname: yup.string().required('Este campo es requerido').label('Apellidos'),
-      phoneNumber: yup.string().required('Este campo es requerido').min(10).label('Numero de telefono')
+      email: yup
+        .string()
+        .required('Este campo es requerido')
+        .email('Inserte un email válido')
+        .label('Email'),
+      phoneNumber: yup
+        .string()
+        .required('Este campo es requerido')
+        .min(10)
+        .label('Numero de telefono')
     })
-    const customerFields = ref({
-      customerId: 0,
+    const providerFields = ref({
+      providerId: 0,
       name: '',
-      lastname: '',
+      email: '',
       phoneNumber: '',
       isDeleted: false
     })
-    const customerFieldsBlank = ref(
-      JSON.parse(JSON.stringify(customerFields))
-    )
+    const providerFieldsBlank = ref(JSON.parse(JSON.stringify(providerFields)))
 
     const onSubmit = () => {
-      isOpenDialog.value = !isOpenDialog.value
-      createCustomer(customerFields.value, data => {
-        swal
-          .fire({
-            title: '¡Nuevo cliente registrado!',
-            text: 'El cliente se ha registrado correctamente',
-            icon: 'success'
-          })
-          .then(result => {
-            if (result.isConfirmed) {
-              isOpenDialog.value = false
-              customerFields.value = JSON.parse(
-                JSON.stringify(customerFieldsBlank)
-              )
-            }
-          })
+      createProvider(providerFields.value, data => {
+        swal.fire({
+          title: '¡Nuevo proveedor registrado!',
+          text: 'El proveedor se ha registrado correctamente',
+          icon: 'success'
+        })
+        isOpenDialog.value = false
+        providerFields.value = JSON.parse(JSON.stringify(providerFieldsBlank))
       })
     }
 
@@ -142,7 +137,7 @@ export default {
       isOpenDialog,
       onSubmit,
       validationSchema,
-      customerFields
+      providerFields
     }
   }
 }

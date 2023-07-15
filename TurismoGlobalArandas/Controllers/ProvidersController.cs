@@ -24,7 +24,7 @@ namespace TurismoGlobalArandas.Controllers
                 .ToListAsync();
             return Ok(providers);
         }
-        [HttpGet("{CustomerId}")]
+        [HttpGet("{ProviderId}")]
         public async Task<ActionResult> getProviderById(int ProviderId)
         {
             var provider = await _context.Providers

@@ -22,55 +22,57 @@
     </el-row>
     <el-row class="mt-3">
       <el-col :span="24">
-        <EasyDataTable
-          rows-per-page-message="registro por pagina"
-          empty-message="No se en cuentran registros"
-          table-class-name="customize-table"
-          buttons-pagination
-          border-cell
-          :loading="isloading"
-          :headers="fields"
-          :items="users"
-          :rows-per-page="5"
-          :search-field="searchField"
-          :search-value="searchValue"
-          theme-color="#6366F1"
-        >
-          <template #header-actions="header">
-            {{ header.text }}
-          </template>
-          <template #item-actions="items">
-            <el-dropdown>
-              <span class="bi bi-three-dots-vertical"> </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item
-                    @click="
-                      () => {
-                        $router.push({
-                          name: 'Edit-User',
-                          params: { UserId: items.id }
-                        })
-                      }
-                    "
-                    >Editar</el-dropdown-item
-                  >
-                  <el-dropdown-item @click="onDeleteUser(items.userName)"
-                    >Eliminar</el-dropdown-item
-                  >
-                  <el-dropdown-item
-                    @click="
-                      () => {
-                        onOpenDialog(items.userName)
-                      }
-                    "
-                    >Actualizar contraseña</el-dropdown-item
-                  >
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </template>
-        </EasyDataTable>
+        <div class="table-scroll">
+          <EasyDataTable
+            rows-per-page-message="registro por pagina"
+            empty-message="No se en cuentran registros"
+            table-class-name="customize-table"
+            buttons-pagination
+            border-cell
+            :loading="isloading"
+            :headers="fields"
+            :items="users"
+            :rows-per-page="5"
+            :search-field="searchField"
+            :search-value="searchValue"
+            theme-color="#6366F1"
+          >
+            <template #header-actions="header">
+              {{ header.text }}
+            </template>
+            <template #item-actions="items">
+              <el-dropdown>
+                <span class="bi bi-three-dots-vertical"> </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item
+                      @click="
+                        () => {
+                          $router.push({
+                            name: 'Edit-User',
+                            params: { UserId: items.id }
+                          })
+                        }
+                      "
+                      >Editar</el-dropdown-item
+                    >
+                    <el-dropdown-item @click="onDeleteUser(items.userName)"
+                      >Eliminar</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      @click="
+                        () => {
+                          onOpenDialog(items.userName)
+                        }
+                      "
+                      >Actualizar contraseña</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </template>
+          </EasyDataTable>
+        </div>
       </el-col>
     </el-row>
   </el-card>

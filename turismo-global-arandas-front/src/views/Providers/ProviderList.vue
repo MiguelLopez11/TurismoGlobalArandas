@@ -1,5 +1,5 @@
 <template>
-  <Providers-add-new />
+  <provider-add-new />
   <el-card>
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
@@ -22,47 +22,52 @@
     </el-row>
     <el-row class="mt-3">
       <el-col :span="24">
-        <EasyDataTable
-          rows-per-page-message="registro por pagina"
-          empty-message="No se en cuentran registros"
-          table-class-name="customize-table"
-          buttons-pagination
-          border-cell
-          :loading="isloading"
-          :headers="fields"
-          :items="Providers"
-          :rows-per-page="5"
-          :search-field="searchField"
-          :search-value="searchValue"
-          theme-color="#6366F1"
-        >
-          <template #header-actions="header">
-            {{ header.text }}
-          </template>
-          <template #item-actions="items">
-            <el-dropdown>
-              <span class="bi bi-three-dots-vertical"> </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item
-                    @click="
-                      () => {
-                        $router.push({
-                          name: 'Edit-Provider',
-                          params: { ProviderId: items.providerId }
-                        })
-                      }
-                    "
-                    >Editar</el-dropdown-item
-                  >
-                  <el-dropdown-item @click="onDeleteProvider(items.providerId)"
-                    >Eliminar</el-dropdown-item
-                  >
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown>
-          </template>
-        </EasyDataTable>
+        <div class="table-scroll">
+          <EasyDataTable
+            rows-per-page-message="registro por pagina"
+            empty-message="No se en cuentran registros"
+            table-class-name="customize-table"
+            buttons-pagination
+            header-text-direction="center"
+            body-text-direction="center"
+            border-cell
+            theme-color="#7367F0"
+            :rows-per-page="10"
+            :loading="isloading"
+            :headers="fields"
+            :items="Providers"
+            :search-field="searchField"
+            :search-value="searchValue"
+          >
+            <template #header-actions="header">
+              {{ header.text }}
+            </template>
+            <template #item-actions="items">
+              <el-dropdown>
+                <span class="bi bi-three-dots-vertical"> </span>
+                <template #dropdown>
+                  <el-dropdown-menu>
+                    <el-dropdown-item
+                      @click="
+                        () => {
+                          $router.push({
+                            name: 'Edit-Provider',
+                            params: { ProviderId: items.providerId }
+                          })
+                        }
+                      "
+                      >Editar</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      @click="onDeleteProvider(items.providerId)"
+                      >Eliminar</el-dropdown-item
+                    >
+                  </el-dropdown-menu>
+                </template>
+              </el-dropdown>
+            </template>
+          </EasyDataTable>
+        </div>
       </el-col>
     </el-row>
   </el-card>
@@ -71,10 +76,10 @@
 <script>
 import { ref, watch, provide, inject } from 'vue'
 import ProviderServices from '@/Services/Provider.Services'
-// import CustomersAddNew from './CustomersAddNew.vue'
+import ProviderAddNew from './ProviderAddNew.vue'
 
 export default {
-//   components: { CustomersAddNew },
+  components: { ProviderAddNew },
   setup () {
     const { getProviders, deleteProvider } = ProviderServices()
     const Providers = ref([])
@@ -90,7 +95,7 @@ export default {
     provide('addProvider', isAddProvider)
     const fields = ref([
       { value: 'name', text: 'Nombre' },
-      { value: 'lastname', text: 'Apellidos' },
+      { value: 'email', text: 'Correo electronico' },
       { value: 'phoneNumber', text: 'Telefono' },
       { value: 'actions', text: 'Acciones' }
     ])
@@ -110,7 +115,7 @@ export default {
         refreshTable()
       }
     })
-    const onDeleteProvider = customerId => {
+    const onDeleteProvider = providerId => {
       swal
         .fire({
           title: 'Estás a punto de eliminar un proveedor, ¿Estas seguro?',
@@ -122,7 +127,7 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteProvider(customerId, data => {
+            deleteProvider(providerId, data => {
               swal.fire({
                 title: 'Proveedor eliminado!',
                 text: 'El proveedor ha sido eliminado satisfactoriamente .',

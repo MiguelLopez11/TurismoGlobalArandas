@@ -1,6 +1,6 @@
 .customize-table {
-    --easy-table-border: 1px solid #c9c8cb;
-    --easy-table-row-border: 1px solid #c9c8cb;
+    --easy-table-border: 2px solid #c9c8cb;
+    --easy-table-row-border: 2px solid #c9c8cb;
   
     --easy-table-header-font-size: 14px;
     --easy-table-header-height: 50px;
@@ -32,10 +32,17 @@
     --easy-table-rows-per-page-selector-width: 70px;
     --easy-table-rows-per-page-selector-option-padding: 10px;
     --easy-table-rows-per-page-selector-z-index: 1;
+
+    border-radius: 8px;
   
   }
   label.label-top {
     display: block;
     font-weight: bold;
     margin-bottom: 5px;
+  }
+  .table-scroll {
+    min-height: 75vh;
+    max-height: 75vh; /* Ajusta la altura máxima según tus necesidades */
+    overflow-y: auto;
   }

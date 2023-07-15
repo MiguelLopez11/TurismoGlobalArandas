@@ -1,9 +1,6 @@
 <template>
   <el-dialog v-model="isOpenDialog" title="Nuevo cliente" width="80%" center>
-    <Form
-      :validation-schema="validationSchema"
-      @submit="onSubmit"
-    >
+    <Form :validation-schema="validationSchema" @submit="onSubmit">
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="name" v-slot="{ value, field, errorMessage }">
@@ -104,8 +101,15 @@ export default {
     const { createCustomer } = CustomerServices()
     const validationSchema = yup.object({
       name: yup.string().required('Este campo es requerido').label('Nombre'),
-      lastname: yup.string().required('Este campo es requerido').label('Apellidos'),
-      phoneNumber: yup.string().required('Este campo es requerido').min(10).label('Numero de telefono')
+      lastname: yup
+        .string()
+        .required('Este campo es requerido')
+        .label('Apellidos'),
+      phoneNumber: yup
+        .string()
+        .required('Este campo es requerido')
+        .min(10)
+        .label('Numero de telefono')
     })
     const customerFields = ref({
       customerId: 0,
@@ -114,27 +118,17 @@ export default {
       phoneNumber: '',
       isDeleted: false
     })
-    const customerFieldsBlank = ref(
-      JSON.parse(JSON.stringify(customerFields))
-    )
+    const customerFieldsBlank = ref(JSON.parse(JSON.stringify(customerFields)))
 
     const onSubmit = () => {
-      isOpenDialog.value = !isOpenDialog.value
       createCustomer(customerFields.value, data => {
-        swal
-          .fire({
-            title: '¡Nuevo cliente registrado!',
-            text: 'El cliente se ha registrado correctamente',
-            icon: 'success'
-          })
-          .then(result => {
-            if (result.isConfirmed) {
-              isOpenDialog.value = false
-              customerFields.value = JSON.parse(
-                JSON.stringify(customerFieldsBlank)
-              )
-            }
-          })
+        swal.fire({
+          title: '¡Nuevo cliente registrado!',
+          text: 'El cliente se ha registrado correctamente',
+          icon: 'success'
+        })
+        isOpenDialog.value = false
+        customerFields.value = JSON.parse(JSON.stringify(customerFieldsBlank))
       })
     }
 

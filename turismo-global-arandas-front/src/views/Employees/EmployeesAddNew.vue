@@ -148,7 +148,6 @@ import EmployeeServices from '@/Services/Employees.Services'
 import * as yup from 'yup'
 
 export default {
-  name: 'App',
   components: {
     Form,
     Field
@@ -180,21 +179,14 @@ export default {
     )
 
     const onSubmit = () => {
-      isOpenedDialog.value = false
       createEmployee(EmployeesFields.value, data => {
-        swal
-          .fire({
-            title: '¡Nuevo empleado registrado!',
-            text: 'El empleado se ha registrado correctamente',
-            icon: 'success'
-          })
-          .then(result => {
-            if (result.isConfirmed) {
-              EmployeesFields.value = JSON.parse(
-                JSON.stringify(EmployeesFieldsBlank)
-              )
-            }
-          })
+        swal.fire({
+          title: '¡Nuevo empleado registrado!',
+          text: 'El empleado se ha registrado correctamente',
+          icon: 'success'
+        })
+        isOpenedDialog.value = false
+        EmployeesFields.value = JSON.parse(JSON.stringify(EmployeesFieldsBlank))
       })
     }
 
