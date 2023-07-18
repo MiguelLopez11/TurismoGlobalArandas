@@ -14,6 +14,9 @@ namespace TurismoGlobalArandas.Context
         public DbSet<Employees> Employees { get; set; }
         public DbSet<Customers> Customers { get; set; }
         public DbSet<Providers> Providers { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Sale> Sales { get; set; }
+        public DbSet<Habitation> Habitations { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
