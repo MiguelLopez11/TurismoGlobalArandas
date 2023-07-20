@@ -9,7 +9,7 @@ namespace TurismoGlobalArandas.Models
         [Required]
         public string Invoice { get; set; }
         [Required]
-        public int Ages { get; set; }
+        public string Ages { get; set; }
 
         [Required]
         public int Adults { get; set; }
