@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230718190649_Sale_models")]
+    partial class Sale_models
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -183,30 +186,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.Destinations", b =>
-                {
-                    b.Property<int>("DestinationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DestinationId"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("DestinationId");
-
-                    b.ToTable("Destinations");
-                });
-
             modelBuilder.Entity("TurismoGlobalArandas.Models.Employees", b =>
                 {
                     b.Property<int>("EmployeeId")
@@ -250,7 +229,7 @@ namespace TurismoGlobalArandas.Migrations
                     b.ToTable("Employees");
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.Habitations", b =>
+            modelBuilder.Entity("TurismoGlobalArandas.Models.Habitation", b =>
                 {
                     b.Property<int>("HabitationId")
                         .ValueGeneratedOnAdd()
@@ -271,9 +250,6 @@ namespace TurismoGlobalArandas.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<int>("Minors")
                         .HasColumnType("int");
 
@@ -283,33 +259,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasKey("HabitationId");
 
                     b.ToTable("Habitations");
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.Hotels", b =>
-                {
-                    b.Property<int>("HotelId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("HotelId"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DestinationId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("HotelId");
-
-                    b.ToTable("Hotels");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Providers", b =>
@@ -337,7 +286,7 @@ namespace TurismoGlobalArandas.Migrations
                     b.ToTable("Providers");
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.Reservations", b =>
+            modelBuilder.Entity("TurismoGlobalArandas.Models.Reservation", b =>
                 {
                     b.Property<int>("ReservationId")
                         .ValueGeneratedOnAdd()
@@ -355,9 +304,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("Hotel")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Observation")
                         .IsRequired()
@@ -388,9 +334,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("CodeVoucher")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("NumberHabitations")
                         .HasColumnType("int");
@@ -552,7 +495,7 @@ namespace TurismoGlobalArandas.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.Reservations", b =>
+            modelBuilder.Entity("TurismoGlobalArandas.Models.Reservation", b =>
                 {
                     b.HasOne("TurismoGlobalArandas.Models.Customers", "Customers")
                         .WithMany()
@@ -571,7 +514,7 @@ namespace TurismoGlobalArandas.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TurismoGlobalArandas.Models.Reservations", "Reservation")
+                    b.HasOne("TurismoGlobalArandas.Models.Reservation", "Reservation")
                         .WithMany()
                         .HasForeignKey("ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)

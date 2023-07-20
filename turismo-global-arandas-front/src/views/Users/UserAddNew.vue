@@ -193,19 +193,14 @@ export default {
     const usersFieldsBlank = ref(JSON.parse(JSON.stringify(usersFields)))
 
     const onSubmit = () => {
-      isOpenDialog.value = false
       createUser(usersFields.value, data => {
-        swal
-          .fire({
-            title: '¡Nuevo empleado registrado!',
-            text: 'El empleado se ha registrado correctamente',
-            icon: 'success'
-          })
-          .then(result => {
-            if (result.isConfirmed) {
-              usersFields.value = JSON.parse(JSON.stringify(usersFieldsBlank))
-            }
-          })
+        swal.fire({
+          title: '¡Nuevo empleado registrado!',
+          text: 'El empleado se ha registrado correctamente',
+          icon: 'success'
+        })
+        isOpenDialog.value = false
+        usersFields.value = JSON.parse(JSON.stringify(usersFieldsBlank))
       })
     }
 
