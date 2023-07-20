@@ -2,7 +2,7 @@
 
 namespace TurismoGlobalArandas.Models
 {
-    public class Habitation
+    public class Habitations
     {
         [Key]
         public int HabitationId { get; set; }
@@ -17,6 +17,7 @@ namespace TurismoGlobalArandas.Models
         public int Minors { get; set; }
         public DateTime SaleDate { get; set; }
         public double Cost { get; set; }
+        public bool IsDeleted { get; set; }
         
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TurismoGlobalArandas.Models
 {
-    public class Reservation
+    public class Reservations
     {
         [Key]
         public int ReservationId { get; set; }
@@ -16,5 +16,6 @@ namespace TurismoGlobalArandas.Models
         public string Destination { get; set; }
         public DateTime TravelDate { get; set; }
         public string Observation { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

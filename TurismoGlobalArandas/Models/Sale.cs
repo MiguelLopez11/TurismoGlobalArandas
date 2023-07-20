@@ -28,6 +28,7 @@ namespace TurismoGlobalArandas.Models
         [ForeignKey("PromoterId")]
         public Employees? Employee { get; set; }
         [ForeignKey("ReservationId")]
-        public Reservation? Reservation  { get; set; }
+        public Reservations? Reservation  { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
