@@ -80,6 +80,22 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/Destinos',
+    name: 'Destinations',
+    component: () => import('../views/Destinations/DestinationList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Destinos/:DestinationId',
+    name: 'Edit-Destination',
+    component: () => import('../views/Destinations/DestinationEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]

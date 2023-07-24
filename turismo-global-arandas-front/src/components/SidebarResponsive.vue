@@ -2,7 +2,7 @@
   <el-menu
     background-color="#FFF"
     text-color="#85838D"
-    active-text-color="#F2F1FC"
+    active-text-color="#FFF"
     class="menu"
   >
     <el-header>
@@ -83,18 +83,25 @@ export default {
         index: '3',
         title: 'Gestion operativo',
         icon: 'bi bi-clipboard-data',
-        submenu: [{
-          index: '3-1',
-          title: 'Clientes',
-          path: '/Clientes',
-          icon: 'bi bi-people'
-        },
-        {
-          index: '3-2',
-          title: 'Proveedores',
-          path: '/Proveedores',
-          icon: 'bi bi-arrow-left-right'
-        }
+        submenu: [
+          {
+            index: '3-1',
+            title: 'Clientes',
+            path: '/Clientes',
+            icon: 'bi bi-people'
+          },
+          {
+            index: '3-2',
+            title: 'Proveedores',
+            path: '/Proveedores',
+            icon: 'bi bi-arrow-left-right'
+          },
+          {
+            index: '3-3',
+            title: 'Destinos',
+            path: '/Destinos',
+            icon: 'bi bi-geo'
+          }
         ]
       },
       {
@@ -131,53 +138,41 @@ export default {
   transition: width 0.5s;
   overflow: auto;
 }
-
-.menu {
-  border-radius: 8px;
+.el-menu{
   padding: 5%;
-}
-
-.el-menu {
-  border-right: none;
 }
 .el-menu-item {
   border-radius: 5px;
 }
-
+.el-menu-item:hover{
+  background-color: #f3f2f8 !important;
+}
 .menu-icon {
-  margin-right: 15px;
+  margin-right: 5%;
   font-size: 17px;
-  font-weight: bold;
   letter-spacing: 0.15px;
 }
 
 .menu-title {
   font-size: 16px;
-  font-weight: bold;
   letter-spacing: 0.15px;
 }
 
 .sub-menu-icon {
-  margin-right: 15px;
+  margin-right: 5%;
   font-size: 18px;
-  font-weight: bold;
   letter-spacing: 0.15px;
 }
 
 .sub-menu-title {
   font-size: 15px;
-  font-weight: bold;
   letter-spacing: 0.15px;
 }
-.sub-menu-title :hover{
-  background-color:#85838D;
-  border-radius: 5px;
-}
-li.el-menu-item.is-active{
-  background-image: linear-gradient(to right, #7367F0, #9C94F4)
+li.el-menu-item.is-active {
+  background-image: linear-gradient(to right, #7367f0, #9c94f4);
 }
 p {
-  color: #85838D;
+  color: #85838d;
   font-size: 16px;
   font-weight: bold;
 }

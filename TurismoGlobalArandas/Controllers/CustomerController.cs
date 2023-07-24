@@ -20,7 +20,7 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult<Customers>> getCustomers()
         {
             var customers = await _context.Customers
-                .Where(w => !w.isDeleted)
+                .Where(w => !w.IsDeleted)
                 .ToListAsync();
             return Ok(customers);
         }
@@ -28,7 +28,7 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getCustomerById(int CustomerId)
         {
             var customer = await _context.Customers
-                .Where(w => !w.isDeleted)
+                .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.CustomerId == CustomerId);
             if (customer == null)
             {
@@ -59,7 +59,7 @@ namespace TurismoGlobalArandas.Controllers
             customerOld.Name = customers.Name;
             customerOld.Lastname = customers.Lastname;
             customerOld.PhoneNumber = customers.PhoneNumber;
-            customerOld.isDeleted = customers.isDeleted;
+            customerOld.IsDeleted = customers.IsDeleted;
 
             _context.Customers.Update(customerOld);
             await _context.SaveChangesAsync();
@@ -75,7 +75,7 @@ namespace TurismoGlobalArandas.Controllers
                 return NotFound();
             }
 
-            customer.isDeleted = true;
+            customer.IsDeleted = true;
             _context.Customers.Update(customer);
             await _context.SaveChangesAsync();
             return Ok("Cliente archivado");

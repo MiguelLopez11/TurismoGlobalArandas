@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TurismoGlobalArandas.Models
 {
@@ -10,6 +11,9 @@ namespace TurismoGlobalArandas.Models
         public int DestinationId { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
+
+        [ForeignKey("DestinationId")]
+        public Destinations? Destination { get; set; }
 
     }
 }
