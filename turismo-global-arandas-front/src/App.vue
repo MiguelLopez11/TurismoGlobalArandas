@@ -10,7 +10,7 @@
       <el-main class="p-3 mt-5">
         <el-row align="middle" justify="center" :gutter="25">
           <el-col :span="24">
-              <router-view />
+            <router-view />
           </el-col>
         </el-row>
       </el-main>

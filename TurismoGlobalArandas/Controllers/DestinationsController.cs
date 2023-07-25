@@ -8,10 +8,10 @@ namespace TurismoGlobalArandas.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DestinationController : ControllerBase
+    public class DestinationsController : ControllerBase
     {
         private readonly TurismoGlobalContext _context;
-        public DestinationController(TurismoGlobalContext context)
+        public DestinationsController(TurismoGlobalContext context)
         {
             _context = context;
         }

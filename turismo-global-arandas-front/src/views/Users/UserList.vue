@@ -28,14 +28,16 @@
             empty-message="No se en cuentran registros"
             table-class-name="customize-table"
             buttons-pagination
+            header-text-direction="center"
+            body-text-direction="center"
             border-cell
+            theme-color="#7367F0"
+            :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
             :items="users"
-            :rows-per-page="5"
             :search-field="searchField"
             :search-value="searchValue"
-            theme-color="#6366F1"
           >
             <template #header-actions="header">
               {{ header.text }}

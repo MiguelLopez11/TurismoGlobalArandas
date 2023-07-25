@@ -20,7 +20,7 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult<Providers>> getProviders()
         {
             var providers = await _context.Providers
-                .Where(w => !w.isDeleted)
+                .Where(w => !w.IsDeleted)
                 .ToListAsync();
             return Ok(providers);
         }
@@ -28,7 +28,7 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getProviderById(int ProviderId)
         {
             var provider = await _context.Providers
-                .Where(w => !w.isDeleted)
+                .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.ProviderId == ProviderId);
             if (provider == null)
             {
@@ -59,7 +59,7 @@ namespace TurismoGlobalArandas.Controllers
             ProviderOld.Name = Provider.Name;
             ProviderOld.Email = Provider.Email;
             ProviderOld.PhoneNumber = Provider.PhoneNumber;
-            ProviderOld.isDeleted = Provider.isDeleted;
+            ProviderOld.IsDeleted = Provider.IsDeleted;
 
             _context.Providers.Update(ProviderOld);
             await _context.SaveChangesAsync();
@@ -75,7 +75,7 @@ namespace TurismoGlobalArandas.Controllers
                 return NotFound();
             }
 
-            provider.isDeleted = true;
+            provider.IsDeleted = true;
             _context.Providers.Update(provider);
             await _context.SaveChangesAsync();
             return Ok("Proveedor archivado");

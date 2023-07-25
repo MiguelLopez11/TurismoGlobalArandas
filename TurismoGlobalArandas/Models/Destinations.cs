@@ -6,8 +6,9 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int DestinationId { get; set; }
+        [Required]
         public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public bool IsDeleted { get; set; }
 
     }

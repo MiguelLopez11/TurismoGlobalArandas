@@ -9,7 +9,7 @@ namespace TurismoGlobalArandas.Models
         public string Name { get; set; } = string.Empty;
         public string Lastname { get; set; }
         public string PhoneNumber { get; set; }
-        public bool isDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
 
     }
