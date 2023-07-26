@@ -8,7 +8,7 @@ namespace UConnect.Entities
     {
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
-        public int? EmployeeId { get; set; }
+        public int? EmployeeId { get; set; } = null;
 
         [ForeignKey("EmployeeId")]
         public Employees? Employee { get; set; }

@@ -1,12 +1,12 @@
 <template>
-  <destination-add-new />
+<hotels-add-new />
   <el-card>
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar Destino..."
+          placeholder="Buscar Hotel..."
         />
       </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
@@ -14,9 +14,9 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddDestination = !isAddDestination"
+          @click="isAddHotel = !isAddHotel"
         >
-          <i> Nuevo destino </i>
+          <i> Nuevo Hotel </i>
         </el-button>
       </el-col>
     </el-row>
@@ -35,7 +35,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="destinations"
+            :items="hotels"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -59,7 +59,7 @@
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteDestination(items.destinationId)"
+                      @click="onDeleteHotel(items.hotelId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -75,14 +75,14 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import DestinationServices from '@/Services/Destinations.Services'
-import DestinationAddNew from './DestinationAddNew.vue'
+import HotelsServices from '@/Services/Hotels.Services'
+import HotelsAddNew from './HotelsAddNew.vue'
 
 export default {
-  components: { DestinationAddNew },
+  components: { HotelsAddNew },
   setup () {
-    const { getDestinations, deleteDestination } = DestinationServices()
-    const destinations = ref([])
+    const { getHotels, deleteHotel } = HotelsServices()
+    const hotels = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -91,45 +91,46 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
-    const isAddDestination = ref(false)
-    provide('addDestination', isAddDestination)
+    const isAddHotel = ref(false)
+    provide('addHotel', isAddHotel)
     const fields = ref([
       { value: 'name', text: 'Nombre' },
+      { value: 'destination.name', text: 'Destino' },
       { value: 'description', text: 'Descripción' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getDestinations(data => {
-      destinations.value = data
+    getHotels(data => {
+      hotels.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getDestinations(data => {
-        destinations.value = data
+      getHotels(data => {
+        hotels.value = data
         isloading.value = false
       })
     }
-    watch(isAddDestination, newValue => {
+    watch(isAddHotel, newValue => {
       if (!newValue) {
         refreshTable()
       }
     })
-    const onDeleteDestination = destinationId => {
+    const onDeleteHotel = hotelId => {
       swal
         .fire({
           title: 'Estás a punto de eliminar un proveedor, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar destino',
+          confirmButtonText: 'Si, eliminar hotel',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteDestination(destinationId, data => {
+            deleteHotel(hotelId, data => {
               swal.fire({
-                title: 'Destino eliminado!',
-                text: 'El destino ha sido eliminado satisfactoriamente .',
+                title: 'hotel eliminado!',
+                text: 'El hotel ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()
@@ -148,10 +149,10 @@ export default {
       searchValue,
       searchField,
       fields,
-      destinations,
-      isAddDestination,
+      hotels,
+      isAddHotel,
       refreshTable,
-      onDeleteDestination
+      onDeleteHotel
     }
   }
 }

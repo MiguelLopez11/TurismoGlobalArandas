@@ -4,10 +4,10 @@ namespace UConnect.Entities.Identity
 {
     public class LoginModel
     {
-        [Required(ErrorMessage = "User Name is required")]
+        [Required(ErrorMessage = "El nombre de usuario es requerido")]
         public string? Username { get; set; }
 
-        [Required(ErrorMessage = "Password is required")]
+        [Required(ErrorMessage = "La contraseña es requerida")]
         public string? Password { get; set; }
     }
 }

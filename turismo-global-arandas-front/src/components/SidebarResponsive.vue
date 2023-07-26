@@ -101,6 +101,12 @@ export default {
             title: 'Destinos',
             path: '/Destinos',
             icon: 'bi bi-geo'
+          },
+          {
+            index: '3-4',
+            title: 'Hoteles',
+            path: '/Hoteles',
+            icon: 'bi bi-building'
           }
         ]
       },
@@ -138,13 +144,13 @@ export default {
   transition: width 0.5s;
   overflow: auto;
 }
-.el-menu{
+.el-menu {
   padding: 5%;
 }
 .el-menu-item {
   border-radius: 5px;
 }
-.el-menu-item:hover{
+.el-menu-item:hover {
   background-color: #f3f2f8 !important;
 }
 .menu-icon {

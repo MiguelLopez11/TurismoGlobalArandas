@@ -45,3 +45,6 @@
     max-height: 25vh; /* Ajusta la altura máxima según tus necesidades */
     overflow-y: auto;
   }
+  .vs__dropdown-toggle{
+    height: 40px;
+  }

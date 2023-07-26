@@ -96,6 +96,14 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/Hoteles',
+    name: 'Hotels',
+    component: () => import('../views/Hotels/HotelsList.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]

@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import DestinationServices from '@/Services/Destination.Services'
+import DestinationServices from '@/Services/Destinations.Services'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject } from 'vue'
 

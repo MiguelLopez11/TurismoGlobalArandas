@@ -20,6 +20,7 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult<Hotels>> getHotels()
         {
             var hotels = await _context.Hotels
+                .Include(i => i.Destination)
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
             return Ok(hotels);
@@ -28,6 +29,7 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getHotelById(int HotelId)
         {
             var hotel = await _context.Hotels
+                .Include(i => i.Destination)
                 .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.HotelId == HotelId);
             if (hotel == null)
