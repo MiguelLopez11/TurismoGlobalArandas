@@ -73,6 +73,15 @@
                 </template>
               </el-dropdown>
             </template>
+            <template #item-name="items">
+              <p>{{ items.employee ? items.employee.name : '' }}</p>
+            </template>
+            <template #item-workStation="items">
+              <p>{{ items.employee ? items.employee.workStation : '' }}</p>
+            </template>
+            <template #item-phoneNumber="items">
+              <p>{{ items.employee ? items.employee.phoneNumber : '' }}</p>
+            </template>
           </EasyDataTable>
         </div>
       </el-col>
@@ -168,10 +177,10 @@ export default {
     const userName = window.sessionStorage.getItem('UserName')
     provide('AddUser', isAddedUser)
     const fields = ref([
-      { value: 'employee.name', text: 'Empleado' },
-      { value: 'employee.workStation', text: 'Puesto de trabajo' },
+      { value: 'name', text: 'Empleado' },
+      { value: 'workStation', text: 'Puesto de trabajo' },
       { value: 'userName', text: 'nombre de usuario' },
-      { value: 'employee.phoneNumber', text: 'Telefono' },
+      { value: 'phoneNumber', text: 'Telefono' },
       { value: 'email', text: 'Correo electronico' },
       { value: 'actions', text: 'Acciones' }
     ])

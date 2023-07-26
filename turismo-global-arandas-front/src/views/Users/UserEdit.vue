@@ -1,10 +1,6 @@
 <template>
   <el-card>
-    <Form
-      ref="EmployeeForm"
-      @submit="onUpdateUser"
-      v-slot="{ errors }"
-    >
+    <Form ref="EmployeeForm" @submit="onUpdateUser" v-slot="{ errors }">
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="username" :rules="validateUsername">
@@ -36,9 +32,6 @@
         </el-col>
         <el-col :span="8">
           <Field name="role">
-            <div>
-              <label>Role</label>
-            </div>
             <el-form-item>
               <v-select
                 v-model="user.roleId"
@@ -47,6 +40,9 @@
                 :options="roles"
                 :reduce="role => role.id"
               >
+                <template #header>
+                  <label>Role</label>
+                </template>
                 <template #search="{ attributes, events }">
                   <input
                     class="vs__search"
@@ -61,9 +57,6 @@
         </el-col>
         <el-col :span="8">
           <Field name="employee">
-            <div>
-              <label>Empleados</label>
-            </div>
             <el-form-item>
               <v-select
                 v-model="user.employeeId"
@@ -72,6 +65,12 @@
                 :options="employees"
                 :reduce="employee => employee.employeeId"
               >
+                <template #header>
+                  <label> Empleado </label>
+                </template>
+                <template #option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
                 <template #search="{ attributes, events }">
                   <input
                     class="vs__search"
