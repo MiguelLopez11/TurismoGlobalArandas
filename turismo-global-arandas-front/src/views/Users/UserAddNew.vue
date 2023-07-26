@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="isOpenDialog" title="Nuevo Usuario" width="80%" center>
     <Form
-      ref="EmployeeForm"
+      ref="UserFormRef"
       as="el-form"
       :validation-schema="validationSchema"
       @submit="onSubmit"
@@ -154,6 +154,7 @@ export default {
   setup () {
     const isOpenDialog = inject('AddUser')
     const swal = inject('$swal')
+    const UserFormRef = ref(null)
     const { createUser } = UserServices()
     const { getEmployees } = EmployeeServices()
     const { getRoles } = RoleServices()
@@ -204,6 +205,7 @@ export default {
         })
         isOpenDialog.value = false
         usersFields.value = JSON.parse(JSON.stringify(usersFieldsBlank))
+        UserFormRef.value.resetForm()
       })
     }
 
@@ -213,7 +215,8 @@ export default {
       employees,
       validationSchema,
       usersFields,
-      roles
+      roles,
+      UserFormRef
     }
   }
 }

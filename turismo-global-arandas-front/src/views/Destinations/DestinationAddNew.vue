@@ -1,6 +1,11 @@
 <template>
   <el-dialog v-model="isOpenDialog" title="Nuevo Destino" width="80%" center>
-    <Form :validation-schema="validationSchema" @submit="onSubmit">
+    <Form
+      ref="DestinationFormRef"
+      as="el-form"
+      :validation-schema="validationSchema"
+      @submit="onSubmit"
+    >
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="name" v-slot="{ value, field, errorMessage }">
@@ -75,6 +80,7 @@ export default {
   setup () {
     const isOpenDialog = inject('addDestination')
     const swal = inject('$swal')
+    const DestinationFormRef = ref(null)
     const { createDestination } = DestinationServices()
     const validationSchema = yup.object({
       name: yup.string().required('Este campo es requerido').label('Nombre')
@@ -85,7 +91,9 @@ export default {
       description: null,
       isDeleted: false
     })
-    const destinationFieldsBlank = ref(JSON.parse(JSON.stringify(destinationFields)))
+    const destinationFieldsBlank = ref(
+      JSON.parse(JSON.stringify(destinationFields))
+    )
 
     const onSubmit = () => {
       createDestination(destinationFields.value, data => {
@@ -95,7 +103,10 @@ export default {
           icon: 'success'
         })
         isOpenDialog.value = false
-        destinationFields.value = JSON.parse(JSON.stringify(destinationFieldsBlank))
+        destinationFields.value = JSON.parse(
+          JSON.stringify(destinationFieldsBlank)
+        )
+        DestinationFormRef.value.resetForm()
       })
     }
 
@@ -103,7 +114,8 @@ export default {
       isOpenDialog,
       onSubmit,
       validationSchema,
-      destinationFields
+      destinationFields,
+      DestinationFormRef
     }
   }
 }

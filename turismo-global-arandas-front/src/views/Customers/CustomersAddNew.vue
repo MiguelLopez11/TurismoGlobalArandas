@@ -1,6 +1,11 @@
 <template>
   <el-dialog v-model="isOpenDialog" title="Nuevo cliente" width="80%" center>
-    <Form :validation-schema="validationSchema" @submit="onSubmit">
+    <Form
+      ref="CustomerFormRef"
+      as="el-form"
+      :validation-schema="validationSchema"
+      @submit="onSubmit"
+    >
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="name" v-slot="{ value, field, errorMessage }">
@@ -99,6 +104,7 @@ export default {
     const isOpenDialog = inject('addCustomer')
     const swal = inject('$swal')
     const { createCustomer } = CustomerServices()
+    const CustomerFormRef = ref(null)
     const validationSchema = yup.object({
       name: yup.string().required('Este campo es requerido').label('Nombre'),
       lastname: yup
@@ -129,6 +135,7 @@ export default {
         })
         isOpenDialog.value = false
         customerFields.value = JSON.parse(JSON.stringify(customerFieldsBlank))
+        CustomerFormRef.value.resetForm()
       })
     }
 
@@ -136,7 +143,8 @@ export default {
       isOpenDialog,
       onSubmit,
       validationSchema,
-      customerFields
+      customerFields,
+      CustomerFormRef
     }
   }
 }

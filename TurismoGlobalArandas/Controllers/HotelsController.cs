@@ -59,7 +59,7 @@ namespace TurismoGlobalArandas.Controllers
             {
                 return BadRequest($"La habitacion con el ID {HotelId} no existe");
             }
-            hotelOld.HotelId = hotel.DestinationId;
+            hotelOld.HotelId = hotel.HotelId;
             hotelOld.Name = hotel.Name;
             hotelOld.DestinationId = hotel.DestinationId;
             hotelOld.Description = hotel.Description;

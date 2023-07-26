@@ -104,6 +104,14 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/Hoteles/:HotelId',
+    name: 'Edit-Hotel',
+    component: () => import('../views/Hotels/HotelsEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]
