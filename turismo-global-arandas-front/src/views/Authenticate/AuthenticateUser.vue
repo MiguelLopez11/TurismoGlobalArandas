@@ -26,6 +26,8 @@
                   </el-row>
                 </template>
                 <Form
+                  ref="AuthenticateFormRef"
+                  as="el-form"
                   :validation-schema="validationSchema"
                   @submit="onAuthenticate"
                 >
@@ -112,6 +114,7 @@ export default {
     const swal = inject('$swal')
     const redirect = useRouter()
     const { LogIn } = AuthenticationServices()
+    const AuthenticateFormRef = ref(null)
     const user = ref({
       username: null,
       password: null
@@ -154,12 +157,14 @@ export default {
             icon: 'error'
           })
         }
+        AuthenticateFormRef.value.resetForm()
       })
     }
 
     return {
       user,
       validationSchema,
+      AuthenticateFormRef,
       onAuthenticate
     }
   }

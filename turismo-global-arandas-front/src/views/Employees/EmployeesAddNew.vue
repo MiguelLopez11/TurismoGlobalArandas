@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="isOpenedDialog" title="Nuevo Empleado" width="80%" center>
     <Form
-      ref="EmployeeForm"
+      ref="EmployeeFormRef"
       as="el-form"
       :validation-schema="validationSchema"
       @submit="onSubmit"
@@ -155,6 +155,7 @@ export default {
   setup () {
     const isOpenedDialog = inject('AddEmployee')
     const swal = inject('$swal')
+    const EmployeeFormRef = ref(null)
     const { createEmployee } = EmployeeServices()
     const validationSchema = yup.object({
       name: yup.string().required().label('Nombre'),
@@ -187,6 +188,7 @@ export default {
         })
         isOpenedDialog.value = false
         EmployeesFields.value = JSON.parse(JSON.stringify(EmployeesFieldsBlank))
+        EmployeeFormRef.value.resetForm()
       })
     }
 
@@ -194,7 +196,8 @@ export default {
       isOpenedDialog,
       onSubmit,
       validationSchema,
-      EmployeesFields
+      EmployeesFields,
+      EmployeeFormRef
     }
   }
 }

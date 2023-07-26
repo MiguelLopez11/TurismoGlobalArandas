@@ -1,6 +1,11 @@
 <template>
   <el-dialog v-model="isOpenDialog" title="Nuevo Proveedor" width="80%" center>
-    <Form :validation-schema="validationSchema" @submit="onSubmit">
+    <Form
+      ref="ProviderFormRef"
+      as="el-form"
+      :validation-schema="validationSchema"
+      @submit="onSubmit"
+    >
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="name" v-slot="{ value, field, errorMessage }">
@@ -98,6 +103,7 @@ export default {
   setup () {
     const isOpenDialog = inject('addProvider')
     const swal = inject('$swal')
+    const ProviderFormRef = ref(null)
     const { createProvider } = ProviderServices()
     const validationSchema = yup.object({
       name: yup.string().required('Este campo es requerido').label('Nombre'),
@@ -130,6 +136,7 @@ export default {
         })
         isOpenDialog.value = false
         providerFields.value = JSON.parse(JSON.stringify(providerFieldsBlank))
+        ProviderFormRef.value.resetForm()
       })
     }
 
@@ -137,7 +144,8 @@ export default {
       isOpenDialog,
       onSubmit,
       validationSchema,
-      providerFields
+      providerFields,
+      ProviderFormRef
     }
   }
 }
