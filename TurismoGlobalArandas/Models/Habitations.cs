@@ -16,7 +16,7 @@ namespace TurismoGlobalArandas.Models
         [Required]
         public int Minors { get; set; }
         public DateTime SaleDate { get; set; }
-        public double Cost { get; set; }
+        public double?  Cost { get; set; }
         public bool IsDeleted { get; set; }
         
     }
