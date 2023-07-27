@@ -62,48 +62,61 @@ export default {
       },
       {
         index: '2',
-        title: 'Gestor Administrativo',
+        title: 'Gestión de Usuarios',
         icon: 'bi bi-card-checklist',
         submenu: [
           {
             index: '2-1',
-            title: 'Empleados',
-            path: '/Empleados',
-            icon: 'bi bi-file-person'
-          },
-          {
-            index: '2-2',
             title: 'Usuarios',
             path: '/Usuarios',
             icon: 'bi bi-person'
+          },
+          {
+            index: '2-2',
+            title: 'Roles',
+            path: '/',
+            icon: 'bi bi-person-lock'
           }
         ]
       },
       {
         index: '3',
-        title: 'Gestion operativo',
-        icon: 'bi bi-clipboard-data',
+        title: 'Gestión de Empleados',
+        icon: 'bi bi-person-fill-lock',
         submenu: [
           {
             index: '3-1',
+            title: 'Empleados',
+            path: '/Empleados',
+            icon: 'bi bi-file-person'
+          }
+        ]
+      },
+      {
+        index: '4',
+        title: 'Gestión operacional',
+        icon: 'bi bi-clipboard-data',
+        submenu: [
+          {
+            index: '4-1',
             title: 'Clientes',
             path: '/Clientes',
             icon: 'bi bi-people'
           },
           {
-            index: '3-2',
+            index: '4-2',
             title: 'Proveedores',
             path: '/Proveedores',
             icon: 'bi bi-arrow-left-right'
           },
           {
-            index: '3-3',
+            index: '4-3',
             title: 'Destinos',
             path: '/Destinos',
             icon: 'bi bi-geo'
           },
           {
-            index: '3-4',
+            index: '4-4',
             title: 'Hoteles',
             path: '/Hoteles',
             icon: 'bi bi-building'
@@ -111,10 +124,17 @@ export default {
         ]
       },
       {
-        index: '4',
-        title: 'Acerca de',
-        path: '/acerca-de',
-        icon: 'el-icon-info'
+        index: '5',
+        title: 'Gestion de ventas',
+        icon: 'bi bi-cash',
+        submenu: [
+          {
+            index: '5-1',
+            title: 'Reservaciones',
+            path: '/Reservaciones',
+            icon: 'bi bi-journal-bookmark'
+          }
+        ]
       },
       {
         index: '5',
