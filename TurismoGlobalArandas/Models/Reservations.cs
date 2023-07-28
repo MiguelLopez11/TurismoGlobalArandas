@@ -7,17 +7,22 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int ReservationId { get; set; }
-        [Required]
-        public string TypeReservationId {get;set;}
-        [Required]
         public string ReservationInvoice {get;set;}
-        public int CustomerId { get;set; }
-        public int HotelId { get; set; }
         public DateTime TravelDate { get; set; }
         public string TypeHabitation { get; set; }
         public string Observations { get; set; }
+        public int TypeReservationId {get;set;}
+        public DateTime DateSale { get; set; }
+        public string Promoter { get; set; }
+        public string PaymentPeriod { get; set; }
+        public DateTime PaymentLimitDate { get; set; }
+        public int EmployeeId { get; set; } 
+        public int CustomerId { get;set; }
+        public int HotelId { get; set; }
         public bool IsDeleted { get; set; }
 
+        [ForeignKey("EmployeeId")]
+        public Employees? Employees { get; set; }
         [ForeignKey("CustomerId")]
         public Customers? Customers { get; set; }
         [ForeignKey("HotelId")]
