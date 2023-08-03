@@ -22,6 +22,8 @@ namespace TurismoGlobalArandas.Context
         public DbSet<Sale> Sales { get; set; }
         public DbSet<SingleRate> SingleRate { get; set; }
         public DbSet<TypeReservation> TypeReservations { get; set; }
+        public DbSet<CategoryReservations> CategoryReservations { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

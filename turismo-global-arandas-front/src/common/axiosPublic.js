@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const axiosPublic = axios.create({
-  baseURL: 'https://www.turismoglobalarandasservices.somee.com/api/',
+  baseURL: 'https://localhost:7207/api/',
   headers: {
     'Content-Type': 'application/json'
   }

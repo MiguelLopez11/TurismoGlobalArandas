@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230803190547_CategoryReservations")]
+    partial class CategoryReservations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,7 +177,12 @@ namespace TurismoGlobalArandas.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("int");
+
                     b.HasKey("CategoryReservationId");
+
+                    b.HasIndex("ReservationId");
 
                     b.ToTable("CategoryReservations");
                 });
@@ -396,9 +404,6 @@ namespace TurismoGlobalArandas.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationId"));
 
-                    b.Property<int?>("CategoryReservationId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
@@ -462,13 +467,9 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("ReservationId");
 
-                    b.HasIndex("CategoryReservationId");
-
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("EmployeeId");
-
-                    b.HasIndex("HabitationsReservationId");
 
                     b.HasIndex("HotelId");
 
@@ -704,6 +705,17 @@ namespace TurismoGlobalArandas.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("TurismoGlobalArandas.Models.CategoryReservations", b =>
+                {
+                    b.HasOne("TurismoGlobalArandas.Models.Reservations", "Reservations")
+                        .WithMany()
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reservations");
+                });
+
             modelBuilder.Entity("TurismoGlobalArandas.Models.HabitationsReservation", b =>
                 {
                     b.HasOne("TurismoGlobalArandas.Models.Habitations", "Habitations")
@@ -728,10 +740,6 @@ namespace TurismoGlobalArandas.Migrations
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Reservations", b =>
                 {
-                    b.HasOne("TurismoGlobalArandas.Models.CategoryReservations", "CategoryReservation")
-                        .WithMany()
-                        .HasForeignKey("CategoryReservationId");
-
                     b.HasOne("TurismoGlobalArandas.Models.Customers", "Customers")
                         .WithMany()
                         .HasForeignKey("CustomerId");
@@ -740,19 +748,17 @@ namespace TurismoGlobalArandas.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
-                    b.HasOne("TurismoGlobalArandas.Models.HabitationsReservation", "HabitationsReservation")
-                        .WithMany()
-                        .HasForeignKey("HabitationsReservationId");
-
                     b.HasOne("TurismoGlobalArandas.Models.Hotels", "Hotels")
                         .WithMany()
                         .HasForeignKey("HotelId");
 
-                    b.HasOne("TurismoGlobalArandas.Models.TypeReservation", "TypeReservation")
+                    b.HasOne("TurismoGlobalArandas.Models.HabitationsReservation", "HabitationsReservation")
                         .WithMany()
                         .HasForeignKey("TypeReservationId");
 
-                    b.Navigation("CategoryReservation");
+                    b.HasOne("TurismoGlobalArandas.Models.TypeReservation", "TypeReservation")
+                        .WithMany()
+                        .HasForeignKey("TypeReservationId");
 
                     b.Navigation("Customers");
 
