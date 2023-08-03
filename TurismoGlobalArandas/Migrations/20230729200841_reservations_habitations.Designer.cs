@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230729200841_reservations_habitations")]
+    partial class reservations_habitations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -300,13 +303,10 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("ReservationInvoice")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RevertationId")
+                        .HasColumnType("int");
 
                     b.HasKey("HabitationsReservationId");
-
-                    b.HasIndex("HabitationId");
 
                     b.ToTable("HabitationsReservations");
                 });
@@ -671,17 +671,6 @@ namespace TurismoGlobalArandas.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.HabitationsReservation", b =>
-                {
-                    b.HasOne("TurismoGlobalArandas.Models.Habitations", "Habitations")
-                        .WithMany()
-                        .HasForeignKey("HabitationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Habitations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Hotels", b =>
