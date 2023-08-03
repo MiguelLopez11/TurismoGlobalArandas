@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TurismoGlobalArandas.Models
 {
@@ -16,5 +17,8 @@ namespace TurismoGlobalArandas.Models
         public int AgesMinors { get; set; }
         public int AgesJuniors { get; set; }
         public bool IsDeleted { get; set; }
+
+        [ForeignKey("RateTypeId")]
+        public RateType? RateTypes { get; set; }
     }
 }
