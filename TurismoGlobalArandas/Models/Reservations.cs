@@ -25,9 +25,9 @@ namespace TurismoGlobalArandas.Models
         public int? CustomerId { get;set; }
         public int? HotelId { get; set; }
         public int? HabitationsReservationId { get; set; }
-        public bool IsDeleted { get; set; }
         public bool InlcudesTrasport { get; set; }
         public bool InlcudesBreakfast { get; set; }
+        public bool IsDeleted { get; set; } 
 
         [ForeignKey("EmployeeId")]
         public Employees? Employees { get; set; }
