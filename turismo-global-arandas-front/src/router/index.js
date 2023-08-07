@@ -112,6 +112,30 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/Roles',
+    name: 'Roles',
+    component: () => import('../views/Roles/RolesList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Roles/:roleName',
+    name: 'Edit-Role',
+    component: () => import('../views/Roles/RoleEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Reservaciones',
+    name: 'Reservations',
+    component: () => import('../views/Reservations/ReservationsList.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]

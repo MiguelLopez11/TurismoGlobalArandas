@@ -1,12 +1,12 @@
 <template>
-  <destination-add-new />
+  <role-add-new />
   <el-card>
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar Destino..."
+          placeholder="Buscar Roles..."
         />
       </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
@@ -14,9 +14,9 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddDestination = !isAddDestination"
+          @click="isAddRole = !isAddRole"
         >
-          <i> Nuevo destino </i>
+          <i> Nuevo Role </i>
         </el-button>
       </el-col>
     </el-row>
@@ -35,7 +35,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="destinations"
+            :items="roles"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -51,15 +51,14 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-Destination',
-                            params: { DestinationId: items.destinationId }
+                            name: 'Edit-Role',
+                            params: { roleName: items.name }
                           })
                         }
                       "
                       >Editar</el-dropdown-item
                     >
-                    <el-dropdown-item
-                      @click="onDeleteDestination(items.destinationId)"
+                    <el-dropdown-item @click="onDeleteRole(items.id)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -75,14 +74,14 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import DestinationServices from '@/Services/Destinations.Services'
-import DestinationAddNew from './DestinationAddNew.vue'
+import RoleServices from '@/Services/Roles.Services'
+import RoleAddNew from './RoleAddNew.vue'
 
 export default {
-  components: { DestinationAddNew },
+  components: { RoleAddNew },
   setup () {
-    const { getDestinations, deleteDestination } = DestinationServices()
-    const destinations = ref([])
+    const { getRoles, deleteRole } = RoleServices()
+    const roles = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -91,33 +90,32 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
-    const isAddDestination = ref(false)
-    provide('addDestination', isAddDestination)
+    const isAddRole = ref(false)
+    provide('addDestination', isAddRole)
     const fields = ref([
       { value: 'name', text: 'Nombre' },
-      { value: 'description', text: 'Descripción' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getDestinations(data => {
-      destinations.value = data
+    getRoles(data => {
+      roles.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getDestinations(data => {
-        destinations.value = data
+      getRoles(data => {
+        roles.value = data
         isloading.value = false
       })
     }
-    watch(isAddDestination, newValue => {
+    watch(isAddRole, newValue => {
       if (!newValue) {
         refreshTable()
       }
     })
-    const onDeleteDestination = destinationId => {
+    const onDeleteRole = roleId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar un destino, ¿Estas seguro?',
+          title: 'Estás a punto de eliminar un role, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
@@ -126,10 +124,10 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteDestination(destinationId, data => {
+            deleteRole(roleId, data => {
               swal.fire({
-                title: 'Destino eliminado!',
-                text: 'El destino ha sido eliminado satisfactoriamente .',
+                title: 'Role eliminado!',
+                text: 'El role ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()
@@ -148,10 +146,10 @@ export default {
       searchValue,
       searchField,
       fields,
-      destinations,
-      isAddDestination,
+      roles,
+      isAddRole,
       refreshTable,
-      onDeleteDestination
+      onDeleteRole
     }
   }
 }

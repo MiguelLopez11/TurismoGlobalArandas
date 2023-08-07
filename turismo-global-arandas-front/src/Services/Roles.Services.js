@@ -11,13 +11,13 @@ export default function RoleServices () {
       callback(response.data)
     })
   }
-  const createRole = (data, callback) => {
-    axiosPrivate.post('/Roles', data).then((response) => {
+  const createRole = (name, callback) => {
+    axiosPrivate.post(`/Roles/${name}`).then((response) => {
       callback(response.data)
     })
   }
-  const updateRole = (data, callback) => {
-    axiosPrivate.put(`/Roles/${data.name}`, data).then((response) => {
+  const updateRole = (name, oldName, callback) => {
+    axiosPrivate.put(`/Roles/${name}/${oldName}`).then((response) => {
       callback(response.data)
     })
   }

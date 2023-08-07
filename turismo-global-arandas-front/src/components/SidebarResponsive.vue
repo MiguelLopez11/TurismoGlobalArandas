@@ -74,7 +74,7 @@ export default {
           {
             index: '2-2',
             title: 'Roles',
-            path: '/',
+            path: '/Roles',
             icon: 'bi bi-person-lock'
           }
         ]

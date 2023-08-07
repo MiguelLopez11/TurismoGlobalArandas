@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <Form v-slot="{ errors }" @submit="onUpdateProvider">
+    <Form v-slot="{ errors }" @submit="onUpdateRole">
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="name" :rules="validateName" as="text">
@@ -9,24 +9,12 @@
                 <label> Nombre </label>
               </div>
               <el-input
-                placeholder="Ingresa el nombre del destino"
+                placeholder="Ingresa el nombre del role"
                 size="large"
-                v-model="destination.name"
+                v-model="role.name"
               />
             </el-form-item>
           </Field>
-        </el-col>
-        <el-col :span="8">
-            <el-form-item>
-              <div>
-                <label> Descripción </label>
-              </div>
-              <el-input
-                placeholder="Ingresa una descripción del destino"
-                size="large"
-                v-model="destination.description"
-              />
-            </el-form-item>
         </el-col>
       </el-row>
       <el-divider />
@@ -47,7 +35,7 @@
             size="large"
             @click="
               () => {
-                $router.push('/Destinos')
+                $router.push('/Roles')
               }
             "
             >Cancelar</el-button
@@ -59,44 +47,44 @@
 </template>
 
 <script>
-import DestinationServices from '@/Services/Destinations.Services'
+import RoleServices from '@/Services/Roles.Services'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject } from 'vue'
 
 export default {
   setup () {
-    const { getDestination, updateDestination } = DestinationServices()
-    const destination = ref({})
+    const { getRole, updateRole } = RoleServices()
+    const role = ref({})
     const router = useRoute()
     const redirect = useRouter()
     const swal = inject('$swal')
-    getDestination(router.params.DestinationId, data => {
-      destination.value = data
+    getRole(router.params.roleName, data => {
+      role.value = data
     })
-    const onUpdateProvider = () => {
-      updateDestination(destination.value, data => {
+    const onUpdateRole = () => {
+      updateRole(router.params.roleName, role.value.name, data => {
         swal
           .fire({
-            title: 'Destino modificado correctamente',
-            text: 'El destino se ha modificado satisfactoriamente.',
+            title: 'Role modificado correctamente',
+            text: 'El role se ha modificado satisfactoriamente.',
             icon: 'success'
           })
           .then(result => {
             if (result.isConfirmed) {
-              redirect.push('/Destinos')
+              redirect.push('/Roles')
             }
           })
       })
     }
     const validateName = () => {
-      if (!destination.value.name) {
+      if (!role.value.name) {
         return 'Este campo es requerido'
       }
       return true
     }
     return {
-      destination,
-      onUpdateProvider,
+      role,
+      onUpdateRole,
       validateName
     }
   }
