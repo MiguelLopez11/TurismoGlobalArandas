@@ -32,42 +32,43 @@ namespace UConnect.Controllers
             var roles = await _roleManager.Roles.ToListAsync();
             return Ok(roles);
         }
-        [HttpGet("{RoleName}")]
-        public async Task<IActionResult> GetRoles(string RoleName)
+        [HttpGet("{Name}")]
+        public async Task<IActionResult> GetRoles(string Name)
         {
             var role = await _roleManager.Roles
-                .FirstOrDefaultAsync(f => f.Name == RoleName);
+                .FirstOrDefaultAsync(f => f.Name == Name);
             if (role == null)
             {
                 return NotFound();
             }
             return Ok(role);
         }
-        [HttpPost]
-        public async Task<IActionResult> postRole(string RoleName)
+        [HttpPost("{Name}")]
+        public async Task<IActionResult> postRole(string Name)
         {
-            if (!await _roleManager.RoleExistsAsync(RoleName))
-                await _roleManager.CreateAsync(new IdentityRole(RoleName));
+            if (!await _roleManager.RoleExistsAsync(Name))
+                await _roleManager.CreateAsync(new IdentityRole(Name));
             return Ok("Role creado correctamente"); 
         }
-        [HttpPut("{RoleName}")]
-        public async Task<IActionResult> putRole(string RoleName, string newRoleName)
+        [HttpPut("{Name}/{newRoleName}")]
+        public async Task<IActionResult> putRole(string Name, string newRoleName)
         {
-            if (!await _roleManager.RoleExistsAsync(RoleName))
+            if (!await _roleManager.RoleExistsAsync(Name))
             {
                 return NotFound();
             }
-            var role = await _roleManager.FindByNameAsync(RoleName);
+            var role = await _roleManager.FindByNameAsync(Name);
                role.Name= newRoleName;
             await _roleManager.UpdateAsync(role);
 
             return Ok("Role modificado correctamente");
 
         }
-        [HttpDelete("{RoleName}")]
-        public async Task<IActionResult> DeleteUser(string RoleName)
+        [HttpDelete("{RoleId}")]
+        public async Task<IActionResult> DeleteUser(string RoleId)
         {
-            var role = await _roleManager.Roles.FirstOrDefaultAsync(w => w.Name == RoleName);
+            var role = await _roleManager.Roles
+                .FirstOrDefaultAsync(w => w.Id == RoleId);
             if (role == null)
             {
                 return BadRequest();
