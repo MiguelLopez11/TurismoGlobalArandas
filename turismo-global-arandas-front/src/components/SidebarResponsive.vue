@@ -133,6 +133,18 @@ export default {
             title: 'Reservaciones',
             path: '/Reservaciones',
             icon: 'bi bi-journal-bookmark'
+          },
+          {
+            index: '5-2',
+            title: 'Tipos de Reservaciones',
+            path: '/TiposReservaciones',
+            icon: 'bi bi-arrow-down-up'
+          },
+          {
+            index: '5-3',
+            title: 'Categorías de Reservaciones',
+            path: '/CategoriaReservaciones',
+            icon: 'bi bi-bezier2'
           }
         ]
       },
