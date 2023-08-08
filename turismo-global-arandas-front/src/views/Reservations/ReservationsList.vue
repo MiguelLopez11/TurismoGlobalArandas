@@ -16,7 +16,9 @@
           color="#7367F0"
           @click="
             () => {
-              isAddedEmployee = !isAddedEmployee
+              $router.push({
+                name: 'Reservations-AddNew'
+              })
             }
           "
         >

@@ -1,25 +1,20 @@
 <template>
-  <el-container>
-    <el-aside v-if="Token">
-      <Sidebar :showSidebar="showSidebar" />
+  <el-container class="app-container">
+    <el-aside v-if="Token" class="responsive-sidebar">
+      <Sidebar />
     </el-aside>
     <el-container>
       <el-header v-if="Token" class="header-home">
-        <Navbar @toggleSidebar="toggleSidebar" />
+        <Navbar />
       </el-header>
-      <el-main class="p-3 mt-5">
-        <el-row align="middle" justify="center" :gutter="25">
-          <el-col :span="24">
-            <router-view />
-          </el-col>
-        </el-row>
+      <el-main class="main-content">
+        <router-view />
       </el-main>
     </el-container>
   </el-container>
 </template>
 
 <script>
-import { ref } from 'vue'
 import Navbar from './components/NavbarResponsive.vue'
 import Sidebar from './components/SidebarResponsive.vue'
 
@@ -29,16 +24,10 @@ export default {
     Sidebar
   },
   setup () {
-    const showSidebar = ref(true)
     const Token = window.sessionStorage.getItem('Token')
-    const toggleSidebar = () => {
-      showSidebar.value = !showSidebar.value
-    }
 
     return {
-      showSidebar,
-      Token,
-      toggleSidebar
+      Token
     }
   }
 }
@@ -50,22 +39,47 @@ export default {
 @import '@/Css/Easy-data-table.css';
 @import 'vue-select/dist/vue-select.css';
 
-html {
+/* Ensure a full-height layout */
+html, body, #app {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
   background-color: #e6eef9;
+  flex-direction: column;
 }
-body {
-  background-color: #e6eef9;
+
+/* Set the container to full height */
+.app-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
+
 .el-aside {
-  height: 100vh;
-  width: 20% !important;
+  width: 20%;
   background-color: #fff;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+  flex: 0 0 20%;
+  min-height: 0;
+  overflow-y: auto;
 }
+
 .el-main {
   background-color: #e6eef9;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow-y: auto;
 }
-.el-header.header-home {
-  padding: 1rem;
+
+/* ... (other styles) */
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .responsive-sidebar {
+    width: 0;
+    flex: 0 0 0;
+  }
 }
 </style>

@@ -138,6 +138,14 @@ const routes = [
     }
   },
   {
+    path: '/Reservaciones/Nueva-Reservacion',
+    name: 'Reservations-AddNew',
+    component: () => import('../views/Reservations/ReservationAddNew.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/TiposReservaciones',
     name: 'TypeReservations',
     component: () => import('../views/TypeReservations/TypeReservationList.vue'),
