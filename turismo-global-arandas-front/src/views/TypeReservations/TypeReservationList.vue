@@ -1,26 +1,22 @@
 <template>
-  <!-- <reservations-add-new /> -->
+  <TypeReservationAddNew />
   <el-card>
     <el-row :gutter="25" justify="end">
-      <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
+      <el-col class="m-1" :xs="24" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar reservación..."
+          placeholder="Buscar tipo de reservación..."
         />
       </el-col>
-      <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
+      <el-col class="m-1" :xs="24" :sm="8" :md="6" :xl="4" :lg="5">
         <el-button
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="
-            () => {
-              isAddedEmployee = !isAddedEmployee
-            }
-          "
+          @click="isAddedTypeReservation = !isAddedTypeReservation"
         >
-          <i> Agregar reservación </i>
+          <i> Agregar tipo de reservación </i>
         </el-button>
       </el-col>
     </el-row>
@@ -39,7 +35,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="reservations"
+            :items="typeReservations"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -55,15 +51,15 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-reservations',
-                            params: { EmployeeId: items.employeeId }
+                            name: 'Edit-TypeReservation',
+                            params: { TypeReservationId: items.typeReservationId }
                           })
                         }
                       "
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteEmployee(items.employeeId)"
+                      @click="onDeleteTypeReservation(items.typeReservationId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -79,14 +75,14 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import ReservationServices from '@/Services/Reservations.Services'
-// import EmployeesAddNew from './EmployeesAddNew.vue'
+import TypeReservationServices from '@/Services/TypeReservation.Services'
+import TypeReservationAddNew from './TypeReservationAddNew.vue'
 
 export default {
-  //   components: { EmployeesAddNew },
+  components: { TypeReservationAddNew },
   setup () {
-    const { getReservations, deleteReservation } = ReservationServices()
-    const reservations = ref([])
+    const { getTypeReservations, deleteTypeReservation } = TypeReservationServices()
+    const typeReservations = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -95,49 +91,45 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
-    const isAddedEmployee = ref(false)
-    provide('AddEmployee', isAddedEmployee)
+    const isAddedTypeReservation = ref(false)
+    provide('AddTypeReservation', isAddedTypeReservation)
     const fields = ref([
-      { value: 'reservationInvoice', text: 'Folio' },
-      { value: 'travelDate', text: 'Fecha de viaje' },
-      { value: 'workStation', text: 'Puesto de trabajo' },
-      { value: 'address', text: 'Dirección' },
-      { value: 'phoneNumber', text: 'Telefono' },
-      { value: 'salary', text: 'Salario' },
+      { value: 'name', text: 'Nombre' },
+      { value: 'description', text: 'Descripción' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getReservations(data => {
-      reservations.value = data
+    getTypeReservations(data => {
+      typeReservations.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getReservations(data => {
-        reservations.value = data
+      getTypeReservations(data => {
+        typeReservations.value = data
         isloading.value = false
       })
     }
-    watch(isAddedEmployee, newValue => {
+    watch(isAddedTypeReservation, newValue => {
       if (!newValue) {
         refreshTable()
       }
     })
-    const onDeleteEmployee = reservationId => {
+    const onDeleteTypeReservation = typeReservationId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar un Empleado, ¿Estas seguro?',
+          title: 'Estás a punto de eliminar un tipo de reservación, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar empleado',
+          confirmButtonText: 'Si, eliminar tipo de reservación',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteReservation(reservationId, data => {
+            deleteTypeReservation(typeReservationId, data => {
               swal.fire({
-                title: 'Reservación archivada!',
-                text: 'La reservación ha sido archivada satisfactoriamente .',
+                title: 'Tipo de reservación eliminado!',
+                text: 'El tipo de reservasion ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()
@@ -156,10 +148,10 @@ export default {
       searchValue,
       searchField,
       fields,
-      reservations,
-      isAddedEmployee,
+      typeReservations,
+      isAddedTypeReservation,
       refreshTable,
-      onDeleteEmployee
+      onDeleteTypeReservation
     }
   }
 }

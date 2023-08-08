@@ -136,6 +136,38 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/TiposReservaciones',
+    name: 'TypeReservations',
+    component: () => import('../views/TypeReservations/TypeReservationList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/TiposReservaciones/:TypeReservationId',
+    name: 'Edit-TypeReservation',
+    component: () => import('../views/TypeReservations/TypeReservationEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/CategoriaReservaciones',
+    name: 'CategoryReservations',
+    component: () => import('../views/CategoryReservations/CategoryReservationList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/CategoriaReservaciones/:CategoryReservationId',
+    name: 'Edit-CategoryReservation',
+    component: () => import('../views/CategoryReservations/CategoryReservationEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]
