@@ -1,6 +1,6 @@
 <template>
   <TypeReservationAddNew />
-  <el-card>
+  <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col class="m-1" :xs="24" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
@@ -22,52 +22,51 @@
     </el-row>
     <el-row class="mt-3">
       <el-col :span="24">
-        <div class="table-scroll">
-          <EasyDataTable
-            rows-per-page-message="registro por pagina"
-            empty-message="No se en cuentran registros"
-            table-class-name="customize-table"
-            buttons-pagination
-            header-text-direction="center"
-            body-text-direction="center"
-            border-cell
-            theme-color="#7367F0"
-            :rows-per-page="10"
-            :loading="isloading"
-            :headers="fields"
-            :items="typeReservations"
-            :search-field="searchField"
-            :search-value="searchValue"
-          >
-            <template #header-actions="header">
-              {{ header.text }}
-            </template>
-            <template #item-actions="items">
-              <el-dropdown>
-                <span class="bi bi-three-dots-vertical"> </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      @click="
-                        () => {
-                          $router.push({
-                            name: 'Edit-TypeReservation',
-                            params: { TypeReservationId: items.typeReservationId }
-                          })
-                        }
-                      "
-                      >Editar</el-dropdown-item
-                    >
-                    <el-dropdown-item
-                      @click="onDeleteTypeReservation(items.typeReservationId)"
-                      >Eliminar</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
-            </template>
-          </EasyDataTable>
-        </div>
+        <EasyDataTable
+          rows-per-page-message="registro por pagina"
+          empty-message="No se en cuentran registros"
+          table-class-name="customize-table"
+          buttons-pagination
+          header-text-direction="center"
+          body-text-direction="center"
+          border-cell
+          theme-color="#7367F0"
+          :table-height="500"
+          :rows-per-page="10"
+          :loading="isloading"
+          :headers="fields"
+          :items="typeReservations"
+          :search-field="searchField"
+          :search-value="searchValue"
+        >
+          <template #header-actions="header">
+            {{ header.text }}
+          </template>
+          <template #item-actions="items">
+            <el-dropdown>
+              <span class="bi bi-three-dots-vertical"> </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item
+                    @click="
+                      () => {
+                        $router.push({
+                          name: 'Edit-TypeReservation',
+                          params: { TypeReservationId: items.typeReservationId }
+                        })
+                      }
+                    "
+                    >Editar</el-dropdown-item
+                  >
+                  <el-dropdown-item
+                    @click="onDeleteTypeReservation(items.typeReservationId)"
+                    >Eliminar</el-dropdown-item
+                  >
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+          </template>
+        </EasyDataTable>
       </el-col>
     </el-row>
   </el-card>
@@ -81,7 +80,8 @@ import TypeReservationAddNew from './TypeReservationAddNew.vue'
 export default {
   components: { TypeReservationAddNew },
   setup () {
-    const { getTypeReservations, deleteTypeReservation } = TypeReservationServices()
+    const { getTypeReservations, deleteTypeReservation } =
+      TypeReservationServices()
     const typeReservations = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
@@ -117,7 +117,8 @@ export default {
     const onDeleteTypeReservation = typeReservationId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar un tipo de reservación, ¿Estas seguro?',
+          title:
+            'Estás a punto de eliminar un tipo de reservación, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
@@ -157,4 +158,6 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+
+</style>

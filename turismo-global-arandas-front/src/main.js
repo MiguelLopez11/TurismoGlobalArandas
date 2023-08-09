@@ -8,6 +8,7 @@ import { defineRule, Field, ErrorMessage, Form } from 'vee-validate'
 import Vue3EasyDataTable from 'vue3-easy-data-table'
 import { required } from '@vee-validate/rules'
 import vSelect from 'vue-select'
+
 import 'vue3-easy-data-table/dist/style.css'
 import './registerServiceWorker'
 import 'element-plus/dist/index.css'

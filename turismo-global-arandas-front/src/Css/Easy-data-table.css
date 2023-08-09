@@ -1,43 +1,41 @@
 .customize-table {
-    --easy-table-border: 0.5px solid #c9c8cb;
-    --easy-table-row-border: 1.5px solid #c9c8cb;
-  
-    --easy-table-header-font-size: 14px;
-    --easy-table-header-height: 50px;
-    --easy-table-header-font-color: #6f6b7b;
-    --easy-table-header-background-color: #ffffff;
-  
-    --easy-table-header-item-padding: 15px 15px;
-  
-    --easy-table-body-even-row-font-color: #fff;
-    --easy-table-body-even-row-background-color: #c7c8c9;
-  
-    --easy-table-body-row-font-color: #737080;
-    --easy-table-body-row-background-color: #ffffff;
-    --easy-table-body-row-height: 100%;
-    --easy-table-body-row-font-size: 100%;
-  
-    --easy-table-body-row-hover-font-color: #737080;
-    --easy-table-body-row-border-hover: 2px solid #ffffff;
-    --easy-table-body-row-hover-background-color: #ffffff;
-  
-    --easy-table-body-item-padding: 10px 15px;
-  
-    --easy-table-footer-background-color: #ffffff;
-    --easy-table-footer-font-color: #6f6b7b;
-    --easy-table-footer-font-size: 12.5px;
-    --easy-table-footer-padding: 0px 10px;
-    --easy-table-footer-height: 50px;
-  
-    --easy-table-rows-per-page-selector-width: 70px;
-    --easy-table-rows-per-page-selector-option-padding: 10px;
-    --easy-table-rows-per-page-selector-z-index: 1;
+  --easy-table-border: 0.5px solid #c9c8cb;
+  --easy-table-row-border: 1.5px solid #c9c8cb;
 
-    border-radius: 3px;
-  
-  }
-  .table-scroll {
-    min-height: 100%;
-    max-height: 100%; /* Ajusta la altura máxima según tus necesidades */
-    overflow-y: auto;
-  }
+  --easy-table-header-font-size: 14px;
+  --easy-table-header-height: 50px;
+  --easy-table-header-font-color: #6f6b7b;
+  --easy-table-header-background-color: #ffffff;
+
+  --easy-table-header-item-padding: 15px 15px;
+
+  --easy-table-body-even-row-font-color: #fff;
+  --easy-table-body-even-row-background-color: #c7c8c9;
+
+  --easy-table-body-row-font-color: #737080;
+  --easy-table-body-row-background-color: #ffffff;
+  --easy-table-body-row-height: 100%;
+  --easy-table-body-row-font-size: 100%;
+
+  --easy-table-body-row-hover-font-color: #737080;
+  --easy-table-body-row-border-hover: 2px solid #ffffff;
+  --easy-table-body-row-hover-background-color: #ffffff;
+
+  --easy-table-body-item-padding: 10px 15px;
+
+  --easy-table-footer-background-color: #ffffff;
+  --easy-table-footer-font-color: #6f6b7b;
+  --easy-table-footer-font-size: 12.5px;
+  --easy-table-footer-padding: 0px 10px;
+  --easy-table-footer-height: 50px;
+
+  --easy-table-rows-per-page-selector-width: 70px;
+  --easy-table-rows-per-page-selector-option-padding: 10px;
+  --easy-table-rows-per-page-selector-z-index: 1;
+
+  border-radius: 3px;
+}
+div.scrollable-card {
+  max-height: 100%; /* Ajusta la altura máxima según sea necesario */
+  overflow-y: auto; /* Agrega una barra de desplazamiento vertical si el contenido excede la altura máxima */
+}

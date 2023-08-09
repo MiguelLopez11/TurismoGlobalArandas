@@ -1,6 +1,6 @@
 <template>
   <el-container class="app-container">
-    <el-aside v-if="Token" class="responsive-sidebar">
+    <el-aside v-if="Token" class="responsive-sidebar" :style="{ height: windowHeight + 'px' }">
       <Sidebar />
     </el-aside>
     <el-container>
@@ -25,9 +25,23 @@ export default {
   },
   setup () {
     const Token = window.sessionStorage.getItem('Token')
+    const windowHeight = window.innerHeight
 
     return {
+      windowHeight,
       Token
+    }
+  },
+  mounted () {
+    window.addEventListener('resize', this.handleResize)
+  },
+  // eslint-disable-next-line vue/no-deprecated-destroyed-lifecycle
+  beforeDestroy () {
+    window.removeEventListener('resize', this.handleResize)
+  },
+  methods: {
+    handleResize () {
+      this.windowHeight = window.innerHeight
     }
   }
 }
@@ -40,7 +54,9 @@ export default {
 @import 'vue-select/dist/vue-select.css';
 
 /* Ensure a full-height layout */
-html, body, #app {
+html,
+body,
+#app {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -57,11 +73,12 @@ html, body, #app {
 }
 
 .el-aside {
-  width: 20%;
+  width: 20% !important;
   background-color: #fff;
   flex: 0 0 20%;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: auto !important;
+  z-index: 1000;
 }
 
 .el-main {

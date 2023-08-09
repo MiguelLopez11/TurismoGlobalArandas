@@ -1,26 +1,37 @@
 <template>
   <el-card>
-    <el-steps :space="200" :active="1" simple>
-      <el-step title="Datos generales" >
-       <h1>
-        holi
-       </h1>
-        <template #icon>
-            <i id="Icon-Step" class="bi bi-file-earmark-person"></i>
-        </template>
-      </el-step>
-      <el-step title="Step 2"/>
-      <el-step title="Step 3"/>
-    </el-steps>
+    <horizontal-stepper :steps="steps"> </horizontal-stepper>
   </el-card>
 </template>
 
 <script>
-export default {}
+import { shallowRef } from 'vue'
+import HorizontalStepper from 'vue-stepper'
+import StepOne from './StepsWizzard/StepOne.vue'
+export default {
+  components: {
+    HorizontalStepper
+  },
+  setup () {
+    const steps = shallowRef([
+      {
+        icon: 'mail',
+        name: 'first',
+        title: 'Sample title 1',
+        subtitle: 'Subtitle sample',
+        component: StepOne,
+        completed: false
+      }
+    ])
+    return {
+      steps
+    }
+  }
+}
 </script>
 
 <style scoped>
-#Icon-Step{
+#Icon-Step {
   font-size: 150%;
   justify-content: center;
 }

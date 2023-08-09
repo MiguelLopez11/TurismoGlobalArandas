@@ -1,6 +1,6 @@
 <template>
   <CategoryReservationAddNew />
-  <el-card>
+  <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col class="m-1" :xs="24" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input

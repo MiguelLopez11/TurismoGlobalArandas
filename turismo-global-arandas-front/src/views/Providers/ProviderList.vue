@@ -1,6 +1,6 @@
 <template>
   <provider-add-new />
-  <el-card>
+  <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
@@ -158,4 +158,6 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+
+</style>
