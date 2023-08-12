@@ -16,31 +16,34 @@
       </el-row>
     </el-header>
     <el-divider class="m-0"></el-divider>
-    <template v-for="item in menuItems">
-      <el-sub-menu v-if="item.submenu" :index="item.index" :key="item.index">
+    <template v-for="item in menuItems" :key="item.index">
+      <el-sub-menu :index="item.index" >
         <template #title>
           <i :class="item.icon" class="menu-icon"></i>
           <span class="menu-title">{{ item.title }}</span>
         </template>
-        <el-menu-item
-          v-for="subItem in item.submenu"
-          :index="subItem.index"
-          :key="subItem.index"
-          @click="handleMenuItemClick(subItem.path)"
-        >
-          <i :class="subItem.icon" class="sub-menu-icon"></i>
-          <span class="sub-menu-title">{{ subItem.title }}</span>
-        </el-menu-item>
+        <template v-for="subItem in item.submenu">
+          <el-sub-menu v-if="subItem.submenu" :index="subItem.index" :key="subItem.index">
+            <template #title>
+              <i :class="subItem.icon" class="sub-menu-icon"></i>
+              <span class="sub-menu-title">{{ subItem.title }}</span>
+            </template>
+            <el-menu-item
+              v-for="nestedItem in subItem.submenu"
+              :index="nestedItem.index"
+              :key="nestedItem.index"
+              @click="handleMenuItemClick(nestedItem.path)"
+            >
+              <i :class="nestedItem.icon" class="sub-menu-icon"></i>
+              <span class="sub-menu-title">{{ nestedItem.title }}</span>
+            </el-menu-item>
+          </el-sub-menu>
+          <el-menu-item v-else :index="subItem.index" :key="subItem.index" @click="handleMenuItemClick(subItem.path)">
+            <i :class="subItem.icon" class="sub-menu-icon"></i>
+            <span class="sub-menu-title">{{ subItem.title }}</span>
+          </el-menu-item>
+        </template>
       </el-sub-menu>
-      <el-menu-item
-        v-else
-        :index="item.index"
-        :key="item"
-        @click="handleMenuItemClick(item.path)"
-      >
-        <i :class="item.icon" class="menu-icon"></i>
-        <span class="menu-title">{{ item.title }}</span>
-      </el-menu-item>
     </template>
   </el-menu>
 </template>
@@ -131,25 +134,26 @@ export default {
           {
             index: '5-1',
             title: 'Reservaciones',
-            path: '/Reservaciones',
-            icon: 'bi bi-journal-bookmark'
+            icon: 'bi bi-journal-text',
+            submenu: [
+              {
+                index: '5-1-1',
+                title: 'Reservaciones hotelería',
+                path: '/ReservacionesHoteleria',
+                icon: 'bi bi-buildings'
+              }
+            ]
           },
           {
             index: '5-2',
             title: 'Tipos de Reservaciones',
             path: '/TiposReservaciones',
-            icon: 'bi bi-arrow-down-up'
-          },
-          {
-            index: '5-3',
-            title: 'Categorías de Reservaciones',
-            path: '/CategoriaReservaciones',
             icon: 'bi bi-bezier2'
           }
         ]
       },
       {
-        index: '5',
+        index: '6',
         title: 'Contacto',
         path: '/contacto',
         icon: 'el-icon-phone'

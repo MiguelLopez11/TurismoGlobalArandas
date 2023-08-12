@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TurismoGlobalArandas.Models
 {
-    public class Reservations
+    public class ReservationHotel
     {
         [Key]
-        public int ReservationId { get; set; }
+        public int ReservationHotelId { get; set; }
         public string ReservationInvoice {get;set;}
         public DateTime TravelDate { get; set; }
         public string? TypeHabitation { get; set; }
@@ -20,7 +20,6 @@ namespace TurismoGlobalArandas.Models
         public string? PaymentPeriod { get; set; }
         public DateTime? PaymentLimitDate { get; set; }
         public int? TypeReservationId {get;set;}
-        public int? CategoryReservationId {get;set;}
         public int? EmployeeId { get; set; } 
         public int? CustomerId { get;set; }
         public int? HotelId { get; set; }
@@ -37,8 +36,6 @@ namespace TurismoGlobalArandas.Models
         public Hotels? Hotels { get; set; }
         [ForeignKey("TypeReservationId")]
         public TypeReservation? TypeReservation { get; set; }
-        [ForeignKey("CategoryReservationId")]
-        public CategoryReservations? CategoryReservation { get; set; }
         [ForeignKey("HabitationsReservationId")]
         public HabitationsReservation? HabitationsReservation { get; set; }
     }

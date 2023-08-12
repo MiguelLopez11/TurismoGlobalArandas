@@ -17,7 +17,7 @@
           @click="
             () => {
               $router.push({
-                name: 'Reservations-AddNew'
+                name: 'ReservacionesHoteleria-AddNew'
               })
             }
           "
@@ -58,14 +58,14 @@
                         () => {
                           $router.push({
                             name: 'Edit-reservations',
-                            params: { EmployeeId: items.employeeId }
+                            params: { EmployeeId: items.reservationHotelId }
                           })
                         }
                       "
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteEmployee(items.employeeId)"
+                      @click="onDeleteEmployee(items.reservationHotelId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -81,7 +81,7 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import ReservationServices from '@/Services/Reservations.Services'
+import ReservationServices from '@/Services/ReservationHotel.Services'
 // import EmployeesAddNew from './EmployeesAddNew.vue'
 
 export default {
@@ -124,7 +124,7 @@ export default {
         refreshTable()
       }
     })
-    const onDeleteEmployee = reservationId => {
+    const onDeleteEmployee = reservationHotelId => {
       swal
         .fire({
           title: 'Estás a punto de eliminar un Empleado, ¿Estas seguro?',
@@ -136,7 +136,7 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteReservation(reservationId, data => {
+            deleteReservation(reservationHotelId, data => {
               swal.fire({
                 title: 'Reservación archivada!',
                 text: 'La reservación ha sido archivada satisfactoriamente .',

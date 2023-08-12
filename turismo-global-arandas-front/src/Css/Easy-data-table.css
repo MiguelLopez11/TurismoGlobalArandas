@@ -33,7 +33,11 @@
   --easy-table-rows-per-page-selector-option-padding: 10px;
   --easy-table-rows-per-page-selector-z-index: 1;
 
+
   border-radius: 3px;
+}
+.el-card{
+  overflow: visible !important;
 }
 div.scrollable-card {
   max-height: 100%; /* Ajusta la altura máxima según sea necesario */

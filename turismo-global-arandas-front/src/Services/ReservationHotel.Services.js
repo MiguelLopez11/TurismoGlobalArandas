@@ -2,27 +2,27 @@ import { axiosPrivate } from '@/common/axiosPrivate.js'
 
 export default function ReservationServices () {
   const getReservations = (callback) => {
-    axiosPrivate.get('/Reservations').then((response) => {
+    axiosPrivate.get('/ReservationHotel').then((response) => {
       callback(response.data)
     })
   }
-  const getReservation = (reservationId, callback) => {
-    axiosPrivate.get(`/Reservations/${reservationId}`).then((response) => {
+  const getReservation = (reservationHotelId, callback) => {
+    axiosPrivate.get(`/ReservationHotel/${reservationHotelId}`).then((response) => {
       callback(response.data)
     })
   }
   const createReservation = (data, callback) => {
-    axiosPrivate.post('/Reservations', data).then((response) => {
+    axiosPrivate.post('/ReservationHotel', data).then((response) => {
       callback(response.data)
     })
   }
   const updateReservation = (data, callback) => {
-    axiosPrivate.put(`/Reservations/${data.reservationId}`, data).then((response) => {
+    axiosPrivate.put(`/ReservationHotel/${data.reservationHotelId}`, data).then((response) => {
       callback(response.data)
     })
   }
-  const deleteReservation = (reservationId, callback) => {
-    axiosPrivate.delete(`/Reservations/${reservationId}`).then((response) => {
+  const deleteReservation = (reservationHotelId, callback) => {
+    axiosPrivate.delete(`/ReservationHotel/${reservationHotelId}`).then((response) => {
       callback(response.data)
     })
   }
