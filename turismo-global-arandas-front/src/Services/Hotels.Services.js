@@ -11,6 +11,11 @@ export default function HotelsServices () {
       callback(response.data)
     })
   }
+  const getHotelByDestinationId = (destinationId, callback, reject) => {
+    axiosPrivate.get(`/Hotels/Destino/${destinationId}`).then((response) => {
+      callback(response.data)
+    })
+  }
   const createHotel = (data, callback) => {
     axiosPrivate.post('/Hotels', data).then((response) => {
       callback(response.data)
@@ -29,6 +34,7 @@ export default function HotelsServices () {
   return {
     getHotels,
     getHotel,
+    getHotelByDestinationId,
     createHotel,
     updateHotel,
     deleteHotel

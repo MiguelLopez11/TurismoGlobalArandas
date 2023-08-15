@@ -17,7 +17,7 @@
     </el-header>
     <el-divider class="m-0"></el-divider>
     <template v-for="item in menuItems" :key="item.index">
-      <el-sub-menu :index="item.index" >
+      <el-sub-menu v-if="item.submenu" :index="item.index" >
         <template #title>
           <i :class="item.icon" class="menu-icon"></i>
           <span class="menu-title">{{ item.title }}</span>
@@ -44,6 +44,15 @@
           </el-menu-item>
         </template>
       </el-sub-menu>
+      <el-menu-item
+        v-else
+        :index="item.index"
+        :key="item"
+        @click="handleMenuItemClick(item.path)"
+      >
+        <i :class="item.icon" class="menu-icon"></i>
+        <span class="menu-title">{{ item.title }}</span>
+      </el-menu-item>
     </template>
   </el-menu>
 </template>

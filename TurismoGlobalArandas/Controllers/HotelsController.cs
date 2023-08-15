@@ -38,6 +38,16 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(hotel);
         }
+        [HttpGet("Destino/{DestinationId}")]
+        public async Task<ActionResult> getHotelByDestinationId(int DestinationId)
+        {
+            var hotel = await _context.Hotels
+                .Include(i => i.Destination)
+                .Where(w => !w.IsDeleted)
+                .Where(w => w.DestinationId == DestinationId)
+                .ToListAsync();
+            return Ok(hotel);
+        }
         [HttpPost]
         public async Task<ActionResult<Hotels>> PostHotel(Hotels hotel)
         {
