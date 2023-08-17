@@ -57,9 +57,9 @@
           </el-row>
         </el-card>
       </tab-content>
-      <tab-content title="Datos generales" icon="">
+      <tab-content title="Datos generales" icon="bi bi-airplane-engines">
         <el-row :gutter="35">
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item>
               <v-select
                 class="w-100"
@@ -89,7 +89,7 @@
               </v-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <el-form-item>
               <v-select
                 class="w-100"
@@ -118,7 +118,7 @@
               </v-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="8">
             <div class="mb-2">
               <span>Fecha del viaje</span>
             </div>
@@ -133,8 +133,8 @@
           </el-col>
         </el-row>
       </tab-content>
-      <tab-content title="Last step">
-        Yuhuuu! This seems pretty damn simple
+      <tab-content title="Habitaciones">
+        holi
       </tab-content>
     </form-wizard>
   </el-card>
