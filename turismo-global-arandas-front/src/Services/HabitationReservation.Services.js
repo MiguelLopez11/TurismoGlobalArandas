@@ -1,6 +1,6 @@
 import { axiosPrivate } from '@/common/axiosPrivate.js'
 
-export default function HabitationServices () {
+export default function HabitationReservationServices () {
   const getHabitationReservations = (callback) => {
     axiosPrivate.get('/HabitationReservation').then((response) => {
       callback(response.data)

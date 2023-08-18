@@ -11,7 +11,7 @@ namespace TurismoGlobalArandas.Models
         public string? Ages { get; set; }
         public int? Adults { get; set; }
         public int? Minors { get; set; }
-        public DateTime? SaleDate { get; set; }
+        public DateTime? PurchaseDate { get; set; }
         public double?  Cost { get; set; }
         public bool IsDeleted { get; set; }
         

@@ -1,4 +1,5 @@
 <template>
+  <habitation-add-new />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
@@ -13,7 +14,7 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isOpenDialog = !isOpenDialog"
+          @click="isAddHabitation = !isAddHabitation"
         >
           <i> Nueva habitación </i>
         </el-button>
@@ -73,12 +74,12 @@
 </template>
 
 <script>
-import { ref, watch, inject } from 'vue'
+import { ref, watch, inject, provide } from 'vue'
 import HabitationReservationServices from '@/Services/HabitationReservation.Services'
-// import CustomersAddNew from './CustomersAddNew.vue'
+import HabitationAddNew from '../Habitation/HabitationAddNew.vue'
 
 export default {
-//   components: { CustomersAddNew },
+  components: { HabitationAddNew },
   setup () {
     const { getHabitationReservations, deleteHabitationReservation } = HabitationReservationServices()
     const habitationReservations = ref([])
@@ -90,11 +91,14 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
-    const isOpenDialog = ref(false)
+    const isAddHabitation = ref(false)
+    provide('addHabitation', isAddHabitation)
     const fields = ref([
-      { value: 'name', text: 'Nombre' },
-      { value: 'lastname', text: 'Apellidos' },
-      { value: 'phoneNumber', text: 'Telefono' },
+      { value: 'habitations.invoice', text: 'Folio de la habitación' },
+      { value: 'habitations.cost', text: 'Costo' },
+      { value: 'habitations.adults', text: 'Adultos' },
+      { value: 'habitations.minors', text: 'Menores' },
+      { value: 'habitations.purchaseDate', text: 'Fecha de compra' },
       { value: 'actions', text: 'Acciones' }
     ])
     getHabitationReservations(data => {
@@ -108,13 +112,13 @@ export default {
         isloading.value = false
       })
     }
-    watch(isOpenDialog, newValue => {
+    watch(isAddHabitation, newValue => {
       if (!newValue) {
         refreshTable()
       }
     })
     const changeDialog = () => {
-      isOpenDialog.value = !isOpenDialog.value
+      isAddHabitation.value = !isAddHabitation.value
     }
     const onDeleteHabitation = habitationId => {
       swal
@@ -151,7 +155,7 @@ export default {
       searchField,
       fields,
       habitationReservations,
-      isOpenDialog,
+      isAddHabitation,
       refreshTable,
       onDeleteHabitation,
       changeDialog

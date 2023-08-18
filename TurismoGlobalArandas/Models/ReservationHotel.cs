@@ -1,4 +1,4 @@
-﻿    using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TurismoGlobalArandas.Models
@@ -7,26 +7,24 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int ReservationHotelId { get; set; }
-        public string ReservationInvoice {get;set;}
-        public DateTime TravelDate { get; set; }
-        public string? TypeHabitation { get; set; }
-        public int? NumberHabitations { get; set; }
-        public string? PhoneContact { get; set; }
-        public string? Observations { get; set; }
-        public string? GroupCoordinator { get; set; }
-        public string? PhoneCoordinator { get; set; }
-        public DateTime? DateSale { get; set; }
-        public string? Promoter { get; set; }
-        public string? PaymentPeriod { get; set; }
-        public DateTime? PaymentLimitDate { get; set; }
-        public int? TypeReservationId {get;set;}
-        public int? EmployeeId { get; set; } 
-        public int? CustomerId { get;set; }
-        public int? HotelId { get; set; }
-        public int? HabitationsReservationId { get; set; }
-        public bool InlcudesTrasport { get; set; }
-        public bool InlcudesBreakfast { get; set; }
-        public bool IsDeleted { get; set; } 
+        public string? ReservationInvoice { get; set; } = null;
+        public DateTime? TravelDate { get; set; } = null;
+        public string? TypeHabitation { get; set; } = null;
+        public int? NumberHabitations { get; set; } = null;
+        public string? PhoneContact { get; set; } = null;   
+        public string? Observations { get; set; } = null;
+        public string? GroupCoordinator { get; set; } = null;
+        public string? PhoneCoordinator { get; set; } = null;
+        public DateTime? DateSale { get; set; } = null;
+        public string? Promoter { get; set; } = null;
+        public string? PaymentPeriod { get; set; } = null;
+        public DateTime? PaymentLimitDate { get; set; } = null;
+        public int? TypeReservationId { get; set; } = null;
+        public int? EmployeeId { get; set; } = null;
+        public int? CustomerId { get; set; } = null;
+        public int? HotelId { get; set; } = null;
+        public int? HabitationsReservationId { get; set; } = null;
+        public bool IsDeleted { get; set; }
 
         [ForeignKey("EmployeeId")]
         public Employees? Employees { get; set; }

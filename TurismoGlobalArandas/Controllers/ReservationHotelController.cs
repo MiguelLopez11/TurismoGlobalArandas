@@ -18,7 +18,7 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ReservationHotel>> getReservations()
+        public async Task<ActionResult<ReservationHotel>> getReservationsHotel()
         {
             var Reservations = await _context.ReservationHotels
                 .Include(i => i.Employees)
@@ -31,7 +31,7 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpGet("{ReservationHotelId}")]
-        public async Task<ActionResult> getReservationById(int ReservationHotelId)
+        public async Task<ActionResult> getReservationHotelById(int ReservationHotelId)
         {
             var Reservation = await _context.ReservationHotels
                 .Where(w => !w.IsDeleted)
@@ -44,19 +44,19 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ReservationHotel>> PostReservation(ReservationHotel Reservation)
+        public async Task<ActionResult<ReservationHotel>> PostReservationHotel(ReservationHotel Reservation)
         {
             _context.ReservationHotels.Add(Reservation);
             await _context.SaveChangesAsync();
             return CreatedAtAction(
-                "getReservationById",
-                new { getReservationById = Reservation.ReservationHotelId },
+                "getReservationHotelById",
+                new { ReservationHotelId = Reservation.ReservationHotelId },
                 Reservation
             );
         }
 
         [HttpPut("{ReservationHotelId}")]
-        public async Task<ActionResult> PutHabitation(int ReservationHotelId, ReservationHotel Reservation)
+        public async Task<ActionResult> PutReservationHotel(int ReservationHotelId, ReservationHotel Reservation)
         {
             if (Reservation.ReservationHotelId != ReservationHotelId)
             {
@@ -88,8 +88,6 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.CustomerId = Reservation.CustomerId;
             ReservationOld.HotelId = Reservation.HotelId;
             ReservationOld.HabitationsReservationId = Reservation.HabitationsReservationId;
-            ReservationOld.InlcudesTrasport = Reservation.InlcudesTrasport;
-            ReservationOld.InlcudesBreakfast = Reservation.InlcudesBreakfast;
             ReservationOld.IsDeleted = Reservation.IsDeleted;
 
             _context.ReservationHotels.Update(ReservationOld);
@@ -98,7 +96,7 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpDelete("{ReservationHotelId}")]
-        public async Task<IActionResult> DeleteHabitation(int ReservationHotelId)
+        public async Task<IActionResult> DeleteReservationHotel(int ReservationHotelId)
         {
             var Reservation = await _context.ReservationHotels.FirstOrDefaultAsync(
                 f => f.ReservationHotelId == ReservationHotelId

@@ -58,7 +58,6 @@ namespace TurismoGlobalArandas.Controllers
                 return BadRequest($"La habitacion con el ID {HabitationsReservationId} no existe");
             }
             habitationsReservationOld.HabitationsReservationId = habitationsReservation.HabitationId;
-            habitationsReservationOld.ReservationInvoice = habitationsReservation.ReservationInvoice;
             habitationsReservationOld.HabitationsReservationId = habitationsReservation.HabitationsReservationId;
             habitationsReservationOld.IsDeleted = habitationsReservation.IsDeleted;
 

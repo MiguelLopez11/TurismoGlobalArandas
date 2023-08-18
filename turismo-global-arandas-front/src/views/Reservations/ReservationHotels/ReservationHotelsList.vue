@@ -1,5 +1,5 @@
 <template>
-  <!-- <reservations-add-new /> -->
+  <!-- <reservationHotels-add-new /> -->
  <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
@@ -41,7 +41,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="reservations"
+            :items="reservationHotels"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -57,7 +57,7 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-reservations',
+                            name: 'Edit-reservationHotels',
                             params: { EmployeeId: items.reservationHotelId }
                           })
                         }
@@ -65,7 +65,7 @@
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteEmployee(items.reservationHotelId)"
+                      @click="onDeleteReservationHotel(items.reservationHotelId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -87,8 +87,8 @@ import ReservationServices from '@/Services/ReservationHotel.Services'
 export default {
   //   components: { EmployeesAddNew },
   setup () {
-    const { getReservations, deleteReservation } = ReservationServices()
-    const reservations = ref([])
+    const { getReservationHotels, deleteReservationHotel } = ReservationServices()
+    const reservationHotels = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -108,14 +108,14 @@ export default {
       { value: 'salary', text: 'Salario' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getReservations(data => {
-      reservations.value = data
+    getReservationHotels(data => {
+      reservationHotels.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getReservations(data => {
-        reservations.value = data
+      getReservationHotels(data => {
+        reservationHotels.value = data
         isloading.value = false
       })
     }
@@ -124,7 +124,7 @@ export default {
         refreshTable()
       }
     })
-    const onDeleteEmployee = reservationHotelId => {
+    const onDeleteReservationHotel = reservationHotelId => {
       swal
         .fire({
           title: 'Estás a punto de eliminar un Empleado, ¿Estas seguro?',
@@ -136,7 +136,7 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteReservation(reservationHotelId, data => {
+            deleteReservationHotel(reservationHotelId, data => {
               swal.fire({
                 title: 'Reservación archivada!',
                 text: 'La reservación ha sido archivada satisfactoriamente .',
@@ -158,10 +158,10 @@ export default {
       searchValue,
       searchField,
       fields,
-      reservations,
+      reservationHotels,
       isAddedEmployee,
       refreshTable,
-      onDeleteEmployee
+      onDeleteReservationHotel
     }
   }
 }

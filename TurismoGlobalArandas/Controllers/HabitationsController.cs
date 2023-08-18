@@ -62,7 +62,7 @@ namespace TurismoGlobalArandas.Controllers
             habitationOld.Ages = habitation.Ages;
             habitationOld.Adults = habitation.Adults;
             habitationOld.Minors = habitation.Minors;
-            habitationOld.SaleDate = habitation.SaleDate;
+            habitationOld.PurchaseDate = habitation.PurchaseDate;
             habitationOld.Cost = habitation.Cost;
             habitationOld.IsDeleted = habitation.IsDeleted;
 
