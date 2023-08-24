@@ -11,6 +11,11 @@ export default function HabitationReservationServices () {
       callback(response.data)
     })
   }
+  const getHabitationReservationsHotel = (ReservationHotelId, callback) => {
+    axiosPrivate.get(`/HabitationReservation/ReservationHotel/${ReservationHotelId}`).then((response) => {
+      callback(response.data)
+    })
+  }
   const createHabitationReservation = (data, callback) => {
     axiosPrivate.post('/HabitationReservation', data).then((response) => {
       callback(response.data)
@@ -29,6 +34,7 @@ export default function HabitationReservationServices () {
   return {
     getHabitationReservations,
     getHabitationReservation,
+    getHabitationReservationsHotel,
     createHabitationReservation,
     updateHabitationReservation,
     deleteHabitationReservation

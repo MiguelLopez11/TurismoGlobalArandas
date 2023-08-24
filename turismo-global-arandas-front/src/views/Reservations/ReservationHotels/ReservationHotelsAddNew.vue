@@ -10,6 +10,7 @@
         title="Datos del cliente"
         icon="bi bi-person-circle"
         :beforeChange="validationClient"
+        lazy
       >
         <el-card>
           <el-row :gutter="0">
@@ -25,7 +26,7 @@
               <el-form-item>
                 <v-select
                   class="w-100"
-                  v-model="reservationHotelFields.customerId"
+                  v-model="reservationHotel.customerId"
                   label="name"
                   :options="customers"
                   :reduce="customer => customer.customerId"
@@ -42,7 +43,7 @@
                   <template #search="{ attributes, events }">
                     <input
                       class="vs__search"
-                      :required="!reservationHotelFields.customerId"
+                      :required="!reservationHotel.customerId"
                       v-bind="attributes"
                       v-on="events"
                     />
@@ -61,7 +62,15 @@
           </el-row>
         </el-card>
       </tab-content>
-      <tab-content title="Datos generales" icon="bi bi-airplane-engines" :beforeChange="validationGeneral">
+      <tab-content lazy title="Habitaciones" icon="bi bi-door-closed">
+        <habitation-reservation-list />
+      </tab-content>
+      <tab-content
+        title="Datos generales"
+        icon="bi bi-airplane-engines"
+        :beforeChange="validationGeneral"
+        lazy
+      >
         <el-row :gutter="35">
           <el-col :span="8">
             <el-form-item>
@@ -85,7 +94,7 @@
                 <template #search="{ attributes, events }">
                   <input
                     class="vs__search"
-                    :required="!reservationHotelFields.customerId"
+                    :required="!reservationHotel.destinationId"
                     v-bind="attributes"
                     v-on="events"
                   />
@@ -98,7 +107,7 @@
               <v-select
                 class="w-100"
                 label="name"
-                v-model="reservationHotelFields.hotelId"
+                v-model="reservationHotel.hotelId"
                 :options="hotels"
                 :reduce="hotel => hotel.hotelId"
               >
@@ -114,7 +123,7 @@
                 <template #search="{ attributes, events }">
                   <input
                     class="vs__search"
-                    :required="!reservationHotelFields.customerId"
+                    :required="!reservationHotel.hotelId"
                     v-bind="attributes"
                     v-on="events"
                   />
@@ -128,7 +137,7 @@
             </div>
             <el-form-item>
               <el-date-picker
-                v-model="reservationHotelFields.travelDate"
+                v-model="reservationHotel.travelDate"
                 class="w-100"
                 type="date"
                 placeholder="Selecciona una fecha"
@@ -138,8 +147,8 @@
           </el-col>
         </el-row>
       </tab-content>
-      <tab-content title="Habitaciones" icon="bi bi-door-closed">
-        <habitation-reservation-list />
+      <tab-content lazy title="Tarifas" icon="bi bi-door-closed">
+        <h1>pendiente</h1>
       </tab-content>
     </form-wizard>
   </el-card>
@@ -153,6 +162,7 @@ import HotelsServices from '@/Services/Hotels.Services'
 import ReservationHotelServices from '@/Services/ReservationHotel.Services'
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
+import { useStore } from 'vuex'
 export default {
   components: {
     CustomersAddNew,
@@ -162,34 +172,32 @@ export default {
     const { getCustomers } = CustomerServices()
     const { getDestinations } = DestinationServices()
     const { getHotelByDestinationId } = HotelsServices()
-    const { createReservationHotel, updateReservationHotel } = ReservationHotelServices()
+    const {
+      createReservationHotel,
+      updateReservationHotel,
+      getReservationHotel
+    } = ReservationHotelServices()
+    const store = useStore()
     const isNewCustomer = ref(false)
     const customers = ref([])
     const destinations = ref([])
     const hotels = ref([])
     const destinationId = ref(null)
     const reservationHotel = ref([])
+    const reservationHotelId = ref()
     const reservationHotelFields = ref({
       reservationHotelId: 0,
-      reservationInvoice: null,
-      travelDate: null,
-      typeHabitation: null,
-      numberHabitations: null,
-      phoneContact: null,
-      observations: null,
-      groupCoordinator: null,
-      phoneCoordinator: null,
-      dateSale: null,
-      promoter: null,
-      paymentPeriod: null,
-      paymentLimitDate: null,
-      typeReservationId: null,
-      employeeId: null,
-      customerId: null,
-      hotelId: null,
-      habitationsReservationId: null,
       isDeleted: false
     })
+    const updateReservationHotelId = reservationHotelId => {
+      store.commit('setReservationHotelId', reservationHotelId) // Tu ID aquí
+    }
+    createReservationHotel(reservationHotelFields.value, data => {
+      reservationHotelId.value = data.reservationHotelId
+      updateReservationHotelId(data.reservationHotelId)
+      refreshReservationHotel()
+    })
+
     getCustomers(data => {
       customers.value = data
     })
@@ -203,21 +211,23 @@ export default {
     }
     const onAddedCustomer = value => {
       isNewCustomer.value = !isNewCustomer.value
-      reservationHotelFields.value.customerId = value
+      reservationHotel.value.customerId = value
       refreshCustomers()
     }
     const onGetHotel = destinationId => {
-      reservationHotelFields.value.hotelId = null
+      reservationHotel.value.hotelId = null
       getHotelByDestinationId(destinationId, data => {
         hotels.value = data
       })
     }
+    const refreshReservationHotel = () => {
+      getReservationHotel(reservationHotelId.value, data => {
+        reservationHotel.value = data
+      })
+    }
     const validationClient = () => {
       return new Promise((resolve, reject) => {
-        if (reservationHotelFields.value.customerId) {
-          createReservationHotel(reservationHotelFields.value, data => {
-            reservationHotel.value = data
-          })
+        if (reservationHotel.value.customerId) {
           resolve(true)
         }
         reject(new Error('Error'))
@@ -225,10 +235,13 @@ export default {
     }
     const validationGeneral = () => {
       return new Promise((resolve, reject) => {
-        if (reservationHotelFields.value.destinationId && reservationHotelFields.value.hotelId && reservationHotelFields.value.travelDate) {
-          updateReservationHotel(reservationHotelFields.value, data => {
+        if (
+          reservationHotel.value.hotelId &&
+          reservationHotel.value.travelDate
+        ) {
+          updateReservationHotel(reservationHotel.value, data => {
             reservationHotel.value = data
-            console.log(data)
+            refreshReservationHotel()
           })
           resolve(true)
         }
@@ -237,6 +250,7 @@ export default {
     }
     return {
       reservationHotelFields,
+      reservationHotel,
       customers,
       destinations,
       hotels,

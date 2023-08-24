@@ -74,14 +74,17 @@
 </template>
 
 <script>
-import { ref, watch, inject, provide } from 'vue'
+import { ref, watch, inject, provide, computed } from 'vue'
 import HabitationReservationServices from '@/Services/HabitationReservation.Services'
 import HabitationAddNew from '../Habitation/HabitationAddNew.vue'
+import { useStore } from 'vuex'
 
 export default {
   components: { HabitationAddNew },
-  setup () {
-    const { getHabitationReservations, deleteHabitationReservation } = HabitationReservationServices()
+  setup (props) {
+    const { getHabitationReservationsHotel, deleteHabitationReservation } =
+      HabitationReservationServices()
+    const store = useStore()
     const habitationReservations = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
@@ -92,6 +95,9 @@ export default {
     const searchValue = ref('')
     const searchField = ref('name')
     const isAddHabitation = ref(false)
+    const reservationHotelId = computed(
+      () => store.getters.getReservationHotelId
+    )
     provide('addHabitation', isAddHabitation)
     const fields = ref([
       { value: 'habitations.invoice', text: 'Folio de la habitación' },
@@ -101,20 +107,22 @@ export default {
       { value: 'habitations.purchaseDate', text: 'Fecha de compra' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getHabitationReservations(data => {
+    getHabitationReservationsHotel(reservationHotelId.value, data => {
       habitationReservations.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getHabitationReservations(data => {
+      getHabitationReservationsHotel(reservationHotelId.value, data => {
         habitationReservations.value = data
         isloading.value = false
       })
     }
     watch(isAddHabitation, newValue => {
       if (!newValue) {
-        refreshTable()
+        setTimeout(() => {
+          refreshTable()
+        }, 2000)
       }
     })
     const changeDialog = () => {

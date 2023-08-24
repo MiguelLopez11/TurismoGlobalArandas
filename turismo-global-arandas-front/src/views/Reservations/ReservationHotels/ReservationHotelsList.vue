@@ -1,6 +1,5 @@
 <template>
-  <!-- <reservationHotels-add-new /> -->
- <el-card class="scrollable-card">
+  <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
@@ -65,7 +64,9 @@
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteReservationHotel(items.reservationHotelId)"
+                      @click="
+                        onDeleteReservationHotel(items.reservationHotelId)
+                      "
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -82,12 +83,11 @@
 <script>
 import { ref, watch, provide, inject } from 'vue'
 import ReservationServices from '@/Services/ReservationHotel.Services'
-// import EmployeesAddNew from './EmployeesAddNew.vue'
 
 export default {
-  //   components: { EmployeesAddNew },
   setup () {
-    const { getReservationHotels, deleteReservationHotel } = ReservationServices()
+    const { getReservationHotels, deleteReservationHotel } =
+      ReservationServices()
     const reservationHotels = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
@@ -102,10 +102,9 @@ export default {
     const fields = ref([
       { value: 'reservationInvoice', text: 'Folio' },
       { value: 'travelDate', text: 'Fecha de viaje' },
-      { value: 'workStation', text: 'Puesto de trabajo' },
-      { value: 'address', text: 'Dirección' },
-      { value: 'phoneNumber', text: 'Telefono' },
-      { value: 'salary', text: 'Salario' },
+      // { value: 'hotels.name', text: 'Hotel' },
+      // { value: 'hotels.destination.name', text: 'Destino' },
+      { value: 'dateSale', text: 'Fecha de venta' },
       { value: 'actions', text: 'Acciones' }
     ])
     getReservationHotels(data => {

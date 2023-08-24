@@ -9,6 +9,7 @@ import Vue3EasyDataTable from 'vue3-easy-data-table'
 import { required } from '@vee-validate/rules'
 import vSelect from 'vue-select'
 import Vue3FormWizard from 'vue3-form-wizard'
+import store from './Store'
 
 import 'vue3-form-wizard/dist/style.css'
 import 'vue3-easy-data-table/dist/style.css'
@@ -44,6 +45,7 @@ app.component('EasyDataTable', Vue3EasyDataTable)
 app.component('v-select', vSelect)
 app.use(VueSweetalert2, options)
 app.use(Vue3FormWizard)
+app.use(store)
 app.use(router)
 app.use(ElementPlus)
 

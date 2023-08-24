@@ -30,7 +30,24 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="email" v-slot="{ value, field, errorMessage }">
+          <Field name="typehabitation" v-slot="{ value, field, errorMessage }">
+            <el-form-item :error="errorMessage" required>
+              <div>
+                <label> Tipo de habitación </label>
+              </div>
+              <el-input
+                placeholder="Ingresa el tipo de habitación"
+                size="large"
+                v-bind="field"
+                v-model="habitationFields.typeHabitation"
+                :validate-event="false"
+                :model-value="value"
+              />
+            </el-form-item>
+          </Field>
+        </el-col>
+        <el-col :span="8">
+          <Field name="advancePayment" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
                 <label> Anticipo </label>
@@ -126,10 +143,29 @@
                 placeholder="Ingresa el costo de la habitación"
                 size="large"
                 v-bind="field"
-                v-model="habitationFields.minors"
+                v-model="habitationFields.cost"
                 :validate-event="false"
                 :model-value="value"
                 type="number"
+              />
+            </el-form-item>
+          </Field>
+        </el-col>
+        <el-col :span="8">
+          <Field name="observations" v-slot="{ value, field, errorMessage }">
+            <el-form-item :error="errorMessage" required>
+              <div>
+                <label>Observaciones</label>
+              </div>
+              <el-input
+                placeholder="Ingresa las observaciones de la habitación"
+                size="large"
+                v-bind="field"
+                v-model="habitationFields.observations"
+                :validate-event="false"
+                :model-value="value"
+                 type="textarea"
+                :autosize="{ minRows: 4, maxRows: 8 }"
               />
             </el-form-item>
           </Field>
@@ -165,9 +201,11 @@
 </template>
 
 <script>
-import { ref, inject } from 'vue'
+import { ref, inject, computed } from 'vue'
 import { Field, Form } from 'vee-validate'
 import HabitationServices from '@/Services/Habitation.Services'
+import HabitationReservationServices from '@/Services/HabitationReservation.Services'
+import { useStore } from 'vuex'
 import * as yup from 'yup'
 
 export default {
@@ -175,28 +213,38 @@ export default {
     Form,
     Field
   },
-  setup () {
+  setup (props) {
     const isOpenDialog = inject('addHabitation')
+    const store = useStore()
     const swal = inject('$swal')
     const habitationFormRef = ref(null)
     const { createHabitation } = HabitationServices()
+    const { createHabitationReservation } = HabitationReservationServices()
+    const reservationHotelId = computed(
+      () => store.getters.getReservationHotelId
+    )
     const validationSchema = yup.object({
       invoice: yup.string().required('Este campo es requerido').label('Folio'),
       ages: yup.string().required('Este campo es requerido').label('Edades'),
       adults: yup.string().required('Este campo es requerido').label('Adultos'),
       minors: yup.string().required('Este campo es requerido').label('Menores'),
-      purchaseDate: yup.date().required('Este campo es requerido').label('Fecha de compra'),
+      purchaseDate: yup
+        .date()
+        .required('Este campo es requerido')
+        .label('Fecha de compra'),
       cost: yup.number().required('Este campo es requerido').label('Costo')
     })
     const habitationFields = ref({
       habitationId: 0,
       invoice: null,
+      typeHabitation: null,
       advancePayment: null,
       ages: null,
       adults: null,
       minors: null,
       purchaseDate: null,
       cost: null,
+      observations: null,
       isDeleted: false
     })
     const habitationFieldsBlank = ref(
@@ -210,12 +258,18 @@ export default {
           text: 'La habitación se ha registrado correctamente',
           icon: 'success'
         })
-        isOpenDialog.value = false
-        habitationFields.value = JSON.parse(
-          JSON.stringify(habitationFieldsBlank)
+        createHabitationReservation(
+          {
+            reservationHotelId: reservationHotelId.value,
+            habitationId: data.habitationId,
+            isDeleted: false
+          },
+          data => {}
         )
-        habitationFormRef.value.resetForm()
       })
+      habitationFields.value = JSON.parse(JSON.stringify(habitationFieldsBlank))
+      habitationFormRef.value.resetForm()
+      isOpenDialog.value = false
     }
 
     return {

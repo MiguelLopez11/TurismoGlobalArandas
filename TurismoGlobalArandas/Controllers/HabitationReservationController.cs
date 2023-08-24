@@ -20,6 +20,19 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult<HabitationsReservation>> gethabitationsReservations()
         {
             var habitationsReservations = await _context.HabitationsReservations
+                .Include(i => i.Habitations)
+                .Include(i => i.reservationHotel)
+                .Where(w => !w.IsDeleted)
+                .ToListAsync();
+            return Ok(habitationsReservations);
+        }
+        [HttpGet("ReservationHotel/{ReservationHotelId}")]
+        public async Task<ActionResult<HabitationsReservation>> gethabitationsReservationHotelId(int ReservationHotelId)
+        {
+            var habitationsReservations = await _context.HabitationsReservations
+                .Include(i => i.Habitations)
+                .Include(i => i.reservationHotel)
+                .Where(w => w.ReservationHotelId == ReservationHotelId)
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
             return Ok(habitationsReservations);
