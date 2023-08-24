@@ -1,12 +1,12 @@
 <template>
-  <employees-add-new />
+  <habitation-add-new />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar empleado..."
+          placeholder="Buscar habitación..."
         />
       </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
@@ -14,9 +14,9 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddedEmployee = !isAddedEmployee"
+          @click="isAddHabitation = !isAddHabitation"
         >
-          <i> Agregar empleado </i>
+          <i> Nueva habitación </i>
         </el-button>
       </el-col>
     </el-row>
@@ -35,7 +35,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="employees"
+            :items="habitationReservations"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -51,15 +51,15 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-Employees',
-                            params: { EmployeeId: items.employeeId }
+                            name: 'Edit-Customer',
+                            params: { habitationId: items.habitationId }
                           })
                         }
                       "
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteEmployee(items.employeeId)"
+                      @click="onDeleteHabitation(items.habitationId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -74,15 +74,18 @@
 </template>
 
 <script>
-import { ref, watch, provide, inject } from 'vue'
-import EmployeeServices from '@/Services/Employees.Services'
-import EmployeesAddNew from './EmployeesAddNew.vue'
+import { ref, watch, inject, provide, computed } from 'vue'
+import HabitationReservationServices from '@/Services/HabitationReservation.Services'
+import HabitationAddNew from '../Habitation/HabitationAddNew.vue'
+import { useStore } from 'vuex'
 
 export default {
-  components: { EmployeesAddNew },
-  setup () {
-    const { getEmployees, deleteEmployee } = EmployeeServices()
-    const employees = ref([])
+  components: { HabitationAddNew },
+  setup (props) {
+    const { getHabitationReservationsHotel, deleteHabitationReservation } =
+      HabitationReservationServices()
+    const store = useStore()
+    const habitationReservations = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -91,50 +94,56 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
-    const isAddedEmployee = ref(false)
-    provide('AddEmployee', isAddedEmployee)
+    const isAddHabitation = ref(false)
+    const reservationHotelId = computed(
+      () => store.getters.getReservationHotelId
+    )
+    provide('addHabitation', isAddHabitation)
     const fields = ref([
-      { value: 'name', text: 'Nombre' },
-      { value: 'lastname', text: 'Apellidos' },
-      { value: 'workStation', text: 'Puesto de trabajo' },
-      { value: 'address', text: 'Dirección' },
-      { value: 'phoneNumber', text: 'Telefono' },
-      { value: 'salary', text: 'Salario' },
+      { value: 'habitations.invoice', text: 'Folio de la habitación' },
+      { value: 'habitations.cost', text: 'Costo' },
+      { value: 'habitations.adults', text: 'Adultos' },
+      { value: 'habitations.minors', text: 'Menores' },
+      { value: 'habitations.purchaseDate', text: 'Fecha de compra' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getEmployees(data => {
-      employees.value = data
+    getHabitationReservationsHotel(reservationHotelId.value, data => {
+      habitationReservations.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getEmployees(data => {
-        employees.value = data
+      getHabitationReservationsHotel(reservationHotelId.value, data => {
+        habitationReservations.value = data
         isloading.value = false
       })
     }
-    watch(isAddedEmployee, newValue => {
-      console.log(newValue)
+    watch(isAddHabitation, newValue => {
       if (!newValue) {
-        refreshTable()
+        setTimeout(() => {
+          refreshTable()
+        }, 2000)
       }
     })
-    const onDeleteEmployee = employeeId => {
+    const changeDialog = () => {
+      isAddHabitation.value = !isAddHabitation.value
+    }
+    const onDeleteHabitation = habitationId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar un Empleado, ¿Estas seguro?',
+          title: 'Estás a punto de eliminar un habitación, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar empleado',
+          confirmButtonText: 'Si, eliminar habitación',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteEmployee(employeeId, data => {
+            deleteHabitationReservation(habitationId, data => {
               swal.fire({
-                title: 'Empleado eliminado!',
-                text: 'El Empleado ha sido eliminado satisfactoriamente .',
+                title: 'Habitación eliminado!',
+                text: 'La habitación ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()
@@ -153,10 +162,11 @@ export default {
       searchValue,
       searchField,
       fields,
-      employees,
-      isAddedEmployee,
+      habitationReservations,
+      isAddHabitation,
       refreshTable,
-      onDeleteEmployee
+      onDeleteHabitation,
+      changeDialog
     }
   }
 }

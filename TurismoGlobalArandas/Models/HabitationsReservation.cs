@@ -7,11 +7,13 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int HabitationsReservationId { get; set; }
-        public string ReservationInvoice { get; set; }
         public int HabitationId { get; set; }
+        public int ReservationHotelId { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("HabitationId")]
         public Habitations? Habitations { get; set; }
+        [ForeignKey("ReservationHotelId")]
+        public ReservationHotel? reservationHotel { get; set; }
     }
 }

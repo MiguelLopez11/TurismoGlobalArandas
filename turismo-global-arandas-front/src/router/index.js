@@ -4,7 +4,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: () => import('../views/Home/Home.vue'),
+    component: () => import('../views/Home/Home'),
     meta: {
       requiresAuth: true
     }
@@ -12,7 +12,7 @@ const routes = [
   {
     path: '/Login',
     name: 'Login',
-    component: () => import('../views/Authenticate/AuthenticateUser.vue'),
+    component: () => import('../views/Authenticate/AuthenticateUser'),
     meta: {
       requiresAuth: false
     }
@@ -20,7 +20,7 @@ const routes = [
   {
     path: '/Empleados',
     name: 'Employees',
-    component: () => import('../views/Employees/EmployeesList.vue'),
+    component: () => import('../views/Employees/EmployeesList'),
     meta: {
       requiresAuth: true
     }
@@ -28,7 +28,7 @@ const routes = [
   {
     path: '/Empleados/:EmployeeId',
     name: 'Edit-Employees',
-    component: () => import('../views/Employees/EmployeesEdit.vue'),
+    component: () => import('../views/Employees/EmployeesEdit'),
     meta: {
       requiresAuth: true
     }
@@ -36,7 +36,7 @@ const routes = [
   {
     path: '/Usuarios',
     name: 'Users',
-    component: () => import('../views/Users/UserList.vue'),
+    component: () => import('../views/Users/UserList'),
     meta: {
       requiresAuth: true
     }
@@ -44,7 +44,7 @@ const routes = [
   {
     path: '/Usuarios/:UserId',
     name: 'Edit-User',
-    component: () => import('../views/Users/UserEdit.vue'),
+    component: () => import('../views/Users/UserEdit'),
     meta: {
       requiresAuth: true
     }
@@ -52,7 +52,7 @@ const routes = [
   {
     path: '/Clientes',
     name: 'Customers',
-    component: () => import('../views/Customers/CustomersList.vue'),
+    component: () => import('../views/Customers/CustomersList'),
     meta: {
       requiresAuth: true
     }
@@ -60,7 +60,7 @@ const routes = [
   {
     path: '/Clientes/:CustomerId',
     name: 'Edit-Customer',
-    component: () => import('../views/Customers/CustomersEdit.vue'),
+    component: () => import('../views/Customers/CustomersEdit'),
     meta: {
       requiresAuth: true
     }
@@ -68,7 +68,7 @@ const routes = [
   {
     path: '/Proveedores',
     name: 'Providers',
-    component: () => import('../views/Providers/ProviderList.vue'),
+    component: () => import('../views/Providers/ProviderList'),
     meta: {
       requiresAuth: true
     }
@@ -76,7 +76,7 @@ const routes = [
   {
     path: '/Proveedores/:ProviderId',
     name: 'Edit-Provider',
-    component: () => import('../views/Providers/ProviderEdit.vue'),
+    component: () => import('../views/Providers/ProviderEdit'),
     meta: {
       requiresAuth: true
     }
@@ -84,7 +84,7 @@ const routes = [
   {
     path: '/Destinos',
     name: 'Destinations',
-    component: () => import('../views/Destinations/DestinationList.vue'),
+    component: () => import('../views/Destinations/DestinationList'),
     meta: {
       requiresAuth: true
     }
@@ -92,7 +92,7 @@ const routes = [
   {
     path: '/Destinos/:DestinationId',
     name: 'Edit-Destination',
-    component: () => import('../views/Destinations/DestinationEdit.vue'),
+    component: () => import('../views/Destinations/DestinationEdit'),
     meta: {
       requiresAuth: true
     }
@@ -100,7 +100,7 @@ const routes = [
   {
     path: '/Hoteles',
     name: 'Hotels',
-    component: () => import('../views/Hotels/HotelsList.vue'),
+    component: () => import('../views/Hotels/HotelsList'),
     meta: {
       requiresAuth: true
     }
@@ -108,7 +108,7 @@ const routes = [
   {
     path: '/Hoteles/:HotelId',
     name: 'Edit-Hotel',
-    component: () => import('../views/Hotels/HotelsEdit.vue'),
+    component: () => import('../views/Hotels/HotelsEdit'),
     meta: {
       requiresAuth: true
     }
@@ -116,7 +116,7 @@ const routes = [
   {
     path: '/Roles',
     name: 'Roles',
-    component: () => import('../views/Roles/RolesList.vue'),
+    component: () => import('../views/Roles/RolesList'),
     meta: {
       requiresAuth: true
     }
@@ -124,15 +124,23 @@ const routes = [
   {
     path: '/Roles/:roleName',
     name: 'Edit-Role',
-    component: () => import('../views/Roles/RoleEdit.vue'),
+    component: () => import('../views/Roles/RoleEdit'),
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/Reservaciones',
-    name: 'Reservations',
-    component: () => import('../views/Reservations/ReservationsList.vue'),
+    path: '/ReservacionesHoteleria',
+    name: 'ReservationHotels',
+    component: () => import('../views/Reservations/ReservationHotels/ReservationHotelsList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/ReservacionesHoteleria/Nueva-Reservacion',
+    name: 'ReservacionesHoteleria-AddNew',
+    component: () => import('../views/Reservations/ReservationHotels/ReservationHotelsAddNew'),
     meta: {
       requiresAuth: true
     }
@@ -140,7 +148,7 @@ const routes = [
   {
     path: '/TiposReservaciones',
     name: 'TypeReservations',
-    component: () => import('../views/TypeReservations/TypeReservationList.vue'),
+    component: () => import('../views/TypeReservations/TypeReservationList'),
     meta: {
       requiresAuth: true
     }
@@ -148,7 +156,7 @@ const routes = [
   {
     path: '/TiposReservaciones/:TypeReservationId',
     name: 'Edit-TypeReservation',
-    component: () => import('../views/TypeReservations/TypeReservationEdit.vue'),
+    component: () => import('../views/TypeReservations/TypeReservationEdit'),
     meta: {
       requiresAuth: true
     }
@@ -156,7 +164,7 @@ const routes = [
   {
     path: '/CategoriaReservaciones',
     name: 'CategoryReservations',
-    component: () => import('../views/CategoryReservations/CategoryReservationList.vue'),
+    component: () => import('../views/CategoryReservations/CategoryReservationList'),
     meta: {
       requiresAuth: true
     }
@@ -164,7 +172,7 @@ const routes = [
   {
     path: '/CategoriaReservaciones/:CategoryReservationId',
     name: 'Edit-CategoryReservation',
-    component: () => import('../views/CategoryReservations/CategoryReservationEdit.vue'),
+    component: () => import('../views/CategoryReservations/CategoryReservationEdit'),
     meta: {
       requiresAuth: true
     }

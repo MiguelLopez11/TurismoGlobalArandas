@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230818001205_remove-invoice-habitationReservation")]
+    partial class removeinvoicehabitationReservation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,14 +281,8 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<int?>("Minors")
                         .HasColumnType("int");
 
-                    b.Property<string>("Observations")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("PurchaseDate")
+                    b.Property<DateTime?>("SaleDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("TypeHabitation")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("HabitationId");
 
@@ -386,28 +383,28 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("DoubleHabitation")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("IndividualHabitation")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<decimal>("JuniorHabitation")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("MinorHabitation")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal>("QDPLHabitation")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("RateTypeId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("TripleHabitation")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("RateId");
 
@@ -466,6 +463,12 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<int?>("HotelId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("InlcudesBreakfast")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("InlcudesTrasport")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -491,9 +494,10 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ReservationInvoice")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("TravelDate")
+                    b.Property<DateTime>("TravelDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("TypeHabitation")

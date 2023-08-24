@@ -1,6 +1,11 @@
 <template>
-  <customers-add-new />
-  <el-card>
+  <el-dialog v-model="isOpenDialog" title="Nuevo cliente" width="80%" center>
+    <customers-add-new
+      :isAddCustomer="isOpenDialog"
+      @change-adding-customer="changeDialog"
+    />
+  </el-dialog>
+  <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
@@ -14,7 +19,7 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddCustomer = !isAddCustomer"
+          @click="isOpenDialog = !isOpenDialog"
         >
           <i> Nuevo cliente </i>
         </el-button>
@@ -74,7 +79,7 @@
 </template>
 
 <script>
-import { ref, watch, provide, inject } from 'vue'
+import { ref, watch, inject } from 'vue'
 import CustomerServices from '@/Services/Customers.Services'
 import CustomersAddNew from './CustomersAddNew.vue'
 
@@ -91,8 +96,7 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
-    const isAddCustomer = ref(false)
-    provide('addCustomer', isAddCustomer)
+    const isOpenDialog = ref(false)
     const fields = ref([
       { value: 'name', text: 'Nombre' },
       { value: 'lastname', text: 'Apellidos' },
@@ -110,11 +114,14 @@ export default {
         isloading.value = false
       })
     }
-    watch(isAddCustomer, newValue => {
+    watch(isOpenDialog, newValue => {
       if (!newValue) {
         refreshTable()
       }
     })
+    const changeDialog = () => {
+      isOpenDialog.value = !isOpenDialog.value
+    }
     const onDeleteCustomer = customerId => {
       swal
         .fire({
@@ -150,9 +157,10 @@ export default {
       searchField,
       fields,
       customers,
-      isAddCustomer,
+      isOpenDialog,
       refreshTable,
-      onDeleteCustomer
+      onDeleteCustomer,
+      changeDialog
     }
   }
 }

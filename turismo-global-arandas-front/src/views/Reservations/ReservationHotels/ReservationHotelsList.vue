@@ -1,6 +1,5 @@
 <template>
-  <!-- <reservations-add-new /> -->
-  <el-card>
+  <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
@@ -16,7 +15,9 @@
           color="#7367F0"
           @click="
             () => {
-              isAddedEmployee = !isAddedEmployee
+              $router.push({
+                name: 'ReservacionesHoteleria-AddNew'
+              })
             }
           "
         >
@@ -39,7 +40,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="reservations"
+            :items="reservationHotels"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -55,15 +56,17 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-reservations',
-                            params: { EmployeeId: items.employeeId }
+                            name: 'Edit-reservationHotels',
+                            params: { EmployeeId: items.reservationHotelId }
                           })
                         }
                       "
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteEmployee(items.employeeId)"
+                      @click="
+                        onDeleteReservationHotel(items.reservationHotelId)
+                      "
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -79,14 +82,13 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import ReservationServices from '@/Services/Reservations.Services'
-// import EmployeesAddNew from './EmployeesAddNew.vue'
+import ReservationServices from '@/Services/ReservationHotel.Services'
 
 export default {
-  //   components: { EmployeesAddNew },
   setup () {
-    const { getReservations, deleteReservation } = ReservationServices()
-    const reservations = ref([])
+    const { getReservationHotels, deleteReservationHotel } =
+      ReservationServices()
+    const reservationHotels = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -100,20 +102,19 @@ export default {
     const fields = ref([
       { value: 'reservationInvoice', text: 'Folio' },
       { value: 'travelDate', text: 'Fecha de viaje' },
-      { value: 'workStation', text: 'Puesto de trabajo' },
-      { value: 'address', text: 'Dirección' },
-      { value: 'phoneNumber', text: 'Telefono' },
-      { value: 'salary', text: 'Salario' },
+      // { value: 'hotels.name', text: 'Hotel' },
+      // { value: 'hotels.destination.name', text: 'Destino' },
+      { value: 'dateSale', text: 'Fecha de venta' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getReservations(data => {
-      reservations.value = data
+    getReservationHotels(data => {
+      reservationHotels.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getReservations(data => {
-        reservations.value = data
+      getReservationHotels(data => {
+        reservationHotels.value = data
         isloading.value = false
       })
     }
@@ -122,7 +123,7 @@ export default {
         refreshTable()
       }
     })
-    const onDeleteEmployee = reservationId => {
+    const onDeleteReservationHotel = reservationHotelId => {
       swal
         .fire({
           title: 'Estás a punto de eliminar un Empleado, ¿Estas seguro?',
@@ -134,7 +135,7 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteReservation(reservationId, data => {
+            deleteReservationHotel(reservationHotelId, data => {
               swal.fire({
                 title: 'Reservación archivada!',
                 text: 'La reservación ha sido archivada satisfactoriamente .',
@@ -156,10 +157,10 @@ export default {
       searchValue,
       searchField,
       fields,
-      reservations,
+      reservationHotels,
       isAddedEmployee,
       refreshTable,
-      onDeleteEmployee
+      onDeleteReservationHotel
     }
   }
 }

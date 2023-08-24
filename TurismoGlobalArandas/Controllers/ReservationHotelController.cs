@@ -8,35 +8,34 @@ namespace TurismoGlobalArandas.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ReservationsController : ControllerBase
+    public class ReservationHotelController : ControllerBase
     {
         private readonly TurismoGlobalContext _context;
 
-        public ReservationsController(TurismoGlobalContext context)
+        public ReservationHotelController(TurismoGlobalContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<Reservations>> getReservations()
+        public async Task<ActionResult<ReservationHotel>> getReservationsHotel()
         {
-            var Reservations = await _context.Reservations
+            var Reservations = await _context.ReservationHotels
                 .Include(i => i.Employees)
                 .Include(i => i.Customers)
                 .Include(i => i.Hotels)
                 .Include(i => i.TypeReservation)
-                .Include(i => i.CategoryReservation)
                 .Include(i => i.HabitationsReservation)
                 .Where(w => !w.IsDeleted).ToListAsync();
             return Ok(Reservations);
         }
 
-        [HttpGet("{ReservationId}")]
-        public async Task<ActionResult> getReservationById(int ReservationId)
+        [HttpGet("{ReservationHotelId}")]
+        public async Task<ActionResult> getReservationHotelById(int ReservationHotelId)
         {
-            var Reservation = await _context.Reservations
+            var Reservation = await _context.ReservationHotels
                 .Where(w => !w.IsDeleted)
-                .FirstOrDefaultAsync(f => f.ReservationId == ReservationId);
+                .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
             if (Reservation == null)
             {
                 return NotFound();
@@ -45,33 +44,33 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Reservations>> PostReservation(Reservations Reservation)
+        public async Task<ActionResult<ReservationHotel>> PostReservationHotel(ReservationHotel Reservation)
         {
-            _context.Reservations.Add(Reservation);
+            _context.ReservationHotels.Add(Reservation);
             await _context.SaveChangesAsync();
             return CreatedAtAction(
-                "getReservationById",
-                new { getReservationById = Reservation.ReservationId },
+                "getReservationHotelById",
+                new { ReservationHotelId = Reservation.ReservationHotelId },
                 Reservation
             );
         }
 
-        [HttpPut("{ReservationId}")]
-        public async Task<ActionResult> PutHabitation(int ReservationId, Reservations Reservation)
+        [HttpPut("{ReservationHotelId}")]
+        public async Task<ActionResult> PutReservationHotel(int ReservationHotelId, ReservationHotel Reservation)
         {
-            if (Reservation.ReservationId != ReservationId)
+            if (Reservation.ReservationHotelId != ReservationHotelId)
             {
                 return Ok("Los Id ingresados no coinciden");
             }
-            var ReservationOld = await _context.Reservations.FirstOrDefaultAsync(
-                f => f.ReservationId == ReservationId
+            var ReservationOld = await _context.ReservationHotels.FirstOrDefaultAsync(
+                f => f.ReservationHotelId == ReservationHotelId
             );
 
             if (ReservationOld == null)
             {
-                return BadRequest($"La habitacion con el ID {ReservationId} no existe");
+                return BadRequest($"La habitacion con el ID {ReservationHotelId} no existe");
             }
-            ReservationOld.ReservationId = Reservation.ReservationId;
+            ReservationOld.ReservationHotelId = Reservation.ReservationHotelId;
             ReservationOld.ReservationInvoice = Reservation.ReservationInvoice;
             ReservationOld.TravelDate = Reservation.TravelDate;
             ReservationOld.TypeHabitation = Reservation.TypeHabitation;
@@ -85,25 +84,22 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.PaymentPeriod = Reservation.PaymentPeriod;
             ReservationOld.PaymentLimitDate = Reservation.PaymentLimitDate;
             ReservationOld.TypeReservationId = Reservation.TypeReservationId;
-            ReservationOld.CategoryReservationId = Reservation.CategoryReservationId;
             ReservationOld.EmployeeId = Reservation.EmployeeId;
             ReservationOld.CustomerId = Reservation.CustomerId;
             ReservationOld.HotelId = Reservation.HotelId;
             ReservationOld.HabitationsReservationId = Reservation.HabitationsReservationId;
-            ReservationOld.InlcudesTrasport = Reservation.InlcudesTrasport;
-            ReservationOld.InlcudesBreakfast = Reservation.InlcudesBreakfast;
             ReservationOld.IsDeleted = Reservation.IsDeleted;
 
-            _context.Reservations.Update(ReservationOld);
+            _context.ReservationHotels.Update(ReservationOld);
             await _context.SaveChangesAsync();
             return Ok("Actualización correcta");
         }
 
-        [HttpDelete("{ReservationId}")]
-        public async Task<IActionResult> DeleteHabitation(int ReservationId)
+        [HttpDelete("{ReservationHotelId}")]
+        public async Task<IActionResult> DeleteReservationHotel(int ReservationHotelId)
         {
-            var Reservation = await _context.Reservations.FirstOrDefaultAsync(
-                f => f.ReservationId == ReservationId
+            var Reservation = await _context.ReservationHotels.FirstOrDefaultAsync(
+                f => f.ReservationHotelId == ReservationHotelId
             );
             if (Reservation == null)
             {
@@ -111,7 +107,7 @@ namespace TurismoGlobalArandas.Controllers
             }
 
             Reservation.IsDeleted = true;
-            _context.Reservations.Update(Reservation);
+            _context.ReservationHotels.Update(Reservation);
             await _context.SaveChangesAsync();
             return Ok("registro archivado");
         }
