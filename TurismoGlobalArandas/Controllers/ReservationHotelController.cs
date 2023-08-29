@@ -46,6 +46,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ReservationHotel>> PostReservationHotel(ReservationHotel Reservation)
         {
+            Reservation.DateSale = DateTime.Now;
             _context.ReservationHotels.Add(Reservation);
             await _context.SaveChangesAsync();
             return CreatedAtAction(

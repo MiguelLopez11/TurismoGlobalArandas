@@ -1,5 +1,6 @@
 <template>
   <habitation-add-new />
+  <habitation-edit />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
@@ -48,18 +49,13 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item
-                      @click="
-                        () => {
-                          $router.push({
-                            name: 'Edit-Customer',
-                            params: { habitationId: items.habitationId }
-                          })
-                        }
-                      "
+                      @click="onEditHabitation(items.habitations)"
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteHabitation(items.habitationId)"
+                      @click="
+                        onDeleteHabitation(items.habitationsReservationId)
+                      "
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -78,9 +74,10 @@ import { ref, watch, inject, provide, computed } from 'vue'
 import HabitationReservationServices from '@/Services/HabitationReservation.Services'
 import HabitationAddNew from '../Habitation/HabitationAddNew.vue'
 import { useStore } from 'vuex'
+import HabitationEdit from '../Habitation/HabitationEdit.vue'
 
 export default {
-  components: { HabitationAddNew },
+  components: { HabitationAddNew, HabitationEdit },
   setup (props) {
     const { getHabitationReservationsHotel, deleteHabitationReservation } =
       HabitationReservationServices()
@@ -95,10 +92,13 @@ export default {
     const searchValue = ref('')
     const searchField = ref('name')
     const isAddHabitation = ref(false)
+    const isEditHabitation = ref(false)
     const reservationHotelId = computed(
       () => store.getters.getReservationHotelId
     )
+    const hotelId = ref(null)
     provide('addHabitation', isAddHabitation)
+    provide('editHabitation', isEditHabitation)
     const fields = ref([
       { value: 'habitations.invoice', text: 'Folio de la habitación' },
       { value: 'habitations.cost', text: 'Costo' },
@@ -118,17 +118,17 @@ export default {
         isloading.value = false
       })
     }
-    watch(isAddHabitation, newValue => {
-      if (!newValue) {
+    watch([isAddHabitation, isEditHabitation], ([newValueA, newValueB]) => {
+      if (!newValueA || !newValueB) {
         setTimeout(() => {
           refreshTable()
-        }, 2000)
+        }, 1000)
       }
     })
     const changeDialog = () => {
       isAddHabitation.value = !isAddHabitation.value
     }
-    const onDeleteHabitation = habitationId => {
+    const onDeleteHabitation = habitationReservationId => {
       swal
         .fire({
           title: 'Estás a punto de eliminar un habitación, ¿Estas seguro?',
@@ -140,10 +140,10 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteHabitationReservation(habitationId, data => {
+            deleteHabitationReservation(habitationReservationId, data => {
               swal.fire({
-                title: 'Habitación eliminado!',
-                text: 'La habitación ha sido eliminado satisfactoriamente .',
+                title: 'Habitación eliminada!',
+                text: 'La habitación ha sido eliminada satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()
@@ -152,6 +152,10 @@ export default {
             isloading.value = false
           }
         })
+    }
+    const onEditHabitation = habitation => {
+      isEditHabitation.value = !isEditHabitation.value
+      store.commit('setHotelId', habitation.habitationId)
     }
     return {
       filter,
@@ -164,9 +168,12 @@ export default {
       fields,
       habitationReservations,
       isAddHabitation,
+      isEditHabitation,
+      hotelId,
       refreshTable,
       onDeleteHabitation,
-      changeDialog
+      changeDialog,
+      onEditHabitation
     }
   }
 }

@@ -2,12 +2,14 @@
 
 namespace TurismoGlobalArandas.Models
 {
-    public class RateType
+    public class DiscountsProvider
     {
         [Key]
-        public int RateTypeId { get; set; }
-        public string Name { get; set; }
+        public int DiscountProviderId { get; set; }
+        public string Color { get; set; }
+        public double Discount { get; set; }
         public string Description { get; set; }
         public bool IsDeleted { get; set; }
     }
 }
+    

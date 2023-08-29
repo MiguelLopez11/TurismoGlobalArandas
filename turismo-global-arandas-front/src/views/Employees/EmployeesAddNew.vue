@@ -17,7 +17,7 @@
                 placeholder="Ingresa el nombre del empleado"
                 size="large"
                 v-bind="field"
-                v-model="EmployeesFields.name"
+                v-model="employeesFields.name"
                 :validate-event="false"
                 :model-value="value"
               />
@@ -34,7 +34,7 @@
                 placeholder="Ingresa los apellidos del empleado"
                 size="large"
                 v-bind="field"
-                v-model="EmployeesFields.lastname"
+                v-model="employeesFields.lastname"
                 :validate-event="false"
                 :model-value="value"
               />
@@ -51,7 +51,7 @@
                 placeholder="Ingresa el puesto de trabajo del empleado"
                 size="large"
                 v-bind="field"
-                v-model="EmployeesFields.workStation"
+                v-model="employeesFields.workStation"
                 :validate-event="false"
                 :model-value="value"
               />
@@ -68,7 +68,7 @@
                 placeholder="Ingresa la dirección del empleado"
                 size="large"
                 v-bind="field"
-                v-model="EmployeesFields.address"
+                v-model="employeesFields.address"
                 :validate-event="false"
                 :model-value="value"
               />
@@ -85,7 +85,7 @@
                 placeholder="Ingresa el numero de telefono del empleado"
                 size="large"
                 v-bind="field"
-                v-model="EmployeesFields.phoneNumber"
+                v-model="employeesFields.phoneNumber"
                 :validate-event="false"
                 :model-value="value"
                 type="number"
@@ -103,7 +103,7 @@
                 placeholder="Ingresa el salario del empleado"
                 size="large"
                 v-bind="field"
-                v-model="EmployeesFields.salary"
+                v-model="employeesFields.salary"
                 :validate-event="false"
                 :model-value="value"
                 type="number"
@@ -165,7 +165,7 @@ export default {
       phoneNumber: yup.string().required().min(10).label('Numero de telefono'),
       salary: yup.string().required().label('Salario')
     })
-    const EmployeesFields = ref({
+    const employeesFields = ref({
       employeeId: 0,
       name: '',
       lastname: '',
@@ -176,18 +176,18 @@ export default {
       isDeleted: false
     })
     const EmployeesFieldsBlank = ref(
-      JSON.parse(JSON.stringify(EmployeesFields))
+      JSON.parse(JSON.stringify(employeesFields))
     )
 
     const onSubmit = () => {
-      createEmployee(EmployeesFields.value, data => {
+      createEmployee(employeesFields.value, data => {
         swal.fire({
           title: '¡Nuevo empleado registrado!',
           text: 'El empleado se ha registrado correctamente',
           icon: 'success'
         })
         isOpenedDialog.value = false
-        EmployeesFields.value = JSON.parse(JSON.stringify(EmployeesFieldsBlank))
+        employeesFields.value = JSON.parse(JSON.stringify(EmployeesFieldsBlank))
         EmployeeFormRef.value.resetForm()
       })
     }
@@ -196,7 +196,7 @@ export default {
       isOpenedDialog,
       onSubmit,
       validationSchema,
-      EmployeesFields,
+      employeesFields,
       EmployeeFormRef
     }
   }

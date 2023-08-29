@@ -17,13 +17,16 @@ namespace TurismoGlobalArandas.Models
         public string? PhoneCoordinator { get; set; } = null;
         public DateTime? DateSale { get; set; } = null;
         public string? Promoter { get; set; } = null;
+        public string? Agent { get; set; } = null;
         public string? PaymentPeriod { get; set; } = null;
         public DateTime? PaymentLimitDate { get; set; } = null;
+        public DateTime? PaymentLimitDateProvider { get; set; } = null;
         public int? TypeReservationId { get; set; } = null;
         public int? EmployeeId { get; set; } = null;
         public int? CustomerId { get; set; } = null;
         public int? HotelId { get; set; } = null;
         public int? HabitationsReservationId { get; set; } = null;
+        public int? ProviderId { get; set; } = null;
         public bool IsDeleted { get; set; }
 
         [ForeignKey("EmployeeId")]
@@ -36,5 +39,7 @@ namespace TurismoGlobalArandas.Models
         public TypeReservation? TypeReservation { get; set; }
         [ForeignKey("HabitationsReservationId")]
         public HabitationsReservation? HabitationsReservation { get; set; }
+        [ForeignKey("ProviderId")]
+        public Providers? Providers { get; set; }
     }
 }

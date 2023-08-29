@@ -87,8 +87,11 @@ namespace TurismoGlobalArandas.Controllers
             {
                 return NotFound();
             }
-
+            var habitation = await _context.Habitations
+                .FirstOrDefaultAsync(f => f.HabitationId == habitationsReservation.HabitationId);
+            habitation.IsDeleted = true;
             habitationsReservation.IsDeleted = true;
+            _context.Habitations.Update(habitation);
             _context.HabitationsReservations.Update(habitationsReservation);
             await _context.SaveChangesAsync();
             return Ok("registro archivado");
