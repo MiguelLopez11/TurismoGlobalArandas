@@ -171,6 +171,16 @@
               />
             </el-form-item>
           </el-col>
+        </el-row>
+      </tab-content>
+      <tab-content lazy title="Habitaciones" icon="bi bi-door-closed">
+        <habitation-reservation-list />
+      </tab-content>
+      <tab-content lazy title="Tarifas" icon="bi bi-cash-stack">
+        <individual-rate />
+      </tab-content>
+      <tab-content lazy title="Relación de pagos" icon="bi bi-receipt">
+        <el-row :gutter="25" align="center">
           <el-col :span="8">
             <el-form-item>
               <div>
@@ -237,12 +247,6 @@
           </el-col>
         </el-row>
       </tab-content>
-      <tab-content lazy title="Habitaciones" icon="bi bi-door-closed">
-        <habitation-reservation-list />
-      </tab-content>
-      <tab-content lazy title="Tarifas" icon="bi bi-door-closed">
-        <h1>pendiente</h1>
-      </tab-content>
     </form-wizard>
   </el-card>
 </template>
@@ -257,13 +261,15 @@ import TypeReservationServices from '@/Services/TypeReservation.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
+import IndividualRate from '@/views/Rates/IndividualRate.vue'
 // Libraries
 import { useStore } from 'vuex'
 import { ref } from 'vue'
 export default {
   components: {
     CustomersAddNew,
-    HabitationReservationList
+    HabitationReservationList,
+    IndividualRate
   },
   setup () {
     const { getCustomers } = CustomerServices()

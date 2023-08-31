@@ -47,6 +47,24 @@
           </Field>
         </el-col>
         <el-col :span="8">
+          <Field name="contactPhone" v-slot="{ value, field, errorMessage }">
+            <el-form-item :error="errorMessage" required>
+              <div>
+                <label> Telefono de contacto </label>
+              </div>
+              <el-input
+                placeholder="Ingresa el numero de telefono de contacto"
+                size="large"
+                v-bind="field"
+                v-model="habitationFields.phoneContact"
+                :validate-event="false"
+                :model-value="value"
+                type="number"
+              />
+            </el-form-item>
+          </Field>
+        </el-col>
+        <el-col v-if="reservationHotel.typeReservation.typeReservationId !== 1" :span="8">
           <Field name="advancePayment" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
@@ -70,7 +88,7 @@
                 <label>Edades</label>
               </div>
               <el-input
-                placeholder="Ingresa las edades de todos"
+                placeholder="Ingresa las edades de los menores"
                 size="large"
                 v-bind="field"
                 v-model="habitationFields.ages"
@@ -104,7 +122,7 @@
                 <label>Menores</label>
               </div>
               <el-input
-                placeholder="Ingresa el numero de adultos que viajarán"
+                placeholder="Ingresa el numero de menores que viajarán"
                 size="large"
                 v-bind="field"
                 v-model="habitationFields.minors"
@@ -114,26 +132,7 @@
             </el-form-item>
           </Field>
         </el-col>
-        <el-col :span="8">
-          <Field name="purchaseDate" v-slot="{ value, field, errorMessage }">
-            <el-form-item :error="errorMessage" required>
-              <div>
-                <label>Fecha de compra</label>
-              </div>
-              <el-date-picker
-                v-model="habitationFields.purchaseDate"
-                class="w-100"
-                type="date"
-                placeholder="Selecciona una fecha"
-                size="large"
-                v-bind="field"
-                :validate-event="false"
-                :model-value="value"
-              />
-            </el-form-item>
-          </Field>
-        </el-col>
-        <el-col :span="8">
+        <el-col v-if="reservationHotel.typeReservation.typeReservationId !== 1" :span="8">
           <Field name="cost" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
@@ -164,7 +163,7 @@
                 v-model="habitationFields.observations"
                 :validate-event="false"
                 :model-value="value"
-                 type="textarea"
+                type="textarea"
                 :autosize="{ minRows: 4, maxRows: 8 }"
               />
             </el-form-item>
@@ -205,6 +204,7 @@ import { ref, inject, computed } from 'vue'
 import { Field, Form } from 'vee-validate'
 import HabitationServices from '@/Services/Habitation.Services'
 import HabitationReservationServices from '@/Services/HabitationReservation.Services'
+import ReservationHotelServices from '@/Services/ReservationHotel.Services'
 import { useStore } from 'vuex'
 import * as yup from 'yup'
 
@@ -218,7 +218,9 @@ export default {
     const store = useStore()
     const swal = inject('$swal')
     const habitationFormRef = ref(null)
+    const reservationHotel = ref([])
     const { createHabitation } = HabitationServices()
+    const { getReservationHotel } = ReservationHotelServices()
     const { createHabitationReservation } = HabitationReservationServices()
     const reservationHotelId = computed(
       () => store.getters.getReservationHotelId
@@ -228,11 +230,11 @@ export default {
       ages: yup.string().required('Este campo es requerido').label('Edades'),
       adults: yup.string().required('Este campo es requerido').label('Adultos'),
       minors: yup.string().required('Este campo es requerido').label('Menores'),
-      purchaseDate: yup
-        .date()
+      contactPhone: yup
+        .string()
         .required('Este campo es requerido')
-        .label('Fecha de compra'),
-      cost: yup.number().required('Este campo es requerido').label('Costo')
+        .min(10, 'ingrese un numero de telefono válido')
+        .label('Numero de telefono')
     })
     const habitationFields = ref({
       habitationId: 0,
@@ -246,6 +248,9 @@ export default {
       cost: null,
       observations: null,
       isDeleted: false
+    })
+    getReservationHotel(reservationHotelId.value, data => {
+      reservationHotel.value = data
     })
     const habitationFieldsBlank = ref(
       JSON.parse(JSON.stringify(habitationFields))
@@ -275,6 +280,7 @@ export default {
     return {
       isOpenDialog,
       onSubmit,
+      reservationHotel,
       validationSchema,
       habitationFields,
       habitationFormRef

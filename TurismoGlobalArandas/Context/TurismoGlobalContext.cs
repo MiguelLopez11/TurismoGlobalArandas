@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Models;
 using UConnect.Entities;
+using System.Reflection.Emit;
 
 namespace TurismoGlobalArandas.Context
 {
@@ -28,6 +29,10 @@ namespace TurismoGlobalArandas.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 1, Name = "Individual", Description = null, IsDeleted = false });
+            builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 2, Name = "Grupal", Description = null, IsDeleted = false });
+            builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 3, Name = "Grupo", Description = null, IsDeleted = false });
+
         }
     }
 
