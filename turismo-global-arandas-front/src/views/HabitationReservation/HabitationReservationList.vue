@@ -104,7 +104,6 @@ export default {
       { value: 'habitations.cost', text: 'Costo' },
       { value: 'habitations.adults', text: 'Adultos' },
       { value: 'habitations.minors', text: 'Menores' },
-      { value: 'habitations.purchaseDate', text: 'Fecha de compra' },
       { value: 'actions', text: 'Acciones' }
     ])
     getHabitationReservationsHotel(reservationHotelId.value, data => {

@@ -22,40 +22,31 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field
-            name="typehabitation"
-            :rules="validateTypeHabitation"
-            as="text"
-          >
-            <el-form-item :error="errors.typehabitation" required>
-              <div>
-                <label> Tipo de habitación </label>
-              </div>
-              <el-input
-                placeholder="Ingresa el tipo de habitación"
-                size="large"
-                v-model="habitation.typeHabitation"
-              />
-            </el-form-item>
-          </Field>
+          <el-form-item :error="errors.typehabitation" required>
+            <div>
+              <label> Tipo de habitación </label>
+            </div>
+            <el-input
+              placeholder="Ingresa el tipo de habitación"
+              size="large"
+              v-model="habitation.typeHabitation"
+            />
+          </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <Field
-            name="advancePayment"
-            :rules="validateAdvancePayment"
-            as="text"
-          >
-            <el-form-item :error="errors.advancePayment" required>
-              <div>
-                <label> Anticipo </label>
-              </div>
-              <el-input
-                placeholder="Ingresa el monto del anticipo"
-                size="large"
-                v-model="habitation.advancePayment"
-              />
-            </el-form-item>
-          </Field>
+        <el-col
+          v-if="reservationHotel.typeReservation.typeReservationId !== 1"
+          :span="8"
+        >
+          <el-form-item :error="errors.advancePayment" required>
+            <div>
+              <label> Anticipo </label>
+            </div>
+            <el-input
+              placeholder="Ingresa el monto del anticipo"
+              size="large"
+              v-model="habitation.advancePayment"
+            />
+          </el-form-item>
         </el-col>
         <el-col :span="8">
           <Field name="ages" :rules="validateAges" as="text">
@@ -100,51 +91,48 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="purchaseDate" :rules="validatePurchaseDate" as="text">
-            <el-form-item :error="errors.purchaseDate" required>
-              <div>
-                <label>Fecha de compra</label>
-              </div>
-              <el-date-picker
-                v-model="habitation.purchaseDate"
-                class="w-100"
-                type="date"
-                placeholder="Selecciona una fecha"
-                size="large"
-              />
-            </el-form-item>
-          </Field>
+          <el-form-item :error="errors.purchaseDate" required>
+            <div>
+              <label>Fecha de compra</label>
+            </div>
+            <el-date-picker
+              v-model="habitation.purchaseDate"
+              class="w-100"
+              type="date"
+              placeholder="Selecciona una fecha"
+              size="large"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col
+          v-if="reservationHotel.typeReservation.typeReservationId !== 1"
+          :span="8"
+        >
+          <el-form-item :error="errors.cost" required>
+            <div>
+              <label>Costo</label>
+            </div>
+            <el-input
+              placeholder="Ingresa el costo de la habitación"
+              size="large"
+              v-model="habitation.cost"
+              type="number"
+            />
+          </el-form-item>
         </el-col>
         <el-col :span="8">
-          <Field name="cost" :rules="validateCost" as="text">
-            <el-form-item :error="errors.cost" required>
-              <div>
-                <label>Costo</label>
-              </div>
-              <el-input
-                placeholder="Ingresa el costo de la habitación"
-                size="large"
-                v-model="habitation.cost"
-                type="number"
-              />
-            </el-form-item>
-          </Field>
-        </el-col>
-        <el-col :span="8">
-          <Field name="observations" :rules="validateObservations" as="text">
-            <el-form-item :error="errors.observations" required>
-              <div>
-                <label>Observaciones</label>
-              </div>
-              <el-input
-                placeholder="Ingresa las observaciones de la habitación"
-                size="large"
-                v-model="habitation.observations"
-                type="textarea"
-                :autosize="{ minRows: 4, maxRows: 8 }"
-              />
-            </el-form-item>
-          </Field>
+          <el-form-item :error="errors.observations" required>
+            <div>
+              <label>Observaciones</label>
+            </div>
+            <el-input
+              placeholder="Ingresa las observaciones de la habitación"
+              size="large"
+              v-model="habitation.observations"
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 8 }"
+            />
+          </el-form-item>
         </el-col>
       </el-row>
       <el-divider />
@@ -180,6 +168,7 @@
 import { ref, inject, computed, watch } from 'vue'
 import { Field, Form } from 'vee-validate'
 import HabitationServices from '@/Services/Habitation.Services'
+import ReservationHotelServices from '@/Services/ReservationHotel.Services'
 import { useStore } from 'vuex'
 
 export default {
@@ -192,8 +181,17 @@ export default {
     // const swal = inject('$swal')
     const habitationFormRef = ref(null)
     const habitation = ref([])
+    const reservationHotel = ref([])
     const store = useStore()
+    const reservationHotelId = computed(
+      () => store.getters.getReservationHotelId
+    )
+    const { getReservationHotel } = ReservationHotelServices()
     const { getHabitation, updateHabitation } = HabitationServices()
+
+    getReservationHotel(reservationHotelId.value, data => {
+      reservationHotel.value = data
+    })
     watch(isOpenDialog, newValue => {
       if (newValue) {
         const hotelId = computed(() => store.getters.getHotelId)
@@ -206,33 +204,10 @@ export default {
     const onUpdateHabitation = () => {
       updateHabitation(habitation.value, data => {
         isOpenDialog.value = false
-        // swal
-        //   .fire({
-        //     title: 'Habitación modificada correctamente',
-        //     text: 'La habitación se ha modificado satisfactoriamente.',
-        //     icon: 'success'
-        //   })
-        //   .then(result => {
-        //     if (result.isConfirmed) {
-        //       //
-        //     }
-        //   })
       })
     }
     const validateInvoice = () => {
       if (!habitation.value.invoice) {
-        return 'Este campo es requerido'
-      }
-      return true
-    }
-    const validateTypeHabitation = () => {
-      if (!habitation.value.typeHabitation) {
-        return 'Este campo es requerido'
-      }
-      return true
-    }
-    const validateAdvancePayment = () => {
-      if (!habitation.value.advancePayment) {
         return 'Este campo es requerido'
       }
       return true
@@ -255,38 +230,17 @@ export default {
       }
       return true
     }
-    const validatePurchaseDate = () => {
-      if (!habitation.value.purchaseDate) {
-        return 'Este campo es requerido'
-      }
-      return true
-    }
-    const validateCost = () => {
-      if (!habitation.value.cost) {
-        return 'Este campo es requerido'
-      }
-      return true
-    }
-    const validateObservations = () => {
-      if (!habitation.value.observations) {
-        return 'Este campo es requerido'
-      }
-      return true
-    }
     return {
       isOpenDialog,
       habitation,
+      reservationHotel,
+      reservationHotelId,
       habitationFormRef,
       onUpdateHabitation,
       validateInvoice,
-      validateTypeHabitation,
-      validateAdvancePayment,
       validateAges,
       validateAdults,
-      validateMinors,
-      validatePurchaseDate,
-      validateCost,
-      validateObservations
+      validateMinors
     }
   }
 }
