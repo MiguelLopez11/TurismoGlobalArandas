@@ -34,6 +34,11 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getReservationHotelById(int ReservationHotelId)
         {
             var Reservation = await _context.ReservationHotels
+                .Include(i => i.Employees)
+                .Include(i => i.Customers)
+                .Include(i => i.Hotels)
+                .Include(i => i.TypeReservation)
+                .Include(i => i.HabitationsReservation)
                 .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
             if (Reservation == null)
@@ -46,6 +51,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ReservationHotel>> PostReservationHotel(ReservationHotel Reservation)
         {
+            Reservation.DateSale = DateTime.Now;
             _context.ReservationHotels.Add(Reservation);
             await _context.SaveChangesAsync();
             return CreatedAtAction(

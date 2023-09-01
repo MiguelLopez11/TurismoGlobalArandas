@@ -62,9 +62,6 @@
           </el-row>
         </el-card>
       </tab-content>
-      <tab-content lazy title="Habitaciones" icon="bi bi-door-closed">
-        <habitation-reservation-list />
-      </tab-content>
       <tab-content
         title="Datos generales"
         icon="bi bi-airplane-engines"
@@ -72,6 +69,35 @@
         lazy
       >
         <el-row :gutter="35">
+          <el-col :span="8">
+            <el-form-item>
+              <v-select
+                class="w-100"
+                label="name"
+                v-model="reservationHotel.typeReservationId"
+                :options="typeReservations"
+                :reduce="typeReservation => typeReservation.typeReservationId"
+              >
+                <template #selected-option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
+                <template #option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
+                <template #header>
+                  <label>Tipo de reserva</label>
+                </template>
+                <template #search="{ attributes, events }">
+                  <input
+                    class="vs__search"
+                    :required="!reservationHotel.typeReservationId"
+                    v-bind="attributes"
+                    v-on="events"
+                  />
+                </template>
+              </v-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item>
               <v-select
@@ -94,7 +120,7 @@
                 <template #search="{ attributes, events }">
                   <input
                     class="vs__search"
-                    :required="!reservationHotel.destinationId"
+                    :required="!destinationId"
                     v-bind="attributes"
                     v-on="events"
                   />
@@ -147,26 +173,103 @@
           </el-col>
         </el-row>
       </tab-content>
-      <tab-content lazy title="Tarifas" icon="bi bi-door-closed">
-        <h1>pendiente</h1>
+      <tab-content lazy title="Habitaciones" icon="bi bi-door-closed">
+        <habitation-reservation-list />
+      </tab-content>
+      <tab-content lazy title="Tarifas" icon="bi bi-cash-stack">
+        <individual-rate />
+      </tab-content>
+      <tab-content lazy title="Relación de pagos" icon="bi bi-receipt">
+        <el-row :gutter="25" align="center">
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <label> Promotora </label>
+              </div>
+              <el-input
+                placeholder="Ingresa el nombre de la promotora"
+                size="large"
+                v-model="reservationHotel.promoter"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <label> Agente </label>
+              </div>
+              <el-input
+                placeholder="Ingresa el nombre de el agente "
+                size="large"
+                v-model="reservationHotel.agent"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <label> Plazo de pago a cliente </label>
+              </div>
+              <el-input
+                placeholder="Ingresa el plazo de pago a cliente"
+                size="large"
+                v-model="reservationHotel.paymentPeriod"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <div class="mb-2">
+              <span>Fecha limite de pago</span>
+            </div>
+            <el-form-item>
+              <el-date-picker
+                v-model="reservationHotel.paymentLimitDate"
+                class="w-100"
+                type="date"
+                placeholder="Selecciona la fecha limite del pago"
+                size="large"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <div class="mb-2">
+              <span>Fecha limite de pago del proveedor</span>
+            </div>
+            <el-form-item>
+              <el-date-picker
+                v-model="reservationHotel.paymentLimitDateProvider"
+                class="w-100"
+                type="date"
+                placeholder="Selecciona la fecha limite del proveedor"
+                size="large"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
       </tab-content>
     </form-wizard>
   </el-card>
 </template>
 
 <script>
-import { ref } from 'vue'
+// Services
 import CustomerServices from '@/Services/Customers.Services'
 import DestinationServices from '@/Services/Destinations.Services'
 import HotelsServices from '@/Services/Hotels.Services'
 import ReservationHotelServices from '@/Services/ReservationHotel.Services'
+import TypeReservationServices from '@/Services/TypeReservation.Services'
+// Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
+import IndividualRate from '@/views/Rates/IndividualRate.vue'
+// Libraries
 import { useStore } from 'vuex'
+import { ref } from 'vue'
 export default {
   components: {
     CustomersAddNew,
-    HabitationReservationList
+    HabitationReservationList,
+    IndividualRate
   },
   setup () {
     const { getCustomers } = CustomerServices()
@@ -177,11 +280,13 @@ export default {
       updateReservationHotel,
       getReservationHotel
     } = ReservationHotelServices()
+    const { getTypeReservations } = TypeReservationServices()
     const store = useStore()
     const isNewCustomer = ref(false)
     const customers = ref([])
     const destinations = ref([])
     const hotels = ref([])
+    const typeReservations = ref([])
     const destinationId = ref(null)
     const reservationHotel = ref([])
     const reservationHotelId = ref()
@@ -189,12 +294,9 @@ export default {
       reservationHotelId: 0,
       isDeleted: false
     })
-    const updateReservationHotelId = reservationHotelId => {
-      store.commit('setReservationHotelId', reservationHotelId) // Tu ID aquí
-    }
     createReservationHotel(reservationHotelFields.value, data => {
       reservationHotelId.value = data.reservationHotelId
-      updateReservationHotelId(data.reservationHotelId)
+      store.commit('setReservationHotelId', data.reservationHotelId)
       refreshReservationHotel()
     })
 
@@ -203,6 +305,9 @@ export default {
     })
     getDestinations(data => {
       destinations.value = data
+    })
+    getTypeReservations(data => {
+      typeReservations.value = data
     })
     const refreshCustomers = () => {
       getCustomers(data => {
@@ -251,6 +356,7 @@ export default {
     return {
       reservationHotelFields,
       reservationHotel,
+      typeReservations,
       customers,
       destinations,
       hotels,

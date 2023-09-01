@@ -6,8 +6,8 @@ export default function HabitationServices () {
       callback(response.data)
     })
   }
-  const getHabitation = (HabitationId, callback) => {
-    axiosPrivate.get(`/Habitations/${HabitationId}`).then((response) => {
+  const getHabitation = (habitationId, callback) => {
+    axiosPrivate.get(`/Habitations/${habitationId}`).then((response) => {
       callback(response.data)
     })
   }
@@ -17,12 +17,12 @@ export default function HabitationServices () {
     })
   }
   const updateHabitation = (data, callback) => {
-    axiosPrivate.put(`/Habitations/${data.HabitationId}`, data).then((response) => {
+    axiosPrivate.put(`/Habitations/${data.habitationId}`, data).then((response) => {
       callback(response.data)
     })
   }
-  const deleteHabitation = (HabitationId, callback) => {
-    axiosPrivate.delete(`/Habitations/${HabitationId}`).then((response) => {
+  const deleteHabitation = (habitationId, callback) => {
+    axiosPrivate.delete(`/Habitations/${habitationId}`).then((response) => {
       callback(response.data)
     })
   }

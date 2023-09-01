@@ -1,9 +1,24 @@
 <template>
   <el-card>
     <div class="card-header">
-      <el-button class="right-button" color="#7367f0" @click="closeSession">
-        <i class="bi bi-box-arrow-in-right"></i
-      ></el-button>
+      <el-dropdown class="right-button">
+        <el-button class="w-100" size="large" color="#7367F0">
+          <span>
+            <i class="bi bi-gear"></i>
+            Ajustes
+          </span>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="closeSession">
+              <span>
+                <i class="bi bi-box-arrow-in-right"></i>
+                Cerrar sesión
+              </span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
   </el-card>
 </template>
@@ -44,9 +59,11 @@ export default {
 .card-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
 }
-
+.el-header {
+  display: inline-table;
+}
 .right-button {
   margin-left: auto;
 }

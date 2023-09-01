@@ -93,7 +93,6 @@ export default {
     const filter = ref(null)
     const perPage = ref(5)
     const currentPage = ref(1)
-    const perPageSelect = ref([5, 10, 25, 50, 100])
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
@@ -126,11 +125,11 @@ export default {
     const onDeleteReservationHotel = reservationHotelId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar un Empleado, ¿Estas seguro?',
+          title: 'Estás a punto de eliminar una reservación, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar empleado',
+          confirmButtonText: 'Si, eliminar reservación',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
@@ -152,7 +151,6 @@ export default {
       filter,
       perPage,
       currentPage,
-      perPageSelect,
       isloading,
       searchValue,
       searchField,

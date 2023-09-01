@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230829020728_provider_discounts")]
+    partial class provider_discounts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -353,6 +356,9 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("Observations")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("TypeHabitation")
                         .HasColumnType("nvarchar(max)");
 
@@ -579,26 +585,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasKey("TypeReservationId");
 
                     b.ToTable("TypeReservations");
-
-                    b.HasData(
-                        new
-                        {
-                            TypeReservationId = 1,
-                            IsDeleted = false,
-                            Name = "Individual"
-                        },
-                        new
-                        {
-                            TypeReservationId = 2,
-                            IsDeleted = false,
-                            Name = "Grupal"
-                        },
-                        new
-                        {
-                            TypeReservationId = 3,
-                            IsDeleted = false,
-                            Name = "Grupo"
-                        });
                 });
 
             modelBuilder.Entity("UConnect.Entities.User", b =>
