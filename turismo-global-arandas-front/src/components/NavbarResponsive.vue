@@ -2,11 +2,10 @@
   <el-card>
     <div class="card-header">
       <el-dropdown class="right-button">
-        <el-button class="w-100" size="large" color="#7367F0">
-          <span>
-            <i class="bi bi-gear"></i>
-            Ajustes
-          </span>
+        <el-button class="w-100" size="large" circle>
+          <template #icon>
+            <i class="bi bi-person-circle"></i>
+          </template>
         </el-button>
         <template #dropdown>
           <el-dropdown-menu>

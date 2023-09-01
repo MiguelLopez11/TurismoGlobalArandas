@@ -8,7 +8,9 @@ namespace TurismoGlobalArandas.Models
         [Key]
         public int IndividualRateId { get; set; }
         public int ReservationHotelId { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public double PublicRate { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public double ClientRate { get; set; }
         public int ExtraDiscount { get; set; }
         public bool IsDeleted { get; set; }

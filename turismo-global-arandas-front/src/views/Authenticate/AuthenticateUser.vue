@@ -147,6 +147,7 @@ export default {
               if (result.isConfirmed) {
                 window.sessionStorage.setItem('Token', data.token)
                 window.sessionStorage.setItem('User', data.userName)
+                window.sessionStorage.setItem('EmployeeId', data.employeeId)
                 redirect.go('/')
               }
             })

@@ -114,6 +114,7 @@ namespace TurismoGlobalArandas.Controllers
                             Expiration = token.ValidTo,
                             Role = userRoles[0],
                             UserName = user.UserName,
+                            EmployeeId = user.EmployeeId,
                             Status = 200
                         }
                     );

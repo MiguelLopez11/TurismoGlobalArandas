@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230901181117_commission_employee")]
+    partial class commission_employee
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -719,12 +722,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("Agent")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CancellationPolicy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CodeVoicher")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
@@ -775,9 +772,6 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.Property<string>("ReservationInvoice")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("TotalCost")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime?>("TravelDate")
                         .HasColumnType("datetime2");
