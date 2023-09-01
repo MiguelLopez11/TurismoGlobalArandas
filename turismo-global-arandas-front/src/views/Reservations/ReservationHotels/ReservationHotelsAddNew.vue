@@ -177,7 +177,60 @@
         <habitation-reservation-list />
       </tab-content>
       <tab-content lazy title="Tarifas" icon="bi bi-cash-stack">
-        <individual-rate />
+        <el-row :gutter="35">
+          <el-col :span="8">
+            <Field name="publicRate" v-slot="{ value, field, errorMessage }">
+              <el-form-item :error="errorMessage" required>
+                <div>
+                  <label> Tarifa Pública </label>
+                </div>
+                <el-input
+                  placeholder="Ingresa la tarifa pública"
+                  size="large"
+                  v-bind="field"
+                  v-model="individualRateFields.publicRate"
+                  :validate-event="false"
+                  :model-value="value"
+                />
+              </el-form-item>
+            </Field>
+          </el-col>
+          <el-col :span="8">
+            <Field name="clientRate" v-slot="{ value, field, errorMessage }">
+              <el-form-item :error="errorMessage" required>
+                <div>
+                  <label> Tarifa al cliente </label>
+                </div>
+                <el-input
+                  placeholder="Ingresa la tarifa al cliente"
+                  size="large"
+                  v-bind="field"
+                  v-model="individualRateFields.clientRate"
+                  :validate-event="false"
+                  :model-value="value"
+                />
+              </el-form-item>
+            </Field>
+          </el-col>
+          <el-col :span="8">
+            <Field name="extraDiscount" v-slot="{ value, field, errorMessage }">
+              <el-form-item :error="errorMessage" required>
+                <div>
+                  <label>Descuento extra</label>
+                </div>
+                <el-input
+                  placeholder="Ingresa el descuento extra"
+                  size="large"
+                  v-bind="field"
+                  v-model="individualRateFields.extraDiscount"
+                  :validate-event="false"
+                  :model-value="value"
+                />
+              </el-form-item>
+            </Field>
+          </el-col>
+        </el-row>
+        <el-divider />
       </tab-content>
       <tab-content lazy title="Relación de pagos" icon="bi bi-receipt">
         <el-row :gutter="25" align="center">
@@ -261,15 +314,13 @@ import TypeReservationServices from '@/Services/TypeReservation.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
-import IndividualRate from '@/views/Rates/IndividualRate.vue'
 // Libraries
 import { useStore } from 'vuex'
 import { ref } from 'vue'
 export default {
   components: {
     CustomersAddNew,
-    HabitationReservationList,
-    IndividualRate
+    HabitationReservationList
   },
   setup () {
     const { getCustomers } = CustomerServices()
@@ -294,6 +345,15 @@ export default {
       reservationHotelId: 0,
       isDeleted: false
     })
+    const individualRateFields = ref({
+      individualRateId: 0,
+      reservationHotelId: reservationHotelId.value,
+      publicRate: null,
+      clientRate: null,
+      extraDiscount: null,
+      isDeleted: false
+    })
+
     createReservationHotel(reservationHotelFields.value, data => {
       reservationHotelId.value = data.reservationHotelId
       store.commit('setReservationHotelId', data.reservationHotelId)
@@ -333,6 +393,10 @@ export default {
     const validationClient = () => {
       return new Promise((resolve, reject) => {
         if (reservationHotel.value.customerId) {
+          updateReservationHotel(reservationHotel.value, data => {
+            reservationHotel.value = data
+            refreshReservationHotel()
+          })
           resolve(true)
         }
         reject(new Error('Error'))
@@ -353,8 +417,24 @@ export default {
         reject(new Error('Error'))
       })
     }
+    const validationRates = () => {
+      return new Promise((resolve, reject) => {
+        if (
+          individualRateFields.value.publicRate &&
+          individualRateFields.value.clientRate
+        ) {
+          updateReservationHotel(reservationHotel.value, data => {
+            reservationHotel.value = data
+            refreshReservationHotel()
+          })
+          resolve(true)
+        }
+        reject(new Error('Error'))
+      })
+    }
     return {
       reservationHotelFields,
+      individualRateFields,
       reservationHotel,
       typeReservations,
       customers,
@@ -365,7 +445,8 @@ export default {
       onAddedCustomer,
       onGetHotel,
       validationClient,
-      validationGeneral
+      validationGeneral,
+      validationRates
     }
   }
 }

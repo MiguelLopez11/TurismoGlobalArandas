@@ -30,21 +30,16 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="typehabitation" v-slot="{ value, field, errorMessage }">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item >
               <div>
                 <label> Tipo de habitación </label>
               </div>
               <el-input
                 placeholder="Ingresa el tipo de habitación"
                 size="large"
-                v-bind="field"
                 v-model="habitationFields.typeHabitation"
-                :validate-event="false"
-                :model-value="value"
               />
             </el-form-item>
-          </Field>
         </el-col>
         <el-col :span="8">
           <Field name="contactPhone" v-slot="{ value, field, errorMessage }">
@@ -65,21 +60,16 @@
           </Field>
         </el-col>
         <el-col v-if="reservationHotel.typeReservation.typeReservationId !== 1" :span="8">
-          <Field name="advancePayment" v-slot="{ value, field, errorMessage }">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item >
               <div>
                 <label> Anticipo </label>
               </div>
               <el-input
                 placeholder="Ingresa el monto del anticipo"
                 size="large"
-                v-bind="field"
                 v-model="habitationFields.advancePayment"
-                :validate-event="false"
-                :model-value="value"
               />
             </el-form-item>
-          </Field>
         </el-col>
         <el-col :span="8">
           <Field name="ages" v-slot="{ value, field, errorMessage }">
@@ -133,41 +123,31 @@
           </Field>
         </el-col>
         <el-col v-if="reservationHotel.typeReservation.typeReservationId !== 1" :span="8">
-          <Field name="cost" v-slot="{ value, field, errorMessage }">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item >
               <div>
                 <label>Costo</label>
               </div>
               <el-input
                 placeholder="Ingresa el costo de la habitación"
                 size="large"
-                v-bind="field"
                 v-model="habitationFields.cost"
-                :validate-event="false"
-                :model-value="value"
                 type="number"
               />
             </el-form-item>
-          </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="observations" v-slot="{ value, field, errorMessage }">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item>
               <div>
                 <label>Observaciones</label>
               </div>
               <el-input
                 placeholder="Ingresa las observaciones de la habitación"
                 size="large"
-                v-bind="field"
                 v-model="habitationFields.observations"
-                :validate-event="false"
-                :model-value="value"
                 type="textarea"
                 :autosize="{ minRows: 4, maxRows: 8 }"
               />
             </el-form-item>
-          </Field>
         </el-col>
       </el-row>
       <el-divider />
