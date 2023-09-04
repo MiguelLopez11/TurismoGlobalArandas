@@ -277,23 +277,6 @@
             </Field>
           </el-col>
           <el-col :span="8">
-            <Field name="clientRate" v-slot="{ value, field, errorMessage }">
-              <el-form-item :error="errorMessage" required>
-                <div>
-                  <label> Tarifa al cliente </label>
-                </div>
-                <el-input
-                  placeholder="Ingresa la tarifa al cliente"
-                  size="large"
-                  v-bind="field"
-                  v-model="individualRateFields.clientRate"
-                  :validate-event="false"
-                  :model-value="value"
-                />
-              </el-form-item>
-            </Field>
-          </el-col>
-          <el-col :span="8">
             <Field name="extraDiscount" v-slot="{ value, field, errorMessage }">
               <el-form-item :error="errorMessage" required>
                 <div>
@@ -304,6 +287,23 @@
                   size="large"
                   v-bind="field"
                   v-model="individualRateFields.extraDiscount"
+                  :validate-event="false"
+                  :model-value="value"
+                />
+              </el-form-item>
+            </Field>
+          </el-col>
+          <el-col :span="8">
+            <Field name="clientRate" v-slot="{ value, field, errorMessage }">
+              <el-form-item :error="errorMessage" required>
+                <div>
+                  <label> Tarifa al cliente </label>
+                </div>
+                <el-input
+                  placeholder="Ingresa la tarifa al cliente"
+                  size="large"
+                  v-bind="field"
+                  v-model="individualRateFields.clientRate"
                   :validate-event="false"
                   :model-value="value"
                 />
