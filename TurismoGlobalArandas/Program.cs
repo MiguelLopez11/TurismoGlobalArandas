@@ -67,7 +67,7 @@ namespace TurismoGlobalArandas
                     policy =>
                     {
                         policy.WithOrigins("http://localhost:8080");
-                        policy.WithOrigins("https://digital.atogobmx.com");
+                        policy.WithOrigins("https://turismo-global-arandas.onrender.com");
                         policy.AllowAnyHeader();
                         policy.AllowCredentials();
                         policy.AllowAnyMethod();
