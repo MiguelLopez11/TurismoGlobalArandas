@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230901174613_changeTable")]
+    partial class changeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,26 +160,23 @@ namespace TurismoGlobalArandas.Migrations
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Commissions", b =>
                 {
-                    b.Property<int>("CommissionId")
+                    b.Property<int>("DiscountProviderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommissionId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DiscountProviderId"));
 
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("CommissionAgency")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("CommissionClient")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("CommissionEmployee")
-                        .HasColumnType("float");
-
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("DiscountAgency")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal?>("DiscountClient")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -184,7 +184,7 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<int>("ProviderId")
                         .HasColumnType("int");
 
-                    b.HasKey("CommissionId");
+                    b.HasKey("DiscountProviderId");
 
                     b.HasIndex("ProviderId");
 
@@ -193,138 +193,67 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasData(
                         new
                         {
-                            CommissionId = 1,
-                            CommissionAgency = 0.14999999999999999,
-                            CommissionClient = 0.10000000000000001,
-                            CommissionEmployee = 0.050000000000000003,
+                            DiscountProviderId = 1,
+                            DiscountAgency = 0.15m,
+                            DiscountClient = 0.1m,
                             IsDeleted = false,
                             ProviderId = 1
                         },
                         new
                         {
-                            CommissionId = 2,
-                            CommissionAgency = 0.14999999999999999,
-                            CommissionClient = 0.0,
-                            CommissionEmployee = 0.14999999999999999,
+                            DiscountProviderId = 2,
+                            DiscountAgency = 0.15m,
+                            DiscountClient = 0m,
                             IsDeleted = false,
                             ProviderId = 2
                         },
                         new
                         {
-                            CommissionId = 3,
-                            CommissionAgency = 0.14999999999999999,
-                            CommissionClient = 0.10000000000000001,
-                            CommissionEmployee = 0.050000000000000003,
+                            DiscountProviderId = 3,
+                            DiscountAgency = 0.15m,
+                            DiscountClient = 0.1m,
                             IsDeleted = false,
                             ProviderId = 3
                         },
                         new
                         {
-                            CommissionId = 4,
-                            CommissionAgency = 0.10000000000000001,
-                            CommissionClient = 0.0,
-                            CommissionEmployee = 0.10000000000000001,
+                            DiscountProviderId = 4,
+                            DiscountAgency = 0.1m,
+                            DiscountClient = 0m,
                             IsDeleted = false,
                             ProviderId = 4
                         },
                         new
                         {
-                            CommissionId = 5,
-                            CommissionAgency = 0.17999999999999999,
-                            CommissionClient = 0.13,
-                            CommissionEmployee = 0.050000000000000003,
+                            DiscountProviderId = 5,
+                            DiscountAgency = 0.18m,
+                            DiscountClient = 0.13m,
                             IsDeleted = false,
                             ProviderId = 5
                         },
                         new
                         {
-                            CommissionId = 6,
-                            CommissionAgency = 0.17999999999999999,
-                            CommissionClient = 0.10000000000000001,
-                            CommissionEmployee = 0.080000000000000002,
+                            DiscountProviderId = 6,
+                            DiscountAgency = 0.18m,
+                            DiscountClient = 0.1m,
                             IsDeleted = false,
                             ProviderId = 6
                         },
                         new
                         {
-                            CommissionId = 7,
-                            CommissionAgency = 0.10000000000000001,
-                            CommissionClient = 0.0,
-                            CommissionEmployee = 0.10000000000000001,
+                            DiscountProviderId = 7,
+                            DiscountAgency = 0.1m,
+                            DiscountClient = 0m,
                             IsDeleted = false,
                             ProviderId = 7
                         },
                         new
                         {
-                            CommissionId = 8,
-                            CommissionAgency = 0.050000000000000003,
-                            CommissionClient = 0.0,
-                            CommissionEmployee = 0.050000000000000003,
+                            DiscountProviderId = 8,
+                            DiscountAgency = 0.05m,
+                            DiscountClient = 0m,
                             IsDeleted = false,
                             ProviderId = 8
-                        },
-                        new
-                        {
-                            CommissionId = 9,
-                            CommissionAgency = 0.14999999999999999,
-                            CommissionClient = 0.080000000000000002,
-                            CommissionEmployee = 0.070000000000000007,
-                            IsDeleted = false,
-                            ProviderId = 9
-                        },
-                        new
-                        {
-                            CommissionId = 10,
-                            CommissionAgency = 0.17000000000000001,
-                            CommissionClient = 0.12,
-                            CommissionEmployee = 0.050000000000000003,
-                            IsDeleted = false,
-                            ProviderId = 10
-                        },
-                        new
-                        {
-                            CommissionId = 11,
-                            CommissionAgency = 0.10000000000000001,
-                            CommissionClient = 0.050000000000000003,
-                            CommissionEmployee = 0.050000000000000003,
-                            IsDeleted = false,
-                            ProviderId = 11
-                        },
-                        new
-                        {
-                            CommissionId = 12,
-                            CommissionAgency = 0.10000000000000001,
-                            CommissionClient = 0.0,
-                            CommissionEmployee = 0.10000000000000001,
-                            IsDeleted = false,
-                            ProviderId = 12
-                        },
-                        new
-                        {
-                            CommissionId = 13,
-                            CommissionAgency = 0.20000000000000001,
-                            CommissionClient = 0.0,
-                            CommissionEmployee = 0.20000000000000001,
-                            IsDeleted = false,
-                            ProviderId = 13
-                        },
-                        new
-                        {
-                            CommissionId = 14,
-                            CommissionAgency = 0.050000000000000003,
-                            CommissionClient = 0.0,
-                            CommissionEmployee = 0.050000000000000003,
-                            IsDeleted = false,
-                            ProviderId = 14
-                        },
-                        new
-                        {
-                            CommissionId = 15,
-                            CommissionAgency = 0.14999999999999999,
-                            CommissionClient = 0.10000000000000001,
-                            CommissionEmployee = 0.050000000000000003,
-                            IsDeleted = false,
-                            ProviderId = 15
                         });
                 });
 
@@ -719,12 +648,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("Agent")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CancellationPolicy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CodeVoicher")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
@@ -775,9 +698,6 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.Property<string>("ReservationInvoice")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("TotalCost")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime?>("TravelDate")
                         .HasColumnType("datetime2");

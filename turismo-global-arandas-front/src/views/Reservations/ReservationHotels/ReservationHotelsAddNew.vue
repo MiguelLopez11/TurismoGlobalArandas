@@ -171,6 +171,87 @@
               />
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <v-select
+                class="w-100"
+                label="name"
+                v-model="reservationHotel.providerId"
+                :options="providers"
+                :reduce="provider => provider.providerId"
+              >
+                <template #selected-option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
+                <template #option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
+                <template #header>
+                  <label>Promotora</label>
+                </template>
+                <template #search="{ attributes, events }">
+                  <input
+                    class="vs__search"
+                    :required="!reservationHotel.providerId"
+                    v-bind="attributes"
+                    v-on="events"
+                  />
+                </template>
+              </v-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <label> Agente </label>
+              </div>
+              <el-input
+                placeholder="Ingresa el nombre de el agente "
+                size="large"
+                v-model="reservationHotel.agent"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <label> Plazo de pago a cliente </label>
+              </div>
+              <el-input
+                placeholder="Ingresa el plazo de pago a cliente"
+                size="large"
+                v-model="reservationHotel.paymentPeriod"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <div class="mb-2">
+              <span>Fecha limite de pago</span>
+            </div>
+            <el-form-item>
+              <el-date-picker
+                v-model="reservationHotel.paymentLimitDate"
+                class="w-100"
+                type="date"
+                placeholder="Selecciona la fecha limite del pago"
+                size="large"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <div class="mb-2">
+              <span>Fecha limite de pago del proveedor</span>
+            </div>
+            <el-form-item>
+              <el-date-picker
+                v-model="reservationHotel.paymentLimitDateProvider"
+                class="w-100"
+                type="date"
+                placeholder="Selecciona la fecha limite del proveedor"
+                size="large"
+              />
+            </el-form-item>
+          </el-col>
         </el-row>
       </tab-content>
       <tab-content lazy title="Habitaciones" icon="bi bi-door-closed">
@@ -232,70 +313,63 @@
         </el-row>
         <el-divider />
       </tab-content>
-      <tab-content lazy title="Relación de pagos" icon="bi bi-receipt">
-        <el-row :gutter="25" align="center">
+      <tab-content lazy title="Cierre reservación" icon="bi bi-receipt">
+        <el-row :gutter="25" align="middle">
           <el-col :span="8">
             <el-form-item>
               <div>
-                <label> Promotora </label>
+                <label>Politicas de cancelación</label>
               </div>
               <el-input
-                placeholder="Ingresa el nombre de la promotora"
+                placeholder="Ingresa el descuento extra"
                 size="large"
-                v-model="reservationHotel.promoter"
+                v-model="reservationHotel.cancellationPolicy"
+                type="textarea"
+                :autosize="{ minRows: 4, maxRows: 8 }"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item>
               <div>
-                <label> Agente </label>
+                <label>Codigo de voucher</label>
               </div>
               <el-input
-                placeholder="Ingresa el nombre de el agente "
+                placeholder="Ingresa el descuento extra"
                 size="large"
-                v-model="reservationHotel.agent"
+                v-model="reservationHotel.codeVoicher"
+                type="textarea"
+                :autosize="{ minRows: 4, maxRows: 8 }"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item>
-              <div>
-                <label> Plazo de pago a cliente </label>
-              </div>
-              <el-input
-                placeholder="Ingresa el plazo de pago a cliente"
-                size="large"
-                v-model="reservationHotel.paymentPeriod"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <div class="mb-2">
-              <span>Fecha limite de pago</span>
-            </div>
-            <el-form-item>
-              <el-date-picker
-                v-model="reservationHotel.paymentLimitDate"
+              <v-select
                 class="w-100"
-                type="date"
-                placeholder="Selecciona la fecha limite del pago"
-                size="large"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <div class="mb-2">
-              <span>Fecha limite de pago del proveedor</span>
-            </div>
-            <el-form-item>
-              <el-date-picker
-                v-model="reservationHotel.paymentLimitDateProvider"
-                class="w-100"
-                type="date"
-                placeholder="Selecciona la fecha limite del proveedor"
-                size="large"
-              />
+                label="name"
+                v-model="reservationHotel.employeeId"
+                :options="employees"
+                :reduce="employee => employee.employeeId"
+              >
+                <template #selected-option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
+                <template #option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
+                <template #header>
+                  <label>Agente emisor</label>
+                </template>
+                <template #search="{ attributes, events }">
+                  <input
+                    class="vs__search"
+                    :required="!reservationHotel.employeeId"
+                    v-bind="attributes"
+                    v-on="events"
+                  />
+                </template>
+              </v-select>
             </el-form-item>
           </el-col>
         </el-row>
@@ -311,6 +385,8 @@ import DestinationServices from '@/Services/Destinations.Services'
 import HotelsServices from '@/Services/Hotels.Services'
 import ReservationHotelServices from '@/Services/ReservationHotel.Services'
 import TypeReservationServices from '@/Services/TypeReservation.Services'
+import ProviderServices from '@/Services/Provider.Services'
+import EmployeeServices from '@/Services/Employees.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
@@ -332,12 +408,16 @@ export default {
       getReservationHotel
     } = ReservationHotelServices()
     const { getTypeReservations } = TypeReservationServices()
+    const { getProviders } = ProviderServices()
+    const { getEmployees } = EmployeeServices()
     const store = useStore()
     const isNewCustomer = ref(false)
     const customers = ref([])
     const destinations = ref([])
     const hotels = ref([])
     const typeReservations = ref([])
+    const providers = ref([])
+    const employees = ref([])
     const destinationId = ref(null)
     const reservationHotel = ref([])
     const reservationHotelId = ref()
@@ -353,6 +433,7 @@ export default {
       extraDiscount: null,
       isDeleted: false
     })
+    const employyeId = window.sessionStorage.getItem('EmployeeId')
 
     createReservationHotel(reservationHotelFields.value, data => {
       reservationHotelId.value = data.reservationHotelId
@@ -368,6 +449,12 @@ export default {
     })
     getTypeReservations(data => {
       typeReservations.value = data
+    })
+    getProviders(data => {
+      providers.value = data
+    })
+    getEmployees(data => {
+      employees.value = data
     })
     const refreshCustomers = () => {
       getCustomers(data => {
@@ -393,6 +480,7 @@ export default {
     const validationClient = () => {
       return new Promise((resolve, reject) => {
         if (reservationHotel.value.customerId) {
+          reservationHotel.value.employeeId = employyeId
           updateReservationHotel(reservationHotel.value, data => {
             reservationHotel.value = data
             refreshReservationHotel()
@@ -440,6 +528,8 @@ export default {
       customers,
       destinations,
       hotels,
+      providers,
+      employees,
       isNewCustomer,
       destinationId,
       onAddedCustomer,

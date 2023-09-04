@@ -54,7 +54,7 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpPut("{TypeReservationId}")]
-        public async Task<ActionResult> PutHabitation(
+        public async Task<ActionResult> PutTypeReservation(
             int TypeReservationId,
             TypeReservation typeReservation
         )
@@ -82,7 +82,7 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpDelete("{TypeReservationId}")]
-        public async Task<IActionResult> DeleteHabitation(int TypeReservationId)
+        public async Task<IActionResult> DeleteTYpeReservation(int TypeReservationId)
         {
             var typeReservation = await _context.TypeReservations.FirstOrDefaultAsync(
                 f => f.TypeReservationId == TypeReservationId
