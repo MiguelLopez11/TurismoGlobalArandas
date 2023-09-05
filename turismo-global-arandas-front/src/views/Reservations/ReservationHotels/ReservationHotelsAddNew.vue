@@ -5,6 +5,7 @@
       backButtonText="Atras"
       doneButtonText="Finalizar"
       color="#7367F0"
+      @on-complete="onComplete"
     >
       <tab-content
         title="Datos del cliente"
@@ -16,7 +17,7 @@
           <el-row :gutter="0">
             <el-col :span="8">
               <div>
-                <label>¿Es un cliente nuevo?</label>
+                <label> ¿Es un cliente nuevo?</label>
               </div>
               <el-form-item>
                 <el-switch size="large" v-model="isNewCustomer"> </el-switch>
@@ -38,7 +39,8 @@
                     <label>{{ name }} {{ lastname }}</label>
                   </template>
                   <template #header>
-                    <label>Cliente</label>
+                    <span class="text-danger">*</span>
+                    <label> Cliente</label>
                   </template>
                   <template #search="{ attributes, events }">
                     <input
@@ -85,6 +87,7 @@
                   <label>{{ name }} {{ lastname }}</label>
                 </template>
                 <template #header>
+                  <span class="text-danger">*</span>
                   <label>Tipo de reserva</label>
                 </template>
                 <template #search="{ attributes, events }">
@@ -115,6 +118,7 @@
                   <label>{{ name }} {{ lastname }}</label>
                 </template>
                 <template #header>
+                  <span class="text-danger">*</span>
                   <label>Destino</label>
                 </template>
                 <template #search="{ attributes, events }">
@@ -144,6 +148,7 @@
                   <label>{{ name }} {{ lastname }}</label>
                 </template>
                 <template #header>
+                  <span class="text-danger">*</span>
                   <label>Hotel</label>
                 </template>
                 <template #search="{ attributes, events }">
@@ -159,6 +164,7 @@
           </el-col>
           <el-col :span="8">
             <div class="mb-2">
+              <span class="text-danger">*</span>
               <span>Fecha del viaje</span>
             </div>
             <el-form-item>
@@ -187,6 +193,7 @@
                   <label>{{ name }} {{ lastname }}</label>
                 </template>
                 <template #header>
+                  <span class="text-danger">*</span>
                   <label>Promotora</label>
                 </template>
                 <template #search="{ attributes, events }">
@@ -203,6 +210,7 @@
           <el-col :span="8">
             <el-form-item>
               <div>
+                <span class="text-danger">*</span>
                 <label> Agente </label>
               </div>
               <el-input
@@ -215,6 +223,7 @@
           <el-col :span="8">
             <el-form-item>
               <div>
+                <span class="text-danger">*</span>
                 <label> Plazo de pago a cliente </label>
               </div>
               <el-input
@@ -226,6 +235,7 @@
           </el-col>
           <el-col :span="8">
             <div class="mb-2">
+              <span class="text-danger">*</span>
               <span>Fecha limite de pago</span>
             </div>
             <el-form-item>
@@ -240,6 +250,7 @@
           </el-col>
           <el-col :span="8">
             <div class="mb-2">
+              <span class="text-danger">*</span>
               <span>Fecha limite de pago del proveedor</span>
             </div>
             <el-form-item>
@@ -257,12 +268,18 @@
       <tab-content lazy title="Habitaciones" icon="bi bi-door-closed">
         <habitation-reservation-list />
       </tab-content>
-      <tab-content lazy title="Tarifas" icon="bi bi-cash-stack">
+      <tab-content
+        lazy
+        title="Tarifas"
+        icon="bi bi-cash-stack"
+        :beforeChange="validationRates"
+      >
         <el-row :gutter="35">
           <el-col :span="8">
             <Field name="publicRate" v-slot="{ value, field, errorMessage }">
               <el-form-item :error="errorMessage" required>
                 <div>
+                  <span class="text-danger">*</span>
                   <label> Tarifa Pública </label>
                 </div>
                 <el-input
@@ -289,7 +306,9 @@
                   v-model="individualRateFields.extraDiscount"
                   :validate-event="false"
                   :model-value="value"
-                />
+                >
+                  <template #append>%</template>
+                </el-input>
               </el-form-item>
             </Field>
           </el-col>
@@ -313,11 +332,17 @@
         </el-row>
         <el-divider />
       </tab-content>
-      <tab-content lazy title="Cierre reservación" icon="bi bi-receipt">
+      <tab-content
+        lazy
+        title="Cierre reservación"
+        icon="bi bi-receipt"
+        :beforeChange="validationClosure"
+      >
         <el-row :gutter="25" align="middle">
           <el-col :span="8">
             <el-form-item>
               <div>
+                <span class="text-danger">*</span>
                 <label>Politicas de cancelación</label>
               </div>
               <el-input
@@ -332,6 +357,7 @@
           <el-col :span="8">
             <el-form-item>
               <div>
+                <span class="text-danger">*</span>
                 <label>Codigo de voucher</label>
               </div>
               <el-input
@@ -359,6 +385,7 @@
                   <label>{{ name }} {{ lastname }}</label>
                 </template>
                 <template #header>
+                  <span class="text-danger">*</span>
                   <label>Agente emisor</label>
                 </template>
                 <template #search="{ attributes, events }">
@@ -392,7 +419,8 @@ import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
 // Libraries
 import { useStore } from 'vuex'
-import { ref } from 'vue'
+import { ref, inject } from 'vue'
+import { useRouter } from 'vue-router'
 export default {
   components: {
     CustomersAddNew,
@@ -411,6 +439,8 @@ export default {
     const { getProviders } = ProviderServices()
     const { getEmployees } = EmployeeServices()
     const store = useStore()
+    const redirect = useRouter()
+    const swal = inject('$swal')
     const isNewCustomer = ref(false)
     const customers = ref([])
     const destinations = ref([])
@@ -477,47 +507,91 @@ export default {
         reservationHotel.value = data
       })
     }
+    const onUpdateReservation = () => {
+      updateReservationHotel(reservationHotel.value, data => {
+        reservationHotel.value = data
+        refreshReservationHotel()
+      })
+    }
+    const onMessageErrorSteps = () => {
+      swal.fire({
+        title: 'Datos requeridos',
+        text: 'Verifique los datos requeridos con un * e intentelo de nuevo.',
+        icon: 'error'
+      })
+    }
+    const onComplete = () => {
+      swal
+        .fire({
+          title: 'Reservación registrada correctamente',
+          text: 'La reservación se ha cargado al sistema satisfactoriamente.',
+          icon: 'success'
+        })
+        .then(result => {
+          if (result.isConfirmed) {
+            redirect.push('/ReservacionesHoteleria')
+          }
+        })
+    }
     const validationClient = () => {
       return new Promise((resolve, reject) => {
         if (reservationHotel.value.customerId) {
           reservationHotel.value.employeeId = employyeId
-          updateReservationHotel(reservationHotel.value, data => {
-            reservationHotel.value = data
-            refreshReservationHotel()
-          })
+          onUpdateReservation()
           resolve(true)
+        } else {
+          onMessageErrorSteps()
+          reject(new Error('Error'))
         }
-        reject(new Error('Error'))
       })
     }
     const validationGeneral = () => {
       return new Promise((resolve, reject) => {
         if (
           reservationHotel.value.hotelId &&
-          reservationHotel.value.travelDate
+          reservationHotel.value.travelDate &&
+          reservationHotel.value.typeReservationId &&
+          destinationId.value &&
+          reservationHotel.value.hotelId &&
+          reservationHotel.value.travelDate &&
+          reservationHotel.value.providerId &&
+          reservationHotel.value.agent &&
+          reservationHotel.value.paymentPeriod &&
+          reservationHotel.value.paymentLimitDate &&
+          reservationHotel.value.paymentLimitDateProvider
         ) {
-          updateReservationHotel(reservationHotel.value, data => {
-            reservationHotel.value = data
-            refreshReservationHotel()
-          })
+          onUpdateReservation()
           resolve(true)
+        } else {
+          onMessageErrorSteps()
+          reject(new Error('Error'))
         }
-        reject(new Error('Error'))
       })
     }
     const validationRates = () => {
       return new Promise((resolve, reject) => {
-        if (
-          individualRateFields.value.publicRate &&
-          individualRateFields.value.clientRate
-        ) {
-          updateReservationHotel(reservationHotel.value, data => {
-            reservationHotel.value = data
-            refreshReservationHotel()
-          })
+        if (individualRateFields.value.publicRate) {
+          onUpdateReservation()
           resolve(true)
+        } else {
+          onMessageErrorSteps()
+          reject(new Error('Error'))
         }
-        reject(new Error('Error'))
+      })
+    }
+    const validationClosure = () => {
+      return new Promise((resolve, reject) => {
+        if (
+          individualRateFields.value.cancellationPolicy &&
+          individualRateFields.value.codeVoicher &&
+          individualRateFields.value.employeeId
+        ) {
+          onUpdateReservation()
+          resolve(true)
+        } else {
+          onMessageErrorSteps()
+          reject(new Error('Error'))
+        }
       })
     }
     return {
@@ -534,9 +608,11 @@ export default {
       destinationId,
       onAddedCustomer,
       onGetHotel,
+      onComplete,
       validationClient,
       validationGeneral,
-      validationRates
+      validationRates,
+      validationClosure
     }
   }
 }
