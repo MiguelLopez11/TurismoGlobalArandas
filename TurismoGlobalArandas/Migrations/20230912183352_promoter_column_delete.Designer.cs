@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230912183352_promoter_column_delete")]
+    partial class promoter_column_delete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -737,6 +740,9 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("GroupCoordinator")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("HabitationsReservationId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("HotelId")
                         .HasColumnType("int");
 
@@ -790,6 +796,8 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("EmployeeId");
+
+                    b.HasIndex("HabitationsReservationId");
 
                     b.HasIndex("HotelId");
 
@@ -1043,6 +1051,10 @@ namespace TurismoGlobalArandas.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
+                    b.HasOne("TurismoGlobalArandas.Models.HabitationsReservation", "HabitationsReservation")
+                        .WithMany()
+                        .HasForeignKey("HabitationsReservationId");
+
                     b.HasOne("TurismoGlobalArandas.Models.Hotels", "Hotels")
                         .WithMany()
                         .HasForeignKey("HotelId");
@@ -1058,6 +1070,8 @@ namespace TurismoGlobalArandas.Migrations
                     b.Navigation("Customers");
 
                     b.Navigation("Employees");
+
+                    b.Navigation("HabitationsReservation");
 
                     b.Navigation("Hotels");
 

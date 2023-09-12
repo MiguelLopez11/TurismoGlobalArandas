@@ -8,7 +8,8 @@ namespace TurismoGlobalArandas.Models
         [Key]
         public int ReservationHotelId { get; set; }
         public string? ReservationInvoice { get; set; } = null;
-        public DateTime? TravelDate { get; set; } = null;
+        public DateTime? TravelDateStart { get; set; } = null;
+        public DateTime? TravelDateEnd { get; set; } = null;
         public string? TypeHabitation { get; set; } = null;
         public int? NumberHabitations { get; set; } = null;
         public string? PhoneContact { get; set; } = null;
@@ -16,7 +17,6 @@ namespace TurismoGlobalArandas.Models
         public string? GroupCoordinator { get; set; } = null;
         public string? PhoneCoordinator { get; set; } = null;
         public DateTime? DateSale { get; set; } = null;
-        public string? Promoter { get; set; } = null;
         public string? Agent { get; set; } = null;
         public string? PaymentPeriod { get; set; } = null;
         public string? CancellationPolicy { get; set; } = null;
@@ -30,7 +30,6 @@ namespace TurismoGlobalArandas.Models
         public int? EmployeeId { get; set; } = null;
         public int? CustomerId { get; set; } = null;
         public int? HotelId { get; set; } = null;
-        public int? HabitationsReservationId { get; set; } = null;
         public int? ProviderId { get; set; } = null;
         public bool IsDeleted { get; set; }
 
@@ -46,8 +45,6 @@ namespace TurismoGlobalArandas.Models
         [ForeignKey("TypeReservationId")]
         public TypeReservation? TypeReservation { get; set; }
 
-        [ForeignKey("HabitationsReservationId")]
-        public HabitationsReservation? HabitationsReservation { get; set; }
 
         [ForeignKey("ProviderId")]
         public Providers? Providers { get; set; }

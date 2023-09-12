@@ -25,7 +25,6 @@ namespace TurismoGlobalArandas.Controllers
                 .Include(i => i.Customers)
                 .Include(i => i.Hotels)
                 .Include(i => i.TypeReservation)
-                .Include(i => i.HabitationsReservation)
                 .Where(w => !w.IsDeleted).ToListAsync();
             return Ok(Reservations);
         }
@@ -38,7 +37,6 @@ namespace TurismoGlobalArandas.Controllers
                 .Include(i => i.Customers)
                 .Include(i => i.Hotels)
                 .Include(i => i.TypeReservation)
-                .Include(i => i.HabitationsReservation)
                 .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
             if (Reservation == null)
@@ -51,6 +49,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ReservationHotel>> PostReservationHotel(ReservationHotel Reservation)
         {
+            
             Reservation.DateSale = DateTime.Now;
             _context.ReservationHotels.Add(Reservation);
             await _context.SaveChangesAsync();
@@ -78,22 +77,27 @@ namespace TurismoGlobalArandas.Controllers
             }
             ReservationOld.ReservationHotelId = Reservation.ReservationHotelId;
             ReservationOld.ReservationInvoice = Reservation.ReservationInvoice;
-            ReservationOld.TravelDate = Reservation.TravelDate;
+            ReservationOld.TravelDateStart = Reservation.TravelDateStart;
+            ReservationOld.TravelDateEnd = Reservation.TravelDateEnd;
             ReservationOld.TypeHabitation = Reservation.TypeHabitation;
+            ReservationOld.Agent = Reservation.Agent;
+            ReservationOld.PaymentLimitDateProvider = Reservation.PaymentLimitDateProvider;
             ReservationOld.NumberHabitations = Reservation.NumberHabitations;
             ReservationOld.PhoneContact = Reservation.PhoneContact;
             ReservationOld.Observations = Reservation.Observations;
             ReservationOld.GroupCoordinator = Reservation.GroupCoordinator;
             ReservationOld.PhoneCoordinator = Reservation.PhoneCoordinator;
             ReservationOld.DateSale = Reservation.DateSale;
-            ReservationOld.Promoter = Reservation.Promoter;
             ReservationOld.PaymentPeriod = Reservation.PaymentPeriod;
             ReservationOld.PaymentLimitDate = Reservation.PaymentLimitDate;
+            ReservationOld.CancellationPolicy = Reservation.CancellationPolicy;
+            ReservationOld.CodeVoicher = Reservation.CodeVoicher;
+            ReservationOld.TotalCost = Reservation.TotalCost;
             ReservationOld.TypeReservationId = Reservation.TypeReservationId;
             ReservationOld.EmployeeId = Reservation.EmployeeId;
             ReservationOld.CustomerId = Reservation.CustomerId;
             ReservationOld.HotelId = Reservation.HotelId;
-            ReservationOld.HabitationsReservationId = Reservation.HabitationsReservationId;
+            ReservationOld.ProviderId = Reservation.ProviderId;
             ReservationOld.IsDeleted = Reservation.IsDeleted;
 
             _context.ReservationHotels.Update(ReservationOld);

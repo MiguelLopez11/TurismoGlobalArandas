@@ -169,11 +169,14 @@
             </div>
             <el-form-item>
               <el-date-picker
-                v-model="reservationHotel.travelDate"
+                v-model="rangeDatesTravel"
                 class="w-100"
-                type="date"
-                placeholder="Selecciona una fecha"
+                type="daterange"
+                range-separator="A"
+                start-placeholder="Fecha de salida"
+                end-placeholder="Fecha de llegada"
                 size="large"
+                @change="onSelectTravelDate"
               />
             </el-form-item>
           </el-col>
@@ -364,8 +367,19 @@
                 placeholder="Ingresa el descuento extra"
                 size="large"
                 v-model="reservationHotel.codeVoicher"
-                type="textarea"
-                :autosize="{ minRows: 4, maxRows: 8 }"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <span class="text-danger">*</span>
+                <label>Costo Total</label>
+              </div>
+              <el-input
+                placeholder="Ingresa el costo total de la reserva"
+                size="large"
+                v-model="reservationHotel.totalCost"
               />
             </el-form-item>
           </el-col>
@@ -451,6 +465,7 @@ export default {
     const destinationId = ref(null)
     const reservationHotel = ref([])
     const reservationHotelId = ref()
+    const rangeDatesTravel = ref()
     const reservationHotelFields = ref({
       reservationHotelId: 0,
       isDeleted: false
@@ -533,6 +548,10 @@ export default {
           }
         })
     }
+    const onSelectTravelDate = () => {
+      reservationHotel.value.travelDateStart = rangeDatesTravel.value[0]
+      reservationHotel.value.travelDateEnd = rangeDatesTravel.value[1]
+    }
     const validationClient = () => {
       return new Promise((resolve, reject) => {
         if (reservationHotel.value.customerId) {
@@ -548,12 +567,11 @@ export default {
     const validationGeneral = () => {
       return new Promise((resolve, reject) => {
         if (
-          reservationHotel.value.hotelId &&
-          reservationHotel.value.travelDate &&
           reservationHotel.value.typeReservationId &&
           destinationId.value &&
           reservationHotel.value.hotelId &&
-          reservationHotel.value.travelDate &&
+          reservationHotel.value.travelDateStart &&
+          reservationHotel.value.travelDateEnd &&
           reservationHotel.value.providerId &&
           reservationHotel.value.agent &&
           reservationHotel.value.paymentPeriod &&
@@ -582,9 +600,9 @@ export default {
     const validationClosure = () => {
       return new Promise((resolve, reject) => {
         if (
-          individualRateFields.value.cancellationPolicy &&
-          individualRateFields.value.codeVoicher &&
-          individualRateFields.value.employeeId
+          reservationHotel.value.cancellationPolicy &&
+          reservationHotel.value.codeVoicher &&
+          reservationHotel.value.employeeId
         ) {
           onUpdateReservation()
           resolve(true)
@@ -606,9 +624,11 @@ export default {
       employees,
       isNewCustomer,
       destinationId,
+      rangeDatesTravel,
       onAddedCustomer,
       onGetHotel,
       onComplete,
+      onSelectTravelDate,
       validationClient,
       validationGeneral,
       validationRates,
