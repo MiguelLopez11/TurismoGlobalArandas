@@ -98,6 +98,19 @@
                     v-on="events"
                   />
                 </template>
+                <template #list-footer>
+                  <el-button
+                    v-if="!reservationHotel.typeReservationId"
+                    class="w-100"
+                    @click="
+                      () => {
+                        isAddedTypeReservation = !isAddedTypeReservation
+                      }
+                    "
+                  >
+                    agregar nuevo tipo de reserva</el-button
+                  >
+                </template>
               </v-select>
             </el-form-item>
           </el-col>
@@ -129,6 +142,19 @@
                     v-on="events"
                   />
                 </template>
+                <template #list-footer>
+                  <el-button
+                    v-if="!destinationId"
+                    class="w-100"
+                    @click="
+                      () => {
+                        isAddDestination = !isAddDestination
+                      }
+                    "
+                  >
+                    agregar nuevo destino</el-button
+                  >
+                </template>
               </v-select>
             </el-form-item>
           </el-col>
@@ -158,6 +184,19 @@
                     v-bind="attributes"
                     v-on="events"
                   />
+                </template>
+                <template #list-footer>
+                  <el-button
+                    v-if="!reservationHotel.hotelId"
+                    class="w-100"
+                    @click="
+                      () => {
+                        isAddHotel = !isAddHabitation
+                      }
+                    "
+                  >
+                    agregar nuevo hotel</el-button
+                  >
                 </template>
               </v-select>
             </el-form-item>
@@ -206,6 +245,19 @@
                     v-bind="attributes"
                     v-on="events"
                   />
+                </template>
+                <template #list-footer>
+                  <el-button
+                    v-if="!reservationHotel.providerId"
+                    class="w-100"
+                    @click="
+                      () => {
+                        isAddProvider = !isAddProvider
+                      }
+                    "
+                  >
+                    agregar nuevo promotor</el-button
+                  >
                 </template>
               </v-select>
             </el-form-item>
@@ -343,6 +395,15 @@
       >
         <el-row :gutter="25" align="middle">
           <el-col :span="8">
+            <div>
+              <label> ¿Desea que se calcule en automatico el costo?</label>
+            </div>
+            <el-form-item>
+              <el-switch size="large" v-model="isAutomaticCalculation">
+              </el-switch>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item>
               <div>
                 <span class="text-danger">*</span>
@@ -417,6 +478,10 @@
       </tab-content>
     </form-wizard>
   </el-card>
+  <type-reservation-add-new />
+  <destination-add-new />
+  <hotels-add-new />
+  <provider-add-new />
 </template>
 
 <script>
@@ -431,16 +496,25 @@ import EmployeeServices from '@/Services/Employees.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
+import TypeReservationAddNew from '@/views/TypeReservations/TypeReservationAddNew.vue'
+import DestinationAddNew from '@/views/Destinations/DestinationAddNew.vue'
+import HotelsAddNew from '@/views/Hotels/HotelsAddNew.vue'
+import ProviderAddNew from '@/views/Providers/ProviderAddNew.vue'
 // Libraries
 import { useStore } from 'vuex'
-import { ref, inject } from 'vue'
+import { ref, inject, provide, watch } from 'vue'
 import { useRouter } from 'vue-router'
 export default {
   components: {
     CustomersAddNew,
-    HabitationReservationList
+    HabitationReservationList,
+    TypeReservationAddNew,
+    DestinationAddNew,
+    HotelsAddNew,
+    ProviderAddNew
   },
   setup () {
+    // SERVICES
     const { getCustomers } = CustomerServices()
     const { getDestinations } = DestinationServices()
     const { getHotelByDestinationId } = HotelsServices()
@@ -454,8 +528,14 @@ export default {
     const { getEmployees } = EmployeeServices()
     const store = useStore()
     const redirect = useRouter()
+    // DATA
     const swal = inject('$swal')
+    const isAddedTypeReservation = ref(false)
+    const isAddDestination = ref(false)
+    const isAddHotel = ref(false)
     const isNewCustomer = ref(false)
+    const isAutomaticCalculation = ref(false)
+    const isAddProvider = ref(false)
     const customers = ref([])
     const destinations = ref([])
     const hotels = ref([])
@@ -466,6 +546,12 @@ export default {
     const reservationHotel = ref([])
     const reservationHotelId = ref()
     const rangeDatesTravel = ref()
+    const employyeId = window.sessionStorage.getItem('EmployeeId')
+    provide('AddTypeReservation', isAddedTypeReservation)
+    provide('addDestination', isAddDestination)
+    provide('addHotel', isAddHotel)
+    provide('addProvider', isAddProvider)
+    // MODELS DATA
     const reservationHotelFields = ref({
       reservationHotelId: 0,
       isDeleted: false
@@ -478,8 +564,29 @@ export default {
       extraDiscount: null,
       isDeleted: false
     })
-    const employyeId = window.sessionStorage.getItem('EmployeeId')
-
+    // METHODS
+    watch(
+      [isAddedTypeReservation, isAddDestination, isAddHotel, isAddProvider],
+      ([newValueA, newValueB, newValueC, newValueD]) => {
+        if (!newValueA || newValueB || newValueC || newValueD) {
+          refreshDataSelect()
+        }
+      }
+    )
+    const refreshDataSelect = () => {
+      getDestinations(data => {
+        destinations.value = data
+      })
+      getTypeReservations(data => {
+        typeReservations.value = data
+      })
+      getProviders(data => {
+        providers.value = data
+      })
+      getHotelByDestinationId(destinationId.value, data => {
+        hotels.value = data
+      })
+    }
     createReservationHotel(reservationHotelFields.value, data => {
       reservationHotelId.value = data.reservationHotelId
       store.commit('setReservationHotelId', data.reservationHotelId)
@@ -513,9 +620,11 @@ export default {
     }
     const onGetHotel = destinationId => {
       reservationHotel.value.hotelId = null
-      getHotelByDestinationId(destinationId, data => {
-        hotels.value = data
-      })
+      if (destinationId !== null || destinationId !== 0) {
+        getHotelByDestinationId(destinationId, data => {
+          hotels.value = data
+        })
+      }
     }
     const refreshReservationHotel = () => {
       getReservationHotel(reservationHotelId.value, data => {
@@ -552,6 +661,7 @@ export default {
       reservationHotel.value.travelDateStart = rangeDatesTravel.value[0]
       reservationHotel.value.travelDateEnd = rangeDatesTravel.value[1]
     }
+    // VALIDATIONS
     const validationClient = () => {
       return new Promise((resolve, reject) => {
         if (reservationHotel.value.customerId) {
@@ -623,11 +733,17 @@ export default {
       providers,
       employees,
       isNewCustomer,
+      isAutomaticCalculation,
       destinationId,
       rangeDatesTravel,
+      isAddedTypeReservation,
+      isAddDestination,
+      isAddHotel,
+      isAddProvider,
       onAddedCustomer,
       onGetHotel,
       onComplete,
+      refreshDataSelect,
       onSelectTravelDate,
       validationClient,
       validationGeneral,
