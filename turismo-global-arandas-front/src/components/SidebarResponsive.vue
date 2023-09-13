@@ -132,6 +132,12 @@ export default {
             title: 'Hoteles',
             path: '/Hoteles',
             icon: 'bi bi-building'
+          },
+          {
+            index: '4-5',
+            title: 'Comisiones',
+            path: '/Comisiones',
+            icon: 'bi bi-cash-stack'
           }
         ]
       },

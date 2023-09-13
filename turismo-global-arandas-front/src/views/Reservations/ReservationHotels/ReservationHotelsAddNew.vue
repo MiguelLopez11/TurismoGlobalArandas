@@ -7,12 +7,8 @@
       color="#7367F0"
       @on-complete="onComplete"
     >
-      <tab-content
-        title="Datos del cliente"
-        icon="bi bi-person-circle"
-        :beforeChange="validationClient"
-        lazy
-      >
+      <tab-content title="Datos del cliente" icon="bi bi-person-circle" lazy>
+        <!-- :beforeChange="validationClient" -->
         <el-card>
           <el-row :gutter="0">
             <el-col :span="8">
@@ -64,12 +60,8 @@
           </el-row>
         </el-card>
       </tab-content>
-      <tab-content
-        title="Datos generales"
-        icon="bi bi-airplane-engines"
-        :beforeChange="validationGeneral"
-        lazy
-      >
+      <tab-content title="Datos generales" icon="bi bi-airplane-engines" lazy>
+        <!-- :beforeChange="validationGeneral" -->
         <el-row :gutter="35">
           <el-col :span="8">
             <el-form-item>
@@ -323,13 +315,18 @@
       <tab-content lazy title="Habitaciones" icon="bi bi-door-closed">
         <habitation-reservation-list />
       </tab-content>
-      <tab-content
-        lazy
-        title="Tarifas"
-        icon="bi bi-cash-stack"
-        :beforeChange="validationRates"
-      >
+      <tab-content lazy title="Tarifas" icon="bi bi-cash-stack">
+        <!-- :beforeChange="validationRates" -->
         <el-row :gutter="35">
+          <el-col :span="8">
+            <div>
+              <label> ¿Desea que se calcule en automatico el costo?</label>
+            </div>
+            <el-form-item>
+              <el-switch size="large" v-model="isAutomaticCalculation">
+              </el-switch>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <Field name="publicRate" v-slot="{ value, field, errorMessage }">
               <el-form-item :error="errorMessage" required>
@@ -344,6 +341,7 @@
                   v-model="individualRateFields.publicRate"
                   :validate-event="false"
                   :model-value="value"
+                  @change="onCalculateRate"
                 />
               </el-form-item>
             </Field>
@@ -387,22 +385,9 @@
         </el-row>
         <el-divider />
       </tab-content>
-      <tab-content
-        lazy
-        title="Cierre reservación"
-        icon="bi bi-receipt"
-        :beforeChange="validationClosure"
-      >
+      <tab-content lazy title="Cierre reservación" icon="bi bi-receipt">
+        <!-- :beforeChange="validationClosure" -->
         <el-row :gutter="25" align="middle">
-          <el-col :span="8">
-            <div>
-              <label> ¿Desea que se calcule en automatico el costo?</label>
-            </div>
-            <el-form-item>
-              <el-switch size="large" v-model="isAutomaticCalculation">
-              </el-switch>
-            </el-form-item>
-          </el-col>
           <el-col :span="8">
             <el-form-item>
               <div>
@@ -661,6 +646,8 @@ export default {
       reservationHotel.value.travelDateStart = rangeDatesTravel.value[0]
       reservationHotel.value.travelDateEnd = rangeDatesTravel.value[1]
     }
+    const onCalculateRate = () => {
+    }
     // VALIDATIONS
     const validationClient = () => {
       return new Promise((resolve, reject) => {
@@ -745,6 +732,7 @@ export default {
       onComplete,
       refreshDataSelect,
       onSelectTravelDate,
+      onCalculateRate,
       validationClient,
       validationGeneral,
       validationRates,

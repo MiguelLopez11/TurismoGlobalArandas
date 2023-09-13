@@ -176,6 +176,14 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/Comisiones',
+    name: 'Commissions',
+    component: () => import('../views/Commissions/CommissionList'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]
