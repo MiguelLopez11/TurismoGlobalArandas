@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230914193646_decimal_commissions")]
+    partial class decimal_commissions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,143 +192,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasIndex("ProviderId");
 
                     b.ToTable("Commissions");
-
-                    b.HasData(
-                        new
-                        {
-                            CommissionId = 1,
-                            CommissionAgency = 0.15m,
-                            CommissionClient = 0.1m,
-                            CommissionEmployee = 0.05m,
-                            IsDeleted = false,
-                            ProviderId = 1
-                        },
-                        new
-                        {
-                            CommissionId = 2,
-                            CommissionAgency = 0.15m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 0.15m,
-                            IsDeleted = false,
-                            ProviderId = 2
-                        },
-                        new
-                        {
-                            CommissionId = 3,
-                            CommissionAgency = 0.15m,
-                            CommissionClient = 0.1m,
-                            CommissionEmployee = 0.05m,
-                            IsDeleted = false,
-                            ProviderId = 3
-                        },
-                        new
-                        {
-                            CommissionId = 4,
-                            CommissionAgency = 0.1m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 0.1m,
-                            IsDeleted = false,
-                            ProviderId = 4
-                        },
-                        new
-                        {
-                            CommissionId = 5,
-                            CommissionAgency = 0.18m,
-                            CommissionClient = 0.13m,
-                            CommissionEmployee = 0.05m,
-                            IsDeleted = false,
-                            ProviderId = 5
-                        },
-                        new
-                        {
-                            CommissionId = 6,
-                            CommissionAgency = 0.18m,
-                            CommissionClient = 0.1m,
-                            CommissionEmployee = 0.08m,
-                            IsDeleted = false,
-                            ProviderId = 6
-                        },
-                        new
-                        {
-                            CommissionId = 7,
-                            CommissionAgency = 0.1m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 0.1m,
-                            IsDeleted = false,
-                            ProviderId = 7
-                        },
-                        new
-                        {
-                            CommissionId = 8,
-                            CommissionAgency = 0.05m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 0.05m,
-                            IsDeleted = false,
-                            ProviderId = 8
-                        },
-                        new
-                        {
-                            CommissionId = 9,
-                            CommissionAgency = 0.15m,
-                            CommissionClient = 0.08m,
-                            CommissionEmployee = 0.07m,
-                            IsDeleted = false,
-                            ProviderId = 9
-                        },
-                        new
-                        {
-                            CommissionId = 10,
-                            CommissionAgency = 0.17m,
-                            CommissionClient = 0.12m,
-                            CommissionEmployee = 0.05m,
-                            IsDeleted = false,
-                            ProviderId = 10
-                        },
-                        new
-                        {
-                            CommissionId = 11,
-                            CommissionAgency = 0.05m,
-                            CommissionClient = 0.05m,
-                            CommissionEmployee = 0.05m,
-                            IsDeleted = false,
-                            ProviderId = 11
-                        },
-                        new
-                        {
-                            CommissionId = 12,
-                            CommissionAgency = 0.1m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 0.1m,
-                            IsDeleted = false,
-                            ProviderId = 12
-                        },
-                        new
-                        {
-                            CommissionId = 13,
-                            CommissionAgency = 0.2m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 0.2m,
-                            IsDeleted = false,
-                            ProviderId = 13
-                        },
-                        new
-                        {
-                            CommissionId = 14,
-                            CommissionAgency = 0.05m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 0.05m,
-                            IsDeleted = false,
-                            ProviderId = 14
-                        },
-                        new
-                        {
-                            CommissionId = 15,
-                            CommissionAgency = 0.15m,
-                            CommissionClient = 0.1m,
-                            CommissionEmployee = 0.05m,
-                            IsDeleted = false,
-                            ProviderId = 15
-                        });
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Customers", b =>
@@ -614,98 +480,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasKey("ProviderId");
 
                     b.ToTable("Providers");
-
-                    b.HasData(
-                        new
-                        {
-                            ProviderId = 1,
-                            IsDeleted = false,
-                            Name = "Record Hoteleria"
-                        },
-                        new
-                        {
-                            ProviderId = 2,
-                            IsDeleted = false,
-                            Name = "Record Traslados"
-                        },
-                        new
-                        {
-                            ProviderId = 3,
-                            IsDeleted = false,
-                            Name = "Check In Hoteleria"
-                        },
-                        new
-                        {
-                            ProviderId = 4,
-                            IsDeleted = false,
-                            Name = "Check In renta de autos"
-                        },
-                        new
-                        {
-                            ProviderId = 5,
-                            IsDeleted = false,
-                            Name = "Imacop"
-                        },
-                        new
-                        {
-                            ProviderId = 6,
-                            IsDeleted = false,
-                            Name = "Imacop circuitos"
-                        },
-                        new
-                        {
-                            ProviderId = 7,
-                            IsDeleted = false,
-                            Name = "Imacop traslados"
-                        },
-                        new
-                        {
-                            ProviderId = 8,
-                            IsDeleted = false,
-                            Name = "Imacop entradas a disney"
-                        },
-                        new
-                        {
-                            ProviderId = 9,
-                            IsDeleted = false,
-                            Name = "Promoser parques"
-                        },
-                        new
-                        {
-                            ProviderId = 10,
-                            IsDeleted = false,
-                            Name = "Promoser hoteleria"
-                        },
-                        new
-                        {
-                            ProviderId = 11,
-                            IsDeleted = false,
-                            Name = "Megatravel"
-                        },
-                        new
-                        {
-                            ProviderId = 12,
-                            IsDeleted = false,
-                            Name = "Europamundo"
-                        },
-                        new
-                        {
-                            ProviderId = 13,
-                            IsDeleted = false,
-                            Name = "Chartes"
-                        },
-                        new
-                        {
-                            ProviderId = 14,
-                            IsDeleted = false,
-                            Name = "Israel traslados"
-                        },
-                        new
-                        {
-                            ProviderId = 15,
-                            IsDeleted = false,
-                            Name = "Copper canyon"
-                        });
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotel", b =>
@@ -821,26 +595,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasKey("TypeReservationId");
 
                     b.ToTable("TypeReservations");
-
-                    b.HasData(
-                        new
-                        {
-                            TypeReservationId = 1,
-                            IsDeleted = false,
-                            Name = "Individual"
-                        },
-                        new
-                        {
-                            TypeReservationId = 2,
-                            IsDeleted = false,
-                            Name = "Grupal"
-                        },
-                        new
-                        {
-                            TypeReservationId = 3,
-                            IsDeleted = false,
-                            Name = "Grupo"
-                        });
                 });
 
             modelBuilder.Entity("UConnect.Entities.User", b =>

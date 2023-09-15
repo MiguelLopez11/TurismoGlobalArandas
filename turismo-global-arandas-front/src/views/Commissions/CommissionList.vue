@@ -1,12 +1,12 @@
 <template>
-  <!-- <provider-add-new /> -->
+  <commission-add-new />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar proveedor..."
+          placeholder="Buscar comision..."
         />
       </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
@@ -16,7 +16,7 @@
           color="#7367F0"
           @click="isAddCommission = !isAddCommission"
         >
-          <i> Nuevo proveedor </i>
+          <i> Nueva comisión </i>
         </el-button>
       </el-col>
     </el-row>
@@ -51,8 +51,8 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-Provider',
-                            params: { commissionId: items.commissionId }
+                            name: 'Edit-Commission',
+                            params: { CommissionId: items.commissionId }
                           })
                         }
                       "
@@ -66,6 +66,9 @@
                 </template>
               </el-dropdown>
             </template>
+            <template #item-color="items">
+              <el-tag :style="`background-color: ${items.color}`"> </el-tag>
+            </template>
           </EasyDataTable>
         </div>
       </el-col>
@@ -76,10 +79,10 @@
 <script>
 import { ref, watch, provide, inject } from 'vue'
 import CommissionServices from '@/Services/Commissions.Services'
-// import ProviderAddNew from './ProviderAddNew.vue'
+import CommissionAddNew from './CommissionAddNew.vue'
 
 export default {
-  // components: { ProviderAddNew },
+  components: { CommissionAddNew },
   setup () {
     const { getCommissions, deleteCommission } = CommissionServices()
     const commissions = ref([])
@@ -95,6 +98,7 @@ export default {
     provide('addCommission', isAddCommission)
     const fields = ref([
       { value: 'color', text: 'Color' },
+      { value: 'providers.name', text: 'Provedor' },
       { value: 'commissionAgency', text: 'Comisión de la agencia' },
       { value: 'commissionClient', text: 'Comision al cliente' },
       { value: 'commissionEmployee', text: 'Comision al empleado' },
@@ -120,7 +124,8 @@ export default {
     const onDeleteProvider = commissionId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar un registro de comisión, ¿Estas seguro?',
+          title:
+            'Estás a punto de eliminar un registro de comisión, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
@@ -160,6 +165,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

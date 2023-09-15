@@ -56,11 +56,11 @@ namespace TurismoGlobalArandas.Controllers
             Commissions Commission
         )
         {
-            var Provider = await _context.Commissions.FirstOrDefaultAsync(w => w.ProviderId == Commission.ProviderId);
-            if (Provider != null)
-            {
-                return BadRequest("Proveedor ya tiene registrado un descuento");
-            }
+            //var Provider = await _context.Commissions.FirstOrDefaultAsync(w => w.ProviderId == Commission.ProviderId);
+            //if (Provider != null)
+            //{
+            //    return BadRequest("Proveedor ya tiene registrado un descuento");
+            //}
             _context.Commissions.Add(Commission);
             await _context.SaveChangesAsync();
             return CreatedAtAction(

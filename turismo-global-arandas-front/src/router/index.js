@@ -184,6 +184,14 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/Comisiones/:CommissionId',
+    name: 'Edit-Commission',
+    component: () => import('../views/Commissions/CommissionEdit'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]
