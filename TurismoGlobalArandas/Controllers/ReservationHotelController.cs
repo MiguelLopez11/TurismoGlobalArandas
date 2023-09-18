@@ -97,6 +97,7 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.EmployeeId = Reservation.EmployeeId;
             ReservationOld.CustomerId = Reservation.CustomerId;
             ReservationOld.HotelId = Reservation.HotelId;
+            ReservationOld.DestinationId = Reservation.DestinationId;
             ReservationOld.ProviderId = Reservation.ProviderId;
             ReservationOld.IsDeleted = Reservation.IsDeleted;
 

@@ -1,6 +1,23 @@
 <template>
   <el-card>
     <div class="card-header">
+       <el-dropdown class="right-button">
+        <el-button class="w-100" size="large" circle>
+          <template #icon>
+            <i class="bi bi-bell"></i>
+          </template>
+        </el-button>
+        <!-- <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="closeSession">
+              <span>
+                <i class="bi bi-box-arrow-in-right"></i>
+                Cerrar sesión
+              </span>
+            </el-dropdown-item>
+          </el-dropdown-menu>
+        </template> -->
+      </el-dropdown>
       <el-dropdown class="right-button">
         <el-button class="w-100" size="large" circle>
           <template #icon>
@@ -49,21 +66,21 @@ export default {
 </script>
 
 <style>
-.flex-grow {
+/* .flex-grow {
   flex-grow: 1;
-}
+} */
 .el-menu {
   border-bottom: none !important;
 }
 .card-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: flex-start;
 }
 .el-header {
   display: inline-table;
 }
 .right-button {
-  margin-left: auto;
+  margin: 5px;
 }
 </style>

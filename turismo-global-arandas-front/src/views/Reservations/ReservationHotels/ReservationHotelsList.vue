@@ -56,8 +56,8 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-reservationHotels',
-                            params: { EmployeeId: items.reservationHotelId }
+                            name: 'Edit-ReservationHotels',
+                            params: { ReservationHotelId: items.reservationHotelId }
                           })
                         }
                       "

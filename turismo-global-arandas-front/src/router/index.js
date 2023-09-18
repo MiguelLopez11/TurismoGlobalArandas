@@ -138,6 +138,14 @@ const routes = [
     }
   },
   {
+    path: '/ReservacionesHoteleria/:ReservationHotelId',
+    name: 'Edit-ReservationHotels',
+    component: () => import('../views/Reservations/ReservationHotels/ReservationHotelsEdit'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/ReservacionesHoteleria/Nueva-Reservacion',
     name: 'ReservacionesHoteleria-AddNew',
     component: () => import('../views/Reservations/ReservationHotels/ReservationHotelsAddNew'),
