@@ -340,59 +340,44 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <Field name="publicRate" v-slot="{ value, field, errorMessage }">
-              <el-form-item :error="errorMessage" required>
-                <div>
-                  <span class="text-danger">*</span>
-                  <label> Tarifa Pública </label>
-                </div>
-                <el-input
-                  placeholder="Ingresa la tarifa pública"
-                  size="large"
-                  v-bind="field"
-                  v-model="individualRateFields.publicRate"
-                  :validate-event="false"
-                  :model-value="value"
-                  @change="onCalculateRate"
-                />
-              </el-form-item>
-            </Field>
+            <el-form-item>
+              <div>
+                <span class="text-danger">*</span>
+                <label> Tarifa Pública </label>
+              </div>
+              <el-input
+                placeholder="Ingresa la tarifa pública"
+                size="large"
+                v-model="individualRate.publicRate"
+                @input="onCalculateRate"
+              />
+            </el-form-item>
           </el-col>
           <el-col :span="8">
-            <Field name="extraDiscount" v-slot="{ value, field, errorMessage }">
-              <el-form-item :error="errorMessage" required>
-                <div>
-                  <label>Descuento extra</label>
-                </div>
-                <el-input
-                  placeholder="Ingresa el descuento extra"
-                  size="large"
-                  v-bind="field"
-                  v-model="individualRateFields.extraDiscount"
-                  :validate-event="false"
-                  :model-value="value"
-                >
-                  <template #append>%</template>
-                </el-input>
-              </el-form-item>
-            </Field>
+            <el-form-item>
+              <div>
+                <label>Descuento extra</label>
+              </div>
+              <el-input
+                placeholder="Ingresa el descuento extra"
+                size="large"
+                v-model="individualRate.extraDiscount"
+              >
+                <template #append>%</template>
+              </el-input>
+            </el-form-item>
           </el-col>
           <el-col :span="8">
-            <Field name="clientRate" v-slot="{ value, field, errorMessage }">
-              <el-form-item :error="errorMessage" required>
-                <div>
-                  <label> Tarifa al cliente </label>
-                </div>
-                <el-input
-                  placeholder="Ingresa la tarifa al cliente"
-                  size="large"
-                  v-bind="field"
-                  v-model="individualRateFields.clientRate"
-                  :validate-event="false"
-                  :model-value="value"
-                />
-              </el-form-item>
-            </Field>
+            <el-form-item>
+              <div>
+                <label> Tarifa al cliente </label>
+              </div>
+              <el-input
+                placeholder="Ingresa la tarifa al cliente"
+                size="large"
+                v-model="individualRate.clientRate"
+              />
+            </el-form-item>
           </el-col>
         </el-row>
         <el-divider />
@@ -494,6 +479,8 @@ import ReservationHotelServices from '@/Services/ReservationHotel.Services'
 import TypeReservationServices from '@/Services/TypeReservation.Services'
 import ProviderServices from '@/Services/Provider.Services'
 import EmployeeServices from '@/Services/Employees.Services'
+import IndividualRateServices from '@/Services/IndividualRate.Services'
+import CommissionServices from '@/Services/Commissions.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
@@ -534,6 +521,12 @@ export default {
     const { getTypeReservations } = TypeReservationServices()
     const { getProviders } = ProviderServices()
     const { getEmployees } = EmployeeServices()
+    const {
+      createIndividualRate,
+      getIndividualRate,
+      getIndividualRateByReservationHotel
+    } = IndividualRateServices()
+    const { getCommissionByProvider } = CommissionServices()
     const store = useStore()
     const redirect = useRouter()
     // DATA
@@ -542,7 +535,7 @@ export default {
     const isAddDestination = ref(false)
     const isAddHotel = ref(false)
     const isNewCustomer = ref(false)
-    const isAutomaticCalculation = ref(false)
+    const isAutomaticCalculation = ref(true)
     const isAddProvider = ref(false)
     const customers = ref([])
     const destinations = ref([])
@@ -551,6 +544,7 @@ export default {
     const providers = ref([])
     const employees = ref([])
     const reservationHotel = ref([])
+    const individualRate = ref([])
     const reservationHotelId = ref()
     const rangeDatesTravel = ref()
     const employyeId = window.sessionStorage.getItem('EmployeeId')
@@ -586,10 +580,18 @@ export default {
         store.commit('setReservationHotelId', data.reservationHotelId)
         refreshReservationHotel()
       })
+      createIndividualRate(individualRateFields.value, data => {
+        getIndividualRate(data.individualRateId, items => {
+          individualRate.value = items
+        })
+      })
     } else {
       getReservationHotel(props.reservationHotelId, data => {
         store.commit('setReservationHotelId', data.reservationHotelId)
         reservationHotel.value = data
+      })
+      getIndividualRateByReservationHotel(props.reservationHotelId, data => {
+        individualRate.value = data
       })
     }
     const refreshDataSelect = () => {
@@ -641,9 +643,12 @@ export default {
       }
     }
     const refreshReservationHotel = () => {
-      getReservationHotel(reservationHotelId.value || props.reservationHotelId, data => {
-        reservationHotel.value = data
-      })
+      getReservationHotel(
+        reservationHotelId.value || props.reservationHotelId,
+        data => {
+          reservationHotel.value = data
+        }
+      )
     }
     const onUpdateReservation = () => {
       updateReservationHotel(reservationHotel.value, data => {
@@ -675,7 +680,23 @@ export default {
       reservationHotel.value.travelDateStart = rangeDatesTravel.value[0]
       reservationHotel.value.travelDateEnd = rangeDatesTravel.value[1]
     }
-    const onCalculateRate = () => {}
+    const onCalculateRate = () => {
+      if (isAutomaticCalculation.value) {
+        const commissionPercentage = ref()
+        const commission = ref()
+        const commissionClient = ref()
+        getCommissionByProvider(reservationHotel.value.providerId, data => {
+          commissionPercentage.value = parseFloat(
+            data.commissionClient
+          ).toFixed(2)
+          commission.value =
+            individualRate.value.publicRate * commissionPercentage.value
+          commissionClient.value =
+            individualRate.value.publicRate - commission.value
+          individualRate.value.clientRate = commissionClient.value
+        })
+      }
+    }
     // VALIDATIONS
     const validationClient = () => {
       return new Promise((resolve, reject) => {
@@ -713,7 +734,7 @@ export default {
     }
     const validationRates = () => {
       return new Promise((resolve, reject) => {
-        if (individualRateFields.value.publicRate) {
+        if (individualRate.value.publicRate) {
           onUpdateReservation()
           resolve(true)
         } else {
@@ -747,6 +768,7 @@ export default {
       hotels,
       providers,
       employees,
+      individualRate,
       isNewCustomer,
       isAutomaticCalculation,
       rangeDatesTravel,

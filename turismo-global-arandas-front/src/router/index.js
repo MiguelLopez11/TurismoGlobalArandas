@@ -200,6 +200,14 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/ReservacionesVuelos',
+    name: 'ReservationFlight',
+    component: () => import('../views/Reservations/ReservationFlights/ReservationFlightList'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]

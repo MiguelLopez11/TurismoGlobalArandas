@@ -35,6 +35,18 @@ namespace TurismoGlobalArandas.Controllers
                 return NotFound();
             }
             return Ok(IndividualRate);
+        } 
+        [HttpGet("ReservationHotel/{ReservationHotelId}")]
+        public async Task<ActionResult> getIndividualRatebyReservationHotel(int ReservationHotelId)
+        {
+            var IndividualRate = await _context.IndividualRates
+                .Where(w => !w.IsDeleted)
+                .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
+            if (IndividualRate == null)
+            {
+                return NotFound();
+            }
+            return Ok(IndividualRate);
         }
         [HttpPost]
         public async Task<ActionResult<IndividualRate>> PostIndividualRate(IndividualRate individualRate)

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230918222914_reservationFlieght_model")]
+    partial class reservationFlieght_model
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -166,14 +169,14 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CommissionAgency")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal?>("CommissionAgency")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("CommissionClient")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal?>("CommissionClient")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<string>("CommissionEmployee")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal?>("CommissionEmployee")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -188,141 +191,141 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("Commissions", (string)null);
+                    b.ToTable("Commissions");
 
                     b.HasData(
                         new
                         {
                             CommissionId = 1,
-                            CommissionAgency = "0.15",
-                            CommissionClient = "0.10",
-                            CommissionEmployee = "0.05",
+                            CommissionAgency = 0.15m,
+                            CommissionClient = 0.1m,
+                            CommissionEmployee = 0.05m,
                             IsDeleted = false,
                             ProviderId = 1
                         },
                         new
                         {
                             CommissionId = 2,
-                            CommissionAgency = "0.15",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.15",
+                            CommissionAgency = 0.15m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 0.15m,
                             IsDeleted = false,
                             ProviderId = 2
                         },
                         new
                         {
                             CommissionId = 3,
-                            CommissionAgency = "0.15",
-                            CommissionClient = "0.10",
-                            CommissionEmployee = "0.05",
+                            CommissionAgency = 0.15m,
+                            CommissionClient = 0.1m,
+                            CommissionEmployee = 0.05m,
                             IsDeleted = false,
                             ProviderId = 3
                         },
                         new
                         {
                             CommissionId = 4,
-                            CommissionAgency = "0.10",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.10",
+                            CommissionAgency = 0.1m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 0.1m,
                             IsDeleted = false,
                             ProviderId = 4
                         },
                         new
                         {
                             CommissionId = 5,
-                            CommissionAgency = "0.18",
-                            CommissionClient = "0.13",
-                            CommissionEmployee = "0.05",
+                            CommissionAgency = 0.18m,
+                            CommissionClient = 0.13m,
+                            CommissionEmployee = 0.05m,
                             IsDeleted = false,
                             ProviderId = 5
                         },
                         new
                         {
                             CommissionId = 6,
-                            CommissionAgency = "0.18",
-                            CommissionClient = "0.10",
-                            CommissionEmployee = "0.08",
+                            CommissionAgency = 0.18m,
+                            CommissionClient = 0.1m,
+                            CommissionEmployee = 0.08m,
                             IsDeleted = false,
                             ProviderId = 6
                         },
                         new
                         {
                             CommissionId = 7,
-                            CommissionAgency = "0.10",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.10",
+                            CommissionAgency = 0.1m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 0.1m,
                             IsDeleted = false,
                             ProviderId = 7
                         },
                         new
                         {
                             CommissionId = 8,
-                            CommissionAgency = "0.05",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.05",
+                            CommissionAgency = 0.05m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 0.05m,
                             IsDeleted = false,
                             ProviderId = 8
                         },
                         new
                         {
                             CommissionId = 9,
-                            CommissionAgency = "0.15",
-                            CommissionClient = "0.08",
-                            CommissionEmployee = "0.07",
+                            CommissionAgency = 0.15m,
+                            CommissionClient = 0.08m,
+                            CommissionEmployee = 0.07m,
                             IsDeleted = false,
                             ProviderId = 9
                         },
                         new
                         {
                             CommissionId = 10,
-                            CommissionAgency = "0.17",
-                            CommissionClient = "0.12",
-                            CommissionEmployee = "0.05",
+                            CommissionAgency = 0.17m,
+                            CommissionClient = 0.12m,
+                            CommissionEmployee = 0.05m,
                             IsDeleted = false,
                             ProviderId = 10
                         },
                         new
                         {
                             CommissionId = 11,
-                            CommissionAgency = "0.05",
-                            CommissionClient = "0.05",
-                            CommissionEmployee = "0.05",
+                            CommissionAgency = 0.05m,
+                            CommissionClient = 0.05m,
+                            CommissionEmployee = 0.05m,
                             IsDeleted = false,
                             ProviderId = 11
                         },
                         new
                         {
                             CommissionId = 12,
-                            CommissionAgency = "0.10",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.10",
+                            CommissionAgency = 0.1m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 0.1m,
                             IsDeleted = false,
                             ProviderId = 12
                         },
                         new
                         {
                             CommissionId = 13,
-                            CommissionAgency = "0.20",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.20",
+                            CommissionAgency = 0.2m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 0.2m,
                             IsDeleted = false,
                             ProviderId = 13
                         },
                         new
                         {
                             CommissionId = 14,
-                            CommissionAgency = "0.05",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.05",
+                            CommissionAgency = 0.05m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 0.05m,
                             IsDeleted = false,
                             ProviderId = 14
                         },
                         new
                         {
                             CommissionId = 15,
-                            CommissionAgency = "0.15",
-                            CommissionClient = "0.10",
-                            CommissionEmployee = "0.05",
+                            CommissionAgency = 0.15m,
+                            CommissionClient = 0.1m,
+                            CommissionEmployee = 0.05m,
                             IsDeleted = false,
                             ProviderId = 15
                         });
@@ -360,7 +363,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("CustomerId");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Destinations", b =>
@@ -383,7 +386,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("DestinationId");
 
-                    b.ToTable("Destinations", (string)null);
+                    b.ToTable("Destinations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Employees", b =>
@@ -426,7 +429,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("EmployeeId");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.GroupRate", b =>
@@ -471,7 +474,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ReservationHotelId");
 
-                    b.ToTable("GroupRates", (string)null);
+                    b.ToTable("GroupRates");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Habitations", b =>
@@ -511,7 +514,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("HabitationId");
 
-                    b.ToTable("Habitations", (string)null);
+                    b.ToTable("Habitations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.HabitationsReservation", b =>
@@ -537,7 +540,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ReservationHotelId");
 
-                    b.ToTable("HabitationsReservations", (string)null);
+                    b.ToTable("HabitationsReservations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Hotels", b =>
@@ -565,7 +568,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("DestinationId");
 
-                    b.ToTable("Hotels", (string)null);
+                    b.ToTable("Hotels");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.IndividualRate", b =>
@@ -595,7 +598,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ReservationHotelId");
 
-                    b.ToTable("IndividualRates", (string)null);
+                    b.ToTable("IndividualRates");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Providers", b =>
@@ -620,7 +623,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("ProviderId");
 
-                    b.ToTable("Providers", (string)null);
+                    b.ToTable("Providers");
 
                     b.HasData(
                         new
@@ -747,9 +750,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("Invoice")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("PaymentMethodAgency")
                         .HasColumnType("nvarchar(max)");
 
@@ -768,6 +768,9 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<DateTime?>("TravelDateStart")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("isDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<bool>("isMultidestinationFlight")
                         .HasColumnType("bit");
 
@@ -781,7 +784,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("ReservationFlights", (string)null);
+                    b.ToTable("ReservationFlights");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotel", b =>
@@ -878,7 +881,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("TypeReservationId");
 
-                    b.ToTable("ReservationHotels", (string)null);
+                    b.ToTable("ReservationHotels");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.TypeReservation", b =>
@@ -901,7 +904,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("TypeReservationId");
 
-                    b.ToTable("TypeReservations", (string)null);
+                    b.ToTable("TypeReservations");
 
                     b.HasData(
                         new

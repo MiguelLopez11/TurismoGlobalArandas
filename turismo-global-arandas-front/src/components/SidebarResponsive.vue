@@ -156,6 +156,12 @@ export default {
                 title: 'Reservaciones hotelería',
                 path: '/ReservacionesHoteleria',
                 icon: 'bi bi-buildings'
+              },
+              {
+                index: '5-1-2',
+                title: 'Reservaciones vuelos',
+                path: '/ReservacionesVuelos',
+                icon: 'bi bi-airplane-engines'
               }
             ]
           },
@@ -166,12 +172,6 @@ export default {
             icon: 'bi bi-bezier2'
           }
         ]
-      },
-      {
-        index: '6',
-        title: 'Contacto',
-        path: '/contacto',
-        icon: 'el-icon-phone'
       }
     ])
 

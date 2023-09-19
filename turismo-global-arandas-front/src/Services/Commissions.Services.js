@@ -11,6 +11,11 @@ export default function CommissionServices () {
       callback(response.data)
     })
   }
+  const getCommissionByProvider = (providerId, callback) => {
+    axiosPrivate.get(`/Commissions/${providerId}`).then((response) => {
+      callback(response.data)
+    })
+  }
   const createCommission = (data, callback) => {
     axiosPrivate.post('/Commissions', data).then((response) => {
       callback(response.data)
@@ -29,6 +34,7 @@ export default function CommissionServices () {
   return {
     getCommissions,
     getCommission,
+    getCommissionByProvider,
     createCommission,
     updateCommission,
     deleteCommission
