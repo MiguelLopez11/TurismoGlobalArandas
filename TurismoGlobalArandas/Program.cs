@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +13,7 @@ namespace TurismoGlobalArandas
     public class Program
     {
         private IConfiguration _configuration;
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -118,9 +118,7 @@ namespace TurismoGlobalArandas
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-            }
+            if (app.Environment.IsDevelopment()) { }
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseHttpsRedirection();

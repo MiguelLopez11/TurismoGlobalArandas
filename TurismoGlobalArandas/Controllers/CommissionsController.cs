@@ -18,11 +18,12 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<Commissions>> getCommissions()
+        public async Task<ActionResult<IEnumerable<Commissions>>> getCommissions()
         {
             var commissions = await _context.Commissions
                 .Include(i => i.Providers)
-                .Where(w => !w.IsDeleted).ToListAsync();
+                .Where(w => !w.IsDeleted)
+                .ToListAsync();
             return Ok(commissions);
         }
 
@@ -38,7 +39,7 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(Commission);
         }
-        [HttpGet("/Proveedor/{ProveedorId}")]
+        [HttpGet("Proveedor/{ProveedorId}")]
         public async Task<ActionResult> getCommissionByProvider(int ProveedorId)
         {
             var Commission = await _context.Commissions
