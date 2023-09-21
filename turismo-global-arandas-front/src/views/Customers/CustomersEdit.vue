@@ -46,6 +46,22 @@
             </el-form-item>
           </Field>
         </el-col>
+        <el-col :span="8">
+          <Field name="nationality" :rules="validateNationality" as="text">
+            <el-form-item :error="errors.nationality" required>
+              <div>
+                <label>Nacionalidad</label>
+              </div>
+              <el-input
+                placeholder="Ingresa la nacionalidad del cliente"
+                size="large"
+                v-model="customer.nationality"
+                type="number"
+                min="10"
+              />
+            </el-form-item>
+          </Field>
+        </el-col>
       </el-row>
       <el-divider />
       <el-row :gutter="25" justify="end">
@@ -124,13 +140,20 @@ export default {
       }
       return true
     }
+    const validateNationality = () => {
+      if (!customer.value.nationality) {
+        return 'Este campo es requerido'
+      }
+      return true
+    }
 
     return {
       customer,
       onUpdateCustomer,
       validateName,
       validateLastname,
-      validatePhoneNumber
+      validatePhoneNumber,
+      validateNationality
     }
   }
 }

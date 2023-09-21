@@ -58,6 +58,24 @@
           </el-form-item>
         </Field>
       </el-col>
+      <el-col :span="8">
+        <Field name="nationality" v-slot="{ value, field, errorMessage }">
+          <el-form-item :error="errorMessage" required>
+            <div>
+              <label>Nacionalidad</label>
+            </div>
+            <el-input
+              placeholder="Ingresa la nacionalidad del empleado"
+              size="large"
+              v-bind="field"
+              v-model="customerFields.nationality"
+              :validate-event="false"
+              :model-value="value"
+              type="number"
+            />
+          </el-form-item>
+        </Field>
+      </el-col>
     </el-row>
     <el-divider />
     <el-row :gutter="25" justify="end">
@@ -71,8 +89,11 @@
         >
       </el-col>
       <el-col :span="3">
-        <el-button class="w-100" color="#F1F1F2" size="large"
-        @click="isAddingCustomer"
+        <el-button
+          class="w-100"
+          color="#F1F1F2"
+          size="large"
+          @click="isAddingCustomer"
           >Cancelar</el-button
         >
       </el-col>
@@ -115,13 +136,18 @@ export default {
         .string()
         .required('Este campo es requerido')
         .min(10)
-        .label('Numero de telefono')
+        .label('Numero de telefono'),
+      nationality: yup
+        .string()
+        .required('Este campo es requerido')
+        .label('Nacionalidad')
     })
     const customerFields = ref({
       customerId: 0,
-      name: '',
-      lastname: '',
-      phoneNumber: '',
+      name: null,
+      lastname: null,
+      phoneNumber: null,
+      nationality: null,
       isDeleted: false
     })
     const customerFieldsBlank = ref(JSON.parse(JSON.stringify(customerFields)))
