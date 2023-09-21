@@ -71,7 +71,6 @@
               v-model="customerFields.nationality"
               :validate-event="false"
               :model-value="value"
-              type="number"
             />
           </el-form-item>
         </Field>
