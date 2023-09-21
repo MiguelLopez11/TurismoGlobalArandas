@@ -56,8 +56,6 @@
                 placeholder="Ingresa la nacionalidad del cliente"
                 size="large"
                 v-model="customer.nationality"
-                type="number"
-                min="10"
               />
             </el-form-item>
           </Field>
