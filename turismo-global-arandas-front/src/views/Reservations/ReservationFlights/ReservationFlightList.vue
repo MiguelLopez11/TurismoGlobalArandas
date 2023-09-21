@@ -1,5 +1,5 @@
 <template>
-  <!-- <role-add-new /> -->
+  <reservation-flights-add-new />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
@@ -58,13 +58,17 @@
                       "
                       >Editar</el-dropdown-item
                     >
-                    <el-dropdown-item @click="onDeleteReservationFlight(items.id)"
+                    <el-dropdown-item
+                      @click="onDeleteReservationFlight(items.id)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
             </template>
+            <!-- <template #item-status="items">
+
+            </template> -->
           </EasyDataTable>
         </div>
       </el-col>
@@ -75,12 +79,14 @@
 <script>
 import { ref, watch, provide, inject } from 'vue'
 import reservationFlightservices from '@/Services/ReservationFlights.Services'
+import ReservationFlightsAddNew from './ReservationFlightsAddNew.vue'
 // import RoleAddNew from './RoleAddNew.vue'
 
 export default {
-//   components: { RoleAddNew },
+  components: { ReservationFlightsAddNew },
   setup () {
-    const { getReservationFlights, deleteReservationFlight } = reservationFlightservices()
+    const { getReservationFlights, deleteReservationFlight } =
+      reservationFlightservices()
     const reservationFlights = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
@@ -104,6 +110,7 @@ export default {
       { value: 'paymentMethodAgency', text: 'Método de pago agencia' },
       { value: 'paymentMethodClient', text: 'Método de pago cliente' },
       { value: 'contactPhone', text: 'Telefono de contacto' },
+      // { value: 'status', text: 'Estado del vuelo' },
       { value: 'actions', text: 'Acciones' }
     ])
     getReservationFlights(data => {
@@ -125,19 +132,19 @@ export default {
     const onDeleteReservationFlight = reservationFlightId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar un role, ¿Estas seguro?',
+          title: 'Estás a punto de cancelar un vuelo, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar destino',
+          confirmButtonText: 'Si, cancelar vuelo',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
             deleteReservationFlight(reservationFlightId, data => {
               swal.fire({
-                title: 'Role eliminado!',
-                text: 'El role ha sido eliminado satisfactoriamente .',
+                title: 'Vuelo Cancelado!',
+                text: 'El vuelo ha sido cancelado satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()

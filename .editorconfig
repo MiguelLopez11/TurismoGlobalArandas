@@ -11,3 +11,9 @@ dotnet_diagnostic.CS8600.severity = none
 
 # IDE0058: El valor de la expresión no se utiliza nunca.
 dotnet_diagnostic.IDE0058.severity = none
+
+# CS8604: Posible argumento de referencia nulo
+dotnet_diagnostic.CS8604.severity = none
+
+# CS8981: El nombre de tipo solo contiene caracteres ASCII en minúsculas. Estos nombres pueden reservarse para el idioma.
+dotnet_diagnostic.CS8981.severity = none

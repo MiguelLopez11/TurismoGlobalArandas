@@ -57,7 +57,9 @@
                         () => {
                           $router.push({
                             name: 'Edit-ReservationHotels',
-                            params: { ReservationHotelId: items.reservationHotelId }
+                            params: {
+                              ReservationHotelId: items.reservationHotelId
+                            }
                           })
                         }
                       "
@@ -72,6 +74,14 @@
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
+            </template>
+            <template #item-destinations="items">
+              <span>{{
+                items.destinations ? items.destinations.name : ''
+              }}</span>
+            </template>
+            <template #item-hotel="items">
+              <span>{{ items.hotels ? items.hotels.name : '' }}</span>
             </template>
           </EasyDataTable>
         </div>
@@ -100,9 +110,10 @@ export default {
     provide('AddEmployee', isAddedEmployee)
     const fields = ref([
       { value: 'reservationInvoice', text: 'Folio' },
-      { value: 'travelDate', text: 'Fecha de viaje' },
-      // { value: 'hotels.name', text: 'Hotel' },
-      // { value: 'hotels.destination.name', text: 'Destino' },
+      { value: 'travelDateStart', text: 'Fecha de salida' },
+      { value: 'travelDateEnd', text: 'Fecha de regreso' },
+      { value: 'hotel', text: 'Hotel' },
+      { value: 'destinations', text: 'Destino' },
       { value: 'dateSale', text: 'Fecha de venta' },
       { value: 'actions', text: 'Acciones' }
     ])
