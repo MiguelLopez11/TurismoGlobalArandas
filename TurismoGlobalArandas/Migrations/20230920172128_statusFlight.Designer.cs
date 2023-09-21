@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230920172128_statusFlight")]
+    partial class statusFlight
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -417,7 +420,7 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal>("Salary")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("WorkStation")
                         .IsRequired()
@@ -486,7 +489,7 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal?>("AdvancePayment")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<string>("Ages")
                         .HasColumnType("nvarchar(max)");
@@ -757,13 +760,10 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("PriceNeto")
-                        .HasColumnType("decimal(18, 2)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<decimal?>("PricePublic")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<int?>("StatusFlightId")
-                        .HasColumnType("int");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime?>("TravelDateEnd")
                         .HasColumnType("datetime2");
@@ -783,8 +783,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasKey("FlightId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("StatusFlightId");
 
                     b.ToTable("ReservationFlights");
                 });
@@ -1150,13 +1148,7 @@ namespace TurismoGlobalArandas.Migrations
                         .WithMany()
                         .HasForeignKey("CustomerId");
 
-                    b.HasOne("TurismoGlobalArandas.Models.StatusFlight", "StatusFlight")
-                        .WithMany()
-                        .HasForeignKey("StatusFlightId");
-
                     b.Navigation("Customers");
-
-                    b.Navigation("StatusFlight");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotel", b =>

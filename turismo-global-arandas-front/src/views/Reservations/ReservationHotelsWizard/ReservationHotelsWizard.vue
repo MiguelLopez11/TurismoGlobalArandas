@@ -580,11 +580,6 @@ export default {
         store.commit('setReservationHotelId', data.reservationHotelId)
         refreshReservationHotel()
       })
-      createIndividualRate(individualRateFields.value, data => {
-        getIndividualRate(data.individualRateId, items => {
-          individualRate.value = items
-        })
-      })
     } else {
       getReservationHotel(props.reservationHotelId, data => {
         store.commit('setReservationHotelId', data.reservationHotelId)
@@ -725,6 +720,13 @@ export default {
           reservationHotel.value.paymentLimitDateProvider
         ) {
           onUpdateReservation()
+          if (!reservationHotel.value.typeReservationId !== 1 && individualRate.value.length > 0) {
+            createIndividualRate(individualRateFields.value, data => {
+              getIndividualRate(data.individualRateId, items => {
+                individualRate.value = items
+              })
+            })
+          }
           resolve(true)
         } else {
           onMessageErrorSteps()

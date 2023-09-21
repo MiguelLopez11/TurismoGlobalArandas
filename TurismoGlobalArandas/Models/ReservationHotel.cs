@@ -8,7 +8,11 @@ namespace TurismoGlobalArandas.Models
         [Key]
         public int ReservationHotelId { get; set; }
         public string? ReservationInvoice { get; set; } = null;
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime? TravelDateStart { get; set; } = null;
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime? TravelDateEnd { get; set; } = null;
         public string? TypeHabitation { get; set; } = null;
         public int? NumberHabitations { get; set; } = null;
@@ -16,6 +20,8 @@ namespace TurismoGlobalArandas.Models
         public string? Observations { get; set; } = null;
         public string? GroupCoordinator { get; set; } = null;
         public string? PhoneCoordinator { get; set; } = null;
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime? DateSale { get; set; } = null;
         public string? Agent { get; set; } = null;
         public string? PaymentPeriod { get; set; } = null;
@@ -24,7 +30,11 @@ namespace TurismoGlobalArandas.Models
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal? TotalCost { get; set; } = null;
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime? PaymentLimitDate { get; set; } = null;
+        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
         public DateTime? PaymentLimitDateProvider { get; set; } = null;
         public int? TypeReservationId { get; set; } = null;
         public int? EmployeeId { get; set; } = null;
@@ -41,7 +51,7 @@ namespace TurismoGlobalArandas.Models
         public Customers? Customers { get; set; }
 
         [ForeignKey("HotelId")]
-        public Hotels? Hotels { get; set; } 
+        public Hotels? Hotels { get; set; }
         [ForeignKey("DestinationId")]
         public Destinations? Destinations { get; set; }
 

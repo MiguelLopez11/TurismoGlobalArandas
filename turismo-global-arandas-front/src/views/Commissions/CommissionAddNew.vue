@@ -1,7 +1,7 @@
 <template>
   <el-dialog v-model="isOpenDialog" title="Nueva comisión" width="80%" center>
     <Form
-      ref="commisionFormRef"
+      ref="commissionFormRef"
       as="el-form"
       :validation-schema="validationSchema"
       @submit="onSubmit"
@@ -180,7 +180,7 @@ export default {
   setup () {
     const isOpenDialog = inject('addCommission')
     const swal = inject('$swal')
-    const commisionFormRef = ref(null)
+    const commissionFormRef = ref(null)
     const providers = ref([])
     const { createCommission } = CommissionServices()
     const { getProviders } = ProviderServices()
@@ -233,13 +233,13 @@ export default {
         })
         isOpenDialog.value = false
         commisionFields.value = JSON.parse(JSON.stringify(commisionFieldsBlank))
-        commisionFormRef.value.resetForm()
+        commissionFormRef.value.resetForm()
       })
     }
 
     return {
       isOpenDialog,
-      commisionFormRef,
+      commissionFormRef,
       providers,
       onSubmit,
       commisionFields,

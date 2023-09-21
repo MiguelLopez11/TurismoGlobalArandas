@@ -25,6 +25,7 @@ namespace TurismoGlobalArandas.Context
         public DbSet<TypeReservation> TypeReservations { get; set; }
         public DbSet<Commissions> Commissions { get; set; }
         public DbSet<ReservationFlight> ReservationFlights { get; set; }
+        public DbSet<StatusFlight> StatusFlight { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
