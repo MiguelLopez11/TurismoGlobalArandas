@@ -26,6 +26,7 @@ namespace TurismoGlobalArandas.Context
         public DbSet<Commissions> Commissions { get; set; }
         public DbSet<ReservationFlight> ReservationFlights { get; set; }
         public DbSet<StatusFlight> StatusFlight { get; set; }
+        public DbSet<TypeReservationGrupal> TypeReservationGrupals { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -34,6 +35,8 @@ namespace TurismoGlobalArandas.Context
             builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 1, Name = "Individual", Description = null, IsDeleted = false });
             builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 2, Name = "Grupal", Description = null, IsDeleted = false });
             builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 3, Name = "Grupo", Description = null, IsDeleted = false });
+            builder.Entity<TypeReservationGrupal>().HasData(new TypeReservationGrupal { TypeReservationGrupalId = 1, Name = "Grupo", Description = null, IsDeleted = false });
+            builder.Entity<TypeReservationGrupal>().HasData(new TypeReservationGrupal { TypeReservationGrupalId = 2, Name = "Individual", Description = null, IsDeleted = false });
             builder.Entity<Providers>().HasData(new Providers { ProviderId = 1, Name = "Record Hoteleria", Email = null, PhoneNumber = null, IsDeleted = false });
             builder.Entity<Commissions>().HasData(new Commissions { CommissionId = 1, ProviderId = 1, Color = null, CommissionAgency = "0.15", CommissionClient = "0.10", CommissionEmployee = "0.05", Description = null, IsDeleted = false });
             builder.Entity<Providers>().HasData(new Providers { ProviderId = 2, Name = "Record Traslados", Email = null, PhoneNumber = null, IsDeleted = false });

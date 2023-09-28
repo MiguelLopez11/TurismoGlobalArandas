@@ -208,6 +208,14 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/ReservacionesVuelos/:FlightId',
+    name: 'Edit-ReservationFlight',
+    component: () => import('../views/Reservations/ReservationFlights/ReservationFlightEdit'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]

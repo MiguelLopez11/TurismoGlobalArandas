@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { ref, inject } from 'vue'
+import { ref, inject, watch } from 'vue'
 import { Field, Form } from 'vee-validate'
 import hotelsServices from '@/Services/Hotels.Services'
 import DestinationServices from '@/Services/Destinations.Services'
@@ -110,9 +110,14 @@ export default {
     const { getDestinations } = DestinationServices()
     const { createHotel } = hotelsServices()
     const destinations = ref([])
-    getDestinations(data => {
-      destinations.value = data
+    watch(isOpenDialog, newValue => {
+      if (newValue) {
+        getDestinations(data => {
+          destinations.value = data
+        })
+      }
     })
+
     const validationSchema = yup.object({
       name: yup.string().required('Este campo es requerido').label('Nombre')
     })

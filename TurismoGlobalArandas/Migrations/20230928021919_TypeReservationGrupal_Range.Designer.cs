@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230928021919_TypeReservationGrupal_Range")]
+    partial class TypeReservationGrupal_Range
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -960,31 +963,19 @@ namespace TurismoGlobalArandas.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TypeReservationGrupalId"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("TypeReservationGrupalId");
 
                     b.ToTable("TypeReservationGrupals");
-
-                    b.HasData(
-                        new
-                        {
-                            TypeReservationGrupalId = 1,
-                            IsDeleted = false,
-                            Name = "Grupo"
-                        },
-                        new
-                        {
-                            TypeReservationGrupalId = 2,
-                            IsDeleted = false,
-                            Name = "Individual"
-                        });
                 });
 
             modelBuilder.Entity("UConnect.Entities.User", b =>

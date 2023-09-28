@@ -143,7 +143,7 @@ export default {
       },
       {
         index: '5',
-        title: 'Gestion de ventas',
+        title: 'Gestion de reservaciones',
         icon: 'bi bi-cash',
         submenu: [
           {

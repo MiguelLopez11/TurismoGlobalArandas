@@ -4,8 +4,8 @@
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="travelDate">
-            <el-form-item :error="errorMessage" required>
-              <div class="mb-2">
+            <el-form-item :error="errors.travelDate" required>
+              <div>
                 <span>Fecha del viaje</span>
               </div>
               <el-date-picker
@@ -23,14 +23,14 @@
         </el-col>
         <el-col :span="8">
           <Field name="departureAirport">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item :error="errors.departureAirport" required>
               <div>
                 <label> Aeropuerto de salida </label>
               </div>
               <el-input
-                placeholder="Ingresa la comisión para la agencia"
+                placeholder="Ingresa el aeropuerto de salida para el cliente"
                 size="large"
-                v-model="reservationFlightFields.departureAirport"
+                v-model="reservationFlight.departureAirport"
               >
               </el-input>
             </el-form-item>
@@ -38,14 +38,14 @@
         </el-col>
         <el-col :span="8">
           <Field name="arrivalAirport">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item :error="errors.arrivalAirport" required>
               <div>
                 <label> Aeropuerto de salida </label>
               </div>
               <el-input
-                placeholder="Ingresa la comision para el cliente"
+                placeholder="Ingresa el aeropuerto de llegada para el cliente"
                 size="large"
-                v-model="reservationFlightFields.arrivalAirport"
+                v-model="reservationFlight.arrivalAirport"
               >
               </el-input>
             </el-form-item>
@@ -53,14 +53,14 @@
         </el-col>
         <el-col :span="8">
           <Field name="airline">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item :error="errors.airline" required>
               <div>
                 <label>AeroLinea</label>
               </div>
               <el-input
                 placeholder="Ingresa la aerolinea en la que viajará el cliente"
                 size="large"
-                v-model="reservationFlightFields.airline"
+                v-model="reservationFlight.airline"
               >
               </el-input>
             </el-form-item>
@@ -70,7 +70,7 @@
           <el-form-item>
             <v-select
               class="w-100"
-              v-model="reservationFlightFields.customerId"
+              v-model="reservationFlight.customerId"
               label="name"
               :options="customers"
               :reduce="customer => customer.customerId"
@@ -85,10 +85,22 @@
                 <span class="text-danger">*</span>
                 <label> Cliente</label>
               </template>
+              <template #list-footer>
+                <el-button
+                  class="w-100"
+                  @click="
+                    () => {
+                      isAddedCustomer = !isAddedCustomer
+                    }
+                  "
+                >
+                  Agregar nuevo cliente</el-button
+                >
+              </template>
               <template #search="{ attributes, events }">
                 <input
                   class="vs__search"
-                  :required="!reservationFlightFields.customerId"
+                  :required="!reservationFlight.customerId"
                   v-bind="attributes"
                   v-on="events"
                 />
@@ -98,12 +110,12 @@
         </el-col>
         <el-col :span="4">
           <Field name="confirmationKey">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item :error="errors.confirmationKey" required>
               <div>
                 <label>Clave de confirmación</label>
               </div>
               <el-input
-                v-model="reservationFlightFields.confirmationKey"
+                v-model="reservationFlight.confirmationKey"
                 size="large"
               />
             </el-form-item>
@@ -111,14 +123,14 @@
         </el-col>
         <el-col :span="8">
           <Field name="priceNeto">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item :error="errors.priceNeto" required>
               <div>
                 <label>Precio neto</label>
               </div>
               <el-input
                 placeholder="Ingresa el precio neto"
                 size="large"
-                v-model="reservationFlightFields.priceNeto"
+                v-model="reservationFlight.priceNeto"
                 type="number"
               />
             </el-form-item>
@@ -126,14 +138,14 @@
         </el-col>
         <el-col :span="8">
           <Field name="pricePublic">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item :error="errors.pricePublic" required>
               <div>
-                <label>Precio neto</label>
+                <label>Precio al público</label>
               </div>
               <el-input
-                placeholder="Ingresa el precio neto"
+                placeholder="Ingresa el precio al público"
                 size="large"
-                v-model="reservationFlightFields.pricePublic"
+                v-model="reservationFlight.pricePublic"
                 type="number"
               />
             </el-form-item>
@@ -144,10 +156,7 @@
             <label> ¿Es un vuelo sencillo?</label>
           </div>
           <el-form-item>
-            <el-switch
-              size="large"
-              v-model="reservationFlightFields.isSimpleFlight"
-            >
+            <el-switch size="large" v-model="reservationFlight.isSimpleFlight">
             </el-switch>
           </el-form-item>
         </el-col>
@@ -156,10 +165,7 @@
             <label> ¿Es un vuelo redondo?</label>
           </div>
           <el-form-item>
-            <el-switch
-              size="large"
-              v-model="reservationFlightFields.isRoundFlight"
-            >
+            <el-switch size="large" v-model="reservationFlight.isRoundFlight">
             </el-switch>
           </el-form-item>
         </el-col>
@@ -170,49 +176,49 @@
           <el-form-item>
             <el-switch
               size="large"
-              v-model="reservationFlightFields.isMultidestinationFlight"
+              v-model="reservationFlight.isMultidestinationFlight"
             >
             </el-switch>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <Field name="paymentMethodAgency">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item :error="errors.paymentMethodAgency" required>
               <div>
                 <label>Metodo de pago de la agencia</label>
               </div>
               <el-input
                 placeholder="Ingresa una descripcion"
                 size="large"
-                v-model="reservationFlightFields.paymentMethodAgency"
+                v-model="reservationFlight.paymentMethodAgency"
               />
             </el-form-item>
           </Field>
         </el-col>
         <el-col :span="8">
           <Field name="paymentMethodClient">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item :error="errors.paymentMethodClient" required>
               <div>
                 <label>Metodo de pago del cliente</label>
               </div>
               <el-input
                 placeholder="Ingresa una descripcion"
                 size="large"
-                v-model="reservationFlightFields.paymentMethodClient"
+                v-model="reservationFlight.paymentMethodClient"
               />
             </el-form-item>
           </Field>
         </el-col>
         <el-col :span="8">
           <Field name="contactPhone">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item :error="errors.contactPhone" required>
               <div>
                 <label>Telefono de contacto</label>
               </div>
               <el-input
                 placeholder="Ingresa el telefono de contacto"
                 size="large"
-                v-model="reservationFlightFields.contactPhone"
+                v-model="reservationFlight.contactPhone"
                 type="number"
               />
             </el-form-item>
@@ -237,7 +243,7 @@
             size="large"
             @click="
               () => {
-                $router.push('/comisiones')
+                $router.push('/ReservacionesVuelos')
               }
             "
             >Cancelar</el-button
@@ -249,75 +255,89 @@
 </template>
 
 <script>
-import CommissionServices from '@/Services/Commissions.Services'
-import ProviderServices from '@/Services/Provider.Services'
+import ReservationFlightServices from '@/Services/ReservationFlights.Services'
+import CustomerServices from '@/Services/Customers.Services'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, inject } from 'vue'
+import { ref, inject, provide } from 'vue'
 
 export default {
   setup () {
-    const { getCommission, updateCommission } = CommissionServices()
-    const { getProviders } = ProviderServices()
-    const providers = ref([])
-    const commission = ref({})
+    const { getReservationFlight, updateReservationFlight } =
+      ReservationFlightServices()
+    const { getCustomers } = CustomerServices()
+    const rangeDatesTravel = ref([])
+    const customers = ref([])
+    const reservationFlight = ref([])
     const router = useRoute()
     const redirect = useRouter()
     const swal = inject('$swal')
-    getCommission(router.params.CommissionId, data => {
-      commission.value = data
+    const isAddedCustomer = ref(false)
+    provide('AddCustomer', isAddedCustomer)
+    getReservationFlight(router.params.FlightId, data => {
+      reservationFlight.value = data
+      rangeDatesTravel.value.push(data.travelDateStart)
+      rangeDatesTravel.value.push(data.travelDateEnd)
     })
-    getProviders(data => {
-      providers.value = data
+    getCustomers(data => {
+      customers.value = data
     })
+    const onSelectTravelDate = () => {
+      reservationFlight.value.travelDateStart = rangeDatesTravel.value[0]
+      reservationFlight.value.travelDateEnd = rangeDatesTravel.value[1]
+    }
     const onUpdateCommission = () => {
-      updateCommission(commission.value, data => {
+      updateReservationFlight(reservationFlight.value, data => {
         swal
           .fire({
-            title: 'Comisión modificado correctamente',
-            text: 'La comision se ha modificado satisfactoriamente.',
+            title: 'vuelo modificado correctamente',
+            text: 'El vuelo se ha modificado satisfactoriamente.',
             icon: 'success'
           })
           .then(result => {
             if (result.isConfirmed) {
-              redirect.push('/comisiones')
+              rangeDatesTravel.value = []
+              redirect.push('/ReservacionesVuelos')
             }
           })
       })
     }
     const validateCommissionAgency = () => {
-      if (!commission.value.commissionAgency) {
+      if (!reservationFlight.value.commissionAgency) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateCommissionClient = () => {
-      if (!commission.value.commissionClient) {
+      if (!reservationFlight.value.commissionClient) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateCommissionEmployee = () => {
-      if (!commission.value.commissionEmployee) {
+      if (!reservationFlight.value.commissionEmployee) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateColor = () => {
-      if (!commission.value.color) {
+      if (!reservationFlight.value.color) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateProvider = () => {
-      if (!commission.value.providerId) {
+      if (!reservationFlight.value.providerId) {
         return 'Este campo es requerido'
       }
       return true
     }
 
     return {
-      commission,
-      providers,
+      reservationFlight,
+      customers,
+      isAddedCustomer,
+      rangeDatesTravel,
+      onSelectTravelDate,
       onUpdateCommission,
       validateCommissionAgency,
       validateCommissionClient,

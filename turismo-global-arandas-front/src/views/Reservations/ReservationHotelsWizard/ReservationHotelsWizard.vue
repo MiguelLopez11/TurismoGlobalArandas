@@ -108,7 +108,7 @@
                       }
                     "
                   >
-                    agregar nuevo tipo de reserva</el-button
+                    Agregar nuevo tipo de reserva</el-button
                   >
                 </template>
               </v-select>
@@ -586,7 +586,15 @@ export default {
         reservationHotel.value = data
       })
       getIndividualRateByReservationHotel(props.reservationHotelId, data => {
-        individualRate.value = data
+        if (data) {
+          individualRate.value = data
+        } else {
+          createIndividualRate(individualRateFields.value, data => {
+            getIndividualRate(data.individualRateId, items => {
+              individualRate.value = items
+            })
+          })
+        }
       })
     }
     const refreshDataSelect = () => {
@@ -720,7 +728,10 @@ export default {
           reservationHotel.value.paymentLimitDateProvider
         ) {
           onUpdateReservation()
-          if (!reservationHotel.value.typeReservationId !== 1 && individualRate.value.length > 0) {
+          if (
+            !reservationHotel.value.typeReservationId !== 1 &&
+            individualRate.value.length > 0
+          ) {
             createIndividualRate(individualRateFields.value, data => {
               getIndividualRate(data.individualRateId, items => {
                 individualRate.value = items

@@ -42,10 +42,6 @@ namespace TurismoGlobalArandas.Controllers
             var IndividualRate = await _context.IndividualRates
                 .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
-            if (IndividualRate == null)
-            {
-                return NotFound();
-            }
             return Ok(IndividualRate);
         }
         [HttpPost]

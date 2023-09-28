@@ -44,7 +44,7 @@
                 <label> Aeropuerto de salida </label>
               </div>
               <el-input
-                placeholder="Ingresa la comisión para la agencia"
+                placeholder="Ingresa el aeropuerto de salida para el cliente"
                 size="large"
                 v-bind="field"
                 v-model="reservationFlightFields.departureAirport"
@@ -59,10 +59,10 @@
           <Field name="arrivalAirport" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
-                <label> Aeropuerto de salida </label>
+                <label> Aeropuerto de llegada </label>
               </div>
               <el-input
-                placeholder="Ingresa la comision para el cliente"
+                placeholder="Ingresa el aeropuerto de llegada para el cliente"
                 size="large"
                 v-bind="field"
                 v-model="reservationFlightFields.arrivalAirport"
@@ -109,6 +109,18 @@
               <template #header>
                 <span class="text-danger">*</span>
                 <label> Cliente</label>
+              </template>
+              <template #list-footer>
+                <el-button
+                  class="w-100"
+                  @click="
+                    () => {
+                      isAddedCustomer = !isAddedCustomer
+                    }
+                  "
+                >
+                  Agregar nuevo cliente</el-button
+                >
               </template>
               <template #search="{ attributes, events }">
                 <input

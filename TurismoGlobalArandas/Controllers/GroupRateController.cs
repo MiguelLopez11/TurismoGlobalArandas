@@ -57,14 +57,13 @@ namespace TurismoGlobalArandas.Controllers
                 return BadRequest($"La categoría con el ID {GroupRateId} no existe");
             }
             GroupRateOld.GroupRateId = GroupRate.GroupRateId;
-            GroupRateOld.IndividualHabitation = GroupRate.IndividualHabitation;
-            GroupRateOld.DoubleHabitation = GroupRate.DoubleHabitation;
-            GroupRateOld.TripleHabitation = GroupRate.TripleHabitation;
-            GroupRateOld.QDPLHabitation = GroupRate.QDPLHabitation;
-            GroupRateOld.JuniorHabitation = GroupRate.JuniorHabitation;
-            GroupRateOld.MinorHabitation = GroupRate.MinorHabitation;
-            GroupRateOld.AgesMinors = GroupRate.AgesMinors;
-            GroupRateOld.AgesJuniors = GroupRate.AgesJuniors;
+            GroupRateOld.GroupRateName = GroupRate.GroupRateName;
+            GroupRateOld.Confirmation = GroupRate.Confirmation;
+            GroupRateOld.DateArrival = GroupRate.DateArrival;
+            GroupRateOld.Coordinator = GroupRate.Coordinator;
+            GroupRateOld.PhoneNumber = GroupRate.PhoneNumber;
+            GroupRateOld.ReservationHotelId = GroupRate.ReservationHotelId;
+            GroupRateOld.TypeReservationGrupalId = GroupRate.TypeReservationGrupalId;
             GroupRateOld.IsDeleted = GroupRate.IsDeleted;
 
             _context.GroupRates.Update(GroupRateOld);
