@@ -59,7 +59,7 @@
             </el-form-item>
           </Field>
         </el-col>
-        <el-col v-if="reservationHotel.typeReservation.typeReservationId !== 1" :span="8">
+        <el-col v-if="reservationHotel.typeReservationGroupId !== 1" :span="8">
             <el-form-item >
               <div>
                 <label> Anticipo </label>
@@ -122,7 +122,7 @@
             </el-form-item>
           </Field>
         </el-col>
-        <el-col v-if="reservationHotel.typeReservation.typeReservationId !== 1" :span="8">
+        <el-col v-if="reservationHotel.typeReservationGroupId !== 1" :span="8">
             <el-form-item >
               <div>
                 <label>Costo</label>

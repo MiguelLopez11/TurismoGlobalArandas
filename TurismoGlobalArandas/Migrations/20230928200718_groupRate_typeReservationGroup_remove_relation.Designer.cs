@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20230928200718_groupRate_typeReservationGroup_remove_relation")]
+    partial class groupRate_typeReservationGroup_remove_relation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -436,59 +439,32 @@ namespace TurismoGlobalArandas.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupRateId"));
 
-                    b.Property<int>("Adults")
-                        .HasColumnType("int");
+                    b.Property<string>("Confirmation")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("AgesMinors")
+                    b.Property<string>("Coordinator")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateEnd")
+                    b.Property<DateTime?>("DateArrival")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateStart")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("GroupRateName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("Juniors")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MinorsCharge")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MinorsWithoutCharge")
-                        .HasColumnType("int");
-
-                    b.Property<int>("NightsNumber")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Observations")
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("RangeJunior")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("RangeMinor")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("RangeNight")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("RangePublicClient")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("RangeTotal")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("ReservationHotelGroupId")
+                    b.Property<int>("ReservationHotelId")
                         .HasColumnType("int");
 
                     b.HasKey("GroupRateId");
 
-                    b.HasIndex("ReservationHotelGroupId");
+                    b.HasIndex("ReservationHotelId");
 
                     b.ToTable("GroupRates");
                 });
@@ -910,44 +886,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.ToTable("ReservationHotels");
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotelGroup", b =>
-                {
-                    b.Property<int>("ReservationHotelGroupId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationHotelGroupId"));
-
-                    b.Property<string>("Confirmation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Coordinator")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DateArrival")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("GroupRateName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReservationHotelId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReservationHotelGroupId");
-
-                    b.HasIndex("ReservationHotelId");
-
-                    b.ToTable("ReservationHotelGroups");
-                });
-
             modelBuilder.Entity("TurismoGlobalArandas.Models.StatusFlight", b =>
                 {
                     b.Property<int>("StatusFlightId")
@@ -1192,13 +1130,13 @@ namespace TurismoGlobalArandas.Migrations
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.GroupRate", b =>
                 {
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationHotelGroup", "ReservationHotelGroup")
+                    b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "reservationHotel")
                         .WithMany()
-                        .HasForeignKey("ReservationHotelGroupId")
+                        .HasForeignKey("ReservationHotelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ReservationHotelGroup");
+                    b.Navigation("reservationHotel");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.HabitationsReservation", b =>
@@ -1298,17 +1236,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Navigation("TypeReservation");
 
                     b.Navigation("TypeReservationGrupal");
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotelGroup", b =>
-                {
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "reservationHotel")
-                        .WithMany()
-                        .HasForeignKey("ReservationHotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("reservationHotel");
                 });
 
             modelBuilder.Entity("UConnect.Entities.User", b =>

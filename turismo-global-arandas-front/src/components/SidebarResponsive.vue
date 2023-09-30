@@ -170,6 +170,12 @@ export default {
             title: 'Tipos de Reservaciones',
             path: '/TiposReservaciones',
             icon: 'bi bi-bezier2'
+          },
+          {
+            index: '5-3',
+            title: 'Tipos de Reservaciones grupales',
+            path: '/TiposReservacionesGrupales',
+            icon: 'bi bi-bezier'
           }
         ]
       }

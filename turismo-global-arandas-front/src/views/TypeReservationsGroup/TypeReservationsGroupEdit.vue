@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <Form v-slot="{ errors }" @submit="onupdateTypeReservation">
+    <Form v-slot="{ errors }" @submit="onupdateTypeReservationGrupal">
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="name" :rules="validateName" as="text">
@@ -11,7 +11,7 @@
               <el-input
                 placeholder="Ingresa el nombre del destino"
                 size="large"
-                v-model="typeReservation.name"
+                v-model="TypeReservationGroup.name"
               />
             </el-form-item>
           </Field>
@@ -24,7 +24,7 @@
             <el-input
               placeholder="Ingresa una descripción del destino"
               size="large"
-              v-model="typeReservation.description"
+              v-model="TypeReservationGroup.description"
             />
           </el-form-item>
         </el-col>
@@ -59,45 +59,45 @@
 </template>
 
 <script>
-import TypeReservationServices from '@/Services/TypeReservation.Services'
+import TypeReservationGrupalservices from '@/Services/TypeReservationGroup.Services'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject } from 'vue'
 
 export default {
   setup () {
-    const { getTypeReservation, updateTypeReservation } =
-      TypeReservationServices()
-    const typeReservation = ref({})
+    const { getTypeReservationGrupal, updateTypeReservationGrupal } =
+      TypeReservationGrupalservices()
+    const TypeReservationGroup = ref({})
     const router = useRoute()
     const redirect = useRouter()
     const swal = inject('$swal')
-    getTypeReservation(router.params.TypeReservationId, data => {
-      typeReservation.value = data
+    getTypeReservationGrupal(router.params.TypeReservationGrupalId, data => {
+      TypeReservationGroup.value = data
     })
-    const onupdateTypeReservation = () => {
-      updateTypeReservation(typeReservation.value, data => {
+    const onupdateTypeReservationGrupal = () => {
+      updateTypeReservationGrupal(TypeReservationGroup.value, data => {
         swal
           .fire({
-            title: 'Tipo de reservación modificado correctamente',
-            text: 'El Tipo de reservación se ha modificado satisfactoriamente.',
+            title: 'Tipo de reservación grupal modificado correctamente',
+            text: 'El Tipo de reservación grupal se ha modificado satisfactoriamente.',
             icon: 'success'
           })
           .then(result => {
             if (result.isConfirmed) {
-              redirect.push('/TiposReservaciones')
+              redirect.push('/TiposReservacionesGrupales')
             }
           })
       })
     }
     const validateName = () => {
-      if (!typeReservation.value.name) {
+      if (!TypeReservationGroup.value.name) {
         return 'Este campo es requerido'
       }
       return true
     }
     return {
-      typeReservation,
-      onupdateTypeReservation,
+      TypeReservationGroup,
+      onupdateTypeReservationGrupal,
       validateName
     }
   }

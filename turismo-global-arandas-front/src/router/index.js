@@ -216,6 +216,22 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/TiposReservacionesGrupales',
+    name: 'TypeReservationsGroup',
+    component: () => import('../views/TypeReservationsGroup/TypeReservationsGroupList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/TiposReservacionesGrupales/:TypeReservationGrupalId',
+    name: 'Edit-TypeReservationsGroup',
+    component: () => import('../views/TypeReservationsGroup/TypeReservationsGroupEdit'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]

@@ -1,5 +1,5 @@
 <template>
-  <TypeReservationAddNew />
+  <TypeReservationsGroupAddNew />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col class="m-1" :xs="24" :sm="12" :md="6" :xl="6" :lg="8">
@@ -14,7 +14,7 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddedTypeReservation = !isAddedTypeReservation"
+          @click="isAddedTypeReservationGroup = !isAddedTypeReservationGroup"
         >
           <i> Agregar tipo de reservación </i>
         </el-button>
@@ -34,7 +34,7 @@
           :rows-per-page="10"
           :loading="isloading"
           :headers="fields"
-          :items="typeReservations"
+          :items="typeReservationsgroup"
           :search-field="searchField"
           :search-value="searchValue"
         >
@@ -50,15 +50,15 @@
                     @click="
                       () => {
                         $router.push({
-                          name: 'Edit-TypeReservation',
-                          params: { TypeReservationId: items.typeReservationId }
+                          name: 'Edit-TypeReservationsGroup',
+                          params: { TypeReservationGrupalId: items.typeReservationGrupalId }
                         })
                       }
                     "
                     >Editar</el-dropdown-item
                   >
                   <el-dropdown-item
-                    @click="onDeleteTypeReservation(items.typeReservationId)"
+                    @click="onDeleteTypeReservation(items.typeReservationGrupalId)"
                     >Eliminar</el-dropdown-item
                   >
                 </el-dropdown-menu>
@@ -73,15 +73,15 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import TypeReservationServices from '@/Services/TypeReservation.Services'
-import TypeReservationAddNew from './TypeReservationAddNew.vue'
+import TypeReservationGrupalservices from '@/Services/TypeReservationGroup.Services'
+import TypeReservationsGroupAddNew from './TypeReservationsGroupAddNew.vue'
 
 export default {
-  components: { TypeReservationAddNew },
+  components: { TypeReservationsGroupAddNew },
   setup () {
-    const { getTypeReservations, deleteTypeReservation } =
-      TypeReservationServices()
-    const typeReservations = ref([])
+    const { getTypeReservationGrupals, deleteTypeReservationGrupal } =
+      TypeReservationGrupalservices()
+    const typeReservationsgroup = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -90,43 +90,43 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
-    const isAddedTypeReservation = ref(false)
-    provide('AddTypeReservation', isAddedTypeReservation)
+    const isAddedTypeReservationGroup = ref(false)
+    provide('AddTypeReservationGroup', isAddedTypeReservationGroup)
     const fields = ref([
       { value: 'name', text: 'Nombre' },
       { value: 'description', text: 'Descripción' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getTypeReservations(data => {
-      typeReservations.value = data
+    getTypeReservationGrupals(data => {
+      typeReservationsgroup.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getTypeReservations(data => {
-        typeReservations.value = data
+      getTypeReservationGrupals(data => {
+        typeReservationsgroup.value = data
         isloading.value = false
       })
     }
-    watch(isAddedTypeReservation, newValue => {
+    watch(isAddedTypeReservationGroup, newValue => {
       if (!newValue) {
         refreshTable()
       }
     })
-    const onDeleteTypeReservation = typeReservationId => {
+    const onDeleteTypeReservation = typeReservationGrupalId => {
       swal
         .fire({
           title:
-            'Estás a punto de eliminar un tipo de reservación, ¿Estas seguro?',
+            'Estás a punto de eliminar un tipo de reservación grupal, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar tipo de reservación',
+          confirmButtonText: 'Si, eliminar tipo de reservación grupal',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteTypeReservation(typeReservationId, data => {
+            deleteTypeReservationGrupal(typeReservationGrupalId, data => {
               swal.fire({
                 title: 'Tipo de reservación eliminado!',
                 text: 'El tipo de reservasion ha sido eliminado satisfactoriamente .',
@@ -148,8 +148,8 @@ export default {
       searchValue,
       searchField,
       fields,
-      typeReservations,
-      isAddedTypeReservation,
+      typeReservationsgroup,
+      isAddedTypeReservationGroup,
       refreshTable,
       onDeleteTypeReservation
     }

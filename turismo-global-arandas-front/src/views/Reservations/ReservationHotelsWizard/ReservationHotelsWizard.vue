@@ -114,6 +114,52 @@
               </v-select>
             </el-form-item>
           </el-col>
+          <el-col :span="8" v-if="reservationHotel.typeReservationId === 2">
+            <el-form-item>
+              <v-select
+                class="w-100"
+                label="name"
+                v-model="reservationHotel.typeReservationGroupId"
+                :options="typeReservationsgrupal"
+                :reduce="
+                  typeReservationGroup =>
+                    typeReservationGroup.typeReservationGrupalId
+                "
+              >
+                <template #selected-option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
+                <template #option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
+                <template #header>
+                  <span class="text-danger">*</span>
+                  <label>Tipo de reserva grupal</label>
+                </template>
+                <template #search="{ attributes, events }">
+                  <input
+                    class="vs__search"
+                    :required="!reservationHotel.typeReservationGroupId"
+                    v-bind="attributes"
+                    v-on="events"
+                  />
+                </template>
+                <template #list-footer>
+                  <el-button
+                    v-if="!reservationHotel.typeReservationId"
+                    class="w-100"
+                    @click="
+                      () => {
+                        isAddedTypeReservation = !isAddedTypeReservation
+                      }
+                    "
+                  >
+                    Agregar nuevo tipo de reserva</el-button
+                  >
+                </template>
+              </v-select>
+            </el-form-item>
+          </el-col>
           <el-col :span="8">
             <el-form-item>
               <v-select
@@ -320,67 +366,75 @@
           </el-col>
         </el-row>
       </tab-content>
-      <tab-content lazy title="Habitaciones" icon="bi bi-door-closed">
-        <habitation-reservation-list />
-      </tab-content>
       <tab-content
         lazy
-        title="Tarifas"
-        icon="bi bi-cash-stack"
-        :beforeChange="validationRates"
+        title="Tarifas Y Habitaciones"
+        icon="bi bi-door-closed"
+        :beforeChange="validationRatesAndHabitations"
       >
-        <el-row :gutter="35">
-          <el-col :span="8">
-            <div>
-              <label> ¿Desea que se calcule en automatico el costo?</label>
-            </div>
-            <el-form-item>
-              <el-switch size="large" v-model="isAutomaticCalculation">
-              </el-switch>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item>
-              <div>
-                <span class="text-danger">*</span>
-                <label> Tarifa Pública </label>
-              </div>
-              <el-input
-                placeholder="Ingresa la tarifa pública"
-                size="large"
-                v-model="individualRate.publicRate"
-                @input="onCalculateRate"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item>
-              <div>
-                <label>Descuento extra</label>
-              </div>
-              <el-input
-                placeholder="Ingresa el descuento extra"
-                size="large"
-                v-model="individualRate.extraDiscount"
-              >
-                <template #append>%</template>
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item>
-              <div>
-                <label> Tarifa al cliente </label>
-              </div>
-              <el-input
-                placeholder="Ingresa la tarifa al cliente"
-                size="large"
-                v-model="individualRate.clientRate"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-divider />
+        <el-tabs v-if="reservationHotel.typeReservationGroupId !== 1">
+          <el-tab-pane label="Habitaciones">
+            <habitation-reservation-list />
+          </el-tab-pane>
+          <el-tab-pane>
+            <template #label>
+              <span class="custom-tabs-label">
+                <i class="bi bi-building"></i>
+                <span>Tarifas </span>
+              </span>
+            </template>
+            <el-row :gutter="35">
+              <el-col :span="8">
+                <div>
+                  <label> ¿Desea que se calcule en automatico el costo?</label>
+                </div>
+                <el-form-item>
+                  <el-switch size="large" v-model="isAutomaticCalculation">
+                  </el-switch>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item>
+                  <div>
+                    <span class="text-danger">*</span>
+                    <label> Tarifa Pública </label>
+                  </div>
+                  <el-input
+                    placeholder="Ingresa la tarifa pública"
+                    size="large"
+                    v-model="individualRate.publicRate"
+                    @input="onCalculateRate"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item>
+                  <div>
+                    <label>Descuento extra</label>
+                  </div>
+                  <el-input
+                    placeholder="Ingresa el descuento extra"
+                    size="large"
+                    v-model="individualRate.extraDiscount"
+                  >
+                    <template #append>%</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item>
+                  <div>
+                    <label> Tarifa al cliente </label>
+                  </div>
+                  <el-input
+                    placeholder="Ingresa la tarifa al cliente"
+                    size="large"
+                    v-model="individualRate.clientRate"
+                  />
+                </el-form-item>
+              </el-col> </el-row
+          ></el-tab-pane>
+        </el-tabs>
       </tab-content>
       <tab-content
         lazy
@@ -477,10 +531,12 @@ import DestinationServices from '@/Services/Destinations.Services'
 import HotelsServices from '@/Services/Hotels.Services'
 import ReservationHotelServices from '@/Services/ReservationHotel.Services'
 import TypeReservationServices from '@/Services/TypeReservation.Services'
+import TypeReservationGroupServices from '@/Services/TypeReservationGroup.Services'
 import ProviderServices from '@/Services/Provider.Services'
 import EmployeeServices from '@/Services/Employees.Services'
 import IndividualRateServices from '@/Services/IndividualRate.Services'
 import CommissionServices from '@/Services/Commissions.Services'
+import HabitationReservationServices from '@/Services/HabitationReservation.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
@@ -519,14 +575,17 @@ export default {
       getReservationHotel
     } = ReservationHotelServices()
     const { getTypeReservations } = TypeReservationServices()
+    const { getTypeReservationGrupals } = TypeReservationGroupServices()
     const { getProviders } = ProviderServices()
     const { getEmployees } = EmployeeServices()
     const {
       createIndividualRate,
       getIndividualRate,
-      getIndividualRateByReservationHotel
+      getIndividualRateByReservationHotel,
+      updateIndividualRate
     } = IndividualRateServices()
     const { getCommissionByProvider } = CommissionServices()
+    const { getHabitationReservationsHotel } = HabitationReservationServices()
     const store = useStore()
     const redirect = useRouter()
     // DATA
@@ -541,12 +600,14 @@ export default {
     const destinations = ref([])
     const hotels = ref([])
     const typeReservations = ref([])
+    const typeReservationsgrupal = ref([])
     const providers = ref([])
     const employees = ref([])
     const reservationHotel = ref([])
     const individualRate = ref([])
     const reservationHotelId = ref()
-    const rangeDatesTravel = ref()
+    const rangeDatesTravel = ref([])
+    const habitationReservations = ref([])
     const employyeId = window.sessionStorage.getItem('EmployeeId')
     provide('AddTypeReservation', isAddedTypeReservation)
     provide('addDestination', isAddDestination)
@@ -559,7 +620,7 @@ export default {
     })
     const individualRateFields = ref({
       individualRateId: 0,
-      reservationHotelId: reservationHotelId.value,
+      reservationHotelId: props.reservationHotelId,
       publicRate: null,
       clientRate: null,
       extraDiscount: null,
@@ -584,6 +645,11 @@ export default {
       getReservationHotel(props.reservationHotelId, data => {
         store.commit('setReservationHotelId', data.reservationHotelId)
         reservationHotel.value = data
+        rangeDatesTravel.value.push(data.travelDateStart)
+        rangeDatesTravel.value.push(data.travelDateEnd)
+        getHotelByDestinationId(data.destinationId, data => {
+          hotels.value = data
+        })
       })
       getIndividualRateByReservationHotel(props.reservationHotelId, data => {
         if (data) {
@@ -621,12 +687,20 @@ export default {
     getTypeReservations(data => {
       typeReservations.value = data
     })
+    getTypeReservationGrupals(data => {
+      typeReservationsgrupal.value = data
+    })
     getProviders(data => {
       providers.value = data
     })
     getEmployees(data => {
       employees.value = data
     })
+    const refreshHabitationReservationsHotel = () => {
+      getHabitationReservationsHotel(props.reservationHotelId, data => {
+        habitationReservations.value = data
+      })
+    }
     const refreshCustomers = () => {
       getCustomers(data => {
         customers.value = data
@@ -745,10 +819,16 @@ export default {
         }
       })
     }
-    const validationRates = () => {
+    const validationRatesAndHabitations = () => {
+      refreshHabitationReservationsHotel()
       return new Promise((resolve, reject) => {
-        if (individualRate.value.publicRate) {
+        if (
+          individualRate.value.publicRate &&
+          individualRate.value.clientRate &&
+          habitationReservations.value.length > 0
+        ) {
           onUpdateReservation()
+          updateIndividualRate(individualRate.value, data => {})
           resolve(true)
         } else {
           onMessageErrorSteps()
@@ -776,6 +856,7 @@ export default {
       individualRateFields,
       reservationHotel,
       typeReservations,
+      typeReservationsgrupal,
       customers,
       destinations,
       hotels,
@@ -797,7 +878,7 @@ export default {
       onCalculateRate,
       validationClient,
       validationGeneral,
-      validationRates,
+      validationRatesAndHabitations,
       validationClosure
     }
   }
