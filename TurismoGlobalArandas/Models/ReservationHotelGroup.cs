@@ -7,8 +7,8 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int ReservationHotelGroupId { get; set; }
-        public string? GroupRateName { get; set; }
-        public string? Confirmation { get; set; }
+        public string? GroupName { get; set; }
+        public string? ConfirmationKey { get; set; }
         public DateTime? DateArrival { get; set; }
         public string Coordinator { get; set; }
         public string PhoneNumber { get; set; }

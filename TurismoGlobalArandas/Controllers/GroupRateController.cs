@@ -36,6 +36,19 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(GroupRate);
         }
+        [HttpGet("ReservationHotelGroup/{ReservationHotelGroupId}")]
+        public async Task<ActionResult> getGroupRateByReservationHotelGroup(int ReservationHotelGroupId)
+        {
+            var GroupRate = await _context.GroupRates
+                .Where(w => !w.IsDeleted)
+                .Where(w => w.ReservationHotelGroupId == ReservationHotelGroupId)
+                .ToListAsync();
+            if (GroupRate == null)
+            {
+                return NotFound();
+            }
+            return Ok(GroupRate);
+        }
         [HttpPost]
         public async Task<ActionResult<GroupRate>> PostGroupRate(GroupRate GroupRate)
         {

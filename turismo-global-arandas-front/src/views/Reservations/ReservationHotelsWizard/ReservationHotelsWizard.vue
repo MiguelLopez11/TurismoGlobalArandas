@@ -435,6 +435,90 @@
               </el-col> </el-row
           ></el-tab-pane>
         </el-tabs>
+        <el-row :gutter="35">
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <span class="text-danger">*</span>
+                <label> Nombre del grupo </label>
+              </div>
+              <el-input
+                placeholder="Ingresa un nombre para el grupo"
+                size="large"
+                v-model="reservationHotelGroup.groupName"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <span class="text-danger">*</span>
+                <label> Confirmación </label>
+              </div>
+              <el-input
+                placeholder="Ingresa una clave de confirmación"
+                size="large"
+                v-model="reservationHotelGroup.confirmationKey"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <div class="mb-2">
+              <span class="text-danger">*</span>
+              <span>Fecha y hora de llegada</span>
+            </div>
+            <el-form-item>
+              <VueDatePicker
+                v-model="reservationHotelGroup.dateArrival"
+                placeholder="Seleccionar ..."
+                selectText="Seleccionar"
+                cancelText="Cancelar"
+                modelType="yyyy-MM-dd HH:mm"
+                @update:model-value="
+                  onSelectedDateArrival(reservationHotelGroup.dateArrival)
+                "
+              >
+                <template #input-icon>
+                  <el-row class="m-3">
+                    <i class="bi bi-calendar-event" />
+                  </el-row>
+                </template>
+              </VueDatePicker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <span class="text-danger">*</span>
+                <label> Coordinador de grupo </label>
+              </div>
+              <el-input
+                placeholder="Ingresa una clave de confirmación"
+                size="large"
+                v-model="reservationHotelGroup.coordinator"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <span class="text-danger">*</span>
+                <label> Numero de contacto </label>
+              </div>
+              <el-input
+                placeholder="Ingresa una clave de confirmación"
+                size="large"
+                v-model="reservationHotelGroup.phoneNumber"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :md="24" :lg="24">
+
+          <group-rate-list :ReservationHotelGroupId="reservationHotelGroup.reservationHotelGroupId"/>
+          </el-col>
+        </el-row>
       </tab-content>
       <tab-content
         lazy
@@ -536,7 +620,7 @@ import ProviderServices from '@/Services/Provider.Services'
 import EmployeeServices from '@/Services/Employees.Services'
 import IndividualRateServices from '@/Services/IndividualRate.Services'
 import CommissionServices from '@/Services/Commissions.Services'
-import HabitationReservationServices from '@/Services/HabitationReservation.Services'
+import ReservationHotelGroupServices from '@/Services/ReservationHotelGroup.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
@@ -544,10 +628,13 @@ import TypeReservationAddNew from '@/views/TypeReservations/TypeReservationAddNe
 import DestinationAddNew from '@/views/Destinations/DestinationAddNew.vue'
 import HotelsAddNew from '@/views/Hotels/HotelsAddNew.vue'
 import ProviderAddNew from '@/views/Providers/ProviderAddNew.vue'
+import GroupRateList from '@/views/Rates/GroupRate/GroupRateList.vue'
 // Libraries
 import { useStore } from 'vuex'
 import { ref, inject, provide, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { format } from 'date-fns'
+
 export default {
   components: {
     CustomersAddNew,
@@ -555,7 +642,8 @@ export default {
     TypeReservationAddNew,
     DestinationAddNew,
     HotelsAddNew,
-    ProviderAddNew
+    ProviderAddNew,
+    GroupRateList
   },
   props: {
     reservationHotelId: {
@@ -585,7 +673,11 @@ export default {
       updateIndividualRate
     } = IndividualRateServices()
     const { getCommissionByProvider } = CommissionServices()
-    const { getHabitationReservationsHotel } = HabitationReservationServices()
+    const {
+      getReservationHotelGroupByreservationHotel,
+      createReservationHotelGroup,
+      updateReservationHotelGroup
+    } = ReservationHotelGroupServices()
     const store = useStore()
     const redirect = useRouter()
     // DATA
@@ -607,8 +699,9 @@ export default {
     const individualRate = ref([])
     const reservationHotelId = ref()
     const rangeDatesTravel = ref([])
-    const habitationReservations = ref([])
+    const reservationHotelGroup = ref([])
     const employyeId = window.sessionStorage.getItem('EmployeeId')
+    let dateArrival = new Date()
     provide('AddTypeReservation', isAddedTypeReservation)
     provide('addDestination', isAddDestination)
     provide('addHotel', isAddHotel)
@@ -626,6 +719,16 @@ export default {
       extraDiscount: null,
       isDeleted: false
     })
+    const reservationHotelGroupfields = ref({
+      reservationHotelGroupId: 0,
+      groupName: null,
+      confirmationKey: null,
+      dateArrival: null,
+      coordinator: null,
+      phoneNumber: null,
+      reservationHotelId: reservationHotelId.value,
+      isDeleted: false
+    })
     // METHODS
     watch(
       [isAddedTypeReservation, isAddDestination, isAddHotel, isAddProvider],
@@ -641,15 +744,38 @@ export default {
         store.commit('setReservationHotelId', data.reservationHotelId)
         refreshReservationHotel()
       })
+      createReservationHotelGroup(reservationHotelGroupfields.value, data => {
+        getReservationHotelGroupByreservationHotel(
+          data.reservationHotelId,
+          data => {
+            reservationHotelGroup.value = data
+            reservationHotelGroup.value.dateArrival = format(
+              new Date(reservationHotelGroup.value.dateArrival),
+              'yyyy-MM-dd HH:mm'
+            )
+          }
+        )
+      })
     } else {
       getReservationHotel(props.reservationHotelId, data => {
         store.commit('setReservationHotelId', data.reservationHotelId)
         reservationHotel.value = data
         rangeDatesTravel.value.push(data.travelDateStart)
         rangeDatesTravel.value.push(data.travelDateEnd)
+        reservationHotelGroup.value = []
         getHotelByDestinationId(data.destinationId, data => {
           hotels.value = data
         })
+        getReservationHotelGroupByreservationHotel(
+          props.reservationHotelId,
+          data => {
+            reservationHotelGroup.value = data
+            reservationHotelGroup.value.dateArrival = format(
+              new Date(reservationHotelGroup.value.dateArrival),
+              'yyyy-MM-dd HH:mm'
+            )
+          }
+        )
       })
       getIndividualRateByReservationHotel(props.reservationHotelId, data => {
         if (data) {
@@ -677,6 +803,19 @@ export default {
         hotels.value = data
       })
     }
+    // const refreshReservationhotelGroup = () => {
+    //   reservationHotelGroup.value = []
+    //   getReservationHotelGroupByreservationHotel(
+    //     props.reservationHotelId,
+    //     data => {
+    //       reservationHotelGroup.value = data
+    //       reservationHotelGroup.value.dateArrival = format(
+    //         new Date(reservationHotelGroup.value.dateArrival),
+    //         'yyyy-MM-dd HH:mm'
+    //       )
+    //     }
+    //   )
+    // }
 
     getCustomers(data => {
       customers.value = data
@@ -696,11 +835,6 @@ export default {
     getEmployees(data => {
       employees.value = data
     })
-    const refreshHabitationReservationsHotel = () => {
-      getHabitationReservationsHotel(props.reservationHotelId, data => {
-        habitationReservations.value = data
-      })
-    }
     const refreshCustomers = () => {
       getCustomers(data => {
         customers.value = data
@@ -774,6 +908,14 @@ export default {
         })
       }
     }
+    const onUpdateTypeReservation = () => {
+      if (reservationHotel.value.typeReservationId === 1) {
+        reservationHotel.value.typeReservationGroupId = null
+      }
+    }
+    const onSelectedDateArrival = modelData => {
+      dateArrival = new Date(modelData)
+    }
     // VALIDATIONS
     const validationClient = () => {
       return new Promise((resolve, reject) => {
@@ -801,6 +943,7 @@ export default {
           reservationHotel.value.paymentLimitDate &&
           reservationHotel.value.paymentLimitDateProvider
         ) {
+          onUpdateTypeReservation()
           onUpdateReservation()
           if (
             !reservationHotel.value.typeReservationId !== 1 &&
@@ -820,19 +963,28 @@ export default {
       })
     }
     const validationRatesAndHabitations = () => {
-      refreshHabitationReservationsHotel()
       return new Promise((resolve, reject) => {
-        if (
-          individualRate.value.publicRate &&
-          individualRate.value.clientRate &&
-          habitationReservations.value.length > 0
-        ) {
-          onUpdateReservation()
-          updateIndividualRate(individualRate.value, data => {})
-          resolve(true)
+        if (reservationHotel.value.typeReservationGroupId !== 1) {
+          if (
+            individualRate.value.publicRate &&
+            individualRate.value.clientRate
+          ) {
+            onUpdateReservation()
+            updateIndividualRate(individualRate.value, data => {})
+            resolve(true)
+          } else {
+            onMessageErrorSteps()
+            reject(new Error('Error'))
+          }
         } else {
-          onMessageErrorSteps()
-          reject(new Error('Error'))
+          if (reservationHotelGroup.value.groupName) {
+            reservationHotelGroup.value.dateArrival = dateArrival.toISOString()
+            updateReservationHotelGroup(reservationHotelGroup.value, data => {})
+            resolve(true)
+          } else {
+            onMessageErrorSteps()
+            reject(new Error('Error'))
+          }
         }
       })
     }
@@ -863,6 +1015,7 @@ export default {
       providers,
       employees,
       individualRate,
+      reservationHotelGroup,
       isNewCustomer,
       isAutomaticCalculation,
       rangeDatesTravel,
@@ -875,6 +1028,7 @@ export default {
       onComplete,
       refreshDataSelect,
       onSelectTravelDate,
+      onSelectedDateArrival,
       onCalculateRate,
       validationClient,
       validationGeneral,
