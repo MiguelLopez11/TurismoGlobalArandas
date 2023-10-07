@@ -135,15 +135,15 @@ export default {
           },
           {
             index: '4-5',
-            title: 'Comisiones',
-            path: '/Comisiones',
+            title: 'Servicios de proveedores',
+            path: '/ServiciosProveedores',
             icon: 'bi bi-cash-stack'
           }
         ]
       },
       {
         index: '5',
-        title: 'Gestion de ventas',
+        title: 'Gestion de reservaciones',
         icon: 'bi bi-cash',
         submenu: [
           {
@@ -170,6 +170,12 @@ export default {
             title: 'Tipos de Reservaciones',
             path: '/TiposReservaciones',
             icon: 'bi bi-bezier2'
+          },
+          {
+            index: '5-3',
+            title: 'Tipos de Reservaciones grupales',
+            path: '/TiposReservacionesGrupales',
+            icon: 'bi bi-bezier'
           }
         ]
       }

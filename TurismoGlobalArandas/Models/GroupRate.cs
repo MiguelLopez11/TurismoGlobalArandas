@@ -7,23 +7,25 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int GroupRateId { get; set; }
-        public int ReservationHotelId { get; set; }
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal? IndividualHabitation { get; set; }
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal? DoubleHabitation { get; set; }
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal? TripleHabitation { get; set; }
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal? QDPLHabitation { get; set; }
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal? JuniorHabitation { get; set; }
-        [Column(TypeName = "decimal(18, 2)")]
-        public decimal? MinorHabitation { get; set; }
-        public int? AgesMinors { get; set; }
-        public int? AgesJuniors { get; set; }
+        public string? NamesCompanions { get; set; }
+        public int? Adults { get; set; }
+        public int? Juniors { get; set; }
+        public int? MinorsCharge { get; set; }
+        public int? MinorsWithoutCharge { get; set; }
+        public string? AgesMinors { get; set; }
+        public DateTime? DateStart { get; set; }
+        public DateTime? DateEnd { get; set; }
+        public decimal? RangePublicClient { get; set; }
+        public decimal? RangeJunior { get; set; }
+        public decimal? RangeMinor { get; set; }
+        public int? NightsNumber { get; set; }
+        public decimal? RangeNight { get; set; }
+        public decimal? RangeTotal { get; set; }
+        public string? Observations { get; set; } 
+        public int ReservationHotelGroupId { get; set; }
         public bool IsDeleted { get; set; }
-        [ForeignKey("ReservationHotelId")]
-        public ReservationHotel? reservationHotel { get; set; }
+
+        [ForeignKey("ReservationHotelGroupId")]
+        public ReservationHotelGroup? ReservationHotelGroup { get; set; }
     }
 }

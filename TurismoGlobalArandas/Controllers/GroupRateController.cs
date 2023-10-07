@@ -36,6 +36,19 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(GroupRate);
         }
+        [HttpGet("ReservationHotelGroup/{ReservationHotelGroupId}")]
+        public async Task<ActionResult> getGroupRateByReservationHotelGroup(int ReservationHotelGroupId)
+        {
+            var GroupRate = await _context.GroupRates
+                .Where(w => !w.IsDeleted)
+                .Where(w => w.ReservationHotelGroupId == ReservationHotelGroupId)
+                .ToListAsync();
+            if (GroupRate == null)
+            {
+                return NotFound();
+            }
+            return Ok(GroupRate);
+        }
         [HttpPost]
         public async Task<ActionResult<GroupRate>> PostGroupRate(GroupRate GroupRate)
         {
@@ -57,14 +70,22 @@ namespace TurismoGlobalArandas.Controllers
                 return BadRequest($"La categoría con el ID {GroupRateId} no existe");
             }
             GroupRateOld.GroupRateId = GroupRate.GroupRateId;
-            GroupRateOld.IndividualHabitation = GroupRate.IndividualHabitation;
-            GroupRateOld.DoubleHabitation = GroupRate.DoubleHabitation;
-            GroupRateOld.TripleHabitation = GroupRate.TripleHabitation;
-            GroupRateOld.QDPLHabitation = GroupRate.QDPLHabitation;
-            GroupRateOld.JuniorHabitation = GroupRate.JuniorHabitation;
-            GroupRateOld.MinorHabitation = GroupRate.MinorHabitation;
+            GroupRateOld.NamesCompanions = GroupRate.NamesCompanions;
+            GroupRateOld.Adults = GroupRate.Adults;
+            GroupRateOld.Juniors = GroupRate.Juniors;
+            GroupRateOld.MinorsCharge = GroupRate.MinorsCharge;
+            GroupRateOld.MinorsWithoutCharge = GroupRate.MinorsWithoutCharge;
             GroupRateOld.AgesMinors = GroupRate.AgesMinors;
-            GroupRateOld.AgesJuniors = GroupRate.AgesJuniors;
+            GroupRateOld.DateStart = GroupRate.DateStart;
+            GroupRateOld.DateEnd = GroupRate.DateEnd;
+            GroupRateOld.RangePublicClient = GroupRate.RangePublicClient;
+            GroupRateOld.RangeJunior = GroupRate.RangeJunior;
+            GroupRateOld.RangeMinor = GroupRate.RangeMinor;
+            GroupRateOld.NightsNumber = GroupRate.NightsNumber;
+            GroupRateOld.RangeNight = GroupRate.RangeNight;
+            GroupRateOld.RangeTotal = GroupRate.RangeTotal;
+            GroupRateOld.Observations = GroupRate.Observations;
+            GroupRateOld.ReservationHotelGroupId = GroupRate.ReservationHotelGroupId;
             GroupRateOld.IsDeleted = GroupRate.IsDeleted;
 
             _context.GroupRates.Update(GroupRateOld);

@@ -51,15 +51,15 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-Role',
-                            params: { roleName: items.name }
+                            name: 'Edit-ReservationFlight',
+                            params: { FlightId: items.flightId }
                           })
                         }
                       "
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteReservationFlight(items.id)"
+                      @click="onDeleteReservationFlight(items.flightId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>

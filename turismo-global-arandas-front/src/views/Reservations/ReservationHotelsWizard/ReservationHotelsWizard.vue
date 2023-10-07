@@ -108,7 +108,53 @@
                       }
                     "
                   >
-                    agregar nuevo tipo de reserva</el-button
+                    Agregar nuevo tipo de reserva</el-button
+                  >
+                </template>
+              </v-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8" v-if="reservationHotel.typeReservationId === 2">
+            <el-form-item>
+              <v-select
+                class="w-100"
+                label="name"
+                v-model="reservationHotel.typeReservationGroupId"
+                :options="typeReservationsgrupal"
+                :reduce="
+                  typeReservationGroup =>
+                    typeReservationGroup.typeReservationGrupalId
+                "
+              >
+                <template #selected-option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
+                <template #option="{ name, lastname }">
+                  <label>{{ name }} {{ lastname }}</label>
+                </template>
+                <template #header>
+                  <span class="text-danger">*</span>
+                  <label>Tipo de reserva grupal</label>
+                </template>
+                <template #search="{ attributes, events }">
+                  <input
+                    class="vs__search"
+                    :required="!reservationHotel.typeReservationGroupId"
+                    v-bind="attributes"
+                    v-on="events"
+                  />
+                </template>
+                <template #list-footer>
+                  <el-button
+                    v-if="!reservationHotel.typeReservationId"
+                    class="w-100"
+                    @click="
+                      () => {
+                        isAddedTypeReservation = !isAddedTypeReservation
+                      }
+                    "
+                  >
+                    Agregar nuevo tipo de reserva</el-button
                   >
                 </template>
               </v-select>
@@ -320,67 +366,165 @@
           </el-col>
         </el-row>
       </tab-content>
-      <tab-content lazy title="Habitaciones" icon="bi bi-door-closed">
-        <habitation-reservation-list />
-      </tab-content>
       <tab-content
         lazy
-        title="Tarifas"
-        icon="bi bi-cash-stack"
-        :beforeChange="validationRates"
+        title="Tarifas Y Habitaciones"
+        icon="bi bi-door-closed"
+        :beforeChange="validationRatesAndHabitations"
       >
-        <el-row :gutter="35">
+        <el-tabs v-if="reservationHotel.typeReservationGroupId !== 1">
+          <el-tab-pane label="Habitaciones">
+            <habitation-reservation-list />
+          </el-tab-pane>
+          <el-tab-pane>
+            <template #label>
+              <span class="custom-tabs-label">
+                <i class="bi bi-building"></i>
+                <span>Tarifas </span>
+              </span>
+            </template>
+            <el-row :gutter="35">
+              <el-col :span="8">
+                <div>
+                  <label> ¿Desea que se calcule en automatico el costo?</label>
+                </div>
+                <el-form-item>
+                  <el-switch size="large" v-model="isAutomaticCalculation">
+                  </el-switch>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item>
+                  <div>
+                    <span class="text-danger">*</span>
+                    <label> Tarifa Pública </label>
+                  </div>
+                  <el-input
+                    placeholder="Ingresa la tarifa pública"
+                    size="large"
+                    v-model="individualRate.publicRate"
+                    @input="onCalculateRate"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item>
+                  <div>
+                    <label>Descuento extra</label>
+                  </div>
+                  <el-input
+                    placeholder="Ingresa el descuento extra"
+                    size="large"
+                    v-model="individualRate.extraDiscount"
+                  >
+                    <template #append>%</template>
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item>
+                  <div>
+                    <label> Tarifa al cliente </label>
+                  </div>
+                  <el-input
+                    placeholder="Ingresa la tarifa al cliente"
+                    size="large"
+                    v-model="individualRate.clientRate"
+                  />
+                </el-form-item>
+              </el-col> </el-row
+          ></el-tab-pane>
+        </el-tabs>
+        <el-row
+          :gutter="35"
+          v-if="reservationHotel.typeReservationGroupId === 1"
+        >
           <el-col :span="8">
-            <div>
-              <label> ¿Desea que se calcule en automatico el costo?</label>
-            </div>
             <el-form-item>
-              <el-switch size="large" v-model="isAutomaticCalculation">
-              </el-switch>
+              <div>
+                <span class="text-danger">*</span>
+                <label> Nombre del grupo </label>
+              </div>
+              <el-input
+                placeholder="Ingresa un nombre para el grupo"
+                size="large"
+                v-model="reservationHotelGroup.groupName"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item>
               <div>
                 <span class="text-danger">*</span>
-                <label> Tarifa Pública </label>
+                <label> Confirmación </label>
               </div>
               <el-input
-                placeholder="Ingresa la tarifa pública"
+                placeholder="Ingresa una clave de confirmación"
                 size="large"
-                v-model="individualRate.publicRate"
-                @input="onCalculateRate"
+                v-model="reservationHotelGroup.confirmationKey"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <div class="mb-2">
+              <span class="text-danger">*</span>
+              <span>Fecha y hora de llegada</span>
+            </div>
+            <el-form-item>
+              <VueDatePicker
+                v-model="reservationHotelGroup.dateArrival"
+                placeholder="Seleccionar ..."
+                selectText="Seleccionar"
+                cancelText="Cancelar"
+                modelType="yyyy-MM-dd HH:mm"
+                @update:model-value="
+                  onSelectedDateArrival(reservationHotelGroup.dateArrival)
+                "
+              >
+                <template #input-icon>
+                  <el-row class="m-3">
+                    <i class="bi bi-calendar-event" />
+                  </el-row>
+                </template>
+              </VueDatePicker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <span class="text-danger">*</span>
+                <label> Coordinador de grupo </label>
+              </div>
+              <el-input
+                placeholder="Ingresa una clave de confirmación"
+                size="large"
+                v-model="reservationHotelGroup.coordinator"
               />
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item>
               <div>
-                <label>Descuento extra</label>
+                <span class="text-danger">*</span>
+                <label> Numero de contacto </label>
               </div>
               <el-input
-                placeholder="Ingresa el descuento extra"
+                placeholder="Ingresa una clave de confirmación"
                 size="large"
-                v-model="individualRate.extraDiscount"
-              >
-                <template #append>%</template>
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :span="8">
-            <el-form-item>
-              <div>
-                <label> Tarifa al cliente </label>
-              </div>
-              <el-input
-                placeholder="Ingresa la tarifa al cliente"
-                size="large"
-                v-model="individualRate.clientRate"
+                v-model="reservationHotelGroup.phoneNumber"
               />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-divider />
+        <el-row v-if="reservationHotel.typeReservationGroupId === 1">
+          <el-col :md="24" :lg="24">
+            <group-rate-list
+              :ReservationHotelGroupId="
+                reservationHotelGroup.reservationHotelGroupId
+              "
+            />
+          </el-col>
+        </el-row>
       </tab-content>
       <tab-content
         lazy
@@ -477,10 +621,12 @@ import DestinationServices from '@/Services/Destinations.Services'
 import HotelsServices from '@/Services/Hotels.Services'
 import ReservationHotelServices from '@/Services/ReservationHotel.Services'
 import TypeReservationServices from '@/Services/TypeReservation.Services'
+import TypeReservationGroupServices from '@/Services/TypeReservationGroup.Services'
 import ProviderServices from '@/Services/Provider.Services'
 import EmployeeServices from '@/Services/Employees.Services'
 import IndividualRateServices from '@/Services/IndividualRate.Services'
-import CommissionServices from '@/Services/Commissions.Services'
+import ServicesProviderServices from '@/Services/ProviderServices.Services'
+import ReservationHotelGroupServices from '@/Services/ReservationHotelGroup.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
@@ -488,10 +634,13 @@ import TypeReservationAddNew from '@/views/TypeReservations/TypeReservationAddNe
 import DestinationAddNew from '@/views/Destinations/DestinationAddNew.vue'
 import HotelsAddNew from '@/views/Hotels/HotelsAddNew.vue'
 import ProviderAddNew from '@/views/Providers/ProviderAddNew.vue'
+import GroupRateList from '@/views/Rates/GroupRate/GroupRateList.vue'
 // Libraries
 import { useStore } from 'vuex'
 import { ref, inject, provide, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { format } from 'date-fns'
+
 export default {
   components: {
     CustomersAddNew,
@@ -499,7 +648,8 @@ export default {
     TypeReservationAddNew,
     DestinationAddNew,
     HotelsAddNew,
-    ProviderAddNew
+    ProviderAddNew,
+    GroupRateList
   },
   props: {
     reservationHotelId: {
@@ -519,14 +669,21 @@ export default {
       getReservationHotel
     } = ReservationHotelServices()
     const { getTypeReservations } = TypeReservationServices()
+    const { getTypeReservationGrupals } = TypeReservationGroupServices()
     const { getProviders } = ProviderServices()
     const { getEmployees } = EmployeeServices()
     const {
       createIndividualRate,
       getIndividualRate,
-      getIndividualRateByReservationHotel
+      getIndividualRateByReservationHotel,
+      updateIndividualRate
     } = IndividualRateServices()
-    const { getCommissionByProvider } = CommissionServices()
+    const { getServiceProviderByProviderId } = ServicesProviderServices()
+    const {
+      getReservationHotelGroupByreservationHotel,
+      createReservationHotelGroup,
+      updateReservationHotelGroup
+    } = ReservationHotelGroupServices()
     const store = useStore()
     const redirect = useRouter()
     // DATA
@@ -541,13 +698,16 @@ export default {
     const destinations = ref([])
     const hotels = ref([])
     const typeReservations = ref([])
+    const typeReservationsgrupal = ref([])
     const providers = ref([])
     const employees = ref([])
     const reservationHotel = ref([])
     const individualRate = ref([])
     const reservationHotelId = ref()
-    const rangeDatesTravel = ref()
+    const rangeDatesTravel = ref([])
+    const reservationHotelGroup = ref([])
     const employyeId = window.sessionStorage.getItem('EmployeeId')
+    let dateArrival = new Date()
     provide('AddTypeReservation', isAddedTypeReservation)
     provide('addDestination', isAddDestination)
     provide('addHotel', isAddHotel)
@@ -559,10 +719,20 @@ export default {
     })
     const individualRateFields = ref({
       individualRateId: 0,
-      reservationHotelId: reservationHotelId.value,
+      reservationHotelId: props.reservationHotelId,
       publicRate: null,
       clientRate: null,
       extraDiscount: null,
+      isDeleted: false
+    })
+    const reservationHotelGroupfields = ref({
+      reservationHotelGroupId: 0,
+      groupName: null,
+      confirmationKey: null,
+      dateArrival: null,
+      coordinator: null,
+      phoneNumber: null,
+      reservationHotelId: reservationHotelId.value,
       isDeleted: false
     })
     // METHODS
@@ -580,13 +750,49 @@ export default {
         store.commit('setReservationHotelId', data.reservationHotelId)
         refreshReservationHotel()
       })
+      createReservationHotelGroup(reservationHotelGroupfields.value, data => {
+        getReservationHotelGroupByreservationHotel(
+          data.reservationHotelId,
+          data => {
+            reservationHotelGroup.value = data
+            reservationHotelGroup.value.dateArrival = format(
+              new Date(reservationHotelGroup.value.dateArrival),
+              'yyyy-MM-dd HH:mm'
+            )
+          }
+        )
+      })
     } else {
       getReservationHotel(props.reservationHotelId, data => {
         store.commit('setReservationHotelId', data.reservationHotelId)
         reservationHotel.value = data
+        rangeDatesTravel.value.push(data.travelDateStart)
+        rangeDatesTravel.value.push(data.travelDateEnd)
+        reservationHotelGroup.value = []
+        getHotelByDestinationId(data.destinationId, data => {
+          hotels.value = data
+        })
+        getReservationHotelGroupByreservationHotel(
+          props.reservationHotelId,
+          data => {
+            reservationHotelGroup.value = data
+            reservationHotelGroup.value.dateArrival = format(
+              new Date(reservationHotelGroup.value.dateArrival),
+              'yyyy-MM-dd HH:mm'
+            )
+          }
+        )
       })
       getIndividualRateByReservationHotel(props.reservationHotelId, data => {
-        individualRate.value = data
+        if (data) {
+          individualRate.value = data
+        } else {
+          createIndividualRate(individualRateFields.value, data => {
+            getIndividualRate(data.individualRateId, items => {
+              individualRate.value = items
+            })
+          })
+        }
       })
     }
     const refreshDataSelect = () => {
@@ -603,6 +809,19 @@ export default {
         hotels.value = data
       })
     }
+    // const refreshReservationhotelGroup = () => {
+    //   reservationHotelGroup.value = []
+    //   getReservationHotelGroupByreservationHotel(
+    //     props.reservationHotelId,
+    //     data => {
+    //       reservationHotelGroup.value = data
+    //       reservationHotelGroup.value.dateArrival = format(
+    //         new Date(reservationHotelGroup.value.dateArrival),
+    //         'yyyy-MM-dd HH:mm'
+    //       )
+    //     }
+    //   )
+    // }
 
     getCustomers(data => {
       customers.value = data
@@ -612,6 +831,9 @@ export default {
     })
     getTypeReservations(data => {
       typeReservations.value = data
+    })
+    getTypeReservationGrupals(data => {
+      typeReservationsgrupal.value = data
     })
     getProviders(data => {
       providers.value = data
@@ -680,7 +902,7 @@ export default {
         const commissionPercentage = ref()
         const commission = ref()
         const commissionClient = ref()
-        getCommissionByProvider(reservationHotel.value.providerId, data => {
+        getServiceProviderByProviderId(reservationHotel.value.providerId, data => {
           commissionPercentage.value = parseFloat(
             data.commissionClient
           ).toFixed(2)
@@ -691,6 +913,14 @@ export default {
           individualRate.value.clientRate = commissionClient.value
         })
       }
+    }
+    const onUpdateTypeReservation = () => {
+      if (reservationHotel.value.typeReservationId === 1) {
+        reservationHotel.value.typeReservationGroupId = null
+      }
+    }
+    const onSelectedDateArrival = modelData => {
+      dateArrival = new Date(modelData)
     }
     // VALIDATIONS
     const validationClient = () => {
@@ -719,8 +949,12 @@ export default {
           reservationHotel.value.paymentLimitDate &&
           reservationHotel.value.paymentLimitDateProvider
         ) {
+          onUpdateTypeReservation()
           onUpdateReservation()
-          if (!reservationHotel.value.typeReservationId !== 1 && individualRate.value.length > 0) {
+          if (
+            !reservationHotel.value.typeReservationId !== 1 &&
+            individualRate.value.length > 0
+          ) {
             createIndividualRate(individualRateFields.value, data => {
               getIndividualRate(data.individualRateId, items => {
                 individualRate.value = items
@@ -734,14 +968,29 @@ export default {
         }
       })
     }
-    const validationRates = () => {
+    const validationRatesAndHabitations = () => {
       return new Promise((resolve, reject) => {
-        if (individualRate.value.publicRate) {
-          onUpdateReservation()
-          resolve(true)
+        if (reservationHotel.value.typeReservationGroupId !== 1) {
+          if (
+            individualRate.value.publicRate &&
+            individualRate.value.clientRate
+          ) {
+            onUpdateReservation()
+            updateIndividualRate(individualRate.value, data => {})
+            resolve(true)
+          } else {
+            onMessageErrorSteps()
+            reject(new Error('Error'))
+          }
         } else {
-          onMessageErrorSteps()
-          reject(new Error('Error'))
+          if (reservationHotelGroup.value.groupName) {
+            reservationHotelGroup.value.dateArrival = dateArrival.toISOString()
+            updateReservationHotelGroup(reservationHotelGroup.value, data => {})
+            resolve(true)
+          } else {
+            onMessageErrorSteps()
+            reject(new Error('Error'))
+          }
         }
       })
     }
@@ -765,12 +1014,14 @@ export default {
       individualRateFields,
       reservationHotel,
       typeReservations,
+      typeReservationsgrupal,
       customers,
       destinations,
       hotels,
       providers,
       employees,
       individualRate,
+      reservationHotelGroup,
       isNewCustomer,
       isAutomaticCalculation,
       rangeDatesTravel,
@@ -783,10 +1034,11 @@ export default {
       onComplete,
       refreshDataSelect,
       onSelectTravelDate,
+      onSelectedDateArrival,
       onCalculateRate,
       validationClient,
       validationGeneral,
-      validationRates,
+      validationRatesAndHabitations,
       validationClosure
     }
   }

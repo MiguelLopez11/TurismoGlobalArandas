@@ -31,7 +31,6 @@
           body-text-direction="center"
           border-cell
           theme-color="#7367F0"
-          :table-height="500"
           :rows-per-page="10"
           :loading="isloading"
           :headers="fields"

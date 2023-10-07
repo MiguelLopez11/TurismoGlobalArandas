@@ -186,17 +186,17 @@ const routes = [
     }
   },
   {
-    path: '/Comisiones',
-    name: 'Commissions',
-    component: () => import('../views/Commissions/CommissionList'),
+    path: '/ServiciosProveedores',
+    name: 'ServicesProvider',
+    component: () => import('../views/ServicesProviders/ServiceProviderList'),
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/Comisiones/:CommissionId',
-    name: 'Edit-Commission',
-    component: () => import('../views/Commissions/CommissionEdit'),
+    path: '/ServiciosProveedores/:ServiceId',
+    name: 'Edit-ServicesProvider',
+    component: () => import('../views/ServicesProviders/ServiceProviderEdit'),
     meta: {
       requiresAuth: true
     }
@@ -205,6 +205,30 @@ const routes = [
     path: '/ReservacionesVuelos',
     name: 'ReservationFlight',
     component: () => import('../views/Reservations/ReservationFlights/ReservationFlightList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/ReservacionesVuelos/:FlightId',
+    name: 'Edit-ReservationFlight',
+    component: () => import('../views/Reservations/ReservationFlights/ReservationFlightEdit'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/TiposReservacionesGrupales',
+    name: 'TypeReservationsGroup',
+    component: () => import('../views/TypeReservationsGroup/TypeReservationsGroupList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/TiposReservacionesGrupales/:TypeReservationGrupalId',
+    name: 'Edit-TypeReservationsGroup',
+    component: () => import('../views/TypeReservationsGroup/TypeReservationsGroupEdit'),
     meta: {
       requiresAuth: true
     }

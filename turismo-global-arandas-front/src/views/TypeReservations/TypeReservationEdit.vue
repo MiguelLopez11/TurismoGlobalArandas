@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <Form v-slot="{ errors }" @submit="onUpdateProvider">
+    <Form v-slot="{ errors }" @submit="onupdateTypeReservation">
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="name" :rules="validateName" as="text">
@@ -74,7 +74,7 @@ export default {
     getTypeReservation(router.params.TypeReservationId, data => {
       typeReservation.value = data
     })
-    const onUpdateProvider = () => {
+    const onupdateTypeReservation = () => {
       updateTypeReservation(typeReservation.value, data => {
         swal
           .fire({
@@ -97,7 +97,7 @@ export default {
     }
     return {
       typeReservation,
-      onUpdateProvider,
+      onupdateTypeReservation,
       validateName
     }
   }

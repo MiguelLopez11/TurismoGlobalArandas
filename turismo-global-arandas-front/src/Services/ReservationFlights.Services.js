@@ -17,7 +17,7 @@ export default function ReservationFlightServices () {
     })
   }
   const updateReservationFlight = (data, callback) => {
-    axiosPrivate.put(`/ReservationFlight/${data.reservationFlightId}`, data).then((response) => {
+    axiosPrivate.put(`/ReservationFlight/${data.flightId}`, data).then((response) => {
       callback(response.data)
     })
   }

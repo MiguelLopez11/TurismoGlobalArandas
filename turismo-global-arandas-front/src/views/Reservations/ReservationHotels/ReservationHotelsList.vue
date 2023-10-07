@@ -105,7 +105,7 @@ export default {
     const currentPage = ref(1)
     const isloading = ref(true)
     const searchValue = ref('')
-    const searchField = ref('name')
+    const searchField = ref('reservationInvoice')
     const isAddedEmployee = ref(false)
     provide('AddEmployee', isAddedEmployee)
     const fields = ref([

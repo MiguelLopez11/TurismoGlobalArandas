@@ -155,179 +155,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.Commissions", b =>
-                {
-                    b.Property<int>("CommissionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommissionId"));
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CommissionAgency")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CommissionClient")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CommissionEmployee")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ProviderId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CommissionId");
-
-                    b.HasIndex("ProviderId");
-
-                    b.ToTable("Commissions");
-
-                    b.HasData(
-                        new
-                        {
-                            CommissionId = 1,
-                            CommissionAgency = "0.15",
-                            CommissionClient = "0.10",
-                            CommissionEmployee = "0.05",
-                            IsDeleted = false,
-                            ProviderId = 1
-                        },
-                        new
-                        {
-                            CommissionId = 2,
-                            CommissionAgency = "0.15",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.15",
-                            IsDeleted = false,
-                            ProviderId = 2
-                        },
-                        new
-                        {
-                            CommissionId = 3,
-                            CommissionAgency = "0.15",
-                            CommissionClient = "0.10",
-                            CommissionEmployee = "0.05",
-                            IsDeleted = false,
-                            ProviderId = 3
-                        },
-                        new
-                        {
-                            CommissionId = 4,
-                            CommissionAgency = "0.10",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.10",
-                            IsDeleted = false,
-                            ProviderId = 4
-                        },
-                        new
-                        {
-                            CommissionId = 5,
-                            CommissionAgency = "0.18",
-                            CommissionClient = "0.13",
-                            CommissionEmployee = "0.05",
-                            IsDeleted = false,
-                            ProviderId = 5
-                        },
-                        new
-                        {
-                            CommissionId = 6,
-                            CommissionAgency = "0.18",
-                            CommissionClient = "0.10",
-                            CommissionEmployee = "0.08",
-                            IsDeleted = false,
-                            ProviderId = 6
-                        },
-                        new
-                        {
-                            CommissionId = 7,
-                            CommissionAgency = "0.10",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.10",
-                            IsDeleted = false,
-                            ProviderId = 7
-                        },
-                        new
-                        {
-                            CommissionId = 8,
-                            CommissionAgency = "0.05",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.05",
-                            IsDeleted = false,
-                            ProviderId = 8
-                        },
-                        new
-                        {
-                            CommissionId = 9,
-                            CommissionAgency = "0.15",
-                            CommissionClient = "0.08",
-                            CommissionEmployee = "0.07",
-                            IsDeleted = false,
-                            ProviderId = 9
-                        },
-                        new
-                        {
-                            CommissionId = 10,
-                            CommissionAgency = "0.17",
-                            CommissionClient = "0.12",
-                            CommissionEmployee = "0.05",
-                            IsDeleted = false,
-                            ProviderId = 10
-                        },
-                        new
-                        {
-                            CommissionId = 11,
-                            CommissionAgency = "0.05",
-                            CommissionClient = "0.05",
-                            CommissionEmployee = "0.05",
-                            IsDeleted = false,
-                            ProviderId = 11
-                        },
-                        new
-                        {
-                            CommissionId = 12,
-                            CommissionAgency = "0.10",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.10",
-                            IsDeleted = false,
-                            ProviderId = 12
-                        },
-                        new
-                        {
-                            CommissionId = 13,
-                            CommissionAgency = "0.20",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.20",
-                            IsDeleted = false,
-                            ProviderId = 13
-                        },
-                        new
-                        {
-                            CommissionId = 14,
-                            CommissionAgency = "0.05",
-                            CommissionClient = "0.00",
-                            CommissionEmployee = "0.05",
-                            IsDeleted = false,
-                            ProviderId = 14
-                        },
-                        new
-                        {
-                            CommissionId = 15,
-                            CommissionAgency = "0.15",
-                            CommissionClient = "0.10",
-                            CommissionEmployee = "0.05",
-                            IsDeleted = false,
-                            ProviderId = 15
-                        });
-                });
-
             modelBuilder.Entity("TurismoGlobalArandas.Models.Customers", b =>
                 {
                     b.Property<int>("CustomerId")
@@ -436,39 +263,60 @@ namespace TurismoGlobalArandas.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupRateId"));
 
-                    b.Property<int?>("AgesJuniors")
+                    b.Property<int?>("Adults")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AgesMinors")
-                        .HasColumnType("int");
+                    b.Property<string>("AgesMinors")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal?>("DoubleHabitation")
-                        .HasColumnType("decimal(18, 2)");
+                    b.Property<DateTime?>("DateEnd")
+                        .HasColumnType("datetime2");
 
-                    b.Property<decimal?>("IndividualHabitation")
-                        .HasColumnType("decimal(18, 2)");
+                    b.Property<DateTime?>("DateStart")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<decimal?>("JuniorHabitation")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<decimal?>("MinorHabitation")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<decimal?>("QDPLHabitation")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<int>("ReservationHotelId")
+                    b.Property<int?>("Juniors")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("TripleHabitation")
-                        .HasColumnType("decimal(18, 2)");
+                    b.Property<int?>("MinorsCharge")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MinorsWithoutCharge")
+                        .HasColumnType("int");
+
+                    b.Property<string>("NamesCompanions")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("NightsNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Observations")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal?>("RangeJunior")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RangeMinor")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RangeNight")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RangePublicClient")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal?>("RangeTotal")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ReservationHotelGroupId")
+                        .HasColumnType("int");
 
                     b.HasKey("GroupRateId");
 
-                    b.HasIndex("ReservationHotelId");
+                    b.HasIndex("ReservationHotelGroupId");
 
                     b.ToTable("GroupRates");
                 });
@@ -597,6 +445,38 @@ namespace TurismoGlobalArandas.Migrations
                     b.ToTable("IndividualRates");
                 });
 
+            modelBuilder.Entity("TurismoGlobalArandas.Models.Itinerary", b =>
+                {
+                    b.Property<int>("itineraryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("itineraryId"));
+
+                    b.Property<DateTime>("CurrentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Details")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Operation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("itineraryId");
+
+                    b.ToTable("Itineraries");
+                });
+
             modelBuilder.Entity("TurismoGlobalArandas.Models.Providers", b =>
                 {
                     b.Property<int>("ProviderId")
@@ -626,91 +506,55 @@ namespace TurismoGlobalArandas.Migrations
                         {
                             ProviderId = 1,
                             IsDeleted = false,
-                            Name = "Record Hoteleria"
+                            Name = "Record"
                         },
                         new
                         {
                             ProviderId = 2,
                             IsDeleted = false,
-                            Name = "Record Traslados"
+                            Name = "Check In"
                         },
                         new
                         {
                             ProviderId = 3,
                             IsDeleted = false,
-                            Name = "Check In Hoteleria"
+                            Name = "Imacop"
                         },
                         new
                         {
                             ProviderId = 4,
                             IsDeleted = false,
-                            Name = "Check In renta de autos"
+                            Name = "Promoser"
                         },
                         new
                         {
                             ProviderId = 5,
                             IsDeleted = false,
-                            Name = "Imacop"
+                            Name = "Megatravel"
                         },
                         new
                         {
                             ProviderId = 6,
                             IsDeleted = false,
-                            Name = "Imacop circuitos"
+                            Name = "Europamundo"
                         },
                         new
                         {
                             ProviderId = 7,
                             IsDeleted = false,
-                            Name = "Imacop traslados"
+                            Name = "Chartes"
                         },
                         new
                         {
                             ProviderId = 8,
                             IsDeleted = false,
-                            Name = "Imacop entradas a disney"
+                            Name = "Israel"
                         },
                         new
                         {
                             ProviderId = 9,
                             IsDeleted = false,
-                            Name = "Promoser parques"
-                        },
-                        new
-                        {
-                            ProviderId = 10,
-                            IsDeleted = false,
-                            Name = "Promoser hoteleria"
-                        },
-                        new
-                        {
-                            ProviderId = 11,
-                            IsDeleted = false,
-                            Name = "Megatravel"
-                        },
-                        new
-                        {
-                            ProviderId = 12,
-                            IsDeleted = false,
-                            Name = "Europamundo"
-                        },
-                        new
-                        {
-                            ProviderId = 13,
-                            IsDeleted = false,
-                            Name = "Chartes"
-                        },
-                        new
-                        {
-                            ProviderId = 14,
-                            IsDeleted = false,
-                            Name = "Israel traslados"
-                        },
-                        new
-                        {
-                            ProviderId = 15,
-                            IsDeleted = false,
-                            Name = "Copper canyon"
+                            Name = "Copper Canyon"
                         });
                 });
 
@@ -865,6 +709,9 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("TypeHabitation")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("TypeReservationGroupId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("TypeReservationId")
                         .HasColumnType("int");
 
@@ -880,9 +727,231 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ProviderId");
 
+                    b.HasIndex("TypeReservationGroupId");
+
                     b.HasIndex("TypeReservationId");
 
                     b.ToTable("ReservationHotels");
+                });
+
+            modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotelGroup", b =>
+                {
+                    b.Property<int>("ReservationHotelGroupId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationHotelGroupId"));
+
+                    b.Property<string>("ConfirmationKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Coordinator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DateArrival")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("GroupName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReservationHotelId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ReservationHotelGroupId");
+
+                    b.HasIndex("ReservationHotelId");
+
+                    b.ToTable("ReservationHotelGroups");
+                });
+
+            modelBuilder.Entity("TurismoGlobalArandas.Models.ServicesProvider", b =>
+                {
+                    b.Property<int>("ServiceId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ServiceId"));
+
+                    b.Property<string>("Color")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("CommissionAgency")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("CommissionClient")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal>("CommissionEmployee")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProviderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ServiceId");
+
+                    b.HasIndex("ProviderId");
+
+                    b.ToTable("ServicesProviders");
+
+                    b.HasData(
+                        new
+                        {
+                            ServiceId = 1,
+                            CommissionAgency = 15m,
+                            CommissionClient = 10m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "Hotelería",
+                            ProviderId = 1
+                        },
+                        new
+                        {
+                            ServiceId = 2,
+                            CommissionAgency = 15m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "Traslados",
+                            ProviderId = 1
+                        },
+                        new
+                        {
+                            ServiceId = 3,
+                            CommissionAgency = 15m,
+                            CommissionClient = 10m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "Hoteleria",
+                            ProviderId = 2
+                        },
+                        new
+                        {
+                            ServiceId = 4,
+                            CommissionAgency = 10m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "Renta de autos",
+                            ProviderId = 2
+                        },
+                        new
+                        {
+                            ServiceId = 5,
+                            CommissionAgency = 18m,
+                            CommissionClient = 13m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "Hoteleria",
+                            ProviderId = 3
+                        },
+                        new
+                        {
+                            ServiceId = 6,
+                            CommissionAgency = 18m,
+                            CommissionClient = 10m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "Circuitos",
+                            ProviderId = 3
+                        },
+                        new
+                        {
+                            ServiceId = 7,
+                            CommissionAgency = 5m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "Entradas a disney",
+                            ProviderId = 3
+                        },
+                        new
+                        {
+                            ServiceId = 8,
+                            CommissionAgency = 15m,
+                            CommissionClient = 8m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "Parques",
+                            ProviderId = 4
+                        },
+                        new
+                        {
+                            ServiceId = 9,
+                            CommissionAgency = 17m,
+                            CommissionClient = 12m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "Hoteleria",
+                            ProviderId = 4
+                        },
+                        new
+                        {
+                            ServiceId = 10,
+                            CommissionAgency = 10m,
+                            CommissionClient = 5m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "",
+                            ProviderId = 5
+                        },
+                        new
+                        {
+                            ServiceId = 11,
+                            CommissionAgency = 10m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "",
+                            ProviderId = 6
+                        },
+                        new
+                        {
+                            ServiceId = 12,
+                            CommissionAgency = 20m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "",
+                            ProviderId = 7
+                        },
+                        new
+                        {
+                            ServiceId = 13,
+                            CommissionAgency = 5m,
+                            CommissionClient = 0m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "Traslados",
+                            ProviderId = 8
+                        },
+                        new
+                        {
+                            ServiceId = 14,
+                            CommissionAgency = 15m,
+                            CommissionClient = 10m,
+                            CommissionEmployee = 5m,
+                            IsDeleted = false,
+                            Name = "",
+                            ProviderId = 9
+                        });
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.StatusFlight", b =>
@@ -950,6 +1019,42 @@ namespace TurismoGlobalArandas.Migrations
                             TypeReservationId = 3,
                             IsDeleted = false,
                             Name = "Grupo"
+                        });
+                });
+
+            modelBuilder.Entity("TurismoGlobalArandas.Models.TypeReservationGrupal", b =>
+                {
+                    b.Property<int>("TypeReservationGrupalId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TypeReservationGrupalId"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("TypeReservationGrupalId");
+
+                    b.ToTable("TypeReservationGrupals");
+
+                    b.HasData(
+                        new
+                        {
+                            TypeReservationGrupalId = 1,
+                            IsDeleted = false,
+                            Name = "Grupo"
+                        },
+                        new
+                        {
+                            TypeReservationGrupalId = 2,
+                            IsDeleted = false,
+                            Name = "Individual"
                         });
                 });
 
@@ -1080,26 +1185,15 @@ namespace TurismoGlobalArandas.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.Commissions", b =>
-                {
-                    b.HasOne("TurismoGlobalArandas.Models.Providers", "Providers")
-                        .WithMany()
-                        .HasForeignKey("ProviderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Providers");
-                });
-
             modelBuilder.Entity("TurismoGlobalArandas.Models.GroupRate", b =>
                 {
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "reservationHotel")
+                    b.HasOne("TurismoGlobalArandas.Models.ReservationHotelGroup", "ReservationHotelGroup")
                         .WithMany()
-                        .HasForeignKey("ReservationHotelId")
+                        .HasForeignKey("ReservationHotelGroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("reservationHotel");
+                    b.Navigation("ReservationHotelGroup");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.HabitationsReservation", b =>
@@ -1178,6 +1272,10 @@ namespace TurismoGlobalArandas.Migrations
                         .WithMany()
                         .HasForeignKey("ProviderId");
 
+                    b.HasOne("TurismoGlobalArandas.Models.TypeReservationGrupal", "TypeReservationGrupal")
+                        .WithMany()
+                        .HasForeignKey("TypeReservationGroupId");
+
                     b.HasOne("TurismoGlobalArandas.Models.TypeReservation", "TypeReservation")
                         .WithMany()
                         .HasForeignKey("TypeReservationId");
@@ -1193,6 +1291,30 @@ namespace TurismoGlobalArandas.Migrations
                     b.Navigation("Providers");
 
                     b.Navigation("TypeReservation");
+
+                    b.Navigation("TypeReservationGrupal");
+                });
+
+            modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotelGroup", b =>
+                {
+                    b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "reservationHotel")
+                        .WithMany()
+                        .HasForeignKey("ReservationHotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("reservationHotel");
+                });
+
+            modelBuilder.Entity("TurismoGlobalArandas.Models.ServicesProvider", b =>
+                {
+                    b.HasOne("TurismoGlobalArandas.Models.Providers", "Providers")
+                        .WithMany()
+                        .HasForeignKey("ProviderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Providers");
                 });
 
             modelBuilder.Entity("UConnect.Entities.User", b =>

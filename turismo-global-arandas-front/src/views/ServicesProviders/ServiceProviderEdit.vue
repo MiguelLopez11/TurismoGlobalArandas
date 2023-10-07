@@ -8,7 +8,7 @@
               <v-select
                 class="w-100"
                 label="name"
-                v-model="commission.providerId"
+                v-model="serviceProvider.providerId"
                 :options="providers"
                 :reduce="provider => provider.providerId"
                 required
@@ -36,7 +36,7 @@
               <el-input
                 placeholder="Ingresa la comisión para la agencia"
                 size="large"
-                v-model="commission.commissionAgency"
+                v-model="serviceProvider.commissionAgency"
                 type="number"
               >
                 <template #append>%</template>
@@ -53,7 +53,7 @@
               <el-input
                 placeholder="Ingresa la comision para el cliente"
                 size="large"
-                v-model="commission.commissionClient"
+                v-model="serviceProvider.commissionClient"
               >
                 <template #append>%</template>
               </el-input>
@@ -69,7 +69,7 @@
               <el-input
                 placeholder="Ingresa la comision para el empleado"
                 size="large"
-                v-model="commission.commissionEmployee"
+                v-model="serviceProvider.commissionEmployee"
                 type="number"
               >
                 <template #append>%</template>
@@ -84,7 +84,7 @@
                 <label>Color representativo</label>
               </div>
               <div style="display: block !important">
-                <el-color-picker v-model="commission.color" size="large" />
+                <el-color-picker v-model="serviceProvider.color" size="large" />
               </div>
             </el-form-item>
           </Field>
@@ -97,7 +97,7 @@
             <el-input
               placeholder="Ingresa una descripcion"
               size="large"
-              v-model="commission.description"
+              v-model="serviceProvider.description"
             />
           </el-form-item>
         </el-col>
@@ -120,7 +120,7 @@
             size="large"
             @click="
               () => {
-                $router.push('/comisiones')
+                $router.push('/ServiciosProveedores')
               }
             "
             >Cancelar</el-button
@@ -132,74 +132,74 @@
 </template>
 
 <script>
-import CommissionServices from '@/Services/Commissions.Services'
+import ServicesProviderServices from '@/Services/ProviderServices.Services'
 import ProviderServices from '@/Services/Provider.Services'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject } from 'vue'
 
 export default {
   setup () {
-    const { getCommission, updateCommission } = CommissionServices()
+    const { getServiceProvider, updateServiceProvider } = ServicesProviderServices()
     const { getProviders } = ProviderServices()
     const providers = ref([])
-    const commission = ref({})
+    const serviceProvider = ref({})
     const router = useRoute()
     const redirect = useRouter()
     const swal = inject('$swal')
-    getCommission(router.params.CommissionId, data => {
-      commission.value = data
+    getServiceProvider(router.params.ServiceId, data => {
+      serviceProvider.value = data
     })
     getProviders(data => {
       providers.value = data
     })
     const onUpdateCommission = () => {
-      updateCommission(commission.value, data => {
+      updateServiceProvider(serviceProvider.value, data => {
         swal
           .fire({
-            title: 'Comisión modificado correctamente',
-            text: 'La comision se ha modificado satisfactoriamente.',
+            title: 'Servicio modificado correctamente',
+            text: 'El servicio se ha modificado satisfactoriamente.',
             icon: 'success'
           })
           .then(result => {
             if (result.isConfirmed) {
-              redirect.push('/comisiones')
+              redirect.push('/ServiciosProveedores')
             }
           })
       })
     }
     const validateCommissionAgency = () => {
-      if (!commission.value.commissionAgency) {
+      if (!serviceProvider.value.commissionAgency) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateCommissionClient = () => {
-      if (!commission.value.commissionClient) {
+      if (!serviceProvider.value.commissionClient) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateCommissionEmployee = () => {
-      if (!commission.value.commissionEmployee) {
+      if (!serviceProvider.value.commissionEmployee) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateColor = () => {
-      if (!commission.value.color) {
+      if (!serviceProvider.value.color) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateProvider = () => {
-      if (!commission.value.providerId) {
+      if (!serviceProvider.value.providerId) {
         return 'Este campo es requerido'
       }
       return true
     }
 
     return {
-      commission,
+      serviceProvider,
       providers,
       onUpdateCommission,
       validateCommissionAgency,
