@@ -135,8 +135,8 @@ export default {
           },
           {
             index: '4-5',
-            title: 'Comisiones',
-            path: '/Comisiones',
+            title: 'Servicios de proveedores',
+            path: '/ServiciosProveedores',
             icon: 'bi bi-cash-stack'
           }
         ]

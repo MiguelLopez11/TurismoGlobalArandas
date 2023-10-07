@@ -17,3 +17,6 @@ dotnet_diagnostic.CS8604.severity = none
 
 # CS8981: El nombre de tipo solo contiene caracteres ASCII en minúsculas. Estos nombres pueden reservarse para el idioma.
 dotnet_diagnostic.CS8981.severity = none
+
+# CS0169: El campo 'Program._configuration' nunca se usa
+dotnet_diagnostic.CS0169.severity = none

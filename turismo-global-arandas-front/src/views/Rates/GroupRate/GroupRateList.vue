@@ -1,6 +1,6 @@
 <template>
-  <!-- <habitation-add-new /> -->
-  <!-- <habitation-edit /> -->
+  <group-rate-add-new :reservationHotelGroupId="reservationHotelGroupId" />
+  <group-rate-edit :groupRateId="groupRateId" />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
@@ -8,9 +8,9 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddHabitation = !isAddHabitation"
+          @click="isAddGroupRate = !isAddGroupRate"
         >
-          <i> Nueva habitación </i>
+          <i> Nueva Tarifa </i>
         </el-button>
       </el-col>
     </el-row>
@@ -40,13 +40,11 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item
-                      @click="onEditHabitation(items.habitations)"
+                      @click="onEditHabitation(items.groupRateId)"
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="
-                        onDeleteHabitation(items.habitationsReservationId)
-                      "
+                      @click="onDeleteHabitation(items.groupRateId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -63,8 +61,10 @@
 <script>
 import { ref, watch, inject, provide } from 'vue'
 import GroupRateServices from '@/Services/GroupRate.Services'
-import { useStore } from 'vuex'
+import groupRateAddNew from './groupRateAddNew.vue'
+import GroupRateEdit from './GroupRateEdit.vue'
 export default {
+  components: { groupRateAddNew, GroupRateEdit },
   props: {
     ReservationHotelGroupId: {
       type: Number,
@@ -75,18 +75,18 @@ export default {
     const { getGroupRateByReservationHotelGroup, deleteGroupRate } =
       GroupRateServices()
     const groupRates = ref([])
-    const store = useStore()
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
     const currentPage = ref(1)
     const perPageSelect = ref([5, 10, 25, 50, 100])
     const isloading = ref(true)
-    const isAddHabitation = ref(false)
-    const isEditHabitation = ref(false)
-    const hotelId = ref(null)
-    provide('addHabitation', isAddHabitation)
-    provide('editHabitation', isEditHabitation)
+    const isAddGroupRate = ref(false)
+    const isEditGroupRate = ref(false)
+    const groupRateId = ref()
+    const reservationHotelGroupId = ref(props.ReservationHotelGroupId)
+    provide('addGroupRate', isAddGroupRate)
+    provide('editHabitation', isEditGroupRate)
     const fields = ref([
       { value: 'adults', text: 'Adultos' },
       { value: 'juniors', text: 'Juniors' },
@@ -104,22 +104,21 @@ export default {
       { value: 'observations', text: 'observaciones' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getGroupRateByReservationHotelGroup(props.ReservationHotelGroupId, data => {
-      console.log(data)
+    getGroupRateByReservationHotelGroup(reservationHotelGroupId.value, data => {
       groupRates.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
       getGroupRateByReservationHotelGroup(
-        props.ReservationHotelGroupId,
+        reservationHotelGroupId.value,
         data => {
           groupRates.value = data
           isloading.value = false
         }
       )
     }
-    watch([isAddHabitation, isEditHabitation], ([newValueA, newValueB]) => {
+    watch([isAddGroupRate, isEditGroupRate], ([newValueA, newValueB]) => {
       if (!newValueA || !newValueB) {
         setTimeout(() => {
           refreshTable()
@@ -127,7 +126,7 @@ export default {
       }
     })
     const changeDialog = () => {
-      isAddHabitation.value = !isAddHabitation.value
+      isAddGroupRate.value = !isAddGroupRate.value
     }
     const onDeleteHabitation = habitationReservationId => {
       swal
@@ -154,9 +153,10 @@ export default {
           }
         })
     }
-    const onEditHabitation = habitation => {
-      isEditHabitation.value = !isEditHabitation.value
-      store.commit('setHotelId', habitation.habitationId)
+    const onEditHabitation = item => {
+      console.log(item)
+      isEditGroupRate.value = !isEditGroupRate.value
+      groupRateId.value = parseInt(item)
     }
     return {
       filter,
@@ -166,9 +166,10 @@ export default {
       isloading,
       fields,
       groupRates,
-      isAddHabitation,
-      isEditHabitation,
-      hotelId,
+      isAddGroupRate,
+      isEditGroupRate,
+      groupRateId,
+      reservationHotelGroupId,
       refreshTable,
       onDeleteHabitation,
       changeDialog,

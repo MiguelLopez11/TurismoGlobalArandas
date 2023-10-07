@@ -70,6 +70,7 @@ namespace TurismoGlobalArandas.Controllers
                 return BadRequest($"La categoría con el ID {GroupRateId} no existe");
             }
             GroupRateOld.GroupRateId = GroupRate.GroupRateId;
+            GroupRateOld.NamesCompanions = GroupRate.NamesCompanions;
             GroupRateOld.Adults = GroupRate.Adults;
             GroupRateOld.Juniors = GroupRate.Juniors;
             GroupRateOld.MinorsCharge = GroupRate.MinorsCharge;

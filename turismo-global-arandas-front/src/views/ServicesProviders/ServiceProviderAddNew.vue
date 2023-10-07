@@ -1,18 +1,35 @@
 <template>
-  <el-dialog v-model="isOpenDialog" title="Nueva comisión" width="80%" center>
+  <el-dialog v-model="isOpenDialog" title="Nuevo servicio" width="80%" center>
     <Form
-      ref="commissionFormRef"
+      ref="serviceProviderFormRef"
       as="el-form"
       :validation-schema="validationSchema"
       @submit="onSubmit"
     >
       <el-row :gutter="35">
         <el-col :span="8">
+          <Field name="name" v-slot="{ value, field, errorMessage }">
+            <el-form-item :error="errorMessage" required>
+              <div>
+                <label>Nombre del servicio</label>
+              </div>
+              <el-input
+                placeholder="Ingresa un nombre para el nuevo servicio"
+                size="large"
+                v-model="serviceProviderFields.name"
+                v-bind="field"
+                :validate-event="false"
+                :model-value="value"
+              />
+            </el-form-item>
+          </Field>
+        </el-col>
+        <el-col :span="8">
           <el-form-item>
             <v-select
               class="w-100"
               label="name"
-              v-model="commisionFields.providerId"
+              v-model="serviceProviderFields.providerId"
               :options="providers"
               :reduce="provider => provider.providerId"
             >
@@ -29,7 +46,7 @@
               <template #search="{ attributes, events }">
                 <input
                   class="vs__search"
-                  :required="!commisionFields.providerId"
+                  :required="!serviceProviderFields.providerId"
                   v-bind="attributes"
                   v-on="events"
                 />
@@ -49,8 +66,8 @@
               <el-input
                 placeholder="Ingresa la comisión para la agencia"
                 size="large"
+                v-model="serviceProviderFields.commissionAgency"
                 v-bind="field"
-                v-model="commisionFields.commissionAgency"
                 :validate-event="false"
                 :model-value="value"
                 type="number"
@@ -73,7 +90,7 @@
                 placeholder="Ingresa la comision para el cliente"
                 size="large"
                 v-bind="field"
-                v-model="commisionFields.commissionClient"
+                v-model="serviceProviderFields.commissionClient"
                 :validate-event="false"
                 :model-value="value"
               >
@@ -95,7 +112,7 @@
                 placeholder="Ingresa la comision para el empleado"
                 size="large"
                 v-bind="field"
-                v-model="commisionFields.commissionEmployee"
+                v-model="serviceProviderFields.commissionEmployee"
                 :validate-event="false"
                 :model-value="value"
                 type="number"
@@ -113,7 +130,7 @@
               </div>
               <div style="display: block !important">
                 <el-color-picker
-                  v-model="commisionFields.color"
+                  v-model="serviceProviderFields.color"
                   :validate-event="false"
                   v-bind="field"
                   :model-value="value"
@@ -131,7 +148,7 @@
             <el-input
               placeholder="Ingresa una descripcion"
               size="large"
-              v-model="commisionFields.description"
+              v-model="serviceProviderFields.description"
             />
           </el-form-item>
         </el-col>
@@ -168,7 +185,7 @@
 <script>
 import { ref, inject } from 'vue'
 import { Field, Form } from 'vee-validate'
-import CommissionServices from '@/Services/Commissions.Services'
+import ServicesProviderServices from '@/Services/ProviderServices.Services'
 import ProviderServices from '@/Services/Provider.Services'
 import * as yup from 'yup'
 
@@ -178,13 +195,17 @@ export default {
     Field
   },
   setup () {
-    const isOpenDialog = inject('addCommission')
+    const isOpenDialog = inject('addServices')
     const swal = inject('$swal')
-    const commissionFormRef = ref(null)
+    const serviceProviderFormRef = ref(null)
     const providers = ref([])
-    const { createCommission } = CommissionServices()
+    const { createServiceProvider } = ServicesProviderServices()
     const { getProviders } = ProviderServices()
     const validationSchema = yup.object({
+      name: yup
+        .string()
+        .required('Este campo es requerido')
+        .label('Nombre servicio'),
       commissionAgency: yup
         .number()
         .required('Este campo es requerido')
@@ -202,9 +223,10 @@ export default {
         .required('Este campo es requerido')
         .label('Comision empleado')
     })
-    const commisionFields = ref({
-      commissionId: 0,
+    const serviceProviderFields = ref({
+      serviceId: 0,
       providerId: null,
+      name: null,
       color: null,
       commissionAgency: null,
       commissionClient: null,
@@ -212,37 +234,33 @@ export default {
       description: null,
       isDeleted: false
     })
-    const commisionFieldsBlank = ref(
-      JSON.parse(JSON.stringify(commisionFields))
+    const serviceProviderFieldsBlank = ref(
+      JSON.parse(JSON.stringify(serviceProviderFields))
     )
     getProviders(data => {
       providers.value = data
     })
     const onSubmit = () => {
-      commisionFields.value.commissionAgency =
-        commisionFields.value.commissionAgency / 100
-      commisionFields.value.commissionClient =
-        commisionFields.value.commissionClient / 100
-      commisionFields.value.commissionEmployee =
-        commisionFields.value.commissionEmployee / 100
-      createCommission(commisionFields.value, data => {
+      createServiceProvider(serviceProviderFields.value, data => {
         swal.fire({
           title: '¡Nueva comisión registrada!',
           text: 'La nueva comisión se ha registrado correctamente',
           icon: 'success'
         })
         isOpenDialog.value = false
-        commisionFields.value = JSON.parse(JSON.stringify(commisionFieldsBlank))
-        commissionFormRef.value.resetForm()
+        serviceProviderFields.value = JSON.parse(
+          JSON.stringify(serviceProviderFieldsBlank)
+        )
+        serviceProviderFormRef.value.resetForm()
       })
     }
 
     return {
       isOpenDialog,
-      commissionFormRef,
+      serviceProviderFormRef,
       providers,
       onSubmit,
-      commisionFields,
+      serviceProviderFields,
       validationSchema
     }
   }

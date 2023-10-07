@@ -11,7 +11,6 @@ using UConnect.Entities.Identity;
 using UConnect.Entities;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
-using TurismoGlobalArandas.Migrations;
 
 namespace TurismoGlobalArandas.Controllers
 {

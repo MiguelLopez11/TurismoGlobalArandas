@@ -7,6 +7,7 @@ using System;
 using TurismoGlobalArandas.Context;
 using Microsoft.OpenApi.Models;
 using UConnect.Entities;
+using Newtonsoft.Json;
 
 namespace TurismoGlobalArandas
 {

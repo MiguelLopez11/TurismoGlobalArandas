@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231006192349_remove_commision")]
+    partial class remove_commision
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -445,38 +448,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.ToTable("IndividualRates");
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.Itinerary", b =>
-                {
-                    b.Property<int>("itineraryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("itineraryId"));
-
-                    b.Property<DateTime>("CurrentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Details")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Operation")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TableName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("User")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("itineraryId");
-
-                    b.ToTable("Itineraries");
-                });
-
             modelBuilder.Entity("TurismoGlobalArandas.Models.Providers", b =>
                 {
                     b.Property<int>("ProviderId")
@@ -783,14 +754,14 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("Color")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("CommissionAgency")
-                        .HasColumnType("decimal(18, 2)");
+                    b.Property<string>("CommissionAgency")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("CommissionClient")
-                        .HasColumnType("decimal(18, 2)");
+                    b.Property<string>("CommissionClient")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<decimal>("CommissionEmployee")
-                        .HasColumnType("decimal(18, 2)");
+                    b.Property<string>("CommissionEmployee")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -809,15 +780,15 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("ServicesProviders");
+                    b.ToTable("ServicesProvider");
 
                     b.HasData(
                         new
                         {
                             ServiceId = 1,
-                            CommissionAgency = 15m,
-                            CommissionClient = 10m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.15",
+                            CommissionClient = "0.10",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "Hotelería",
                             ProviderId = 1
@@ -825,9 +796,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 2,
-                            CommissionAgency = 15m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.15",
+                            CommissionClient = "0.00",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "Traslados",
                             ProviderId = 1
@@ -835,9 +806,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 3,
-                            CommissionAgency = 15m,
-                            CommissionClient = 10m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.15",
+                            CommissionClient = "0.10",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "Hoteleria",
                             ProviderId = 2
@@ -845,9 +816,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 4,
-                            CommissionAgency = 10m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.10",
+                            CommissionClient = "0.00",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "Renta de autos",
                             ProviderId = 2
@@ -855,9 +826,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 5,
-                            CommissionAgency = 18m,
-                            CommissionClient = 13m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.18",
+                            CommissionClient = "0.13",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "Hoteleria",
                             ProviderId = 3
@@ -865,9 +836,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 6,
-                            CommissionAgency = 18m,
-                            CommissionClient = 10m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.18",
+                            CommissionClient = "0.10",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "Circuitos",
                             ProviderId = 3
@@ -875,9 +846,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 7,
-                            CommissionAgency = 5m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.05",
+                            CommissionClient = "0.00",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "Entradas a disney",
                             ProviderId = 3
@@ -885,9 +856,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 8,
-                            CommissionAgency = 15m,
-                            CommissionClient = 8m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.15",
+                            CommissionClient = "0.08",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "Parques",
                             ProviderId = 4
@@ -895,9 +866,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 9,
-                            CommissionAgency = 17m,
-                            CommissionClient = 12m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.17",
+                            CommissionClient = "0.12",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "Hoteleria",
                             ProviderId = 4
@@ -905,9 +876,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 10,
-                            CommissionAgency = 10m,
-                            CommissionClient = 5m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.10",
+                            CommissionClient = "0.05",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "",
                             ProviderId = 5
@@ -915,9 +886,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 11,
-                            CommissionAgency = 10m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.10",
+                            CommissionClient = "0.00",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "",
                             ProviderId = 6
@@ -925,9 +896,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 12,
-                            CommissionAgency = 20m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.20",
+                            CommissionClient = "0.00",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "",
                             ProviderId = 7
@@ -935,9 +906,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 13,
-                            CommissionAgency = 5m,
-                            CommissionClient = 0m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.05",
+                            CommissionClient = "0.00",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "Traslados",
                             ProviderId = 8
@@ -945,9 +916,9 @@ namespace TurismoGlobalArandas.Migrations
                         new
                         {
                             ServiceId = 14,
-                            CommissionAgency = 15m,
-                            CommissionClient = 10m,
-                            CommissionEmployee = 5m,
+                            CommissionAgency = "0.15",
+                            CommissionClient = "0.10",
+                            CommissionEmployee = "0.05",
                             IsDeleted = false,
                             Name = "",
                             ProviderId = 9

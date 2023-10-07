@@ -435,7 +435,10 @@
               </el-col> </el-row
           ></el-tab-pane>
         </el-tabs>
-        <el-row :gutter="35">
+        <el-row
+          :gutter="35"
+          v-if="reservationHotel.typeReservationGroupId === 1"
+        >
           <el-col :span="8">
             <el-form-item>
               <div>
@@ -513,10 +516,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-if="reservationHotel.typeReservationGroupId === 1">
           <el-col :md="24" :lg="24">
-
-          <group-rate-list :ReservationHotelGroupId="reservationHotelGroup.reservationHotelGroupId"/>
+            <group-rate-list
+              :ReservationHotelGroupId="
+                reservationHotelGroup.reservationHotelGroupId
+              "
+            />
           </el-col>
         </el-row>
       </tab-content>
@@ -619,7 +625,7 @@ import TypeReservationGroupServices from '@/Services/TypeReservationGroup.Servic
 import ProviderServices from '@/Services/Provider.Services'
 import EmployeeServices from '@/Services/Employees.Services'
 import IndividualRateServices from '@/Services/IndividualRate.Services'
-import CommissionServices from '@/Services/Commissions.Services'
+import ServicesProviderServices from '@/Services/ProviderServices.Services'
 import ReservationHotelGroupServices from '@/Services/ReservationHotelGroup.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
@@ -672,7 +678,7 @@ export default {
       getIndividualRateByReservationHotel,
       updateIndividualRate
     } = IndividualRateServices()
-    const { getCommissionByProvider } = CommissionServices()
+    const { getServiceProviderByProviderId } = ServicesProviderServices()
     const {
       getReservationHotelGroupByreservationHotel,
       createReservationHotelGroup,
@@ -896,7 +902,7 @@ export default {
         const commissionPercentage = ref()
         const commission = ref()
         const commissionClient = ref()
-        getCommissionByProvider(reservationHotel.value.providerId, data => {
+        getServiceProviderByProviderId(reservationHotel.value.providerId, data => {
           commissionPercentage.value = parseFloat(
             data.commissionClient
           ).toFixed(2)

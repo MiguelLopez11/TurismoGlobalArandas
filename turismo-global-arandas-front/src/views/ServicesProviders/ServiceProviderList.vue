@@ -1,5 +1,5 @@
 <template>
-  <commission-add-new />
+  <ServiceProviderAddNew />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
@@ -14,9 +14,9 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddCommission = !isAddCommission"
+          @click="isAddServiceProvider = !isAddServiceProvider"
         >
-          <i> Nueva comisión </i>
+          <i> Nuevo servicio </i>
         </el-button>
       </el-col>
     </el-row>
@@ -35,7 +35,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="commissions"
+            :items="servicesProvider"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -51,15 +51,15 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-Commission',
-                            params: { CommissionId: items.commissionId }
+                            name: 'Edit-ServicesProvider',
+                            params: { ServiceId: items.serviceId }
                           })
                         }
                       "
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteProvider(items.commissionId)"
+                      @click="onDeleteProvider(items.serviceId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -78,14 +78,15 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import CommissionServices from '@/Services/Commissions.Services'
-import CommissionAddNew from './CommissionAddNew.vue'
+import ServicesProviderServices from '@/Services/ProviderServices.Services'
+import ServiceProviderAddNew from './ServiceProviderAddNew.vue'
 
 export default {
-  components: { CommissionAddNew },
+  components: { ServiceProviderAddNew },
   setup () {
-    const { getCommissions, deleteCommission } = CommissionServices()
-    const commissions = ref([])
+    const { getServicesProvider, deleteServiceProvider } =
+      ServicesProviderServices()
+    const servicesProvider = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -94,10 +95,11 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
-    const isAddCommission = ref(false)
-    provide('addCommission', isAddCommission)
+    const isAddServiceProvider = ref(false)
+    provide('addServices', isAddServiceProvider)
     const fields = ref([
       { value: 'color', text: 'Color' },
+      { value: 'name', text: 'Servicio' },
       { value: 'providers.name', text: 'Provedor' },
       { value: 'commissionAgency', text: 'Comisión de la agencia' },
       { value: 'commissionClient', text: 'Comision al cliente' },
@@ -105,18 +107,28 @@ export default {
       { value: 'description', text: 'Descripción' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getCommissions(data => {
-      commissions.value = data
+    getServicesProvider(data => {
+      data.forEach((item, index) => {
+        item.commissionAgency = (item.commissionAgency / 100).toFixed(2)
+        item.commissionClient = (item.commissionClient / 100).toFixed(2)
+        item.commissionEmployee = (item.commissionEmployee / 100).toFixed(2)
+      })
+      servicesProvider.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getCommissions(data => {
-        commissions.value = data
+      getServicesProvider(data => {
+        data.forEach((item, index) => {
+          item.commissionAgency = (item.commissionAgency / 100).toFixed(2)
+          item.commissionClient = (item.commissionClient / 100).toFixed(2)
+          item.commissionEmployee = (item.commissionEmployee / 100).toFixed(2)
+        })
+        servicesProvider.value = data
         isloading.value = false
       })
     }
-    watch(isAddCommission, newValue => {
+    watch(isAddServiceProvider, newValue => {
       if (!newValue) {
         refreshTable()
       }
@@ -124,17 +136,16 @@ export default {
     const onDeleteProvider = commissionId => {
       swal
         .fire({
-          title:
-            'Estás a punto de eliminar un registro de comisión, ¿Estas seguro?',
+          title: 'Estás a punto de eliminar un servicio, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar registro',
+          confirmButtonText: 'Si, eliminar servicio',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteCommission(commissionId, data => {
+            deleteServiceProvider(commissionId, data => {
               swal.fire({
                 title: 'Proveedor eliminado!',
                 text: 'El proveedor ha sido eliminado satisfactoriamente .',
@@ -156,8 +167,8 @@ export default {
       searchValue,
       searchField,
       fields,
-      commissions,
-      isAddCommission,
+      servicesProvider,
+      isAddServiceProvider,
       refreshTable,
       onDeleteProvider
     }

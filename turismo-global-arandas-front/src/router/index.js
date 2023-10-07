@@ -186,17 +186,17 @@ const routes = [
     }
   },
   {
-    path: '/Comisiones',
-    name: 'Commissions',
-    component: () => import('../views/Commissions/CommissionList'),
+    path: '/ServiciosProveedores',
+    name: 'ServicesProvider',
+    component: () => import('../views/ServicesProviders/ServiceProviderList'),
     meta: {
       requiresAuth: true
     }
   },
   {
-    path: '/Comisiones/:CommissionId',
-    name: 'Edit-Commission',
-    component: () => import('../views/Commissions/CommissionEdit'),
+    path: '/ServiciosProveedores/:ServiceId',
+    name: 'Edit-ServicesProvider',
+    component: () => import('../views/ServicesProviders/ServiceProviderEdit'),
     meta: {
       requiresAuth: true
     }
