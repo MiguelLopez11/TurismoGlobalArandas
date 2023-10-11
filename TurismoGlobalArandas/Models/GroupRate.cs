@@ -15,11 +15,16 @@ namespace TurismoGlobalArandas.Models
         public string? AgesMinors { get; set; }
         public DateTime? DateStart { get; set; }
         public DateTime? DateEnd { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? RangePublicClient { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? RangeJunior { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? RangeMinor { get; set; }
         public int? NightsNumber { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? RangeNight { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal? RangeTotal { get; set; }
         public string? Observations { get; set; } 
         public int ReservationHotelGroupId { get; set; }

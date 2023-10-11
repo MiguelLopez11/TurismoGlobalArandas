@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231010185650_add_employee_context")]
+    partial class add_employee_context
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -825,6 +828,7 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Coordinator")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DateArrival")
@@ -837,9 +841,10 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReservationHotelId")
+                    b.Property<int>("ReservationHotelId")
                         .HasColumnType("int");
 
                     b.HasKey("ReservationHotelGroupId");
@@ -1419,7 +1424,9 @@ namespace TurismoGlobalArandas.Migrations
                 {
                     b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "reservationHotel")
                         .WithMany()
-                        .HasForeignKey("ReservationHotelId");
+                        .HasForeignKey("ReservationHotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("reservationHotel");
                 });

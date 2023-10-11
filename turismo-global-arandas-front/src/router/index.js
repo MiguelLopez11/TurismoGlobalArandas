@@ -232,6 +232,14 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/RelacionPagosReservacionHotel/:ReservationHotelId',
+    name: 'PaymentsRelationReservatioHotel',
+    component: () => import('../views/Reservations/ReservationHotels/PaymentsRelationReservationHotel/PaymentsRelationReservationHotel'),
+    meta: {
+      requiresAuth: true
+    }
   }
 
 ]

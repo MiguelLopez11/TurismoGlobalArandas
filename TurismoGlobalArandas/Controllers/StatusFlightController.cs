@@ -57,8 +57,8 @@ namespace TurismoGlobalArandas.Controllers
             }
             statusFlightOld.StatusFlightId = statusFlight.StatusFlightId;
             statusFlightOld.Name = statusFlight.Name;
-            statusFlightOld.Color = statusFlight.Color;
             statusFlightOld.Description = statusFlight.Description;
+            statusFlightOld.IsDeleted = statusFlight.IsDeleted;
 
             _context.StatusFlight.Update(statusFlightOld);
             await _context.SaveChangesAsync();

@@ -240,7 +240,7 @@ export default {
   props: {
     groupRateId: {
       type: Number,
-      required: true
+      required: false
     }
   },
   setup (props) {
