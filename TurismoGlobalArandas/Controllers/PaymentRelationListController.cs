@@ -26,18 +26,28 @@ namespace TurismoGlobalArandas.Controllers
         [HttpGet("{PaymentId}")]
         public async Task<ActionResult> getPaymentRelationList(int PaymentId)
         {
-            var customer = await _context.PaymentRelationLists
+            var payment = await _context.PaymentRelationLists
                 .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.PaymentId == PaymentId);
-            if (customer == null)
+            if (payment == null)
             {
                 return NotFound();
             }
-            return Ok(customer);
+            return Ok(payment);
+        }
+        [HttpGet("PaymentReservationHotel/{PaymentReservationHotelId}")]
+        public async Task<ActionResult> getPaymentRelationListByPaymentReservationHotel(int PaymentReservationHotelId)
+        {
+            var payments = await _context.PaymentRelationLists
+                .Where(w => !w.IsDeleted)
+                .Where(f => f.PaymentReservationHotelId == PaymentReservationHotelId)
+                .ToListAsync();
+            return Ok(payments);
         }
         [HttpPost]
         public async Task<ActionResult<PaymentRelationList>> PostPaymentRelationList(PaymentRelationList payment)
         {
+            payment.PaymentDate = DateTime.Now;
             _context.PaymentRelationLists.Add(payment);
             await _context.SaveChangesAsync();
             return CreatedAtAction("getPaymentRelationList", new { PaymentId = payment.PaymentId }, payment);

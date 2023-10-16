@@ -7,12 +7,12 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int PaymentId { get; set; }
-        public string Invoice { get; set; }
+        public string? Invoice { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal Amount { get; set; }
-        public DateTime PaymentDate { get; set; }
-        public string Observations { get; set; }
-        public int PaymentReservationHotelId { get; set; }
+        public decimal? Amount { get; set; }
+        public DateTime? PaymentDate { get; set; }
+        public string? Observations { get; set; }
+        public int? PaymentReservationHotelId { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("PaymentReservationHotelId")]
