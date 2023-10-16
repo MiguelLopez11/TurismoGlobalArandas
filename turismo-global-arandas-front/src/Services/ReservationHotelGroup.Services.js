@@ -14,11 +14,20 @@ export default function ReservationHotelGroupServices () {
   const getReservationHotelGroupByreservationHotel = (reservationHotelGroupId, callback) => {
     axiosPrivate.get(`/ReservationHotelGroup/ReservationHotel/${reservationHotelGroupId}`).then((response) => {
       callback(response.data)
+    }).catch((exception) => {
+      callback(exception.response.status)
     })
   }
   const createReservationHotelGroup = (data, callback) => {
     axiosPrivate.post('/ReservationHotelGroup', data).then((response) => {
       callback(response.data)
+    })
+  }
+  const comprobateIfExist = (ReservationHotelId, callback) => {
+    axiosPrivate.post(`/ReservationHotelGroup/IfExist/${ReservationHotelId}`).then((response) => {
+      callback(response.data)
+    }).catch((exception) => {
+      callback(exception.response)
     })
   }
   const updateReservationHotelGroup = (data, callback) => {
@@ -36,6 +45,7 @@ export default function ReservationHotelGroupServices () {
     getReservationHotelGroup,
     getReservationHotelGroupByreservationHotel,
     createReservationHotelGroup,
+    comprobateIfExist,
     updateReservationHotelGroup,
     deleteReservationHotelGroup
   }

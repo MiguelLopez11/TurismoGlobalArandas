@@ -1,12 +1,13 @@
 <template>
-  <role-add-new />
+  <payment-relation-list-add-new />
+  <payment-realtion-edit :PaymentId="paymenRelationtId" />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar Roles..."
+          placeholder="Buscar pagos..."
         />
       </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
@@ -14,9 +15,9 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddRole = !isAddRole"
+          @click="isAddPaymentRelation = !isAddPaymentRelation"
         >
-          <i> Nuevo Role </i>
+          <i> Registrar nuevo pago </i>
         </el-button>
       </el-col>
     </el-row>
@@ -35,7 +36,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="roles"
+            :items="paymentsRelationList"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -47,18 +48,10 @@
                 <span class="bi bi-three-dots-vertical"> </span>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item
-                      @click="
-                        () => {
-                          $router.push({
-                            name: 'Edit-Role',
-                            params: { roleName: items.name }
-                          })
-                        }
-                      "
+                    <el-dropdown-item @click="onEditPayment(items.paymentId)"
                       >Editar</el-dropdown-item
                     >
-                    <el-dropdown-item @click="onDeleteRole(items.id)"
+                    <el-dropdown-item @click="onDeletePayment(items.paymentId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -74,60 +67,95 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import RoleServices from '@/Services/Roles.Services'
-import RoleAddNew from './RoleAddNew.vue'
+import PaymentsRelationListServices from '@/Services/PaymentRelationList.Services'
+import PaymentRelationListAddNew from './PaymentRelationAddNew.vue'
+import PaymentRealtionEdit from './PaymentRealtionEdit.vue'
+import { useStore } from 'vuex'
 
 export default {
-  components: { RoleAddNew },
-  setup () {
-    const { getRoles, deleteRole } = RoleServices()
-    const roles = ref([])
+  components: { PaymentRelationListAddNew, PaymentRealtionEdit },
+  props: {
+    PaymentReservationHotelId: {
+      type: Number,
+      required: true
+    }
+  },
+  setup (props) {
+    const {
+      getPaymentRelationListByPaymentReservationHotel,
+      deletePaymentRelationList
+    } = PaymentsRelationListServices()
+    const store = useStore()
+    const paymentsRelationList = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
     const currentPage = ref(1)
     const perPageSelect = ref([5, 10, 25, 50, 100])
+    const paymenRelationtId = ref(0)
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('name')
-    const isAddRole = ref(false)
-    provide('addDestination', isAddRole)
+    const isAddPaymentRelation = ref(false)
+    const isEditPaymentRelation = ref(false)
+    const paymentReservationHotelId = ref(0)
+    setTimeout(() => {
+      paymentReservationHotelId.value = parseInt(
+        store.getters.getPaymentReservationHotelId
+      )
+      getPaymentRelationListByPaymentReservationHotel(
+        paymentReservationHotelId.value,
+        data => {
+          paymentsRelationList.value = data
+          isloading.value = false
+        }
+      )
+    }, 1000)
+    provide('addPaymentRelation', isAddPaymentRelation)
+    provide('editPaymentRelation', isEditPaymentRelation)
     const fields = ref([
-      { value: 'name', text: 'Nombre' },
+      { value: 'invoice', text: 'Folio' },
+      { value: 'amount', text: 'Monto' },
+      { value: 'paymentDate', text: 'Fecha de pago' },
+      { value: 'observations', text: 'Observaciones' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getRoles(data => {
-      roles.value = data
-      isloading.value = false
-    })
+
     const refreshTable = () => {
       isloading.value = true
-      getRoles(data => {
-        roles.value = data
-        isloading.value = false
-      })
+      getPaymentRelationListByPaymentReservationHotel(
+        paymentReservationHotelId.value,
+        data => {
+          paymentsRelationList.value = data
+          isloading.value = false
+        }
+      )
     }
-    watch(isAddRole, newValue => {
-      if (!newValue) {
+    watch([isAddPaymentRelation, isEditPaymentRelation], ([newValueA, newValueB]) => {
+      if (!newValueA || !newValueB) {
         refreshTable()
       }
     })
-    const onDeleteRole = roleId => {
+    const onEditPayment = paymentId => {
+      isEditPaymentRelation.value = true
+      paymenRelationtId.value = paymentId
+    }
+    const onDeletePayment = PaymentId => {
       swal
         .fire({
           title: 'Estás a punto de eliminar un role, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar Role',
+          confirmButtonText: 'Si, eliminar pago',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteRole(roleId, data => {
+            deletePaymentRelationList(PaymentId, data => {
               swal.fire({
-                title: 'Role eliminado!',
-                text: 'El role ha sido eliminado satisfactoriamente .',
+                title: 'pago eliminado!',
+                text: 'El pago ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()
@@ -146,10 +174,13 @@ export default {
       searchValue,
       searchField,
       fields,
-      roles,
-      isAddRole,
+      paymentsRelationList,
+      isAddPaymentRelation,
+      paymentReservationHotelId,
+      paymenRelationtId,
       refreshTable,
-      onDeleteRole
+      onEditPayment,
+      onDeletePayment
     }
   }
 }

@@ -55,13 +55,41 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ReservationHotelGroup>> PostReservationHotelGroup(ReservationHotelGroup reservationHotelGroup)
         {
+            var reservation = await _context.ReservationHotelGroups
+                .Include(i => i.reservationHotel)
+                .Where(w => !w.IsDeleted)
+                .FirstOrDefaultAsync(f => f.ReservationHotelId == reservationHotelGroup.ReservationHotelId);
+            if (reservation == null)
+            {
+
                 _context.ReservationHotelGroups.Add(reservationHotelGroup);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(
-                "getReservationHotelGroupByReservationHotelId",
-                new { ReservationHotelId = reservationHotelGroup.ReservationHotelGroupId },
-                reservationHotelGroup
-            );
+                await _context.SaveChangesAsync();
+                return CreatedAtAction(
+                    "getReservationHotelGroupByReservationHotelId",
+                    new { ReservationHotelId = reservationHotelGroup.ReservationHotelGroupId },
+                    reservationHotelGroup
+                );
+            }
+            else
+            {
+                return Ok("Ya cuenta con una reservación grupal");
+            }
+        }
+        [HttpPost("IfExist/{ReservationHotelId}")]
+        public async Task<ActionResult> comprobateIfExist(int ReservationHotelId)
+        {
+            var reservation = await _context.ReservationHotelGroups
+                .Include(i => i.reservationHotel)
+                .Where(w => !w.IsDeleted)
+                .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
+            if (reservation == null)
+            {
+                return StatusCode(404, "No se encuentra una reservación de grupo");
+            }
+            else
+            {
+                return StatusCode(200, "Si existe una reservación en grupo");
+            }
         }
 
         [HttpPut("{ReservationHotelGroupId}")]

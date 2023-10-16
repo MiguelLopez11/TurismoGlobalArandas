@@ -72,6 +72,17 @@
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
+                  <el-dropdown-item
+                    @click="
+                      $router.push({
+                        name: 'PaymentsRelationReservatioHotel',
+                        params: {
+                          ReservationHotelId: items.reservationHotelId
+                        }
+                      })
+                    "
+                    >Relación de pagos</el-dropdown-item
+                  >
                 </template>
               </el-dropdown>
             </template>

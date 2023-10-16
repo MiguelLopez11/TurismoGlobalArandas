@@ -15,20 +15,23 @@ namespace TurismoGlobalArandas.Context
         public DbSet<Customers> Customers { get; set; }
         public DbSet<Destinations> Destinations { get; set; }
         public DbSet<Employees> Employees { get; set; }
+        public DbSet<GroupRate> GroupRates { get; set; }
         public DbSet<Habitations> Habitations { get; set; }
         public DbSet<HabitationsReservation> HabitationsReservations { get; set; }
         public DbSet<Hotels> Hotels { get; set; }
+        public DbSet<IndividualRate> IndividualRates { get; set; }
+        public DbSet<Itinerary> Itineraries { get; set; }
+        public DbSet<PaymentRelationList> PaymentRelationLists { get; set; }
+        public DbSet<PaymentsRelationReservationHotels> PaymentsRelationReservationHotels { get; set; }
         public DbSet<Providers> Providers { get; set; }
         public DbSet<ReservationHotel> ReservationHotels { get; set; }
-        public DbSet<IndividualRate> IndividualRates { get; set; }
-        public DbSet<TypeReservation> TypeReservations { get; set; }
-        public DbSet<ServicesProvider> ServicesProviders { get; set; }
         public DbSet<ReservationFlight> ReservationFlights { get; set; }
-        public DbSet<StatusFlight> StatusFlight { get; set; }
-        public DbSet<TypeReservationGrupal> TypeReservationGrupals { get; set; }
         public DbSet<ReservationHotelGroup> ReservationHotelGroups { get; set; }
-        public DbSet<GroupRate> GroupRates { get; set; }
-        public DbSet<Itinerary> Itineraries { get; set; }
+        public DbSet<ServicesProvider> ServicesProviders { get; set; }
+        public DbSet<StatusFlight> StatusFlight { get; set; }
+        public DbSet<StatusPaymentRelations> StatusPaymentRelations { get; set; }
+        public DbSet<TypeReservation> TypeReservations { get; set; }
+        public DbSet<TypeReservationGrupal> TypeReservationGrupals { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -36,9 +39,9 @@ namespace TurismoGlobalArandas.Context
             base.OnModelCreating(builder);
             builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 1, Name = "Individual", Description = null, IsDeleted = false });
             builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 2, Name = "Grupal", Description = null, IsDeleted = false });
-            builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 3, Name = "Grupo", Description = null, IsDeleted = false });
             builder.Entity<TypeReservationGrupal>().HasData(new TypeReservationGrupal { TypeReservationGrupalId = 1, Name = "Grupo", Description = null, IsDeleted = false });
             builder.Entity<TypeReservationGrupal>().HasData(new TypeReservationGrupal { TypeReservationGrupalId = 2, Name = "Individual", Description = null, IsDeleted = false });
+            builder.Entity<Employees>().HasData(new Employees { EmployeeId = 1, Name = "Miguel", Lastname = "López Ortega", WorkStation="Developer", Address=null, PhoneNumber="3911001273", IsDeleted = false });
             builder.Entity<Providers>().HasData(new Providers { ProviderId = 1, Name = "Record", Email = null, PhoneNumber = null, IsDeleted = false });
             builder.Entity<Providers>().HasData(new Providers { ProviderId = 2, Name = "Check In", Email = null, PhoneNumber = null, IsDeleted = false });
             builder.Entity<Providers>().HasData(new Providers { ProviderId = 3, Name = "Imacop", Email = null, PhoneNumber = null, IsDeleted = false });

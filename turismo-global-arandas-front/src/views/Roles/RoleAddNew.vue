@@ -76,7 +76,7 @@ export default {
     const roleFields = ref({
       Name: null
     })
-    const destinationFieldsBlank = ref(
+    const roleFieldsBlank = ref(
       JSON.parse(JSON.stringify(roleFields))
     )
 
@@ -89,7 +89,7 @@ export default {
         })
         isOpenDialog.value = false
         roleFields.value = JSON.parse(
-          JSON.stringify(destinationFieldsBlank)
+          JSON.stringify(roleFieldsBlank)
         )
         roleFormRef.value.resetForm()
       })

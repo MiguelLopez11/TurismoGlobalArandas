@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231009184924_paymentList_deleted")]
+    partial class paymentList_deleted
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -253,18 +256,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasKey("EmployeeId");
 
                     b.ToTable("Employees");
-
-                    b.HasData(
-                        new
-                        {
-                            EmployeeId = 1,
-                            IsDeleted = false,
-                            Lastname = "López Ortega",
-                            Name = "Miguel",
-                            PhoneNumber = "3911001273",
-                            Salary = 0m,
-                            WorkStation = "Developer"
-                        });
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.GroupRate", b =>
@@ -497,22 +488,24 @@ namespace TurismoGlobalArandas.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
 
-                    b.Property<decimal?>("Amount")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Invoice")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Observations")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("PaymentDate")
+                    b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PaymentReservationHotelId")
+                    b.Property<int>("PaymentReservationHotelId")
                         .HasColumnType("int");
 
                     b.HasKey("PaymentId");
@@ -823,6 +816,7 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Coordinator")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("DateArrival")
@@ -835,9 +829,10 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ReservationHotelId")
+                    b.Property<int>("ReservationHotelId")
                         .HasColumnType("int");
 
                     b.HasKey("ReservationHotelGroupId");
@@ -1037,12 +1032,13 @@ namespace TurismoGlobalArandas.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatusFlightId"));
 
-                    b.Property<string>("Description")
+                    b.Property<string>("Color")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -1111,6 +1107,12 @@ namespace TurismoGlobalArandas.Migrations
                             TypeReservationId = 2,
                             IsDeleted = false,
                             Name = "Grupal"
+                        },
+                        new
+                        {
+                            TypeReservationId = 3,
+                            IsDeleted = false,
+                            Name = "Grupo"
                         });
                 });
 
@@ -1331,7 +1333,9 @@ namespace TurismoGlobalArandas.Migrations
                 {
                     b.HasOne("TurismoGlobalArandas.Models.PaymentsRelationReservationHotels", "PaymentsReservationHotels")
                         .WithMany()
-                        .HasForeignKey("PaymentReservationHotelId");
+                        .HasForeignKey("PaymentReservationHotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("PaymentsReservationHotels");
                 });
@@ -1415,7 +1419,9 @@ namespace TurismoGlobalArandas.Migrations
                 {
                     b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "reservationHotel")
                         .WithMany()
-                        .HasForeignKey("ReservationHotelId");
+                        .HasForeignKey("ReservationHotelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("reservationHotel");
                 });

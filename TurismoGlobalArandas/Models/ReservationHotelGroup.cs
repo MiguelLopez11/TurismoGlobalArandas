@@ -10,9 +10,9 @@ namespace TurismoGlobalArandas.Models
         public string? GroupName { get; set; }
         public string? ConfirmationKey { get; set; }
         public DateTime? DateArrival { get; set; }
-        public string Coordinator { get; set; }
-        public string PhoneNumber { get; set; }
-        public int ReservationHotelId { get; set; }
+        public string? Coordinator { get; set; }
+        public string? PhoneNumber { get; set; }
+        public int? ReservationHotelId { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("ReservationHotelId")]

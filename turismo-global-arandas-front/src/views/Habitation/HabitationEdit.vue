@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     v-model="isOpenDialog"
-    title="Registrar habitación"
+    title="Editar habitación"
     width="80%"
     center
   >
@@ -22,7 +22,7 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <el-form-item :error="errors.typehabitation" required>
+          <el-form-item>
             <div>
               <label> Tipo de habitación </label>
             </div>
@@ -37,7 +37,7 @@
           v-if="reservationHotel.typeReservation.typeReservationId !== 1"
           :span="8"
         >
-          <el-form-item :error="errors.advancePayment" required>
+          <el-form-item>
             <div>
               <label> Anticipo </label>
             </div>
@@ -91,7 +91,7 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <el-form-item :error="errors.purchaseDate" required>
+          <el-form-item>
             <div>
               <label>Fecha de compra</label>
             </div>
@@ -108,7 +108,7 @@
           v-if="reservationHotel.typeReservation.typeReservationId !== 1"
           :span="8"
         >
-          <el-form-item :error="errors.cost" required>
+          <el-form-item>
             <div>
               <label>Costo</label>
             </div>
@@ -121,7 +121,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item :error="errors.observations" required>
+          <el-form-item>
             <div>
               <label>Observaciones</label>
             </div>
