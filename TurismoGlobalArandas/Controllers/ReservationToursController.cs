@@ -77,7 +77,7 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.NumberMinors = reservationTours.NumberMinors;
             ReservationOld.AdultCost = reservationTours.AdultCost;
             ReservationOld.MinorCost = reservationTours.MinorCost;
-            ReservationOld.PublicRate = reservationTours.AdultCost;
+            ReservationOld.PublicRate = reservationTours.PublicRate;
             ReservationOld.NetPrice = reservationTours.NetPrice;
             ReservationOld.ExchangeRate = reservationTours.ExchangeRate;
             ReservationOld.IsInternational = reservationTours.IsInternational;

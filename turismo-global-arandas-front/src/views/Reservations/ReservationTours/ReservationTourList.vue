@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { ref, watch, provide, inject } from 'vue'
+import { ref, inject } from 'vue'
 import ReservationTourServices from '@/Services/ReservationTours.Services'
 
 export default {
@@ -114,15 +114,12 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('reservationInvoice')
-    const isAddedEmployee = ref(false)
-    provide('AddEmployee', isAddedEmployee)
     const fields = ref([
-      { value: 'reservationInvoice', text: 'Folio' },
-      { value: 'travelDateStart', text: 'Fecha de salida' },
-      { value: 'travelDateEnd', text: 'Fecha de regreso' },
-      { value: 'hotel', text: 'Hotel' },
-      { value: 'destinations', text: 'Destino' },
+      { value: 'tourName', text: 'Nombre del tour' },
       { value: 'dateSale', text: 'Fecha de venta' },
+      { value: 'dateActivity', text: 'Fecha del tour' },
+      { value: 'destinations', text: 'Destino' },
+      { value: 'ownerName', text: 'Titular' },
       { value: 'actions', text: 'Acciones' }
     ])
     getReservationTours(data => {
@@ -136,11 +133,6 @@ export default {
         isloading.value = false
       })
     }
-    watch(isAddedEmployee, newValue => {
-      if (!newValue) {
-        refreshTable()
-      }
-    })
     const onDeleteReservationTour = reservationHotelId => {
       swal
         .fire({
@@ -175,7 +167,6 @@ export default {
       searchField,
       fields,
       reservationTours,
-      isAddedEmployee,
       refreshTable,
       onDeleteReservationTour
     }

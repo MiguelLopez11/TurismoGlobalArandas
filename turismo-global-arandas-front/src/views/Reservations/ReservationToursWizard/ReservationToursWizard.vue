@@ -1,13 +1,18 @@
 <template>
   <el-card>
-    <!-- wizard STEPS -->
+    <!--------------------------------------------------------------
+      -------------------------WIZARD STEPS-----------------------------
+      ------------------------------------------------------------ -->
     <form-wizard
       nextButtonText="Siguiente"
       backButtonText="Atras"
       doneButtonText="Finalizar"
       color="#7367F0"
+      @on-complete="onComplete"
     >
-      <!-- STEP 1 -->
+      <!-- ------------------------------------------------------------
+      -------------------------STEP 1-----------------------------
+      ------------------------------------------------------------ -->
       <tab-content
         title="Datos generales"
         icon="bi bi-clipboard2-pulse"
@@ -90,13 +95,174 @@
           </el-row>
         </el-card>
       </tab-content>
-      <!-- STEP 2 -->
-      <tab-content title="Datos del cliente" icon="bi bi-person-circle" lazy>
-        en proceso
+      <!-- ------------------------------------------------------------
+      -------------------------STEP 2-----------------------------
+      ------------------------------------------------------------ -->
+      <tab-content
+        title="Datos del cliente"
+        icon="bi bi-person-circle"
+        lazy
+        :beforeChange="validationClientData"
+      >
+        <el-card>
+          <el-row :gutter="35">
+            <el-col :span="8">
+              <el-form-item>
+                <div>
+                  <span class="text-danger">*</span>
+                  <label> Nombre del titular </label>
+                </div>
+                <el-input
+                  placeholder="Ingresa el nombre de el agente "
+                  size="large"
+                  v-model="reservationTour.ownerName"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <div>
+                  <label>Adultos</label>
+                </div>
+                <el-input
+                  placeholder="Ingresa el numero de adultos que viajarán"
+                  size="large"
+                  v-model="reservationTour.numberAdults"
+                  type="number"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <div>
+                  <label>Menores</label>
+                </div>
+                <el-input
+                  placeholder="Ingresa el numero de menores que viajarán"
+                  size="large"
+                  v-model="reservationTour.numberMinors"
+                  type="number"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <div>
+                  <label>costo por menor</label>
+                </div>
+                <el-input
+                  placeholder="Ingresa el costo por menor"
+                  v-model="reservationTour.minorCost"
+                  type="number"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <div>
+                  <label>Costo por adulto</label>
+                </div>
+                <el-input
+                  placeholder="Ingresa el costo por adulto"
+                  size="large"
+                  v-model="reservationTour.adultCost"
+                  type="number"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <div>
+                <label> ¿Incluye transporte?</label>
+              </div>
+              <el-form-item>
+                <el-switch
+                  size="large"
+                  v-model="reservationTour.includeTransportation"
+                >
+                </el-switch>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-card>
       </tab-content>
-      <!-- STEP 3 -->
-      <tab-content title="Cierre de reserva" icon="bi bi-filter-square" lazy>
-        en proceso
+      <!-- ------------------------------------------------------------
+      -------------------------STEP 3-----------------------------
+      ------------------------------------------------------------ -->
+      <tab-content
+        title="Cierre de reserva"
+        icon="bi bi-filter-square"
+        lazy
+        :beforeChange="validationCloseReservation"
+      >
+        <el-card>
+          <el-row :gutter="35">
+            <el-col :span="8">
+              <el-form-item>
+                <div>
+                  <label>Precio al público</label>
+                </div>
+                <el-input
+                  placeholder="Ingresa el numero de adultos que viajarán"
+                  size="large"
+                  v-model="reservationTour.publicRate"
+                  type="number"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <div>
+                  <label>Precio neto</label>
+                </div>
+                <el-input
+                  placeholder="Ingresa el numero de adultos que viajarán"
+                  size="large"
+                  v-model="reservationTour.netPrice"
+                  type="number"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <div>
+                <label> ¿Es un tour nacional?</label>
+              </div>
+              <el-form-item>
+                <el-switch
+                  size="large"
+                  v-model="reservationTour.isNational"
+                  :disabled="reservationTour.isInternational"
+                >
+                </el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <div>
+                <label> ¿Es un tour internacional?</label>
+              </div>
+              <el-form-item>
+                <el-switch
+                  size="large"
+                  v-model="reservationTour.isInternational"
+                  :disabled="reservationTour.isNational"
+                >
+                </el-switch>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <div>
+                  <span class="text-danger">*</span>
+                  <label> Tipo de cambio </label>
+                </div>
+                <el-input
+                  placeholder="Ingresa el nombre de el agente "
+                  size="large"
+                  v-model="reservationTour.exchangeRate"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-card>
       </tab-content>
     </form-wizard>
   </el-card>
@@ -110,6 +276,8 @@ import ReservationTourServices from '@/Services/ReservationTours.Services'
 import DestinationServices from '@/Services/Destinations.Services'
 // COMPONENTS
 import DestinationAddNew from '@/views/Destinations/DestinationAddNew.vue'
+// LIBRARIES
+import { useRouter } from 'vue-router'
 export default {
   props: {
     ReservationTourId: {
@@ -124,6 +292,7 @@ export default {
     const { getReservationTour, createReservationTour, updateReservationTour } =
       ReservationTourServices()
     const { getDestinations } = DestinationServices()
+    const redirect = useRouter()
     //   DATA
     const reservationTour = ref([])
     const destinations = ref([])
@@ -206,11 +375,58 @@ export default {
         }
       })
     }
+    const validationClientData = () => {
+      return new Promise((resolve, reject) => {
+        if (
+          reservationTour.value.ownerName &&
+          reservationTour.value.numberAdults &&
+          reservationTour.value.numberMinors &&
+          reservationTour.value.minorCost &&
+          reservationTour.value.adultCost
+        ) {
+          onUpdateReservation()
+          resolve(true)
+        } else {
+          onMessageErrorSteps()
+          reject(new Error('Error'))
+        }
+      })
+    }
+    const validationCloseReservation = () => {
+      return new Promise((resolve, reject) => {
+        if (
+          reservationTour.value.publicRate &&
+          reservationTour.value.netPrice
+        ) {
+          onUpdateReservation()
+          resolve(true)
+        } else {
+          onMessageErrorSteps()
+          reject(new Error('Error'))
+        }
+      })
+    }
+    const onComplete = () => {
+      swal
+        .fire({
+          title: 'Reservación registrada correctamente',
+          text: 'La reservación se ha cargado al sistema satisfactoriamente.',
+          icon: 'success'
+        })
+        .then(result => {
+          if (result.isConfirmed) {
+            redirect.push('/ReservacionesTours')
+          }
+        })
+    }
     return {
       reservationTour,
       destinations,
       isAddDestination,
-      validationGeneralData
+      validationGeneralData,
+      validationClientData,
+      validationCloseReservation,
+      onComplete
     }
   }
 }
