@@ -193,6 +193,10 @@
             <el-switch
               size="large"
               v-model="reservationFlightFields.isSimpleFlight"
+              :disabled="
+                reservationFlightFields.isRoundFlight ||
+                reservationFlightFields.isMultidestinationFlight
+              "
             >
             </el-switch>
           </el-form-item>
@@ -205,6 +209,10 @@
             <el-switch
               size="large"
               v-model="reservationFlightFields.isRoundFlight"
+              :disabled="
+                reservationFlightFields.isSimpleFlight ||
+                reservationFlightFields.isMultidestinationFlight
+              "
             >
             </el-switch>
           </el-form-item>
@@ -217,6 +225,10 @@
             <el-switch
               size="large"
               v-model="reservationFlightFields.isMultidestinationFlight"
+              :disabled="
+                reservationFlightFields.isSimpleFlight ||
+                reservationFlightFields.isRoundFlight
+              "
             >
             </el-switch>
           </el-form-item>

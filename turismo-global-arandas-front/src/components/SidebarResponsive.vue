@@ -153,15 +153,21 @@ export default {
             submenu: [
               {
                 index: '5-1-1',
-                title: 'Reservaciones hotelería',
+                title: 'Reservaciones Hotelería',
                 path: '/ReservacionesHoteleria',
                 icon: 'bi bi-buildings'
               },
               {
                 index: '5-1-2',
-                title: 'Reservaciones vuelos',
+                title: 'Reservaciones Vuelos',
                 path: '/ReservacionesVuelos',
                 icon: 'bi bi-airplane-engines'
+              },
+              {
+                index: '5-1-3',
+                title: 'Reservaciones Tours',
+                path: '/ReservacionesTours',
+                icon: 'bi bi-bus-front'
               }
             ]
           },

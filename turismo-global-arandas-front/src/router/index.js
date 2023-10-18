@@ -240,8 +240,31 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/ReservacionesTours',
+    name: 'ReservationsTour',
+    component: () => import('../views/Reservations/ReservationTours/ReservationTourList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/ReservacionesTours/NuevaReserva',
+    name: 'ReservationsTour-AddNew',
+    component: () => import('../views/Reservations/ReservationTours/ReservationTourAddNew'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/ReservacionesTours/:ReservationTourId',
+    name: 'ReservationsTour-Edit',
+    component: () => import('../views/Reservations/ReservationTours/ReservationTourEdit'),
+    meta: {
+      requiresAuth: true
+    }
   }
-
 ]
 
 const router = createRouter({
