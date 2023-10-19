@@ -35,12 +35,12 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(payment);
         }
-        [HttpGet("PaymentReservationHotel/{PaymentReservationHotelId}")]
-        public async Task<ActionResult> getPaymentRelationListByPaymentReservationHotel(int PaymentReservationHotelId)
+        [HttpGet("PaymentReservationHotel/{PaymentReservationId}")]
+        public async Task<ActionResult> getPaymentRelationListByPaymentReservationHotel(int PaymentReservationId)
         {
             var payments = await _context.PaymentRelationLists
                 .Where(w => !w.IsDeleted)
-                .Where(f => f.PaymentReservationHotelId == PaymentReservationHotelId)
+                .Where(f => f.PaymentReservationId == PaymentReservationId)
                 .ToListAsync();
             return Ok(payments);
         }
@@ -69,7 +69,7 @@ namespace TurismoGlobalArandas.Controllers
             paymentOld.Amount = payment.Amount;
             paymentOld.PaymentDate = payment.PaymentDate;
             paymentOld.Observations = payment.Observations;
-            paymentOld.PaymentReservationHotelId = payment.PaymentReservationHotelId;
+            paymentOld.PaymentReservationId = payment.PaymentReservationId;
             paymentOld.IsDeleted = payment.IsDeleted;
 
             _context.PaymentRelationLists.Update(paymentOld);

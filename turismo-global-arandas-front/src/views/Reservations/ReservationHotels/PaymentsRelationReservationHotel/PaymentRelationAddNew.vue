@@ -103,10 +103,10 @@ export default {
       invoice: yup.string().required('Este campo es requerido').label('Nombre'),
       amount: yup.number().required('Este campo es requerido').label('Nombre')
     })
-    const paymentReservationHotelId = ref()
+    const paymentReservationId = ref()
     setTimeout(() => {
-      paymentReservationHotelId.value = parseInt(
-        store.getters.getPaymentReservationHotelId
+      paymentReservationId.value = parseInt(
+        store.getters.getPaymentReservationId
       )
     }, 1000)
     const paymentFields = ref({
@@ -115,13 +115,13 @@ export default {
       amount: null,
       paymentDate: null,
       observations: null,
-      paymentReservationHotelId: null,
+      paymentReservationId: null,
       isDeleted: false
     })
     const paymentFieldsBlank = ref(JSON.parse(JSON.stringify(paymentFields)))
 
     const onSubmit = () => {
-      paymentFields.value.paymentReservationHotelId = paymentReservationHotelId.value
+      paymentFields.value.paymentReservationId = paymentReservationId.value
       createPaymentRelationList(paymentFields.value, data => {
         swal.fire({
           title: '¡Nuevo pago registrado!',

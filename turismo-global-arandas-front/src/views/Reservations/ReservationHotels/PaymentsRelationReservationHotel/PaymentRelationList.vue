@@ -68,23 +68,20 @@
 <script>
 import { ref, watch, provide, inject } from 'vue'
 import PaymentsRelationListServices from '@/Services/PaymentRelationList.Services'
+import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 import PaymentRelationListAddNew from './PaymentRelationAddNew.vue'
 import PaymentRealtionEdit from './PaymentRealtionEdit.vue'
 import { useStore } from 'vuex'
 
 export default {
   components: { PaymentRelationListAddNew, PaymentRealtionEdit },
-  props: {
-    PaymentReservationHotelId: {
-      type: Number,
-      required: true
-    }
-  },
-  setup (props) {
+  setup () {
     const {
       getPaymentRelationListByPaymentReservationHotel,
       deletePaymentRelationList
     } = PaymentsRelationListServices()
+    const { getPaymentRelation, updatePaymentRelation } =
+      PaymentsRelationReservationServices()
     const store = useStore()
     const paymentsRelationList = ref([])
     const swal = inject('$swal')
@@ -98,18 +95,29 @@ export default {
     const searchField = ref('name')
     const isAddPaymentRelation = ref(false)
     const isEditPaymentRelation = ref(false)
-    const paymentReservationHotelId = ref(0)
+    const paymentReservationId = ref(0)
+    const totalAmount = ref(0)
+    // const amountMissing = ref()
     setTimeout(() => {
-      paymentReservationHotelId.value = parseInt(
-        store.getters.getPaymentReservationHotelId
+      paymentReservationId.value = parseInt(
+        store.getters.getPaymentReservationId
       )
       getPaymentRelationListByPaymentReservationHotel(
-        paymentReservationHotelId.value,
+        paymentReservationId.value,
         data => {
           paymentsRelationList.value = data
           isloading.value = false
+          data.forEach(data => {
+            totalAmount.value += data.amount
+          })
         }
       )
+      getPaymentRelation(paymentReservationId.value, data => {
+        data.amountMissing = data.amountTotal - totalAmount.value
+        updatePaymentRelation(data, resp => {
+          console.log(resp)
+        })
+      })
     }, 1000)
     provide('addPaymentRelation', isAddPaymentRelation)
     provide('editPaymentRelation', isEditPaymentRelation)
@@ -124,18 +132,30 @@ export default {
     const refreshTable = () => {
       isloading.value = true
       getPaymentRelationListByPaymentReservationHotel(
-        paymentReservationHotelId.value,
+        paymentReservationId.value,
         data => {
           paymentsRelationList.value = data
           isloading.value = false
+          data.forEach(data => {
+            totalAmount.value += data.amount
+          })
+          getPaymentRelation(paymentReservationId.value, data => {
+            data.amountMissing = data.amountTotal - totalAmount.value
+            updatePaymentRelation(data, resp => {
+              console.log(resp)
+            })
+          })
         }
       )
     }
-    watch([isAddPaymentRelation, isEditPaymentRelation], ([newValueA, newValueB]) => {
-      if (!newValueA || !newValueB) {
-        refreshTable()
+    watch(
+      [isAddPaymentRelation, isEditPaymentRelation],
+      ([newValueA, newValueB]) => {
+        if (!newValueA || !newValueB) {
+          refreshTable()
+        }
       }
-    })
+    )
     const onEditPayment = paymentId => {
       isEditPaymentRelation.value = true
       paymenRelationtId.value = paymentId
@@ -176,7 +196,7 @@ export default {
       fields,
       paymentsRelationList,
       isAddPaymentRelation,
-      paymentReservationHotelId,
+      paymentReservationId,
       paymenRelationtId,
       refreshTable,
       onEditPayment,

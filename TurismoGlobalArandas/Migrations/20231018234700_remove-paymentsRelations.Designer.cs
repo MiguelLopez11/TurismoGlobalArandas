@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231018234700_remove-paymentsRelations")]
+    partial class removepaymentsRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -512,51 +515,9 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<DateTime?>("PaymentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("PaymentReservationId")
-                        .HasColumnType("int");
-
                     b.HasKey("PaymentId");
 
-                    b.HasIndex("PaymentReservationId");
-
                     b.ToTable("PaymentRelationLists");
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentsRelationReservations", b =>
-                {
-                    b.Property<int>("PaymentReservationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentReservationId"));
-
-                    b.Property<decimal?>("AmountMissing")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<decimal?>("AmountTotal")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int?>("ReservationHotelId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReservationTourId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("StatusPaymentRelationId")
-                        .HasColumnType("int");
-
-                    b.HasKey("PaymentReservationId");
-
-                    b.HasIndex("ReservationHotelId");
-
-                    b.HasIndex("ReservationTourId");
-
-                    b.HasIndex("StatusPaymentRelationId");
-
-                    b.ToTable("PaymentsRelationReservations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Providers", b =>
@@ -1130,6 +1091,7 @@ namespace TurismoGlobalArandas.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatusId"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -1142,20 +1104,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasKey("StatusId");
 
                     b.ToTable("StatusPaymentRelations");
-
-                    b.HasData(
-                        new
-                        {
-                            StatusId = 1,
-                            IsDeleted = false,
-                            Name = "Pendiente"
-                        },
-                        new
-                        {
-                            StatusId = 2,
-                            IsDeleted = false,
-                            Name = "Liquidado"
-                        });
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.TypeReservation", b =>
@@ -1406,36 +1354,6 @@ namespace TurismoGlobalArandas.Migrations
                         .HasForeignKey("ReservationHotelId");
 
                     b.Navigation("reservationHotel");
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentRelationList", b =>
-                {
-                    b.HasOne("TurismoGlobalArandas.Models.PaymentsRelationReservations", "PaymentsRelationReservations")
-                        .WithMany()
-                        .HasForeignKey("PaymentReservationId");
-
-                    b.Navigation("PaymentsRelationReservations");
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentsRelationReservations", b =>
-                {
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "ReservationHotels")
-                        .WithMany()
-                        .HasForeignKey("ReservationHotelId");
-
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationTours", "ReservationTours")
-                        .WithMany()
-                        .HasForeignKey("ReservationTourId");
-
-                    b.HasOne("TurismoGlobalArandas.Models.StatusPaymentRelations", "StatusPaymentRelations")
-                        .WithMany()
-                        .HasForeignKey("StatusPaymentRelationId");
-
-                    b.Navigation("ReservationHotels");
-
-                    b.Navigation("ReservationTours");
-
-                    b.Navigation("StatusPaymentRelations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationFlight", b =>

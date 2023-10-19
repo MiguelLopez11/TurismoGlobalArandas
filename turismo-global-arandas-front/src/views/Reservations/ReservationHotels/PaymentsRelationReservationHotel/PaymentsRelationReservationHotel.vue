@@ -10,6 +10,7 @@
             placeholder="Ingresa el nombre del role"
             size="large"
             v-model="paymentsRelation.amountTotal"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -22,32 +23,17 @@
             placeholder="Ingresa el nombre del role"
             size="large"
             v-model="paymentsRelation.amountMissing"
+            disabled
           />
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="24">
-      <payment-relation-list v-model:PaymentReservationHotelId="reservationHotelId" />
+      <payment-relation-list />
       </el-col>
     </el-row>
     <el-divider />
-    <el-row :gutter="25" justify="end">
-      <el-col :span="3">
-        <el-button
-          color="#7367F0"
-          class="w-100"
-          native-type="submit"
-          size="large"
-          >Guardar</el-button
-        >
-      </el-col>
-      <el-col :span="3">
-        <el-button class="w-100" color="#F1F1F2" size="large"
-          >Cancelar</el-button
-        >
-      </el-col>
-    </el-row>
   </el-card>
 </template>
 
@@ -68,13 +54,13 @@ export default {
     const paymentsRelation = ref([])
     const router = useRoute()
     const reservationHotelId = ref(parseInt(router.params.ReservationHotelId))
-    const paymentReservationHotelId = ref()
+    const paymentReservationId = ref()
     const { getPaymentsRelationByReservationHotel } =
       PaymentsRelationReservationServices()
     getPaymentsRelationByReservationHotel(reservationHotelId.value, data => {
       paymentsRelation.value = data
-      paymentReservationHotelId.value = data.paymentReservationHotelId
-      store.commit('setPaymentReservationHotelId', data.paymentReservationHotelId)
+      paymentReservationId.value = data.paymentReservationId
+      store.commit('setPaymentReservationId', data.paymentReservationId)
     })
     const onSubmit = () => {
       //   createRole(PaymentsRelationFields.value.Name, data => {
@@ -94,7 +80,7 @@ export default {
     return {
       paymentsRelation,
       reservationHotelId,
-      paymentReservationHotelId,
+      paymentReservationId,
       paymentsRelationFormRef,
       onSubmit
     }

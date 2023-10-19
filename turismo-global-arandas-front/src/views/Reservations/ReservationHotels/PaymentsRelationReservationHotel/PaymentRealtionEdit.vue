@@ -39,6 +39,8 @@
               placeholder="Ingresa el monto del anticipo"
               size="large"
               v-model="payment.observations"
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 8 }"
             />
           </el-form-item>
         </el-col>
