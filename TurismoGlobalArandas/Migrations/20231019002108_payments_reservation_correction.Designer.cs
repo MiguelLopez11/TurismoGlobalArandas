@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231019002108_payments_reservation_correction")]
+    partial class payments_reservation_correction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1130,6 +1133,7 @@ namespace TurismoGlobalArandas.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatusId"));
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
@@ -1142,20 +1146,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasKey("StatusId");
 
                     b.ToTable("StatusPaymentRelations");
-
-                    b.HasData(
-                        new
-                        {
-                            StatusId = 1,
-                            IsDeleted = false,
-                            Name = "Pendiente"
-                        },
-                        new
-                        {
-                            StatusId = 2,
-                            IsDeleted = false,
-                            Name = "Liquidado"
-                        });
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.TypeReservation", b =>

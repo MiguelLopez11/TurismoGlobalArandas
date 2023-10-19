@@ -580,6 +580,7 @@
                 v-model="reservationHotel.employeeId"
                 :options="employees"
                 :reduce="employee => employee.employeeId"
+                disabled
               >
                 <template #selected-option="{ name, lastname }">
                   <label>{{ name }} {{ lastname }}</label>
@@ -625,6 +626,7 @@ import EmployeeServices from '@/Services/Employees.Services'
 import IndividualRateServices from '@/Services/IndividualRate.Services'
 import ServicesProviderServices from '@/Services/ProviderServices.Services'
 import ReservationHotelGroupServices from '@/Services/ReservationHotelGroup.Services'
+import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
@@ -683,6 +685,12 @@ export default {
       updateReservationHotelGroup,
       comprobateIfExist
     } = ReservationHotelGroupServices()
+    const {
+      createPaymentRelation,
+      getPaymentRelation,
+      updatePaymentRelation,
+      getPaymentsRelationByReservationHotel
+    } = PaymentsRelationReservationServices()
     const store = useStore()
     const redirect = useRouter()
     // DATA
@@ -707,6 +715,7 @@ export default {
     const reservationHotelGroup = ref([])
     const employyeId = window.sessionStorage.getItem('EmployeeId')
     const reservationHotelGroupId = ref(0)
+    const paymentReservationId = ref(0)
     let dateArrival = new Date()
     provide('AddTypeReservation', isAddedTypeReservation)
     provide('addDestination', isAddDestination)
@@ -732,7 +741,7 @@ export default {
       dateArrival: null,
       coordinator: null,
       phoneNumber: null,
-      reservationHotelId: null,
+      reservationHotelId: reservationHotelId.value || props.reservationHotelId,
       isDeleted: false
     })
     // METHODS
@@ -748,6 +757,18 @@ export default {
       createReservationHotel(reservationHotelFields.value, data => {
         reservationHotelId.value = data.reservationHotelId
         store.commit('setReservationHotelId', data.reservationHotelId)
+        createPaymentRelation(
+          {
+            amountTotal: null,
+            amountMissing: null,
+            reservationHotelId: data.reservationHotelId,
+            statusPaymentRelationId: 1,
+            isDeleted: false
+          },
+          data => {
+            paymentReservationId.value = data.paymentReservationId
+          }
+        )
         refreshReservationHotel()
       })
     } else {
@@ -756,6 +777,9 @@ export default {
         reservationHotel.value = data
         rangeDatesTravel.value.push(data.travelDateStart)
         rangeDatesTravel.value.push(data.travelDateEnd)
+        getPaymentsRelationByReservationHotel(data.reservationHotelId, data => {
+          paymentReservationId.value = data.paymentReservationId
+        })
         if (data.destinationId) {
           getHotelByDestinationId(data.destinationId, data => {
             hotels.value = data
@@ -773,7 +797,7 @@ export default {
             }
           )
           comprobateIfExist(
-            reservationHotelId.value || props.reservationHotelId,
+            data.reservationHotelId,
             data => {
               const { status } = data
               if (status === 404) {
@@ -781,7 +805,7 @@ export default {
                   reservationHotelGroupfields.value,
                   data => {
                     getReservationHotelGroupByreservationHotel(
-                      reservationHotelId.value || props.reservationHotelId,
+                      props.reservationHotelId,
                       data => {
                         reservationHotelGroup.value = data
                         reservationHotelGroup.value.dateArrival = format(
@@ -954,33 +978,35 @@ export default {
             reservationHotel.value.typeReservationId === 2 &&
             reservationHotel.value.typeReservationGroupId === 1
           ) {
-            comprobateIfExist(reservationHotelId.value || props.reservationHotelId, data => {
-              const { status } = data
-              if (status === 404) {
-                reservationHotelGroupfields.value.reservationHotelId =
-                  reservationHotelId.value
-                createReservationHotelGroup(
-                  reservationHotelGroupfields.value,
-                  data => {
-                    reservationHotelGroupId.value = data.reservationHotelGroupId
-                    getReservationHotelGroupByreservationHotel(
-                      reservationHotelId.value,
-                      data => {
-                        reservationHotelGroup.value = data
-                        reservationHotelGroup.value.dateArrival = format(
-                          new Date(reservationHotelGroup.value.dateArrival),
-                          'yyyy-MM-dd HH:mm'
-                        )
-                      }
-                    )
-                  }
-                )
+            comprobateIfExist(
+              reservationHotelId.value || props.reservationHotelId,
+              data => {
+                const { status } = data
+                if (status === 404) {
+                  reservationHotelGroupfields.value.reservationHotelId =
+                    reservationHotelId.value
+                  createReservationHotelGroup(
+                    reservationHotelGroupfields.value,
+                    data => {
+                      reservationHotelGroupId.value =
+                        data.reservationHotelGroupId
+                      getReservationHotelGroupByreservationHotel(
+                        reservationHotelId.value,
+                        data => {
+                          reservationHotelGroup.value = data
+                          reservationHotelGroup.value.dateArrival = format(
+                            new Date(reservationHotelGroup.value.dateArrival),
+                            'yyyy-MM-dd HH:mm'
+                          )
+                        }
+                      )
+                    }
+                  )
+                }
               }
-            })
+            )
           }
-          if (
-            reservationHotel.value.typeReservationGrupalId === 2
-          ) {
+          if (reservationHotel.value.typeReservationGrupalId === 2) {
             createIndividualRate(individualRateFields.value, data => {
               getIndividualRate(data.individualRateId, items => {
                 individualRate.value = items
@@ -1027,6 +1053,13 @@ export default {
           reservationHotel.value.codeVoicher &&
           reservationHotel.value.employeeId
         ) {
+          getPaymentRelation(paymentReservationId.value, data => {
+            data.amountTotal = reservationHotel.value.totalCost
+            if (data.amountMissing === null) {
+              data.amountMissing = reservationHotel.value.totalCost
+            }
+            updatePaymentRelation(data, response => {})
+          })
           onUpdateReservation()
           resolve(true)
         } else {

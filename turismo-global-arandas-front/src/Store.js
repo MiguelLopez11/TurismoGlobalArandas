@@ -5,7 +5,7 @@ const store = createStore({
     reservationHotelId: null, // Aquí se almacenará el ID
     hotelId: null, // Aquí se almacenará el ID
     hotels: null, // Aquí se almacenará el ID
-    paymentReservationHotelId: null // Aquí se almacenará el ID
+    PaymentReservationId: null // Aquí se almacenará el ID
   },
   mutations: {
     setReservationHotelId (state, id) {
@@ -17,15 +17,15 @@ const store = createStore({
     setHotels (state, lenght) {
       state.hotels = lenght
     },
-    setPaymentReservationHotelId (state, id) {
-      state.paymentReservationHotelId = id
+    setPaymentReservationId (state, id) {
+      state.paymentReservationId = id
     }
   },
   getters: {
     getReservationHotelId: state => state.reservationHotelId,
     getHotelId: state => state.hotelId,
     getHotels: state => state.hotels,
-    getPaymentReservationHotelId: state => state.paymentReservationHotelId
+    getPaymentReservationId: state => state.paymentReservationId
   }
 })
 

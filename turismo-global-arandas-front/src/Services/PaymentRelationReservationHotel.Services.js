@@ -2,27 +2,27 @@ import { axiosPrivate } from '@/common/axiosPrivate.js'
 
 export default function PaymentsRelationReservationServices () {
   const getPaymentsRelationByReservationHotel = (reservationHotelId, callback) => {
-    axiosPrivate.get(`/paymentRelationReservationHotel/ReservationHotel/${reservationHotelId}`).then((response) => {
+    axiosPrivate.get(`/paymentRelationReservations/ReservationHotel/${reservationHotelId}`).then((response) => {
       callback(response.data)
     })
   }
-  const getPaymentRelation = (PaymentReservationHotelId, callback) => {
-    axiosPrivate.get(`/paymentRelationReservationHotel/${PaymentReservationHotelId}`).then((response) => {
+  const getPaymentRelation = (PaymentReservationId, callback) => {
+    axiosPrivate.get(`/paymentRelationReservations/${PaymentReservationId}`).then((response) => {
       callback(response.data)
     })
   }
   const createPaymentRelation = (data, callback) => {
-    axiosPrivate.post('/paymentRelationReservationHotel', data).then((response) => {
+    axiosPrivate.post('/paymentRelationReservations', data).then((response) => {
       callback(response.data)
     })
   }
   const updatePaymentRelation = (data, callback) => {
-    axiosPrivate.put(`/paymentRelationReservationHotel/${data.paymentReservationHotelId}`, data).then((response) => {
+    axiosPrivate.put(`/paymentRelationReservations/${data.paymentReservationId}`, data).then((response) => {
       callback(response.data)
     })
   }
-  const deletePaymentRelation = (PaymentReservationHotelId, callback) => {
-    axiosPrivate.delete(`/paymentRelationReservationHotel/${PaymentReservationHotelId}`).then((response) => {
+  const deletePaymentRelation = (PaymentReservationId, callback) => {
+    axiosPrivate.delete(`/paymentRelationReservations/${PaymentReservationId}`).then((response) => {
       callback(response.data)
     })
   }

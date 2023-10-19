@@ -68,6 +68,7 @@
                 placeholder="Ingresa el monto del anticipo"
                 size="large"
                 v-model="habitationFields.advancePayment"
+                type="number"
               />
             </el-form-item>
         </el-col>

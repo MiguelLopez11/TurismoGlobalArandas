@@ -12,10 +12,10 @@ namespace TurismoGlobalArandas.Models
         public decimal? Amount { get; set; }
         public DateTime? PaymentDate { get; set; }
         public string? Observations { get; set; }
-        public int? PaymentReservationHotelId { get; set; }
+        public int? PaymentReservationId { get; set; }
         public bool IsDeleted { get; set; }
 
-        [ForeignKey("PaymentReservationHotelId")]
-        public PaymentsRelationReservationHotels? PaymentsReservationHotels { get; set; }
+        [ForeignKey("PaymentReservationId")]
+        public PaymentsRelationReservations? PaymentsRelationReservations { get; set; }
     }
 }
