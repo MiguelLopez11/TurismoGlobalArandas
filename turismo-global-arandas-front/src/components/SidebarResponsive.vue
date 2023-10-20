@@ -17,13 +17,17 @@
     </el-header>
     <el-divider class="m-0"></el-divider>
     <template v-for="item in menuItems" :key="item.index">
-      <el-sub-menu v-if="item.submenu" :index="item.index" >
+      <el-sub-menu v-if="item.submenu" :index="item.index">
         <template #title>
           <i :class="item.icon" class="menu-icon"></i>
           <span class="menu-title">{{ item.title }}</span>
         </template>
         <template v-for="subItem in item.submenu">
-          <el-sub-menu v-if="subItem.submenu" :index="subItem.index" :key="subItem.index">
+          <el-sub-menu
+            v-if="subItem.submenu"
+            :index="subItem.index"
+            :key="subItem.index"
+          >
             <template #title>
               <i :class="subItem.icon" class="sub-menu-icon"></i>
               <span class="sub-menu-title">{{ subItem.title }}</span>
@@ -38,7 +42,12 @@
               <span class="sub-menu-title">{{ nestedItem.title }}</span>
             </el-menu-item>
           </el-sub-menu>
-          <el-menu-item v-else :index="subItem.index" :key="subItem.index" @click="handleMenuItemClick(subItem.path)">
+          <el-menu-item
+            v-else
+            :index="subItem.index"
+            :key="subItem.index"
+            @click="handleMenuItemClick(subItem.path)"
+          >
             <i :class="subItem.icon" class="sub-menu-icon"></i>
             <span class="sub-menu-title">{{ subItem.title }}</span>
           </el-menu-item>
@@ -182,6 +191,25 @@ export default {
             title: 'Tipos de Reservaciones grupales',
             path: '/TiposReservacionesGrupales',
             icon: 'bi bi-bezier'
+          }
+        ]
+      },
+      {
+        index: '6',
+        title: 'Gestor de contabilidad',
+        icon: 'bi bi-arrow-left-right',
+        submenu: [
+          {
+            index: '6-1',
+            title: 'Metodos de pago',
+            path: '/MetodosPago',
+            icon: 'bi bi-book-half'
+          },
+          {
+            index: '6-2',
+            title: 'Conceptos de pago',
+            path: '/ConceptosPago',
+            icon: 'bi bi-cash-coin'
           }
         ]
       }

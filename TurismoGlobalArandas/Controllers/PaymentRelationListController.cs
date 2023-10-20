@@ -42,6 +42,22 @@ namespace TurismoGlobalArandas.Controllers
                 .Where(w => !w.IsDeleted)
                 .Where(f => f.PaymentReservationId == PaymentReservationId)
                 .ToListAsync();
+            decimal? total = 0;
+            foreach (var payment in payments)
+            {
+                total += payment.Amount;
+            }
+            var paymentRelation = await _context.PaymentsRelationReservations
+                .Where(w => !w.IsDeleted)
+                .FirstOrDefaultAsync(f => f.PaymentReservationId == PaymentReservationId);
+            if (paymentRelation == null)
+            {
+                return BadRequest();
+            }
+            decimal? AmountMissing = paymentRelation.AmountTotal - total;
+            paymentRelation.AmountMissing = AmountMissing;
+            _context.PaymentsRelationReservations.Update(paymentRelation);
+            await _context.SaveChangesAsync();
             return Ok(payments);
         }
         [HttpPost]

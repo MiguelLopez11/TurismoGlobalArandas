@@ -75,9 +75,9 @@
                   <el-dropdown-item
                     @click="
                       $router.push({
-                        name: 'PaymentsRelationReservatioHotel',
+                        name: 'PaymentsRelationReservatioTour',
                         params: {
-                          ReservationHotelId: items.reservationHotelId
+                          ReservationTourId: items.reservationTourId
                         }
                       })
                     "

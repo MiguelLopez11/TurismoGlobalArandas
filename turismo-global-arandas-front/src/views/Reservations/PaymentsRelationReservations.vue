@@ -30,7 +30,7 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-      <payment-relation-list />
+        <payment-relation-list />
       </el-col>
     </el-row>
     <el-divider />
@@ -41,7 +41,7 @@
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
-import PaymentRelationList from './PaymentRelationList.vue'
+import PaymentRelationList from './ReservationHotels/PaymentsRelationReservationHotel/PaymentRelationList.vue'
 import { useStore } from 'vuex'
 
 export default {
@@ -54,14 +54,24 @@ export default {
     const paymentsRelation = ref([])
     const router = useRoute()
     const reservationHotelId = ref(parseInt(router.params.ReservationHotelId))
-    const paymentReservationId = ref()
-    const { getPaymentsRelationByReservationHotel } =
-      PaymentsRelationReservationServices()
-    getPaymentsRelationByReservationHotel(reservationHotelId.value, data => {
-      paymentsRelation.value = data
-      paymentReservationId.value = data.paymentReservationId
-      store.commit('setPaymentReservationId', data.paymentReservationId)
-    })
+    const {
+      getPaymentsRelationByReservationHotel,
+      getPaymentsRelationByReservationTour
+    } = PaymentsRelationReservationServices()
+    if (reservationHotelId.value) {
+      getPaymentsRelationByReservationHotel(reservationHotelId.value, data => {
+        paymentsRelation.value = data
+        store.commit('setPaymentReservationId', data.paymentReservationId)
+      })
+    } else {
+      getPaymentsRelationByReservationTour(
+        router.params.ReservationTourId,
+        data => {
+          paymentsRelation.value = data
+          store.commit('setPaymentReservationId', data.paymentReservationId)
+        }
+      )
+    }
     const onSubmit = () => {
       //   createRole(PaymentsRelationFields.value.Name, data => {
       //     swal.fire({
@@ -80,7 +90,6 @@ export default {
     return {
       paymentsRelation,
       reservationHotelId,
-      paymentReservationId,
       paymentsRelationFormRef,
       onSubmit
     }

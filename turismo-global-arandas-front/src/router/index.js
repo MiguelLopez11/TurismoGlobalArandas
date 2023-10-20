@@ -236,7 +236,15 @@ const routes = [
   {
     path: '/RelacionPagosReservacionHotel/:ReservationHotelId',
     name: 'PaymentsRelationReservatioHotel',
-    component: () => import('../views/Reservations/ReservationHotels/PaymentsRelationReservationHotel/PaymentsRelationReservationHotel'),
+    component: () => import('../views/Reservations/PaymentsRelationReservations'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/RelacionPagosReservacionTour/:ReservationTourId',
+    name: 'PaymentsRelationReservatioTour',
+    component: () => import('../views/Reservations/PaymentsRelationReservations'),
     meta: {
       requiresAuth: true
     }
@@ -261,6 +269,38 @@ const routes = [
     path: '/ReservacionesTours/:ReservationTourId',
     name: 'ReservationsTour-Edit',
     component: () => import('../views/Reservations/ReservationTours/ReservationTourEdit'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/MetodosPago',
+    name: 'PaymentMethods',
+    component: () => import('../views/PaymentMethods/PaymentMethodsList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/MetodosPago/:PaymentMethodId',
+    name: 'Edit-PaymentMethods',
+    component: () => import('../views/PaymentMethods/PaymentMethodsEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/ConceptosPago',
+    name: 'Paymentconcepts',
+    component: () => import('../views/PaymentConcepts/PaymentConceptsList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/ConceptosPago/:PaymentConceptId',
+    name: 'Edit-Paymentconcepts',
+    component: () => import('../views/PaymentConcepts/PaymentConceptsEdit.vue'),
     meta: {
       requiresAuth: true
     }

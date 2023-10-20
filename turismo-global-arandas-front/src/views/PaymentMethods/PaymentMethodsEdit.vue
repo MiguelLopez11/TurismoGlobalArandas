@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <Form v-slot="{ errors }" @submit="onUpdateDestination">
+    <Form v-slot="{ errors }" @submit="onUpdatePaymentMethod">
       <el-row :gutter="35">
         <el-col :span="8">
           <Field name="name" :rules="validateName" as="text">
@@ -9,9 +9,9 @@
                 <label> Nombre </label>
               </div>
               <el-input
-                placeholder="Ingresa el nombre del destino"
+                placeholder="Ingresa el nombre del concepto"
                 size="large"
-                v-model="destination.name"
+                v-model="paymentMethod.name"
               />
             </el-form-item>
           </Field>
@@ -22,9 +22,9 @@
                 <label> Descripción </label>
               </div>
               <el-input
-                placeholder="Ingresa una descripción del destino"
+                placeholder="Ingresa una descripción del concepto"
                 size="large"
-                v-model="destination.description"
+                v-model="paymentMethod.description"
               />
             </el-form-item>
         </el-col>
@@ -47,7 +47,7 @@
             size="large"
             @click="
               () => {
-                $router.push('/Destinos')
+                $router.push('/MetodosPago')
               }
             "
             >Cancelar</el-button
@@ -59,44 +59,44 @@
 </template>
 
 <script>
-import DestinationServices from '@/Services/Destinations.Services'
+import PaymentMethodsServices from '@/Services/PaymentMethods.Services'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject } from 'vue'
 
 export default {
   setup () {
-    const { getDestination, updateDestination } = DestinationServices()
-    const destination = ref({})
+    const { getPaymentMethod, updatePaymentMethod } = PaymentMethodsServices()
+    const paymentMethod = ref({})
     const router = useRoute()
     const redirect = useRouter()
     const swal = inject('$swal')
-    getDestination(router.params.DestinationId, data => {
-      destination.value = data
+    getPaymentMethod(router.params.PaymentMethodId, data => {
+      paymentMethod.value = data
     })
-    const onUpdateDestination = () => {
-      updateDestination(destination.value, data => {
+    const onUpdatePaymentMethod = () => {
+      updatePaymentMethod(paymentMethod.value, data => {
         swal
           .fire({
-            title: 'Destino modificado correctamente',
-            text: 'El destino se ha modificado satisfactoriamente.',
+            title: 'Método de pago modificado correctamente',
+            text: 'El metodo de pago se ha modificado satisfactoriamente.',
             icon: 'success'
           })
           .then(result => {
             if (result.isConfirmed) {
-              redirect.push('/Destinos')
+              redirect.push('/MetodosPago')
             }
           })
       })
     }
     const validateName = () => {
-      if (!destination.value.name) {
+      if (!paymentMethod.value.name) {
         return 'Este campo es requerido'
       }
       return true
     }
     return {
-      destination,
-      onUpdateDestination,
+      paymentMethod,
+      onUpdatePaymentMethod,
       validateName
     }
   }
