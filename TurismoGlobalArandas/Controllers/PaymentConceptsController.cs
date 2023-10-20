@@ -20,6 +20,7 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult<PaymentConcept>> getPaymentConcepts()
         {
             var concepts = await _context.PaymentConcepts
+                .Where(w => !w.IsDeleted)
                 .ToListAsync();
             return Ok(concepts);
         }
@@ -27,6 +28,7 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getPaymentConceptById(int PaymentConceptId)
         {
             var concept = await _context.PaymentConcepts
+                .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.PaymentConceptId == PaymentConceptId);
             if (concept == null)
             {

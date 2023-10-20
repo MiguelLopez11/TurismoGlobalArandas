@@ -1,27 +1,22 @@
 <template>
+  <payment-concepts-add-new />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar reservación..."
+          placeholder="Buscar concepto de pago..."
         />
       </el-col>
-      <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
+      <el-col :xs="10" :sm="12" :md="6" :xl="4" :lg="5">
         <el-button
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="
-            () => {
-              $router.push({
-                name: 'ReservacionesHoteleria-AddNew'
-              })
-            }
-          "
+          @click="isAddPaymentConcept = !isAddPaymentConcept"
         >
-          <i> Agregar reservación </i>
+          <i> Nuevo concepto de pago </i>
         </el-button>
       </el-col>
     </el-row>
@@ -40,7 +35,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="reservationHotels"
+            :items="paymentConcepts"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -56,40 +51,20 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-ReservationHotels',
-                            params: {
-                              ReservationHotelId: items.reservationHotelId
-                            }
+                            name: 'Edit-Paymentconcepts',
+                            params: { PaymentConceptId: items.paymentConceptId }
                           })
                         }
                       "
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="
-                        onDeleteReservationHotel(items.reservationHotelId)
-                      "
+                      @click="onDeletePaymentConcept(items.paymentConceptId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
-                  <el-dropdown-item
-                    @click="
-                      $router.push({
-                        name: 'PaymentsRelationReservatioHotel',
-                        params: {
-                          ReservationHotelId: items.reservationHotelId
-                        }
-                      })
-                    "
-                    >Relación de pagos</el-dropdown-item
-                  >
                 </template>
               </el-dropdown>
-            </template>
-            <template #item-destinations="items">
-              <span>{{
-                items.destinations ? items.destinations.name : ''
-              }}</span>
             </template>
           </EasyDataTable>
         </div>
@@ -100,65 +75,61 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import ReservationServices from '@/Services/ReservationHotel.Services'
+import PaymentConceptsServices from '@/Services/PaymentConcepts.Services'
+import PaymentConceptsAddNew from './PaymentConceptsAddNew.vue'
 
 export default {
+  components: { PaymentConceptsAddNew },
   setup () {
-    const { getReservationHotels, deleteReservationHotel } =
-      ReservationServices()
-    const reservationHotels = ref([])
+    const { getPaymentConcepts, deletePaymentConcept } = PaymentConceptsServices()
+    const paymentConcepts = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
     const currentPage = ref(1)
+    const perPageSelect = ref([5, 10, 25, 50, 100])
     const isloading = ref(true)
     const searchValue = ref('')
-    const searchField = ref('reservationInvoice')
-    const isAddedEmployee = ref(false)
-    provide('AddEmployee', isAddedEmployee)
+    const searchField = ref('name')
+    const isAddPaymentConcept = ref(false)
+    provide('addPaymentMethod', isAddPaymentConcept)
     const fields = ref([
-      { value: 'reservationInvoice', text: 'Folio' },
-      { value: 'travelDateStart', text: 'Fecha de salida' },
-      { value: 'travelDateEnd', text: 'Fecha de regreso' },
-      { value: 'hotel', text: 'Hotel' },
-      { value: 'destinations', text: 'Destino' },
-      { value: 'dateSale', text: 'Fecha de venta' },
-      { value: 'StatusPayment', text: 'Estado de pago' },
-      { value: 'statusReservation', text: 'Estado reservación' },
+      { value: 'name', text: 'Nombre' },
+      { value: 'description', text: 'Descripción' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getReservationHotels(data => {
-      reservationHotels.value = data
+    getPaymentConcepts(data => {
+      paymentConcepts.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getReservationHotels(data => {
-        reservationHotels.value = data
+      getPaymentConcepts(data => {
+        paymentConcepts.value = data
         isloading.value = false
       })
     }
-    watch(isAddedEmployee, newValue => {
+    watch(isAddPaymentConcept, newValue => {
       if (!newValue) {
         refreshTable()
       }
     })
-    const onDeleteReservationHotel = reservationHotelId => {
+    const onDeletePaymentConcept = paymentConceptId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar una reservación, ¿Estas seguro?',
+          title: 'Estás a punto de eliminar un metodo de pago, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar reservación',
+          confirmButtonText: 'Si, eliminar metodo de pago',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteReservationHotel(reservationHotelId, data => {
+            deletePaymentConcept(paymentConceptId, data => {
               swal.fire({
-                title: 'Reservación archivada!',
-                text: 'La reservación ha sido archivada satisfactoriamente .',
+                title: 'Metodo de pago eliminado!',
+                text: 'El metodo de pago ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()
@@ -172,14 +143,15 @@ export default {
       filter,
       perPage,
       currentPage,
+      perPageSelect,
       isloading,
       searchValue,
       searchField,
       fields,
-      reservationHotels,
-      isAddedEmployee,
+      paymentConcepts,
+      isAddPaymentConcept,
       refreshTable,
-      onDeleteReservationHotel
+      onDeletePaymentConcept
     }
   }
 }
