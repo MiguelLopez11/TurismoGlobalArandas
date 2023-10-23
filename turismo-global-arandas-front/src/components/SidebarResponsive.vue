@@ -147,6 +147,12 @@ export default {
             title: 'Servicios de proveedores',
             path: '/ServiciosProveedores',
             icon: 'bi bi-cash-stack'
+          },
+          {
+            index: '4-6',
+            title: 'Rutas',
+            path: '/Rutas',
+            icon: 'bi bi-sign-turn-right'
           }
         ]
       },
