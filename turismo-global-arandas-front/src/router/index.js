@@ -304,6 +304,22 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/Rutas',
+    name: 'Routes',
+    component: () => import('../views/Routes/RoutesList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Rutas/:RouteId',
+    name: 'Edit-Routes',
+    component: () => import('../views/Routes/RoutesEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 
