@@ -150,15 +150,15 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="priceNeto" v-slot="{ value, field, errorMessage }">
+          <Field name="pricePublic" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
-                <label>Precio neto</label>
+                <label>Precio público</label>
               </div>
               <el-input
-                placeholder="Ingresa el precio neto"
+                placeholder="Ingresa el precio al público"
                 size="large"
-                v-model="reservationFlightFields.priceNeto"
+                v-model="reservationFlightFields.pricePublic"
                 :validate-event="false"
                 v-bind="field"
                 :model-value="value"
@@ -168,7 +168,7 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="pricePublic" v-slot="{ value, field, errorMessage }">
+          <Field name="priceNeto" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
                 <label>Precio neto</label>
@@ -176,7 +176,7 @@
               <el-input
                 placeholder="Ingresa el precio neto"
                 size="large"
-                v-model="reservationFlightFields.pricePublic"
+                v-model="reservationFlightFields.priceNeto"
                 :validate-event="false"
                 v-bind="field"
                 :model-value="value"

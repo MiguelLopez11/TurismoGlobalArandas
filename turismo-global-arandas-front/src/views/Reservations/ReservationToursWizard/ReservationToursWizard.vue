@@ -274,6 +274,7 @@ import { ref, provide, watch, inject } from 'vue'
 // SERVICES
 import ReservationTourServices from '@/Services/ReservationTours.Services'
 import DestinationServices from '@/Services/Destinations.Services'
+import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 // COMPONENTS
 import DestinationAddNew from '@/views/Destinations/DestinationAddNew.vue'
 // LIBRARIES
@@ -292,6 +293,7 @@ export default {
     const { getReservationTour, createReservationTour, updateReservationTour } =
       ReservationTourServices()
     const { getDestinations } = DestinationServices()
+    const { createPaymentRelation } = PaymentsRelationReservationServices()
     const redirect = useRouter()
     //   DATA
     const reservationTour = ref([])
@@ -321,6 +323,18 @@ export default {
         getReservationTour(data.reservationTourId, data => {
           reservationTour.value = data
           reservationTourId.value = data.reservationTourId
+          createPaymentRelation(
+            {
+              amountTotal: null,
+              amountMissing: null,
+              reservationTourId: data.reservationTourId,
+              statusPaymentRelationId: 1,
+              isDeleted: false
+            },
+            data => {
+              console.log('relacion de pagos creado')
+            }
+          )
         })
       })
     } else {

@@ -1,12 +1,11 @@
 <template>
-  <reservation-flights-add-new />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar reservationFlights..."
+          placeholder="Buscar reservación..."
         />
       </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
@@ -14,9 +13,9 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddReservationFlight = !isAddReservationFlight"
+          @click="isAddReservationVehicle = !isAddReservationVehicle"
         >
-          <i> registrar nuevo vuelo </i>
+          <i> Agregar reservación </i>
         </el-button>
       </el-col>
     </el-row>
@@ -35,7 +34,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="reservationFlights"
+            :items="reservationVehicles"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -51,96 +50,111 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'Edit-ReservationFlight',
-                            params: { FlightId: items.flightId }
+                            name: 'Edit-ReservationVehicles',
+                            params: {
+                              ReservationVehicleId: items.reservationVehicleId
+                            }
                           })
                         }
                       "
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeleteReservationFlight(items.flightId)"
+                      @click="
+                        onDeleteReservationVehicle(items.reservationVehicleId)
+                      "
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
+                  <el-dropdown-item
+                    @click="
+                      $router.push({
+                        name: 'PaymentsRelationReservatioVehicle',
+                        params: {
+                          ReservationVehicleId: items.reservationVehicleId
+                        }
+                      })
+                    "
+                    >Relación de pagos</el-dropdown-item
+                  >
                 </template>
               </el-dropdown>
+            </template>
+            <template #item-providers="items">
+              <span>{{ items.providers ? items.providers.name : '' }}</span>
             </template>
           </EasyDataTable>
         </div>
       </el-col>
     </el-row>
   </el-card>
+  <reservation-vehicles-add-new />
 </template>
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import reservationFlightservices from '@/Services/ReservationFlights.Services'
-import ReservationFlightsAddNew from './ReservationFlightsAddNew.vue'
-// import RoleAddNew from './RoleAddNew.vue'
+import ReservationVehicleServices from '@/Services/ReservationVehicle.Services'
+import ReservationVehiclesAddNew from './ReservationVehiclesAddNew.vue'
 
 export default {
-  components: { ReservationFlightsAddNew },
+  components: {
+    ReservationVehiclesAddNew
+  },
   setup () {
-    const { getReservationFlights, deleteReservationFlight } =
-      reservationFlightservices()
-    const reservationFlights = ref([])
+    const { getReservationVehicles, deleteReservationVehicle } =
+      ReservationVehicleServices()
+    const reservationVehicles = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
     const currentPage = ref(1)
-    const perPageSelect = ref([5, 10, 25, 50, 100])
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('invoice')
-    const isAddReservationFlight = ref(false)
-    provide('addReservationFlight', isAddReservationFlight)
+    const isAddReservationVehicle = ref(false)
+    provide('AddReservationVehicle', isAddReservationVehicle)
     const fields = ref([
       { value: 'invoice', text: 'Folio' },
-      { value: 'travelDateStart', text: 'Fecha desde' },
-      { value: 'travelDateEnd', text: 'Fecha hasta' },
-      { value: 'dateSale', text: 'Fecha de venta' },
-      { value: 'departureAirport', text: 'Aeropuerto de salida' },
-      { value: 'arrivalAirport', text: 'Aeropuerto de llegada' },
-      { value: 'confirmationKey', text: 'Clave de confirmación' },
-      { value: 'customer.name', text: 'Cliente' },
-      { value: 'paymentMethodAgency', text: 'Método de pago agencia' },
-      { value: 'paymentMethodClient', text: 'Método de pago cliente' },
-      { value: 'contactPhone', text: 'Telefono de contacto' },
+      { value: 'departureLocation', text: 'Lugar de salida' },
+      { value: 'arrivalLocation', text: 'Lugar de llegada' },
+      { value: 'providers', text: 'Proveedor' },
+      { value: 'pricePublic', text: 'Precio al público' },
+      { value: 'priceNeto', text: 'Precio neto' },
+      { value: 'description', text: 'Descripción' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getReservationFlights(data => {
-      reservationFlights.value = data
+    getReservationVehicles(data => {
+      reservationVehicles.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getReservationFlights(data => {
-        reservationFlights.value = data
+      getReservationVehicles(data => {
+        reservationVehicles.value = data
         isloading.value = false
       })
     }
-    watch(isAddReservationFlight, newValue => {
+    watch(isAddReservationVehicle, newValue => {
       if (!newValue) {
         refreshTable()
       }
     })
-    const onDeleteReservationFlight = reservationFlightId => {
+    const onDeleteReservationVehicle = reservationVehicleId => {
       swal
         .fire({
-          title: 'Estás a punto de cancelar un vuelo, ¿Estas seguro?',
+          title: 'Estás a punto de eliminar una reservación, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, cancelar vuelo',
+          confirmButtonText: 'Si, eliminar reservación',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteReservationFlight(reservationFlightId, data => {
+            deleteReservationVehicle(reservationVehicleId, data => {
               swal.fire({
-                title: 'Vuelo Cancelado!',
-                text: 'El vuelo ha sido cancelado satisfactoriamente .',
+                title: 'Reservación archivada!',
+                text: 'La reservación ha sido archivada satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()
@@ -154,15 +168,14 @@ export default {
       filter,
       perPage,
       currentPage,
-      perPageSelect,
       isloading,
       searchValue,
       searchField,
       fields,
-      reservationFlights,
-      isAddReservationFlight,
+      reservationVehicles,
+      isAddReservationVehicle,
       refreshTable,
-      onDeleteReservationFlight
+      onDeleteReservationVehicle
     }
   }
 }

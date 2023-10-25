@@ -183,6 +183,12 @@ export default {
                 title: 'Reservaciones Tours',
                 path: '/ReservacionesTours',
                 icon: 'bi bi-bus-front'
+              },
+              {
+                index: '5-1-4',
+                title: 'Reservaciones Vehiculos',
+                path: '/ReservacionesVehiculos',
+                icon: 'bi bi-truck'
               }
             ]
           },

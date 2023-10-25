@@ -1,13 +1,18 @@
 import { axiosPrivate } from '@/common/axiosPrivate.js'
 
 export default function PaymentsRelationReservationServices () {
-  const getPaymentsRelationByReservationHotel = (reservationHotelId, callback) => {
-    axiosPrivate.get(`/paymentRelationReservations/ReservationHotel/${reservationHotelId}`).then((response) => {
+  const getPaymentsRelationByReservationHotel = (ReservationHotelId, callback) => {
+    axiosPrivate.get(`/paymentRelationReservations/ReservationHotel/${ReservationHotelId}`).then((response) => {
       callback(response.data)
     })
   }
-  const getPaymentsRelationByReservationTour = (reservationTourId, callback) => {
-    axiosPrivate.get(`/paymentRelationReservations/ReservationTour/${reservationTourId}`).then((response) => {
+  const getPaymentsRelationByReservationTour = (ReservationTourId, callback) => {
+    axiosPrivate.get(`/paymentRelationReservations/ReservationTour/${ReservationTourId}`).then((response) => {
+      callback(response.data)
+    })
+  }
+  const getPaymentsRelationByReservationVehicle = (ReservationVehicle, callback) => {
+    axiosPrivate.get(`/paymentRelationReservations/ReservationVehicle/${ReservationVehicle}`).then((response) => {
       callback(response.data)
     })
   }
@@ -34,6 +39,7 @@ export default function PaymentsRelationReservationServices () {
   return {
     getPaymentsRelationByReservationHotel,
     getPaymentsRelationByReservationTour,
+    getPaymentsRelationByReservationVehicle,
     getPaymentRelation,
     createPaymentRelation,
     updatePaymentRelation,

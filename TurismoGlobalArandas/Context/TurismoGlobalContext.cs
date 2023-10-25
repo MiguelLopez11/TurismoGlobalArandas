@@ -30,6 +30,7 @@ namespace TurismoGlobalArandas.Context
         public DbSet<ReservationFlight> ReservationFlights { get; set; }
         public DbSet<ReservationHotelGroup> ReservationHotelGroups { get; set; }
         public DbSet<ReservationTours> ReservationTours { get; set; }
+        public DbSet<ReservationVehicle> ReservationVehicles { get; set; }
         public DbSet<Routes> Routes { get; set; }
         public DbSet<ServicesProvider> ServicesProviders { get; set; }
         public DbSet<StatusFlight> StatusFlight { get; set; }

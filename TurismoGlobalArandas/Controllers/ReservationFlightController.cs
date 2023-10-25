@@ -17,7 +17,7 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ReservationFlight>> getFlights()
+        public async Task<ActionResult<ReservationFlight>> getReservationFlights()
         {
             var flights = await _context.ReservationFlights
                 .Where(w => !w.IsDeleted)
@@ -25,7 +25,7 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(flights);
         }
         [HttpGet("{FlightId}")]
-        public async Task<ActionResult> getFlightById(int FlightId)
+        public async Task<ActionResult> getReservationFlightById(int FlightId)
         {
             var flight = await _context.ReservationFlights
                 .Where(w => !w.IsDeleted)
@@ -37,14 +37,15 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(flight);
         }
         [HttpPost]
-        public async Task<ActionResult<Customers>> PostCustomer(ReservationFlight flight)
+        public async Task<ActionResult<ReservationFlight>> PostReservationFlight(ReservationFlight flight)
         {
+            flight.DateSale = DateTime.Now;
             _context.ReservationFlights.Add(flight);
             await _context.SaveChangesAsync();
             return CreatedAtAction("getFlightById", new { FlightId = flight.FlightId }, flight);
         }
         [HttpPut("{FlightId}")]
-        public async Task<ActionResult> PutCustomer(int FlightId, ReservationFlight reservationFlight)
+        public async Task<ActionResult> PutReservationFlight(int FlightId, ReservationFlight reservationFlight)
         {
             if (reservationFlight.FlightId != FlightId)
             {
@@ -79,7 +80,7 @@ namespace TurismoGlobalArandas.Controllers
             return Ok("El vuelo se actualizo correctamente");
         }
         [HttpDelete("{FlightId}")]
-        public async Task<IActionResult> DeleteFlight(int FlightId)
+        public async Task<IActionResult> DeleteReservationFlight(int FlightId)
         {
             var flight = await _context.ReservationFlights
                 .FirstOrDefaultAsync(f => f.FlightId == FlightId);

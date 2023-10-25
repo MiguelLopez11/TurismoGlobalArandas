@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231024225824_Reservation_vehicle_providerId")]
+    partial class Reservation_vehicle_providerId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -591,9 +594,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<int?>("ReservationTourId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReservationVehicleId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("StatusPaymentRelationId")
                         .HasColumnType("int");
 
@@ -602,8 +602,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasIndex("ReservationHotelId");
 
                     b.HasIndex("ReservationTourId");
-
-                    b.HasIndex("ReservationVehicleId");
 
                     b.HasIndex("StatusPaymentRelationId");
 
@@ -1547,10 +1545,6 @@ namespace TurismoGlobalArandas.Migrations
                         .WithMany()
                         .HasForeignKey("ReservationTourId");
 
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationVehicle", "ReservationVehicles")
-                        .WithMany()
-                        .HasForeignKey("ReservationVehicleId");
-
                     b.HasOne("TurismoGlobalArandas.Models.StatusPaymentRelations", "StatusPaymentRelations")
                         .WithMany()
                         .HasForeignKey("StatusPaymentRelationId");
@@ -1558,8 +1552,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Navigation("ReservationHotels");
 
                     b.Navigation("ReservationTours");
-
-                    b.Navigation("ReservationVehicles");
 
                     b.Navigation("StatusPaymentRelations");
                 });

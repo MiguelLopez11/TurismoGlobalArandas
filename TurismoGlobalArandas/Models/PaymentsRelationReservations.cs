@@ -13,6 +13,7 @@ namespace TurismoGlobalArandas.Models
         public decimal? AmountMissing { get; set; }
         public int? ReservationHotelId { get; set; }
         public int? ReservationTourId { get; set; }
+        public int? ReservationVehicleId { get; set; }
         public int? StatusPaymentRelationId { get; set; }
         public bool IsDeleted { get; set; }
 
@@ -21,6 +22,8 @@ namespace TurismoGlobalArandas.Models
         public ReservationHotel? ReservationHotels { get; set; }
         [ForeignKey("ReservationTourId")]
         public ReservationTours? ReservationTours { get; set; }
+        [ForeignKey("ReservationVehicleId")]
+        public ReservationVehicle? ReservationVehicles { get; set; }
         [ForeignKey("StatusPaymentRelationId")]
         public StatusPaymentRelations? StatusPaymentRelations { get; set; }
 

@@ -250,6 +250,14 @@ const routes = [
     }
   },
   {
+    path: '/RelacionPagosReservacionVehiculo/:ReservationVehicleId',
+    name: 'PaymentsRelationReservatioVehicle',
+    component: () => import('../views/Reservations/PaymentsRelationReservations'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/ReservacionesTours',
     name: 'ReservationsTour',
     component: () => import('../views/Reservations/ReservationTours/ReservationTourList'),
@@ -317,6 +325,22 @@ const routes = [
     path: '/Rutas/:RouteId',
     name: 'Edit-Routes',
     component: () => import('../views/Routes/RoutesEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/ReservacionesVehiculos',
+    name: 'ReservationVehicles',
+    component: () => import('../views/Reservations/ReservationVehicles/ReservationVehiclesList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/ReservacionesVehiculos/:ReservationVehicleId',
+    name: 'Edit-ReservationVehicles',
+    component: () => import('../views/Reservations/ReservationVehicles/ReservationVehiclesEdit'),
     meta: {
       requiresAuth: true
     }
