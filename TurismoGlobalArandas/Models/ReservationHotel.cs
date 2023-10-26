@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using TurismoGlobalArandas.Migrations;
 
 namespace TurismoGlobalArandas.Models
 {
@@ -33,6 +34,8 @@ namespace TurismoGlobalArandas.Models
         public int? HotelId { get; set; } = null;
         public int? DestinationId { get; set; } = null;
         public int? ProviderId { get; set; } = null;
+        public int? ReservationFlightId { get; set; } = null;
+        public int? ReservationVehicleId { get; set; } = null;
         public bool IsDeleted { get; set; }
 
         [ForeignKey("EmployeeId")]
@@ -50,6 +53,10 @@ namespace TurismoGlobalArandas.Models
         public TypeReservation? TypeReservation { get; set; }
         [ForeignKey("TypeReservationGroupId")]
         public TypeReservationGrupal? TypeReservationGrupal { get; set; }
+        [ForeignKey("ReservationFlightId")]
+        public ReservationFlight? ReservationFlight { get; set; }
+        [ForeignKey("ReservationVehicleId")]
+        public ReservationVehicle? ReservationVehicle { get; set; }
 
 
         [ForeignKey("ProviderId")]

@@ -66,9 +66,6 @@
                 </template>
               </el-dropdown>
             </template>
-            <!-- <template #item-status="items">
-
-            </template> -->
           </EasyDataTable>
         </div>
       </el-col>
@@ -105,12 +102,11 @@ export default {
       { value: 'dateSale', text: 'Fecha de venta' },
       { value: 'departureAirport', text: 'Aeropuerto de salida' },
       { value: 'arrivalAirport', text: 'Aeropuerto de llegada' },
-      { value: 'customer.name', text: 'Cliente' },
       { value: 'confirmationKey', text: 'Clave de confirmación' },
+      { value: 'customer.name', text: 'Cliente' },
       { value: 'paymentMethodAgency', text: 'Método de pago agencia' },
       { value: 'paymentMethodClient', text: 'Método de pago cliente' },
       { value: 'contactPhone', text: 'Telefono de contacto' },
-      // { value: 'status', text: 'Estado del vuelo' },
       { value: 'actions', text: 'Acciones' }
     ])
     getReservationFlights(data => {

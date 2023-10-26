@@ -5,7 +5,7 @@
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar Tour..."
+          placeholder="Buscar reservación..."
         />
       </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
@@ -13,15 +13,9 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="
-            () => {
-              $router.push({
-                name: 'ReservationsTour-AddNew'
-              })
-            }
-          "
+          @click="isAddReservationVehicle = !isAddReservationVehicle"
         >
-          <i> Nuevo Tour </i>
+          <i> Agregar reservación </i>
         </el-button>
       </el-col>
     </el-row>
@@ -40,7 +34,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="reservationTours"
+            :items="reservationVehicles"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -56,9 +50,9 @@
                       @click="
                         () => {
                           $router.push({
-                            name: 'ReservationsTour-Edit',
+                            name: 'Edit-ReservationVehicles',
                             params: {
-                              ReservationTourId: items.reservationTourId
+                              ReservationVehicleId: items.reservationVehicleId
                             }
                           })
                         }
@@ -67,7 +61,7 @@
                     >
                     <el-dropdown-item
                       @click="
-                        onDeleteReservationTour(items.reservationTourId)
+                        onDeleteReservationVehicle(items.reservationVehicleId)
                       "
                       >Eliminar</el-dropdown-item
                     >
@@ -75,9 +69,9 @@
                   <el-dropdown-item
                     @click="
                       $router.push({
-                        name: 'PaymentsRelationReservatioTour',
+                        name: 'PaymentsRelationReservatioVehicle',
                         params: {
-                          ReservationTourId: items.reservationTourId
+                          ReservationVehicleId: items.reservationVehicleId
                         }
                       })
                     "
@@ -86,54 +80,66 @@
                 </template>
               </el-dropdown>
             </template>
-            <template #item-destinations="items">
-              <span>{{
-                items.destinations ? items.destinations.name : ''
-              }}</span>
+            <template #item-providers="items">
+              <span>{{ items.providers ? items.providers.name : '' }}</span>
             </template>
           </EasyDataTable>
         </div>
       </el-col>
     </el-row>
   </el-card>
+  <reservation-vehicles-add-new />
 </template>
 
 <script>
-import { ref, inject } from 'vue'
-import ReservationTourServices from '@/Services/ReservationTours.Services'
+import { ref, watch, provide, inject } from 'vue'
+import ReservationVehicleServices from '@/Services/ReservationVehicle.Services'
+import ReservationVehiclesAddNew from './ReservationVehiclesAddNew.vue'
 
 export default {
+  components: {
+    ReservationVehiclesAddNew
+  },
   setup () {
-    const { getReservationTours, deleteReservationTour } =
-      ReservationTourServices()
-    const reservationTours = ref([])
+    const { getReservationVehicles, deleteReservationVehicle } =
+      ReservationVehicleServices()
+    const reservationVehicles = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
     const currentPage = ref(1)
     const isloading = ref(true)
     const searchValue = ref('')
-    const searchField = ref('reservationInvoice')
+    const searchField = ref('invoice')
+    const isAddReservationVehicle = ref(false)
+    provide('AddReservationVehicle', isAddReservationVehicle)
     const fields = ref([
-      { value: 'tourName', text: 'Nombre del tour' },
-      { value: 'dateSale', text: 'Fecha de venta' },
-      { value: 'dateActivity', text: 'Fecha del tour' },
-      { value: 'destinations', text: 'Destino' },
-      { value: 'ownerName', text: 'Titular' },
+      { value: 'invoice', text: 'Folio' },
+      { value: 'departureLocation', text: 'Lugar de salida' },
+      { value: 'arrivalLocation', text: 'Lugar de llegada' },
+      { value: 'providers', text: 'Proveedor' },
+      { value: 'pricePublic', text: 'Precio al público' },
+      { value: 'priceNeto', text: 'Precio neto' },
+      { value: 'description', text: 'Descripción' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getReservationTours(data => {
-      reservationTours.value = data
+    getReservationVehicles(data => {
+      reservationVehicles.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getReservationTours(data => {
-        reservationTours.value = data
+      getReservationVehicles(data => {
+        reservationVehicles.value = data
         isloading.value = false
       })
     }
-    const onDeleteReservationTour = reservationTourId => {
+    watch(isAddReservationVehicle, newValue => {
+      if (!newValue) {
+        refreshTable()
+      }
+    })
+    const onDeleteReservationVehicle = reservationVehicleId => {
       swal
         .fire({
           title: 'Estás a punto de eliminar una reservación, ¿Estas seguro?',
@@ -145,7 +151,7 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteReservationTour(reservationTourId, data => {
+            deleteReservationVehicle(reservationVehicleId, data => {
               swal.fire({
                 title: 'Reservación archivada!',
                 text: 'La reservación ha sido archivada satisfactoriamente .',
@@ -166,9 +172,10 @@ export default {
       searchValue,
       searchField,
       fields,
-      reservationTours,
+      reservationVehicles,
+      isAddReservationVehicle,
       refreshTable,
-      onDeleteReservationTour
+      onDeleteReservationVehicle
     }
   }
 }

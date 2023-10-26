@@ -73,9 +73,9 @@ body,
 }
 
 .el-aside {
-  width: 20% !important;
+  width: 25% !important;
   background-color: #fff;
-  flex: 0 0 20%;
+  flex: 0 0 25%;
   min-height: 0;
   overflow-y: auto !important;
   z-index: 1000;

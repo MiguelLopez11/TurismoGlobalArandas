@@ -3,7 +3,7 @@
     <Form v-slot="{ errors }" @submit="onUpdateCommission">
       <el-row :gutter="35">
         <el-col :span="8">
-          <Field name="travelDate">
+          <Field name="travelDate" :rules="validateTravelDate">
             <el-form-item :error="errors.travelDate" required>
               <div>
                 <span>Fecha del viaje</span>
@@ -22,7 +22,7 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="departureAirport">
+          <Field name="departureAirport" :rules="validateDepartureAirport">
             <el-form-item :error="errors.departureAirport" required>
               <div>
                 <label> Aeropuerto de salida </label>
@@ -37,10 +37,10 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="arrivalAirport">
+          <Field name="arrivalAirport" :rules="validateArrivalAirport">
             <el-form-item :error="errors.arrivalAirport" required>
               <div>
-                <label> Aeropuerto de salida </label>
+                <label> Aeropuerto de llegada </label>
               </div>
               <el-input
                 placeholder="Ingresa el aeropuerto de llegada para el cliente"
@@ -52,7 +52,7 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="airline">
+          <Field name="airline" :rules="validateAirline">
             <el-form-item :error="errors.airline" required>
               <div>
                 <label>AeroLinea</label>
@@ -109,7 +109,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <Field name="confirmationKey">
+          <Field name="confirmationKey" :rules="validateConfirmationKey">
             <el-form-item :error="errors.confirmationKey" required>
               <div>
                 <label>Clave de confirmación</label>
@@ -122,22 +122,7 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="priceNeto">
-            <el-form-item :error="errors.priceNeto" required>
-              <div>
-                <label>Precio neto</label>
-              </div>
-              <el-input
-                placeholder="Ingresa el precio neto"
-                size="large"
-                v-model="reservationFlight.priceNeto"
-                type="number"
-              />
-            </el-form-item>
-          </Field>
-        </el-col>
-        <el-col :span="8">
-          <Field name="pricePublic">
+          <Field name="pricePublic" :rules="validatePricePublic">
             <el-form-item :error="errors.pricePublic" required>
               <div>
                 <label>Precio al público</label>
@@ -152,11 +137,33 @@
           </Field>
         </el-col>
         <el-col :span="8">
+          <Field name="priceNeto" :rules="validatePriceNeto">
+            <el-form-item :error="errors.priceNeto" required>
+              <div>
+                <label>Precio neto</label>
+              </div>
+              <el-input
+                placeholder="Ingresa el precio neto"
+                size="large"
+                v-model="reservationFlight.priceNeto"
+                type="number"
+              />
+            </el-form-item>
+          </Field>
+        </el-col>
+        <el-col :span="8">
           <div>
             <label> ¿Es un vuelo sencillo?</label>
           </div>
           <el-form-item>
-            <el-switch size="large" v-model="reservationFlight.isSimpleFlight">
+            <el-switch
+              size="large"
+              v-model="reservationFlight.isSimpleFlight"
+              :disabled="
+                reservationFlight.isRoundFlight ||
+                reservationFlight.isMultidestinationFlight
+              "
+            >
             </el-switch>
           </el-form-item>
         </el-col>
@@ -165,7 +172,14 @@
             <label> ¿Es un vuelo redondo?</label>
           </div>
           <el-form-item>
-            <el-switch size="large" v-model="reservationFlight.isRoundFlight">
+            <el-switch
+              size="large"
+              v-model="reservationFlight.isRoundFlight"
+              :disabled="
+                reservationFlight.isSimpleFlight ||
+                reservationFlight.isMultidestinationFlight
+              "
+            >
             </el-switch>
           </el-form-item>
         </el-col>
@@ -177,18 +191,25 @@
             <el-switch
               size="large"
               v-model="reservationFlight.isMultidestinationFlight"
+              :disabled="
+                reservationFlight.isSimpleFlight ||
+                reservationFlight.isRoundFlight
+              "
             >
             </el-switch>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <Field name="paymentMethodAgency">
+          <Field
+            name="paymentMethodAgency"
+            :rules="validatePaymentMethodAgency"
+          >
             <el-form-item :error="errors.paymentMethodAgency" required>
               <div>
                 <label>Metodo de pago de la agencia</label>
               </div>
               <el-input
-                placeholder="Ingresa una descripcion"
+                placeholder="Ingresa el método de pago que usó la agencia"
                 size="large"
                 v-model="reservationFlight.paymentMethodAgency"
               />
@@ -196,13 +217,16 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="paymentMethodClient">
+          <Field
+            name="paymentMethodClient"
+            :rules="validatePaymentMethodClient"
+          >
             <el-form-item :error="errors.paymentMethodClient" required>
               <div>
                 <label>Metodo de pago del cliente</label>
               </div>
               <el-input
-                placeholder="Ingresa una descripcion"
+                placeholder="Ingresa el método de pago que usó el cliente"
                 size="large"
                 v-model="reservationFlight.paymentMethodClient"
               />
@@ -210,7 +234,7 @@
           </Field>
         </el-col>
         <el-col :span="8">
-          <Field name="contactPhone">
+          <Field name="contactPhone" :rules="validateContactPhone">
             <el-form-item :error="errors.contactPhone" required>
               <div>
                 <label>Telefono de contacto</label>
@@ -301,32 +325,65 @@ export default {
           })
       })
     }
-    const validateCommissionAgency = () => {
-      if (!reservationFlight.value.commissionAgency) {
+    const validateTravelDate = () => {
+      if (
+        !reservationFlight.value.travelDateStart &&
+        !reservationFlight.value.travelDateEnd
+      ) {
         return 'Este campo es requerido'
       }
       return true
     }
-    const validateCommissionClient = () => {
-      if (!reservationFlight.value.commissionClient) {
+    const validateDepartureAirport = () => {
+      if (!reservationFlight.value.departureAirport) {
         return 'Este campo es requerido'
       }
       return true
     }
-    const validateCommissionEmployee = () => {
-      if (!reservationFlight.value.commissionEmployee) {
+    const validateArrivalAirport = () => {
+      if (!reservationFlight.value.arrivalAirport) {
         return 'Este campo es requerido'
       }
       return true
     }
-    const validateColor = () => {
-      if (!reservationFlight.value.color) {
+    const validateAirline = () => {
+      if (!reservationFlight.value.airline) {
         return 'Este campo es requerido'
       }
       return true
     }
-    const validateProvider = () => {
-      if (!reservationFlight.value.providerId) {
+    const validateConfirmationKey = () => {
+      if (!reservationFlight.value.confirmationKey) {
+        return 'Este campo es requerido'
+      }
+      return true
+    }
+    const validatePricePublic = () => {
+      if (!reservationFlight.value.pricePublic) {
+        return 'Este campo es requerido'
+      }
+      return true
+    }
+    const validatePriceNeto = () => {
+      if (!reservationFlight.value.priceNeto) {
+        return 'Este campo es requerido'
+      }
+      return true
+    }
+    const validatePaymentMethodAgency = () => {
+      if (!reservationFlight.value.paymentMethodAgency) {
+        return 'Este campo es requerido'
+      }
+      return true
+    }
+    const validatePaymentMethodClient = () => {
+      if (!reservationFlight.value.paymentMethodClient) {
+        return 'Este campo es requerido'
+      }
+      return true
+    }
+    const validateContactPhone = () => {
+      if (!reservationFlight.value.contactPhone) {
         return 'Este campo es requerido'
       }
       return true
@@ -339,11 +396,16 @@ export default {
       rangeDatesTravel,
       onSelectTravelDate,
       onUpdateCommission,
-      validateCommissionAgency,
-      validateCommissionClient,
-      validateCommissionEmployee,
-      validateColor,
-      validateProvider
+      validateTravelDate,
+      validateDepartureAirport,
+      validateArrivalAirport,
+      validateAirline,
+      validateConfirmationKey,
+      validatePricePublic,
+      validatePriceNeto,
+      validatePaymentMethodAgency,
+      validatePaymentMethodClient,
+      validateContactPhone
     }
   }
 }

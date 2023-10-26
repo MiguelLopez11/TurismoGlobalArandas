@@ -21,6 +21,7 @@ namespace TurismoGlobalArandas.Controllers
             var payments = await _context.PaymentRelationLists
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
+           
             return Ok(payments);
         }
         [HttpGet("{PaymentId}")]
@@ -107,5 +108,6 @@ namespace TurismoGlobalArandas.Controllers
             await _context.SaveChangesAsync();
             return Ok("Registro archivado");
         }
+
     }
 }

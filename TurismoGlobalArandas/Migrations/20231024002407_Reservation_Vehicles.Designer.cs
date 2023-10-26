@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231024002407_Reservation_Vehicles")]
+    partial class Reservation_Vehicles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,32 +156,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.AditionalServices", b =>
-                {
-                    b.Property<int>("AditionalServiceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AditionalServiceId"));
-
-                    b.Property<decimal>("Cost")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AditionalServiceId");
-
-                    b.ToTable("AditionalServices");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Customers", b =>
@@ -617,9 +594,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<int?>("ReservationTourId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReservationVehicleId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("StatusPaymentRelationId")
                         .HasColumnType("int");
 
@@ -628,8 +602,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasIndex("ReservationHotelId");
 
                     b.HasIndex("ReservationTourId");
-
-                    b.HasIndex("ReservationVehicleId");
 
                     b.HasIndex("StatusPaymentRelationId");
 
@@ -853,14 +825,8 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<int?>("ProviderId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReservationFlightId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ReservationInvoice")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("ReservationVehicleId")
-                        .HasColumnType("int");
 
                     b.Property<decimal?>("TotalCost")
                         .HasColumnType("decimal(18, 2)");
@@ -891,10 +857,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasIndex("HotelId");
 
                     b.HasIndex("ProviderId");
-
-                    b.HasIndex("ReservationFlightId");
-
-                    b.HasIndex("ReservationVehicleId");
 
                     b.HasIndex("TypeReservationGroupId");
 
@@ -937,32 +899,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasIndex("ReservationHotelId");
 
                     b.ToTable("ReservationHotelGroups");
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotelsServicesAditionals", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AditionalServiceId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ReservationHotelId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AditionalServiceId");
-
-                    b.HasIndex("ReservationHotelId");
-
-                    b.ToTable("ReservationHotelsServicesAditionals");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationTours", b =>
@@ -1036,26 +972,24 @@ namespace TurismoGlobalArandas.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationVehicleId"));
 
-                    b.Property<string>("ArrivalLocation")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("DateSale")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DateTravel")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("DepartureLocation")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Invoice")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("PriceNeto")
                         .HasColumnType("decimal(18, 2)");
@@ -1063,12 +997,12 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<decimal?>("PricePublic")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int?>("ProviderId")
+                    b.Property<int>("ProveedorId")
                         .HasColumnType("int");
 
                     b.HasKey("ReservationVehicleId");
 
-                    b.HasIndex("ProviderId");
+                    b.HasIndex("ProveedorId");
 
                     b.ToTable("ReservationVehicles");
                 });
@@ -1609,10 +1543,6 @@ namespace TurismoGlobalArandas.Migrations
                         .WithMany()
                         .HasForeignKey("ReservationTourId");
 
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationVehicle", "ReservationVehicles")
-                        .WithMany()
-                        .HasForeignKey("ReservationVehicleId");
-
                     b.HasOne("TurismoGlobalArandas.Models.StatusPaymentRelations", "StatusPaymentRelations")
                         .WithMany()
                         .HasForeignKey("StatusPaymentRelationId");
@@ -1620,8 +1550,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Navigation("ReservationHotels");
 
                     b.Navigation("ReservationTours");
-
-                    b.Navigation("ReservationVehicles");
 
                     b.Navigation("StatusPaymentRelations");
                 });
@@ -1663,14 +1591,6 @@ namespace TurismoGlobalArandas.Migrations
                         .WithMany()
                         .HasForeignKey("ProviderId");
 
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationFlight", "ReservationFlight")
-                        .WithMany()
-                        .HasForeignKey("ReservationFlightId");
-
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationVehicle", "ReservationVehicle")
-                        .WithMany()
-                        .HasForeignKey("ReservationVehicleId");
-
                     b.HasOne("TurismoGlobalArandas.Models.TypeReservationGrupal", "TypeReservationGrupal")
                         .WithMany()
                         .HasForeignKey("TypeReservationGroupId");
@@ -1689,10 +1609,6 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.Navigation("Providers");
 
-                    b.Navigation("ReservationFlight");
-
-                    b.Navigation("ReservationVehicle");
-
                     b.Navigation("TypeReservation");
 
                     b.Navigation("TypeReservationGrupal");
@@ -1703,25 +1619,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "reservationHotel")
                         .WithMany()
                         .HasForeignKey("ReservationHotelId");
-
-                    b.Navigation("reservationHotel");
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotelsServicesAditionals", b =>
-                {
-                    b.HasOne("TurismoGlobalArandas.Models.AditionalServices", "AditionalServices")
-                        .WithMany()
-                        .HasForeignKey("AditionalServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "reservationHotel")
-                        .WithMany()
-                        .HasForeignKey("ReservationHotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AditionalServices");
 
                     b.Navigation("reservationHotel");
                 });
@@ -1739,7 +1636,9 @@ namespace TurismoGlobalArandas.Migrations
                 {
                     b.HasOne("TurismoGlobalArandas.Models.Providers", "Providers")
                         .WithMany()
-                        .HasForeignKey("ProviderId");
+                        .HasForeignKey("ProveedorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Providers");
                 });

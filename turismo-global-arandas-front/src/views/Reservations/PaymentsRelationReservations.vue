@@ -7,7 +7,6 @@
             <label> Monto total de reserva </label>
           </div>
           <el-input
-            placeholder="Ingresa el nombre del role"
             size="large"
             v-model="paymentsRelation.amountTotal"
             disabled
@@ -20,7 +19,6 @@
             <label> Monto faltante de reserva </label>
           </div>
           <el-input
-            placeholder="Ingresa el nombre del role"
             size="large"
             v-model="paymentsRelation.amountMissing"
             disabled
@@ -38,7 +36,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 import PaymentRelationList from './ReservationHotels/PaymentsRelationReservationHotel/PaymentRelationList.vue'
@@ -53,45 +51,37 @@ export default {
     const store = useStore()
     const paymentsRelation = ref([])
     const router = useRoute()
-    const reservationHotelId = ref(parseInt(router.params.ReservationHotelId))
+    const isAddedPayment = ref(false)
+    provide('isAddedPayment', isAddedPayment)
     const {
       getPaymentsRelationByReservationHotel,
-      getPaymentsRelationByReservationTour
+      getPaymentsRelationByReservationTour,
+      getPaymentsRelationByReservationVehicle
     } = PaymentsRelationReservationServices()
-    if (reservationHotelId.value) {
-      getPaymentsRelationByReservationHotel(reservationHotelId.value, data => {
-        paymentsRelation.value = data
-        store.commit('setPaymentReservationId', data.paymentReservationId)
-      })
-    } else {
-      getPaymentsRelationByReservationTour(
-        router.params.ReservationTourId,
+    if (router.params.ReservationHotelId) {
+      getPaymentsRelationByReservationHotel(router.params.ReservationHotelId,
         data => {
           paymentsRelation.value = data
           store.commit('setPaymentReservationId', data.paymentReservationId)
         }
       )
-    }
-    const onSubmit = () => {
-      //   createRole(PaymentsRelationFields.value.Name, data => {
-      //     swal.fire({
-      //       title: '¡Nuevo role registrado!',
-      //       text: 'El role se ha registrado correctamente',
-      //       icon: 'success'
-      //     })
-      //     isOpenDialog.value = false
-      //     PaymentsRelationFields.value = JSON.parse(
-      //       JSON.stringify(PaymentsRelationFieldsBlank)
-      //     )
-      //     paymentsRelationFormRef.value.resetForm()
-      //   })
+    } else if (router.params.ReservationTourId) {
+      getPaymentsRelationByReservationTour(router.params.ReservationTourId,
+        data => {
+          paymentsRelation.value = data
+          store.commit('setPaymentReservationId', data.paymentReservationId)
+        }
+      )
+    } else if (router.params.ReservationVehicleId) {
+      getPaymentsRelationByReservationVehicle(router.params.ReservationVehicleId, data => {
+        paymentsRelation.value = data
+        store.commit('setPaymentReservationId', data.paymentReservationId)
+      })
     }
 
     return {
       paymentsRelation,
-      reservationHotelId,
-      paymentsRelationFormRef,
-      onSubmit
+      paymentsRelationFormRef
     }
   }
 }

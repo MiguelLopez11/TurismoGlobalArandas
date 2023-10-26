@@ -26,7 +26,7 @@
         </el-col>
         <el-col :span="8">
           <Field name="amount" v-slot="{ value, field, errorMessage }">
-            <el-form-item :error="errorMessage" required>
+            <el-form-item :error="errorMessage">
               <div>
                 <label> Monto </label>
               </div>
@@ -37,24 +37,23 @@
                 v-model="paymentFields.amount"
                 :validate-event="false"
                 :model-value="value"
-                type="number"
               />
             </el-form-item>
           </Field>
         </el-col>
         <el-col :span="8">
-            <el-form-item>
-              <div>
-                <label> Observaciones </label>
-              </div>
-              <el-input
-                placeholder="Ingresa una observacion del pago"
-                size="large"
-                v-model="paymentFields.observations"
-                type="textarea"
-                :autosize="{ minRows: 4, maxRows: 8 }"
-              />
-            </el-form-item>
+          <el-form-item>
+            <div>
+              <label> Observaciones </label>
+            </div>
+            <el-input
+              placeholder="Ingresa una observacion del pago"
+              size="large"
+              v-model="paymentFields.observations"
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 8 }"
+            />
+          </el-form-item>
         </el-col>
       </el-row>
       <el-divider />
@@ -101,7 +100,13 @@ export default {
     const { createPaymentRelationList } = PaymentsRelationListServices()
     const validationSchema = yup.object({
       invoice: yup.string().required('Este campo es requerido').label('Nombre'),
-      amount: yup.number().required('Este campo es requerido').label('Nombre')
+      amount: yup
+        .number()
+        .test('is-decimal', 'invalid decimal', value =>
+          (value + '').match(/^\d+(\.\d+)?$/)
+        )
+        .required('Este campo es requerido')
+        .label('Nombre')
     })
     const paymentReservationId = ref()
     setTimeout(() => {
@@ -131,6 +136,7 @@ export default {
         isOpenDialog.value = false
         paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
         paymentFormRef.value.resetForm()
+        location.reload()
       })
     }
 

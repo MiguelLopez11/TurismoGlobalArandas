@@ -19,7 +19,6 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult<PaymentsRelationReservations>> getPaymentsRelationReservation()
         {
             var Payments = await _context.PaymentsRelationReservations
-                .Where(w => !w.IsDeleted)
                 .ToListAsync();
             return Ok(Payments);
         }
@@ -27,7 +26,6 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getPaymentRelationReservation(int PaymentReservationId)
         {
             var Payment = await _context.PaymentsRelationReservations
-                .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.PaymentReservationId == PaymentReservationId);
             if (Payment == null)
             {
@@ -36,7 +34,7 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(Payment);
         }
         [HttpGet("ReservationHotel/{ReservationHotelId}")]
-        public async Task<ActionResult> getPaymentRelationReservationHotelByReservation(int ReservationHotelId)
+        public async Task<ActionResult> getPaymentRelationByReservationHotel(int ReservationHotelId)
         {
             var Payment = await _context.PaymentsRelationReservations
                 .Where(w => !w.IsDeleted)
@@ -48,11 +46,21 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(Payment);
         }
         [HttpGet("ReservationTour/{ReservationTourId}")]
-        public async Task<ActionResult> getPaymentRelationReservationTourByReservation(int ReservationTourId)
+        public async Task<ActionResult> getPaymentRelationByReservationTour(int ReservationTourId)
         {
             var Payment = await _context.PaymentsRelationReservations
-                .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.ReservationTourId == ReservationTourId);
+            if (Payment == null)
+            {
+                return NotFound();
+            }
+            return Ok(Payment);
+        }
+        [HttpGet("ReservationVehicle/{ReservationVehicleId}")]
+        public async Task<ActionResult> getPaymentRelationByReservationVehicle(int ReservationVehicleId)
+        {
+            var Payment = await _context.PaymentsRelationReservations
+                .FirstOrDefaultAsync(f => f.ReservationVehicleId == ReservationVehicleId);
             if (Payment == null)
             {
                 return NotFound();
@@ -83,6 +91,7 @@ namespace TurismoGlobalArandas.Controllers
             paymentOld.AmountMissing = payment.AmountMissing;
             paymentOld.ReservationHotelId = payment.ReservationHotelId;
             paymentOld.ReservationTourId = payment.ReservationTourId;
+            paymentOld.ReservationVehicleId = payment.ReservationVehicleId;
             paymentOld.StatusPaymentRelationId = payment.StatusPaymentRelationId;
             paymentOld.IsDeleted = payment.IsDeleted;
 
