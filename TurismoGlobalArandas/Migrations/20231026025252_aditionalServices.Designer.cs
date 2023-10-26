@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231026025252_aditionalServices")]
+    partial class aditionalServices
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -939,32 +942,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.ToTable("ReservationHotelGroups");
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotelsServicesAditionals", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AditionalServiceId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("ReservationHotelId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AditionalServiceId");
-
-                    b.HasIndex("ReservationHotelId");
-
-                    b.ToTable("ReservationHotelsServicesAditionals");
-                });
-
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationTours", b =>
                 {
                     b.Property<int>("ReservationTourId")
@@ -1703,25 +1680,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "reservationHotel")
                         .WithMany()
                         .HasForeignKey("ReservationHotelId");
-
-                    b.Navigation("reservationHotel");
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotelsServicesAditionals", b =>
-                {
-                    b.HasOne("TurismoGlobalArandas.Models.AditionalServices", "AditionalServices")
-                        .WithMany()
-                        .HasForeignKey("AditionalServiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationHotel", "reservationHotel")
-                        .WithMany()
-                        .HasForeignKey("ReservationHotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AditionalServices");
 
                     b.Navigation("reservationHotel");
                 });

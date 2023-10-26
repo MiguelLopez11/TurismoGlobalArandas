@@ -1055,9 +1055,6 @@ export default {
         ) {
           getPaymentRelation(paymentReservationId.value, data => {
             data.amountTotal = reservationHotel.value.totalCost
-            if (data.amountMissing === null) {
-              data.amountMissing = reservationHotel.value.totalCost
-            }
             updatePaymentRelation(data, response => {})
           })
           onUpdateReservation()

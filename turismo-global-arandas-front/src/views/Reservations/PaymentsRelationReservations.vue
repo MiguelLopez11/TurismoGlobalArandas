@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 import PaymentRelationList from './ReservationHotels/PaymentsRelationReservationHotel/PaymentRelationList.vue'
@@ -51,6 +51,8 @@ export default {
     const store = useStore()
     const paymentsRelation = ref([])
     const router = useRoute()
+    const isAddedPayment = ref(false)
+    provide('isAddedPayment', isAddedPayment)
     const {
       getPaymentsRelationByReservationHotel,
       getPaymentsRelationByReservationTour,

@@ -347,8 +347,18 @@ export default {
       arrivalAirport: yup.string().required('Este campo es requerido'),
       airline: yup.string().required('Este campo es requerido'),
       confirmationKey: yup.string().required('Este campo es requerido'),
-      priceNeto: yup.number().required('Este campo es requerido'),
-      pricePublic: yup.number().required('Este campo es requerido'),
+      priceNeto: yup
+        .number()
+        .test('is-decimal', 'invalid decimal', value =>
+          (value + '').match(/^\d*\.{1}\d*$/)
+        )
+        .required('Este campo es requerido'),
+      pricePublic: yup
+        .number()
+        .test('is-decimal', 'invalid decimal', value =>
+          (value + '').match(/^\d*\.{1}\d*$/)
+        )
+        .required('Este campo es requerido'),
       paymentMethodAgency: yup.string().required('Este campo es requerido'),
       paymentMethodClient: yup.string().required('Este campo es requerido'),
       contactPhone: yup.string().required('Este campo es requerido')

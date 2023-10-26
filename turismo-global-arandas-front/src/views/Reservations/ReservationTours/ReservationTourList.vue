@@ -104,7 +104,7 @@ import ReservationTourServices from '@/Services/ReservationTours.Services'
 
 export default {
   setup () {
-    const { getReservationTours, deleteReservationHotel } =
+    const { getReservationTours, deleteReservationTour } =
       ReservationTourServices()
     const reservationTours = ref([])
     const swal = inject('$swal')
@@ -133,7 +133,7 @@ export default {
         isloading.value = false
       })
     }
-    const onDeleteReservationTour = reservationHotelId => {
+    const onDeleteReservationTour = reservationTourId => {
       swal
         .fire({
           title: 'Estás a punto de eliminar una reservación, ¿Estas seguro?',
@@ -145,7 +145,7 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteReservationHotel(reservationHotelId, data => {
+            deleteReservationTour(reservationTourId, data => {
               swal.fire({
                 title: 'Reservación archivada!',
                 text: 'La reservación ha sido archivada satisfactoriamente .',

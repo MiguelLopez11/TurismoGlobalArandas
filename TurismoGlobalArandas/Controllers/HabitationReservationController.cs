@@ -17,7 +17,7 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<HabitationsReservation>> gethabitationsReservations()
+        public async Task<ActionResult<HabitationsReservation>> GetHabitationsReservations()
         {
             var habitationsReservations = await _context.HabitationsReservations
                 .Include(i => i.Habitations)
@@ -27,7 +27,7 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(habitationsReservations);
         }
         [HttpGet("ReservationHotel/{ReservationHotelId}")]
-        public async Task<ActionResult<HabitationsReservation>> gethabitationsReservationHotelId(int ReservationHotelId)
+        public async Task<ActionResult<HabitationsReservation>> GetHabitationsReservationHotelId(int ReservationHotelId)
         {
             var habitationsReservations = await _context.HabitationsReservations
                 .Include(i => i.Habitations)
@@ -38,7 +38,7 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(habitationsReservations);
         }
         [HttpGet("{HabitationsReservationId}")]
-        public async Task<ActionResult> gethabitationReservationById(int HabitationsReservationId)
+        public async Task<ActionResult> GetHabitationReservationById(int HabitationsReservationId)
         {
             var habitationsReservation = await _context.HabitationsReservations
                 .Where(w => !w.IsDeleted)
@@ -70,7 +70,7 @@ namespace TurismoGlobalArandas.Controllers
             {
                 return BadRequest($"La habitacion con el ID {HabitationsReservationId} no existe");
             }
-            habitationsReservationOld.HabitationsReservationId = habitationsReservation.HabitationId;
+            habitationsReservationOld.HabitationId = habitationsReservation.HabitationId;
             habitationsReservationOld.HabitationsReservationId = habitationsReservation.HabitationsReservationId;
             habitationsReservationOld.IsDeleted = habitationsReservation.IsDeleted;
 
@@ -79,7 +79,7 @@ namespace TurismoGlobalArandas.Controllers
             return Ok("Actualización correcta");
         }
         [HttpDelete("{HabitationsReservationId}")]
-        public async Task<IActionResult> DeleteHabitation(int HabitationsReservationId)
+        public async Task<IActionResult> DeleteHabitationReservation(int HabitationsReservationId)
         {
             var habitationsReservation = await _context.HabitationsReservations
                 .FirstOrDefaultAsync(f => f.HabitationsReservationId == HabitationsReservationId);

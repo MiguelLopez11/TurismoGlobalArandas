@@ -293,13 +293,19 @@ export default {
     const { getReservationTour, createReservationTour, updateReservationTour } =
       ReservationTourServices()
     const { getDestinations } = DestinationServices()
-    const { createPaymentRelation } = PaymentsRelationReservationServices()
+    const {
+      createPaymentRelation,
+      getPaymentsRelationByReservationTour,
+      getPaymentRelation,
+      updatePaymentRelation
+    } = PaymentsRelationReservationServices()
     const redirect = useRouter()
     //   DATA
     const reservationTour = ref([])
     const destinations = ref([])
     const isAddDestination = ref(false)
     const reservationTourId = ref(0)
+    const paymentReservationId = ref(0)
     // OPEN CLOSE COMPONENT
     provide('addDestination', isAddDestination)
     const swal = inject('$swal')
@@ -331,9 +337,7 @@ export default {
               statusPaymentRelationId: 1,
               isDeleted: false
             },
-            data => {
-              console.log('relacion de pagos creado')
-            }
+            data => {}
           )
         })
       })
@@ -341,6 +345,12 @@ export default {
       getReservationTour(props.ReservationTourId, data => {
         reservationTour.value = data
         reservationTourId.value = data.reservationTourId
+        getPaymentsRelationByReservationTour(
+          data.reservationTourId,
+          response => {
+            paymentReservationId.value = response.paymentReservationId
+          }
+        )
       })
     }
     // METHODS
@@ -412,6 +422,10 @@ export default {
           reservationTour.value.publicRate &&
           reservationTour.value.netPrice
         ) {
+          getPaymentRelation(paymentReservationId.value, data => {
+            data.amountTotal = reservationTour.value.netPrice
+            updatePaymentRelation(data, response => {})
+          })
           onUpdateReservation()
           resolve(true)
         } else {
