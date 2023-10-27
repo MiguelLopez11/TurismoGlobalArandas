@@ -344,6 +344,22 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/ServiciosAdicionales',
+    name: 'AditionalServices',
+    component: () => import('../views/AditionalServices/AditionalServicesList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/ServiciosAdicionales/:AditionalServiceId',
+    name: 'Edit-AditionalServices',
+    component: () => import('../views/AditionalServices/AditionalServiceEdit'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 

@@ -144,7 +144,6 @@
                 :model-value="value"
                 size="large"
                 placeholder="Ingresa el precio al público"
-                type="number"
               />
             </el-form-item>
           </Field>
@@ -162,7 +161,6 @@
                 :validate-event="false"
                 v-bind="field"
                 :model-value="value"
-                type="number"
               />
             </el-form-item>
           </Field>
@@ -235,14 +233,14 @@ export default {
       arrivalLocation: yup.string().required('Este campo es requerido'),
       pricePublic: yup
         .number()
-        .test('is-decimal', 'invalid decimal', value =>
-          (value + '').match(/^\d*\.{1}\d*$/)
+        .test('is-decimal', 'Ingresa un valor válido', value =>
+          (value + '').match(/^\d*\.?\d*$/)
         )
         .required('Este campo es requerido'),
       priceNeto: yup
         .number()
-        .test('is-decimal', 'invalid decimal', value =>
-          (value + '').match(/^\d*\.{1}\d*$/)
+        .test('is-decimal', 'Ingresa un valor válido', value =>
+          (value + '').match(/^\d*\.?\d*$/)
         )
         .required('Este campo es requerido')
     })

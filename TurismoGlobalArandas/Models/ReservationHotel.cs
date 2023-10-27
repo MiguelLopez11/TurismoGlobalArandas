@@ -46,15 +46,19 @@ namespace TurismoGlobalArandas.Models
 
         [ForeignKey("HotelId")]
         public Hotels? Hotels { get; set; }
+
         [ForeignKey("DestinationId")]
         public Destinations? Destinations { get; set; }
 
         [ForeignKey("TypeReservationId")]
         public TypeReservation? TypeReservation { get; set; }
+
         [ForeignKey("TypeReservationGroupId")]
         public TypeReservationGrupal? TypeReservationGrupal { get; set; }
+
         [ForeignKey("ReservationFlightId")]
         public ReservationFlight? ReservationFlight { get; set; }
+
         [ForeignKey("ReservationVehicleId")]
         public ReservationVehicle? ReservationVehicle { get; set; }
 
