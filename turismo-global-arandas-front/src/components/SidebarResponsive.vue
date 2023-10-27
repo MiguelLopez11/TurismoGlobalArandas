@@ -203,6 +203,12 @@ export default {
             title: 'Tipos de Reservaciones grupales',
             path: '/TiposReservacionesGrupales',
             icon: 'bi bi-bezier'
+          },
+          {
+            index: '5-4',
+            title: 'Servicios adicionales',
+            path: '/ServiciosAdicionales',
+            icon: 'bi bi-cloud-haze'
           }
         ]
       },

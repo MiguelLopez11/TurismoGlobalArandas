@@ -350,13 +350,13 @@ export default {
       priceNeto: yup
         .number()
         .test('is-decimal', 'invalid decimal', value =>
-          (value + '').match(/^\d*\.{1}\d*$/)
+          (value + '').match(/^\d*\.?\d*$/)
         )
         .required('Este campo es requerido'),
       pricePublic: yup
         .number()
         .test('is-decimal', 'invalid decimal', value =>
-          (value + '').match(/^\d*\.{1}\d*$/)
+          (value + '').match(/^\d*\.?\d*$/)
         )
         .required('Este campo es requerido'),
       paymentMethodAgency: yup.string().required('Este campo es requerido'),
