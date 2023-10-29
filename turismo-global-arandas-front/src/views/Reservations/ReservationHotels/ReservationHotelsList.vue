@@ -91,6 +91,19 @@
                 items.destinations ? items.destinations.name : ''
               }}</span>
             </template>
+            <template #item-hotel="items">
+              <span>{{ items.hotels ? items.hotels.name : '' }}</span>
+            </template>
+            <template #item-statusReservation="items">
+              <el-tag class="ml-2" :type="items.isDeleted === false ? 'success' : 'danger'">
+                {{ items.isDeleted === false ? 'Activo' : 'Cancelado' }}
+              </el-tag>
+            </template>
+            <template #item-statusPayment="items">
+              <el-tag class="ml-2" :type="items.isSoldOut !== false ? 'success' : 'warning'">
+                {{ items.isSoldOut !== false ? 'Liquidado' : 'Sin liquidar' }}
+              </el-tag>
+            </template>
           </EasyDataTable>
         </div>
       </el-col>
@@ -123,7 +136,7 @@ export default {
       { value: 'hotel', text: 'Hotel' },
       { value: 'destinations', text: 'Destino' },
       { value: 'dateSale', text: 'Fecha de venta' },
-      { value: 'StatusPayment', text: 'Estado de pago' },
+      { value: 'statusPayment', text: 'Estado de pago' },
       { value: 'statusReservation', text: 'Estado reservación' },
       { value: 'actions', text: 'Acciones' }
     ])

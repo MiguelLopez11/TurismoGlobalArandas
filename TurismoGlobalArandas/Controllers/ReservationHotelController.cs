@@ -27,7 +27,7 @@ namespace TurismoGlobalArandas.Controllers
                 .Include(i => i.TypeReservation)
                 .Include(i => i.TypeReservationGrupal)
                 .Include(i => i.Destinations)
-                .Where(w => !w.IsDeleted).ToListAsync();
+                .ToListAsync();
             return Ok(Reservations);
         }
 
@@ -41,7 +41,6 @@ namespace TurismoGlobalArandas.Controllers
                 .Include(i => i.TypeReservation)
                 .Include(i => i.TypeReservationGrupal)
                 .Include(i => i.Destinations)
-                .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
             if (Reservation == null)
             {

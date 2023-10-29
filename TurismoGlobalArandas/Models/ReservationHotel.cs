@@ -36,7 +36,8 @@ namespace TurismoGlobalArandas.Models
         public int? ProviderId { get; set; } = null;
         public int? ReservationFlightId { get; set; } = null;
         public int? ReservationVehicleId { get; set; } = null;
-        public bool IsDeleted { get; set; }
+        public bool IsSoldOut { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
 
         [ForeignKey("EmployeeId")]
         public Employees? Employees { get; set; }

@@ -1,22 +1,24 @@
 <template>
-  <reservation-flights-add-new />
+  <!-- <reservation-flights-add-new /> -->
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar vuelo..."
+          placeholder="Buscar servicesAditional..."
         />
       </el-col>
-      <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
+      <el-col :xs="10" :sm="12" :md="6" :xl="4" :lg="5">
         <el-button
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddReservationFlight = !isAddReservationFlight"
+          @click="
+            isAddReservationAditionalService = !isAddReservationAditionalService
+          "
         >
-          <i> registrar nuevo vuelo </i>
+          <i> registrar nuevo servicio </i>
         </el-button>
       </el-col>
     </el-row>
@@ -35,7 +37,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="reservationFlights"
+            :items="servicesAditional"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -74,17 +76,18 @@
 </template>
 
 <script>
-import { ref, watch, provide, inject } from 'vue'
-import reservationFlightservices from '@/Services/ReservationFlights.Services'
-import ReservationFlightsAddNew from './ReservationFlightsAddNew.vue'
-// import RoleAddNew from './RoleAddNew.vue'
-
+import { ref, watch, provide, inject, computed } from 'vue'
+import ReservationHotelAditionalService from '@/Services/ReservationHotelAditionalService.Service'
+import { useStore } from 'vuex'
 export default {
-  components: { ReservationFlightsAddNew },
+  //   components: { ReservationFlightsAddNew },
   setup () {
-    const { getReservationFlights, deleteReservationFlight } =
-      reservationFlightservices()
-    const reservationFlights = ref([])
+    const {
+      getReservationAditionalServiceByReservationHotelId,
+      deleteReservationHotelAditionalService
+    } = ReservationHotelAditionalService()
+    const store = useStore()
+    const servicesAditional = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -93,54 +96,48 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('invoice')
-    const isAddReservationFlight = ref(false)
-    provide('addReservationFlight', isAddReservationFlight)
+    const isAddReservationAditionalService = ref(false)
+    const reservationHotelId = computed(
+      () => store.getters.getReservationHotelId
+    )
+    provide('addReservationFlight', isAddReservationAditionalService)
+
     const fields = ref([
-      { value: 'invoice', text: 'Folio' },
-      { value: 'travelDateStart', text: 'Fecha desde' },
-      { value: 'travelDateEnd', text: 'Fecha hasta' },
-      { value: 'dateSale', text: 'Fecha de venta' },
-      { value: 'departureAirport', text: 'Aeropuerto de salida' },
-      { value: 'arrivalAirport', text: 'Aeropuerto de llegada' },
-      { value: 'confirmationKey', text: 'Clave de confirmación' },
-      { value: 'customer.name', text: 'Cliente' },
-      { value: 'paymentMethodAgency', text: 'Método de pago agencia' },
-      { value: 'paymentMethodClient', text: 'Método de pago cliente' },
-      { value: 'contactPhone', text: 'Telefono de contacto' },
+      { value: 'aditionalServices.name', text: 'Servicio' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getReservationFlights(data => {
-      reservationFlights.value = data
+    getReservationAditionalServiceByReservationHotelId(reservationHotelId.value, data => {
+      servicesAditional.value = data
       isloading.value = false
     })
     const refreshTable = () => {
       isloading.value = true
-      getReservationFlights(data => {
-        reservationFlights.value = data
+      getReservationAditionalServiceByReservationHotelId(reservationHotelId.value, data => {
+        servicesAditional.value = data
         isloading.value = false
       })
     }
-    watch(isAddReservationFlight, newValue => {
+    watch(isAddReservationAditionalService, newValue => {
       if (!newValue) {
         refreshTable()
       }
     })
-    const onDeleteReservationFlight = reservationFlightId => {
+    const onDeleteReservationFlight = id => {
       swal
         .fire({
-          title: 'Estás a punto de cancelar un vuelo, ¿Estas seguro?',
+          title: 'Estás a punto de cancelar un servicio adicional, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, cancelar vuelo',
+          confirmButtonText: 'Si, cancelar servicio',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
-            deleteReservationFlight(reservationFlightId, data => {
+            deleteReservationHotelAditionalService(id, data => {
               swal.fire({
-                title: 'Vuelo Cancelado!',
-                text: 'El vuelo ha sido cancelado satisfactoriamente .',
+                title: 'Servicio Cancelado!',
+                text: 'El servicio adicional ha sido cancelado satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()
@@ -159,8 +156,8 @@ export default {
       searchValue,
       searchField,
       fields,
-      reservationFlights,
-      isAddReservationFlight,
+      servicesAditional,
+      isAddReservationAditionalService,
       refreshTable,
       onDeleteReservationFlight
     }

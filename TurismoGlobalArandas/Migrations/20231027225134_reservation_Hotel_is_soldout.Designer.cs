@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231027225134_reservation_Hotel_is_soldout")]
+    partial class reservation_Hotel_is_soldout
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,7 +181,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("AditionalServiceId");
 
-                    b.ToTable("AditionalServices", (string)null);
+                    b.ToTable("AditionalServices");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Customers", b =>
@@ -212,7 +215,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("CustomerId");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Destinations", b =>
@@ -235,7 +238,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("DestinationId");
 
-                    b.ToTable("Destinations", (string)null);
+                    b.ToTable("Destinations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Employees", b =>
@@ -278,7 +281,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("EmployeeId");
 
-                    b.ToTable("Employees", (string)null);
+                    b.ToTable("Employees");
 
                     b.HasData(
                         new
@@ -356,7 +359,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ReservationHotelGroupId");
 
-                    b.ToTable("GroupRates", (string)null);
+                    b.ToTable("GroupRates");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Habitations", b =>
@@ -396,7 +399,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("HabitationId");
 
-                    b.ToTable("Habitations", (string)null);
+                    b.ToTable("Habitations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.HabitationsReservation", b =>
@@ -422,7 +425,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ReservationHotelId");
 
-                    b.ToTable("HabitationsReservations", (string)null);
+                    b.ToTable("HabitationsReservations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Hotels", b =>
@@ -450,7 +453,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("DestinationId");
 
-                    b.ToTable("Hotels", (string)null);
+                    b.ToTable("Hotels");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.IndividualRate", b =>
@@ -480,7 +483,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ReservationHotelId");
 
-                    b.ToTable("IndividualRates", (string)null);
+                    b.ToTable("IndividualRates");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Itinerary", b =>
@@ -512,7 +515,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("itineraryId");
 
-                    b.ToTable("Itineraries", (string)null);
+                    b.ToTable("Itineraries");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentConcept", b =>
@@ -535,7 +538,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("PaymentConceptId");
 
-                    b.ToTable("PaymentConcepts", (string)null);
+                    b.ToTable("PaymentConcepts");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentMethods", b =>
@@ -558,7 +561,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("PaymentMethodId");
 
-                    b.ToTable("PaymentMethods", (string)null);
+                    b.ToTable("PaymentMethods");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentRelationList", b =>
@@ -591,7 +594,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("PaymentReservationId");
 
-                    b.ToTable("PaymentRelationLists", (string)null);
+                    b.ToTable("PaymentRelationLists");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentsRelationReservations", b =>
@@ -633,7 +636,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("StatusPaymentRelationId");
 
-                    b.ToTable("PaymentsRelationReservations", (string)null);
+                    b.ToTable("PaymentsRelationReservations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Providers", b =>
@@ -658,7 +661,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("ProviderId");
 
-                    b.ToTable("Providers", (string)null);
+                    b.ToTable("Providers");
 
                     b.HasData(
                         new
@@ -788,7 +791,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("StatusFlightId");
 
-                    b.ToTable("ReservationFlights", (string)null);
+                    b.ToTable("ReservationFlights");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotel", b =>
@@ -903,7 +906,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("TypeReservationId");
 
-                    b.ToTable("ReservationHotels", (string)null);
+                    b.ToTable("ReservationHotels");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotelGroup", b =>
@@ -939,7 +942,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ReservationHotelId");
 
-                    b.ToTable("ReservationHotelGroups", (string)null);
+                    b.ToTable("ReservationHotelGroups");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotelsServicesAditionals", b =>
@@ -965,7 +968,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ReservationHotelId");
 
-                    b.ToTable("ReservationHotelsServicesAditionals", (string)null);
+                    b.ToTable("ReservationHotelsServicesAditionals");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationTours", b =>
@@ -1028,7 +1031,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("DestinationId");
 
-                    b.ToTable("ReservationTours", (string)null);
+                    b.ToTable("ReservationTours");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationVehicle", b =>
@@ -1073,7 +1076,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("ReservationVehicles", (string)null);
+                    b.ToTable("ReservationVehicles");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Routes", b =>
@@ -1097,7 +1100,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("RouteId");
 
-                    b.ToTable("Routes", (string)null);
+                    b.ToTable("Routes");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ServicesProvider", b =>
@@ -1137,7 +1140,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("ServicesProviders", (string)null);
+                    b.ToTable("ServicesProviders");
 
                     b.HasData(
                         new
@@ -1303,7 +1306,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("StatusFlightId");
 
-                    b.ToTable("StatusFlight", (string)null);
+                    b.ToTable("StatusFlight");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.StatusPaymentRelations", b =>
@@ -1326,7 +1329,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("StatusId");
 
-                    b.ToTable("StatusPaymentRelations", (string)null);
+                    b.ToTable("StatusPaymentRelations");
 
                     b.HasData(
                         new
@@ -1363,7 +1366,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("TypeReservationId");
 
-                    b.ToTable("TypeReservations", (string)null);
+                    b.ToTable("TypeReservations");
 
                     b.HasData(
                         new
@@ -1399,7 +1402,7 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("TypeReservationGrupalId");
 
-                    b.ToTable("TypeReservationGrupals", (string)null);
+                    b.ToTable("TypeReservationGrupals");
 
                     b.HasData(
                         new
