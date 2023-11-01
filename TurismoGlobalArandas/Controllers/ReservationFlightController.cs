@@ -42,7 +42,7 @@ namespace TurismoGlobalArandas.Controllers
             flight.DateSale = DateTime.Now;
             _context.ReservationFlights.Add(flight);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("getFlightById", new { FlightId = flight.FlightId }, flight);
+            return CreatedAtAction("getReservationFlightById", new { FlightId = flight.FlightId }, flight);
         }
         [HttpPut("{FlightId}")]
         public async Task<ActionResult> PutReservationFlight(int FlightId, ReservationFlight reservationFlight)

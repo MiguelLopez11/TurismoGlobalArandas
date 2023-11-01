@@ -10,9 +10,12 @@ namespace TurismoGlobalArandas.Models
         public int AditionalServiceId { get; set; }
         public string Name { get; set; } = string.Empty;
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal Cost { get; set; }
+        public decimal? Cost { get; set; }
         public string? Description { get; set; }
+        
         public bool IsDeleted { get; set; }
 
+
+        
     }
 }

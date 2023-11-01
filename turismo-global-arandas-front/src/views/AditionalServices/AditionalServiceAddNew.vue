@@ -47,7 +47,7 @@
               <label> Descripción </label>
             </div>
             <el-input
-              placeholder="Ingresa una descripción del destino"
+              placeholder="Ingresa una descripción del servicio"
               size="large"
               v-model="AditionalServiceFields.description"
             />

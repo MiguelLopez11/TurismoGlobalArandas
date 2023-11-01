@@ -69,7 +69,7 @@
                       @click="
                         onDeleteReservationHotel(items.reservationHotelId)
                       "
-                      >Eliminar</el-dropdown-item
+                      >Cancelar reservación</el-dropdown-item
                     >
                   </el-dropdown-menu>
                   <el-dropdown-item
@@ -90,6 +90,19 @@
               <span>{{
                 items.destinations ? items.destinations.name : ''
               }}</span>
+            </template>
+            <template #item-hotel="items">
+              <span>{{ items.hotels ? items.hotels.name : '' }}</span>
+            </template>
+            <template #item-statusReservation="items">
+              <el-tag class="ml-2" :type="items.isDeleted === false ? 'success' : 'danger'">
+                {{ items.isDeleted === false ? 'Activo' : 'Cancelado' }}
+              </el-tag>
+            </template>
+            <template #item-statusPayment="items">
+              <el-tag class="ml-2" :type="items.isSoldOut !== false ? 'success' : 'warning'">
+                {{ items.isSoldOut !== false ? 'Liquidado' : 'Sin liquidar' }}
+              </el-tag>
             </template>
           </EasyDataTable>
         </div>
@@ -123,7 +136,7 @@ export default {
       { value: 'hotel', text: 'Hotel' },
       { value: 'destinations', text: 'Destino' },
       { value: 'dateSale', text: 'Fecha de venta' },
-      { value: 'StatusPayment', text: 'Estado de pago' },
+      { value: 'statusPayment', text: 'Estado de pago' },
       { value: 'statusReservation', text: 'Estado reservación' },
       { value: 'actions', text: 'Acciones' }
     ])
@@ -146,19 +159,19 @@ export default {
     const onDeleteReservationHotel = reservationHotelId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar una reservación, ¿Estas seguro?',
+          title: 'Estás a punto de cancelar una reservación, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar reservación',
+          confirmButtonText: 'Si, cancelar reservación',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
             deleteReservationHotel(reservationHotelId, data => {
               swal.fire({
-                title: 'Reservación archivada!',
-                text: 'La reservación ha sido archivada satisfactoriamente .',
+                title: 'Reservación cancelada!',
+                text: 'La reservación ha sido cancelada satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()

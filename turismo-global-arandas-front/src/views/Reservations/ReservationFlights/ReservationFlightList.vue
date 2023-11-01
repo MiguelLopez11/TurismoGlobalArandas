@@ -6,7 +6,7 @@
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar reservationFlights..."
+          placeholder="Buscar vuelo..."
         />
       </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">

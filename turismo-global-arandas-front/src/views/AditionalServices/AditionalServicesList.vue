@@ -2,14 +2,14 @@
   <aditional-service-add-new />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
-      <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
+      <el-col :xs="13" :sm="12" :md="8" :xl="8" :lg="8">
         <el-input
           v-model="searchValue"
           size="large"
           placeholder="Buscar servicio adicional..."
         />
       </el-col>
-      <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
+      <el-col :xs="10" :sm="10" :md="6" :xl="4" :lg="5">
         <el-button
           class="w-100"
           size="large"

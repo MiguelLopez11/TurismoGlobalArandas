@@ -34,9 +34,9 @@ namespace TurismoGlobalArandas.Models
         public int? HotelId { get; set; } = null;
         public int? DestinationId { get; set; } = null;
         public int? ProviderId { get; set; } = null;
-        public int? ReservationFlightId { get; set; } = null;
-        public int? ReservationVehicleId { get; set; } = null;
-        public bool IsDeleted { get; set; }
+        
+        public bool IsSoldOut { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
 
         [ForeignKey("EmployeeId")]
         public Employees? Employees { get; set; }
@@ -56,11 +56,6 @@ namespace TurismoGlobalArandas.Models
         [ForeignKey("TypeReservationGroupId")]
         public TypeReservationGrupal? TypeReservationGrupal { get; set; }
 
-        [ForeignKey("ReservationFlightId")]
-        public ReservationFlight? ReservationFlight { get; set; }
-
-        [ForeignKey("ReservationVehicleId")]
-        public ReservationVehicle? ReservationVehicle { get; set; }
 
 
         [ForeignKey("ProviderId")]

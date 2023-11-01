@@ -44,6 +44,8 @@ namespace TurismoGlobalArandas.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<AditionalServices>().HasData(new AditionalServices { AditionalServiceId = 1, Name = "Servicio de reservación de vuelo", Description = null, IsDeleted = false });
+            builder.Entity<AditionalServices>().HasData(new AditionalServices { AditionalServiceId = 2, Name = "Servicio de reservación de vehiculo", Description = null, IsDeleted = false });
             builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 1, Name = "Individual", Description = null, IsDeleted = false });
             builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 2, Name = "Grupal", Description = null, IsDeleted = false });
             builder.Entity<TypeReservationGrupal>().HasData(new TypeReservationGrupal { TypeReservationGrupalId = 1, Name = "Grupo", Description = null, IsDeleted = false });
@@ -74,6 +76,8 @@ namespace TurismoGlobalArandas.Context
             builder.Entity<ServicesProvider>().HasData(new ServicesProvider { ServiceId = 12, Name = "", ProviderId = 7, Color = null, CommissionAgency = 20, CommissionClient = 00, CommissionEmployee = 05, Description = null, IsDeleted = false });
             builder.Entity<ServicesProvider>().HasData(new ServicesProvider { ServiceId = 13, Name = "Traslados", ProviderId = 8, Color = null, CommissionAgency = 05, CommissionClient = 00, CommissionEmployee = 05, Description = null, IsDeleted = false });
             builder.Entity<ServicesProvider>().HasData(new ServicesProvider { ServiceId = 14, Name = "", ProviderId = 9, Color = null, CommissionAgency = 15, CommissionClient = 10, CommissionEmployee = 05, Description = null, IsDeleted = false });
+            builder.Entity<StatusFlight>().HasData(new StatusFlight { StatusFlightId = 1, Name = "Activo", Description = null, IsDeleted = false });
+            builder.Entity<StatusFlight>().HasData(new StatusFlight { StatusFlightId = 2, Name = "Cancelado", Description = null, IsDeleted = false });
         }
 
     }
