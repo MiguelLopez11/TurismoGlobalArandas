@@ -36,7 +36,7 @@
                 <label>Descripción</label>
               </div>
               <el-input
-                placeholder="Ingresa el numero de telefono del empleado"
+                placeholder="Ingresa una descripción del servicio"
                 size="large"
                 v-model="aditionalService.description"
               />

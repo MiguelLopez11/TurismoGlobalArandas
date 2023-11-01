@@ -168,7 +168,7 @@
                 v-model="reservationHotel.destinationId"
                 :options="destinations"
                 :reduce="destination => destination.destinationId"
-                @input="onGetHotel(reservationHotel.destinationId)"
+                @close="onGetHotel(reservationHotel.destinationId)"
               >
                 <template #selected-option="{ name, lastname }">
                   <label>{{ name }} {{ lastname }}</label>
@@ -733,7 +733,7 @@ export default {
     })
     const individualRateFields = ref({
       individualRateId: 0,
-      reservationHotelId: reservationHotelId.value || props.reservationHotelId,
+      reservationHotelId: null,
       publicRate: null,
       clientRate: null,
       extraDiscount: null,
@@ -824,9 +824,10 @@ export default {
         }
       })
       getIndividualRateByReservationHotel(props.reservationHotelId, data => {
-        if (data) {
+        if (data.individualRateId) {
           individualRate.value = data
         } else {
+          individualRateFields.value.reservationHotelId = reservationHotelId.value || props.reservationHotelId
           createIndividualRate(individualRateFields.value, data => {
             getIndividualRate(data.individualRateId, items => {
               individualRate.value = items
@@ -1009,13 +1010,15 @@ export default {
                 }
               }
             )
-          }
-          if (reservationHotel.value.typeReservationGrupalId === 2) {
-            createIndividualRate(individualRateFields.value, data => {
-              getIndividualRate(data.individualRateId, items => {
-                individualRate.value = items
+          } else {
+            if (!individualRate.value.individualRateId) {
+              individualRateFields.value.reservationHotelId = reservationHotelId.value || props.reservationHotelId
+              createIndividualRate(individualRateFields.value, data => {
+                getIndividualRate(data.individualRateId, items => {
+                  individualRate.value = items
+                })
               })
-            })
+            }
           }
           resolve(true)
         } else {
@@ -1032,7 +1035,17 @@ export default {
             individualRate.value.clientRate
           ) {
             onUpdateReservation()
-            updateIndividualRate(individualRate.value, data => {})
+            updateIndividualRate(
+              {
+                individualRateId: individualRate.value.individualRateId,
+                reservationHotelId: individualRate.value.reservationHotelId,
+                publicRate: individualRate.value.publicRate,
+                clientRate: individualRate.value.clientRate,
+                extraDiscount: individualRate.value.extraDiscount,
+                isDeleted: false
+              },
+              data => {}
+            )
             resolve(true)
           } else {
             onMessageErrorSteps()

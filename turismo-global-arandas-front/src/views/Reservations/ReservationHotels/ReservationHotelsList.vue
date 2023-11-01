@@ -69,7 +69,7 @@
                       @click="
                         onDeleteReservationHotel(items.reservationHotelId)
                       "
-                      >Eliminar</el-dropdown-item
+                      >Cancelar reservación</el-dropdown-item
                     >
                   </el-dropdown-menu>
                   <el-dropdown-item
@@ -159,19 +159,19 @@ export default {
     const onDeleteReservationHotel = reservationHotelId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar una reservación, ¿Estas seguro?',
+          title: 'Estás a punto de cancelar una reservación, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar reservación',
+          confirmButtonText: 'Si, cancelar reservación',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
             deleteReservationHotel(reservationHotelId, data => {
               swal.fire({
-                title: 'Reservación archivada!',
-                text: 'La reservación ha sido archivada satisfactoriamente .',
+                title: 'Reservación cancelada!',
+                text: 'La reservación ha sido cancelada satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()

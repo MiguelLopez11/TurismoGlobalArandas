@@ -6,7 +6,7 @@
     center
   >
     <Form
-      ref="ReservationFlightFormRef"
+      ref="reservationVehicleFormRef"
       as="el-form"
       :validation-schema="validationSchema"
       @submit="onSubmit"
@@ -222,7 +222,7 @@ export default {
   setup () {
     const isOpenDialog = inject('AddReservationVehicle')
     const swal = inject('$swal')
-    const ReservationFlightFormRef = ref(null)
+    const reservationVehicleFormRef = ref(null)
     const providers = ref([])
     const { getProviders } = ProviderServices()
     const { createReservationVehicle } = ReservationVehicleServices()
@@ -274,13 +274,13 @@ export default {
         reservationVehiclesFields.value = JSON.parse(
           JSON.stringify(reservationVehiclesFieldsBlank)
         )
-        ReservationFlightFormRef.value.resetForm()
+        reservationVehicleFormRef.value.resetForm()
       })
     }
 
     return {
       isOpenDialog,
-      ReservationFlightFormRef,
+      reservationVehicleFormRef,
       providers,
       onSubmit,
       reservationVehiclesFields,

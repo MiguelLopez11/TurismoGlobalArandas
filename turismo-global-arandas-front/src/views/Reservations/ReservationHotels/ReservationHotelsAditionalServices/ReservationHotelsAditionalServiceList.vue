@@ -1,14 +1,7 @@
 <template>
-  <!-- <reservation-flights-add-new /> -->
+  <reservation-hotles-aditional-service-add-new />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
-      <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
-        <el-input
-          v-model="searchValue"
-          size="large"
-          placeholder="Buscar servicesAditional..."
-        />
-      </el-col>
       <el-col :xs="10" :sm="12" :md="6" :xl="4" :lg="5">
         <el-button
           class="w-100"
@@ -50,23 +43,17 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item
-                      @click="
-                        () => {
-                          $router.push({
-                            name: 'Edit-ReservationFlight',
-                            params: { FlightId: items.flightId }
-                          })
-                        }
-                      "
-                      >Editar</el-dropdown-item
-                    >
-                    <el-dropdown-item
-                      @click="onDeleteReservationFlight(items.flightId)"
+                      @click="onDeleteReservationFlight(items.id)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
+            </template>
+            <template #item-cost="items">
+              {{items.reservationFlightId ? items.reservationFlight.priceNeto : '' }}
+              {{items.reservationVehicleId ? items.reservationVehicle.priceNeto : '' }}
+              {{!items.reservationFlightId && !items.reservationVehicleId ? items.aditionalServices.cost : ''}}
             </template>
           </EasyDataTable>
         </div>
@@ -78,9 +65,10 @@
 <script>
 import { ref, watch, provide, inject, computed } from 'vue'
 import ReservationHotelAditionalService from '@/Services/ReservationHotelAditionalService.Service'
+import ReservationHotlesAditionalServiceAddNew from './ReservationHotlesAditionalServiceAddNew.vue'
 import { useStore } from 'vuex'
 export default {
-  //   components: { ReservationFlightsAddNew },
+  components: { ReservationHotlesAditionalServiceAddNew },
   setup () {
     const {
       getReservationAditionalServiceByReservationHotelId,
@@ -95,27 +83,34 @@ export default {
     const perPageSelect = ref([5, 10, 25, 50, 100])
     const isloading = ref(true)
     const searchValue = ref('')
-    const searchField = ref('invoice')
+    const searchField = ref('aditionalServices.name')
     const isAddReservationAditionalService = ref(false)
     const reservationHotelId = computed(
       () => store.getters.getReservationHotelId
     )
-    provide('addReservationFlight', isAddReservationAditionalService)
+    provide('addReservationAditionalService', isAddReservationAditionalService)
 
     const fields = ref([
       { value: 'aditionalServices.name', text: 'Servicio' },
+      { value: 'cost', text: 'Costo' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getReservationAditionalServiceByReservationHotelId(reservationHotelId.value, data => {
-      servicesAditional.value = data
-      isloading.value = false
-    })
-    const refreshTable = () => {
-      isloading.value = true
-      getReservationAditionalServiceByReservationHotelId(reservationHotelId.value, data => {
+    getReservationAditionalServiceByReservationHotelId(
+      reservationHotelId.value,
+      data => {
         servicesAditional.value = data
         isloading.value = false
-      })
+      }
+    )
+    const refreshTable = () => {
+      isloading.value = true
+      getReservationAditionalServiceByReservationHotelId(
+        reservationHotelId.value,
+        data => {
+          servicesAditional.value = data
+          isloading.value = false
+        }
+      )
     }
     watch(isAddReservationAditionalService, newValue => {
       if (!newValue) {
@@ -125,7 +120,8 @@ export default {
     const onDeleteReservationFlight = id => {
       swal
         .fire({
-          title: 'Estás a punto de cancelar un servicio adicional, ¿Estas seguro?',
+          title:
+            'Estás a punto de cancelar un servicio adicional, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
