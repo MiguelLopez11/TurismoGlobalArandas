@@ -85,7 +85,7 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.TypeHabitation = Reservation.TypeHabitation;
             ReservationOld.Agent = Reservation.Agent;
             ReservationOld.PaymentLimitDateProvider = Reservation.PaymentLimitDateProvider;
-            ReservationOld.NumberHabitations = Reservation.NumberHabitations;
+            //ReservationOld.NumberHabitations = Reservation.NumberHabitations;
             ReservationOld.PhoneContact = Reservation.PhoneContact;
             ReservationOld.Observations = Reservation.Observations;
             ReservationOld.GroupCoordinator = Reservation.GroupCoordinator;

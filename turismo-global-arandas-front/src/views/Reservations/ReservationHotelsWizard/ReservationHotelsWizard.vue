@@ -827,7 +827,8 @@ export default {
         if (data.individualRateId) {
           individualRate.value = data
         } else {
-          individualRateFields.value.reservationHotelId = reservationHotelId.value || props.reservationHotelId
+          individualRateFields.value.reservationHotelId =
+            reservationHotelId.value || props.reservationHotelId
           createIndividualRate(individualRateFields.value, data => {
             getIndividualRate(data.individualRateId, items => {
               individualRate.value = items
@@ -911,17 +912,22 @@ export default {
       })
     }
     const onComplete = () => {
-      swal
-        .fire({
-          title: 'Reservación registrada correctamente',
-          text: 'La reservación se ha cargado al sistema satisfactoriamente.',
-          icon: 'success'
+      getPaymentRelation(paymentReservationId.value, data => {
+        data.amountTotal = reservationHotel.value.totalCost
+        updatePaymentRelation(data, response => {
+          swal
+            .fire({
+              title: 'Reservación registrada correctamente',
+              text: 'La reservación se ha cargado al sistema satisfactoriamente.',
+              icon: 'success'
+            })
+            .then(result => {
+              if (result.isConfirmed) {
+                redirect.push('/ReservacionesHoteleria')
+              }
+            })
         })
-        .then(result => {
-          if (result.isConfirmed) {
-            redirect.push('/ReservacionesHoteleria')
-          }
-        })
+      })
     }
     const onSelectTravelDate = () => {
       reservationHotel.value.travelDateStart = rangeDatesTravel.value[0]
@@ -1012,7 +1018,8 @@ export default {
             )
           } else {
             if (!individualRate.value.individualRateId) {
-              individualRateFields.value.reservationHotelId = reservationHotelId.value || props.reservationHotelId
+              individualRateFields.value.reservationHotelId =
+                reservationHotelId.value || props.reservationHotelId
               createIndividualRate(individualRateFields.value, data => {
                 getIndividualRate(data.individualRateId, items => {
                   individualRate.value = items
@@ -1070,10 +1077,6 @@ export default {
           reservationHotel.value.codeVoicher &&
           reservationHotel.value.employeeId
         ) {
-          getPaymentRelation(paymentReservationId.value, data => {
-            data.amountTotal = reservationHotel.value.totalCost
-            updatePaymentRelation(data, response => {})
-          })
           onUpdateReservation()
           resolve(true)
         } else {
