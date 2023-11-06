@@ -477,6 +477,10 @@
                 selectText="Seleccionar"
                 cancelText="Cancelar"
                 modelType="yyyy-MM-dd HH:mm"
+                locale="es"
+                range
+                fixed-start
+                :clearable="true"
                 @update:model-value="
                   onSelectedDateArrival(reservationHotelGroup.dateArrival)
                 "
@@ -743,7 +747,7 @@ export default {
       reservationHotelGroupId: 0,
       groupName: null,
       confirmationKey: null,
-      dateArrival: null,
+      dateArrival: Date.now(),
       coordinator: null,
       phoneNumber: null,
       reservationHotelId: reservationHotelId.value || props.reservationHotelId,
