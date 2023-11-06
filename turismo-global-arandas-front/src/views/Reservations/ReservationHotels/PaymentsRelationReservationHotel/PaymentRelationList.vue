@@ -158,7 +158,7 @@ export default {
                 text: 'El pago ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
-              refreshTable()
+              location.reload()
             })
           } else {
             isloading.value = false

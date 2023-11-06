@@ -12,7 +12,6 @@ namespace TurismoGlobalArandas.Models
         public DateTime? TravelDateStart { get; set; } = null;
         public DateTime? TravelDateEnd { get; set; } = null;
         public string? TypeHabitation { get; set; } = null;
-        public int? NumberHabitations { get; set; } = null;
         public string? PhoneContact { get; set; } = null;
         public string? Observations { get; set; } = null;
         public string? GroupCoordinator { get; set; } = null;
