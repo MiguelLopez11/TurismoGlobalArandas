@@ -53,7 +53,7 @@ namespace TurismoGlobalArandas.Controllers
             var AditionalServiceOld = await _context.AditionalServices.FirstOrDefaultAsync(f => f.AditionalServiceId == AditionalServiceId);
             if (AditionalServiceOld == null)
             {
-                return BadRequest($"El cliente con el ID {AditionalServiceId} no existe");
+                return BadRequest($"El servicio adicional con el ID {AditionalServiceId} no existe");
             }
             AditionalServiceOld.AditionalServiceId = aditionalService.AditionalServiceId;
             AditionalServiceOld.Name = aditionalService.Name;
