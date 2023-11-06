@@ -473,14 +473,11 @@
             <el-form-item>
               <VueDatePicker
                 v-model="reservationHotelGroup.dateArrival"
-                placeholder="Seleccionar ..."
+                placeholder="Seleccionar fecha..."
                 selectText="Seleccionar"
                 cancelText="Cancelar"
                 modelType="yyyy-MM-dd HH:mm"
                 locale="es"
-                range
-                fixed-start
-                :clearable="true"
                 @update:model-value="
                   onSelectedDateArrival(reservationHotelGroup.dateArrival)
                 "
@@ -799,10 +796,14 @@ export default {
             props.reservationHotelId,
             data => {
               reservationHotelGroup.value = data
-              reservationHotelGroup.value.dateArrival = format(
-                new Date(reservationHotelGroup.value.dateArrival),
-                'yyyy-MM-dd HH:mm'
-              )
+              if (reservationHotelGroup.value.dateArrival) {
+                reservationHotelGroup.value.dateArrival = format(
+                  new Date(reservationHotelGroup.value.dateArrival),
+                  'yyyy-MM-dd HH:mm'
+                )
+              } else {
+                reservationHotelGroup.value.dateArrival = new Date()
+              }
             }
           )
           comprobateIfExist(data.reservationHotelId, data => {
