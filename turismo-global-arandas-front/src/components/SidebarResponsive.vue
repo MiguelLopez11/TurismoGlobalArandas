@@ -228,6 +228,18 @@ export default {
             title: 'Conceptos de pago',
             path: '/ConceptosPago',
             icon: 'bi bi-cash-coin'
+          },
+          {
+            index: '6-3',
+            title: 'Gastos eventuales',
+            path: '/GastosEventuales',
+            icon: 'bi bi-wallet2'
+          },
+          {
+            index: '6-4',
+            title: 'Gastos fijos',
+            path: '/GastosFijos',
+            icon: 'bi bi-credit-card-2-front'
           }
         ]
       }
