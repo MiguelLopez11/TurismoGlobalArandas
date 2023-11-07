@@ -360,6 +360,38 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/GastosEventuales',
+    name: 'ExpensesEventual',
+    component: () => import('../views/ExpensesEventual/ExpensesEventualList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/GastosEventuales/:ExpenseId',
+    name: 'Edit-ExpensesEventual',
+    component: () => import('../views/ExpensesEventual/ExpensesEventualEdit'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/GastosFijos',
+    name: 'ExpensesFixed',
+    component: () => import('../views/ExpensesFixed/ExpensesFixedList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/GastosFijos/:ExpenseFixedId',
+    name: 'Edit-ExpensesFixed',
+    component: () => import('../views/ExpensesFixed/ExpensesFixedEdit'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 

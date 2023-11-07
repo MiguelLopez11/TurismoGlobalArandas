@@ -8,18 +8,18 @@ namespace TurismoGlobalArandas.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ExpensesController : ControllerBase
+    public class ExpensesEventualController : ControllerBase
     {
         private readonly TurismoGlobalContext _context;
-        public ExpensesController(TurismoGlobalContext context)
+        public ExpensesEventualController(TurismoGlobalContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<Expenses>> getExpenses()
+        public async Task<ActionResult<ExpensesEventual>> getExpenses()
         {
-            var expenses = await _context.Expenses
+            var expenses = await _context.ExpensesEventuals
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
             return Ok(expenses);
@@ -27,7 +27,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpGet("{ExpenseId}")]
         public async Task<ActionResult> getExpenseById(int ExpenseId)
         {
-            var expense = await _context.Expenses
+            var expense = await _context.ExpensesEventuals
                 .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.ExpenseId == ExpenseId);
             if (expense == null)
@@ -37,20 +37,20 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(expense);
         }
         [HttpPost]
-        public async Task<ActionResult<Expenses>> PostExpense(Expenses expense)
+        public async Task<ActionResult<ExpensesEventual>> PostExpense(ExpensesEventual expense)
         {
-            _context.Expenses.Add(expense);
+            _context.ExpensesEventuals.Add(expense);
             await _context.SaveChangesAsync();
             return CreatedAtAction("getExpenseById", new { ExpenseId = expense.ExpenseId }, expense);
         }
         [HttpPut("{ExpenseId}")]
-        public async Task<ActionResult> PutExpense(int ExpenseId, Expenses expense)
+        public async Task<ActionResult> PutExpense(int ExpenseId, ExpensesEventual expense)
         {
             if (expense.ExpenseId != ExpenseId)
             {
                 return Ok("Los Id ingresados no coinciden");
             }
-            var ExpenseOld = await _context.Expenses
+            var ExpenseOld = await _context.ExpensesEventuals
                 .FirstOrDefaultAsync(f => f.ExpenseId == ExpenseId);
             if (ExpenseOld == null)
             {
@@ -62,14 +62,14 @@ namespace TurismoGlobalArandas.Controllers
             ExpenseOld.Description = expense.Description;
             ExpenseOld.IsDeleted = expense.IsDeleted;
 
-            _context.Expenses.Update(ExpenseOld);
+            _context.ExpensesEventuals.Update(ExpenseOld);
             await _context.SaveChangesAsync();
             return Ok("El gasto se actualizo correctamente");
         }
         [HttpDelete("{ExpenseId}")]
         public async Task<IActionResult> DeleteExpense(int ExpenseId)
         {
-            var expense = await _context.Expenses
+            var expense = await _context.ExpensesEventuals
                 .FirstOrDefaultAsync(f => f.ExpenseId == ExpenseId);
             if (expense == null)
             {
@@ -77,7 +77,7 @@ namespace TurismoGlobalArandas.Controllers
             }
 
             expense.IsDeleted = true;
-            _context.Expenses.Update(expense);
+            _context.ExpensesEventuals.Update(expense);
             await _context.SaveChangesAsync();
             return Ok("Gasto archivado");
         }
