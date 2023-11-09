@@ -61,7 +61,6 @@ namespace TurismoGlobalArandas.Controllers
                 .FirstOrDefaultAsync(f => f.ReservationHotelId == reservationHotelGroup.ReservationHotelId);
             if (reservation == null)
             {
-
                 _context.ReservationHotelGroups.Add(reservationHotelGroup);
                 await _context.SaveChangesAsync();
                 return CreatedAtAction(

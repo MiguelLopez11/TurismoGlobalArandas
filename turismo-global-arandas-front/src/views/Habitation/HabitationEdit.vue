@@ -170,7 +170,6 @@ import { Field, Form } from 'vee-validate'
 import HabitationServices from '@/Services/Habitation.Services'
 import ReservationHotelServices from '@/Services/ReservationHotel.Services'
 import { useStore } from 'vuex'
-
 export default {
   components: {
     Form,
