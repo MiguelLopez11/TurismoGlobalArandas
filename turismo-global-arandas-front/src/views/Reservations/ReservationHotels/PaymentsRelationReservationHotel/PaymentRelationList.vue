@@ -72,6 +72,7 @@ import PaymentsRelationReservationServices from '@/Services/PaymentRelationReser
 import PaymentRelationListAddNew from './PaymentRelationAddNew.vue'
 import PaymentRealtionEdit from './PaymentRealtionEdit.vue'
 import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
 export default {
   components: { PaymentRelationListAddNew, PaymentRealtionEdit },
@@ -82,6 +83,7 @@ export default {
     } = PaymentsRelationListServices()
     PaymentsRelationReservationServices()
     const store = useStore()
+    const redirect = useRouter()
     const paymentsRelationList = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
@@ -158,7 +160,7 @@ export default {
                 text: 'El pago ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
-              location.reload()
+              redirect.go(0)
             })
           } else {
             isloading.value = false

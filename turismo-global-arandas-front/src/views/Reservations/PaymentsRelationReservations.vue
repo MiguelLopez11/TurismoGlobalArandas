@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { ref, provide } from 'vue'
+import { ref, provide, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 import PaymentRelationList from './ReservationHotels/PaymentsRelationReservationHotel/PaymentRelationList.vue'
@@ -53,30 +53,53 @@ export default {
     const router = useRoute()
     const isAddedPayment = ref(false)
     provide('isAddedPayment', isAddedPayment)
+    watch(isAddedPayment, newValue => {
+      if (!newValue) {
+        refreshTable()
+      }
+    })
+    const refreshTable = () => {
+      getPaymentsRelationByReservationHotel(
+        router.params.ReservationHotelId,
+        data => {
+          paymentsRelation.value = data
+          store.commit('setPaymentReservationId', data.paymentReservationId)
+          store.commit('setPaymentAmountTotal', data.amountMissing)
+        }
+      )
+    }
     const {
       getPaymentsRelationByReservationHotel,
       getPaymentsRelationByReservationTour,
       getPaymentsRelationByReservationVehicle
     } = PaymentsRelationReservationServices()
     if (router.params.ReservationHotelId) {
-      getPaymentsRelationByReservationHotel(router.params.ReservationHotelId,
+      getPaymentsRelationByReservationHotel(
+        router.params.ReservationHotelId,
         data => {
           paymentsRelation.value = data
           store.commit('setPaymentReservationId', data.paymentReservationId)
+          store.commit('setPaymentAmountTotal', data.amountMissing)
         }
       )
     } else if (router.params.ReservationTourId) {
-      getPaymentsRelationByReservationTour(router.params.ReservationTourId,
+      getPaymentsRelationByReservationTour(
+        router.params.ReservationTourId,
         data => {
           paymentsRelation.value = data
           store.commit('setPaymentReservationId', data.paymentReservationId)
+          store.commit('setPaymentAmountTotal', data.amountMissing)
         }
       )
     } else if (router.params.ReservationVehicleId) {
-      getPaymentsRelationByReservationVehicle(router.params.ReservationVehicleId, data => {
-        paymentsRelation.value = data
-        store.commit('setPaymentReservationId', data.paymentReservationId)
-      })
+      getPaymentsRelationByReservationVehicle(
+        router.params.ReservationVehicleId,
+        data => {
+          paymentsRelation.value = data
+          store.commit('setPaymentReservationId', data.paymentReservationId)
+          store.commit('setPaymentAmountTotal', data.amountMissing)
+        }
+      )
     }
 
     return {

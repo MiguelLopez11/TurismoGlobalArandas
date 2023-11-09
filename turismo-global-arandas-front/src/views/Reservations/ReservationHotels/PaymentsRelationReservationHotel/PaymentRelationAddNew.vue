@@ -86,10 +86,11 @@
 </template>
 
 <script>
-import { ref, inject } from 'vue'
 import PaymentsRelationListServices from '@/Services/PaymentRelationList.Services'
 import * as yup from 'yup'
+import { ref, inject } from 'vue'
 import { useStore } from 'vuex'
+// import { useRouter } from 'vue-router'
 
 export default {
   setup () {
@@ -97,7 +98,10 @@ export default {
     const swal = inject('$swal')
     const store = useStore()
     const paymentFormRef = ref(null)
+    // const redirect = useRouter()
     const { createPaymentRelationList } = PaymentsRelationListServices()
+    const paymentAmountTotal = ref()
+    const paymentReservationId = ref()
     const validationSchema = yup.object({
       invoice: yup.string().required('Este campo es requerido').label('Nombre'),
       amount: yup
@@ -108,11 +112,11 @@ export default {
         .required('Este campo es requerido')
         .label('Nombre')
     })
-    const paymentReservationId = ref()
     setTimeout(() => {
       paymentReservationId.value = parseInt(
         store.getters.getPaymentReservationId
       )
+      paymentAmountTotal.value = parseInt(store.getters.getPaymentAmountTotal)
     }, 1000)
     const paymentFields = ref({
       paymentId: 0,
@@ -127,17 +131,32 @@ export default {
 
     const onSubmit = () => {
       paymentFields.value.paymentReservationId = paymentReservationId.value
-      createPaymentRelationList(paymentFields.value, data => {
-        swal.fire({
-          title: '¡Nuevo pago registrado!',
-          text: 'El pago se ha registrado correctamente',
-          icon: 'success'
-        })
+      console.log(
+        parseInt(paymentFields.value.amount),
+        paymentAmountTotal.value
+      )
+      if (parseInt(paymentFields.value.amount) > paymentAmountTotal.value) {
         isOpenDialog.value = false
         paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
         paymentFormRef.value.resetForm()
-        location.reload()
-      })
+        swal.fire({
+          title: '¡Error al registrar pago!',
+          text: 'El pago que se desea registrar, es mayor al monto total de la reservación',
+          icon: 'error'
+        })
+      } else {
+        createPaymentRelationList(paymentFields.value, data => {
+          swal.fire({
+            title: '¡Nuevo pago registrado!',
+            text: 'El pago se ha registrado correctamente',
+            icon: 'success'
+          })
+          isOpenDialog.value = false
+          paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
+          paymentFormRef.value.resetForm()
+          // redirect.go(0)
+        })
+      }
     }
 
     return {

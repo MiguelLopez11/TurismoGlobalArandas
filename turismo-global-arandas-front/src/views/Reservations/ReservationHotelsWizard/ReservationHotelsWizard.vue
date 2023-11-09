@@ -744,7 +744,7 @@ export default {
       reservationHotelGroupId: 0,
       groupName: null,
       confirmationKey: null,
-      dateArrival: Date.now(),
+      dateArrival: null,
       coordinator: null,
       phoneNumber: null,
       reservationHotelId: reservationHotelId.value || props.reservationHotelId,

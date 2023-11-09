@@ -43,6 +43,7 @@
             :items="reservationHotels"
             :search-field="searchField"
             :search-value="searchValue"
+            :filter-options="filterOptions"
           >
             <template #header-actions="header">
               {{ header.text }}
@@ -94,27 +95,105 @@
             <template #item-hotel="items">
               <span>{{ items.hotels ? items.hotels.name : '' }}</span>
             </template>
-            <template #item-statusReservation="items">
-              <el-tag class="ml-2" :type="items.isDeleted === false ? 'success' : 'danger'">
+            <template #item-isDeleted="items">
+              <el-tag
+                class="ml-2"
+                :type="items.isDeleted === false ? 'success' : 'danger'"
+              >
                 {{ items.isDeleted === false ? 'Activo' : 'Cancelado' }}
               </el-tag>
             </template>
-            <template #item-statusPayment="items">
-              <el-tag class="ml-2" :type="items.isSoldOut !== false ? 'success' : 'warning'">
+            <template #item-isSoldOut="items">
+              <el-tag
+                class="ml-2"
+                :type="items.isSoldOut !== false ? 'success' : 'warning'"
+              >
                 {{ items.isSoldOut !== false ? 'Liquidado' : 'Sin liquidar' }}
               </el-tag>
+            </template>
+            <template #header-isDeleted="header">
+              <div class="filter-column">
+                <img
+                  src="@/Images/Filter-icon.jpg"
+                  width="15"
+                  height="15"
+                  class="filter-icon"
+                  @click.stop="
+                    showStatusReservationFilter = !showStatusReservationFilter
+                  "
+                />
+                {{ header.text }}
+              </div>
+            </template>
+            <template #header-isSoldOut="header">
+              <div class="filter-column">
+                <img
+                  src="@/Images/Filter-icon.jpg"
+                  width="15"
+                  height="15"
+                  class="filter-icon"
+                  @click.stop="
+                    showStatusPaymentFilter = !showStatusPaymentFilter
+                  "
+                />
+                {{ header.text }}
+              </div>
             </template>
           </EasyDataTable>
         </div>
       </el-col>
     </el-row>
   </el-card>
+  <el-dialog
+    v-model="showStatusReservationFilter"
+    title="Filtrar reservaciones"
+    width="80%"
+    center
+  >
+    <el-row :gutter="35">
+      <el-col :lg="8" :md="8">
+        <v-select
+          v-model="statusReservationCriteria"
+          class="w-100"
+          label="label"
+          :options="filterStatusReservation"
+          :reduce="item => item.value"
+        ></v-select>
+      </el-col>
+    </el-row>
+  </el-dialog>
+  <el-dialog
+    v-model="showStatusPaymentFilter"
+    title="Filtrar por pago"
+    width="80%"
+    center
+  >
+    <el-row :gutter="35">
+      <el-col :lg="8" :md="8">
+        <v-select
+          v-model="statusPaymentCriteria"
+          class="w-100"
+          label="label"
+          :options="filterStatusPayment"
+          :reduce="item => item.value"
+        ></v-select>
+      </el-col>
+    </el-row>
+  </el-dialog>
+      <!-- <el-col :lg="8" :md="8">
+        <v-select
+          v-model="statusPaymentCriteria"
+          class="w-100"
+          label="label"
+          :options="filterStatusPayment"
+          :reduce="item => item.value"
+        ></v-select>
+      </el-col> -->
 </template>
 
 <script>
-import { ref, watch, provide, inject } from 'vue'
+import { ref, watch, provide, inject, computed } from 'vue'
 import ReservationServices from '@/Services/ReservationHotel.Services'
-
 export default {
   setup () {
     const { getReservationHotels, deleteReservationHotel } =
@@ -128,6 +207,10 @@ export default {
     const searchValue = ref('')
     const searchField = ref('reservationInvoice')
     const isAddedEmployee = ref(false)
+    const statusReservationCriteria = ref(null)
+    const statusPaymentCriteria = ref(null)
+    const showStatusReservationFilter = ref(false)
+    const showStatusPaymentFilter = ref(false)
     provide('AddEmployee', isAddedEmployee)
     const fields = ref([
       { value: 'reservationInvoice', text: 'Folio' },
@@ -136,9 +219,55 @@ export default {
       { value: 'hotel', text: 'Hotel' },
       { value: 'destinations', text: 'Destino' },
       { value: 'dateSale', text: 'Fecha de venta' },
-      { value: 'statusPayment', text: 'Estado de pago' },
-      { value: 'statusReservation', text: 'Estado reservación' },
+      { value: 'isSoldOut', text: 'Estado de pago' },
+      { value: 'isDeleted', text: 'Estado reservación' },
       { value: 'actions', text: 'Acciones' }
+    ])
+    const filterOptions = computed(() => {
+      const filterOptionsArray = []
+      if (statusReservationCriteria.value !== null) {
+        filterOptionsArray.push({
+          field: 'isDeleted',
+          comparison: '=',
+          criteria: statusReservationCriteria.value === 'true'
+        })
+      }
+      if (statusPaymentCriteria.value !== null) {
+        filterOptionsArray.push({
+          field: 'isSoldOut',
+          comparison: '=',
+          criteria: statusPaymentCriteria.value === 'true'
+        })
+      }
+      return filterOptionsArray
+    })
+    const filterStatusReservation = ref([
+      {
+        label: 'Activo',
+        value: 'false'
+      },
+      {
+        label: 'Cancelado',
+        value: 'true'
+      },
+      {
+        label: 'Mostrar todo',
+        value: null
+      }
+    ])
+    const filterStatusPayment = ref([
+      {
+        label: 'Pago pendiente',
+        value: 'false'
+      },
+      {
+        label: 'liquidado',
+        value: 'true'
+      },
+      {
+        label: 'Mostrar todo',
+        value: null
+      }
     ])
     getReservationHotels(data => {
       reservationHotels.value = data
@@ -151,11 +280,15 @@ export default {
         isloading.value = false
       })
     }
-    watch(isAddedEmployee, newValue => {
-      if (!newValue) {
+    watch(
+      [isAddedEmployee, statusReservationCriteria, statusPaymentCriteria],
+      (newValueA, newValueB, newValueC) => {
+        if (!newValueA) {
+          refreshTable()
+        }
         refreshTable()
       }
-    })
+    )
     const onDeleteReservationHotel = reservationHotelId => {
       swal
         .fire({
@@ -191,6 +324,13 @@ export default {
       fields,
       reservationHotels,
       isAddedEmployee,
+      showStatusReservationFilter,
+      showStatusPaymentFilter,
+      filterOptions,
+      statusReservationCriteria,
+      statusPaymentCriteria,
+      filterStatusReservation,
+      filterStatusPayment,
       refreshTable,
       onDeleteReservationHotel
     }
@@ -198,4 +338,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.filter-icon {
+  cursor: pointer;
+}
+</style>
