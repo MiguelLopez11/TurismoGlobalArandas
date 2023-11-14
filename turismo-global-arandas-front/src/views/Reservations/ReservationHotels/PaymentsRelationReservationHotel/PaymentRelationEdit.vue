@@ -29,6 +29,7 @@
                 placeholder="Ingresa el la cantidad con la que paga el cliente"
                 size="large"
                 v-model="payment.amountReceivedClient"
+                @input="calculateAmountReturned()"
               />
             </el-form-item>
           </Field>
@@ -42,6 +43,7 @@
               placeholder="Ingresa el la cantidad de cambio que recibe el cliente"
               size="large"
               v-model="payment.amountReturnedClient"
+              disabled
             />
           </el-form-item>
         </el-col>
@@ -87,6 +89,11 @@
             class="w-100"
             native-type="submit"
             size="large"
+            :disabled="
+              payment.amount > paymentAmountMissing ||
+              payment.amountReceivedClient < payment.amount ||
+              paymentAmountMissing == 0
+            "
             >Guardar</el-button
           >
         </el-col>
@@ -112,6 +119,7 @@
 import { ref, inject, watch } from 'vue'
 import PaymentsRelationListServices from '@/Services/PaymentRelationList.Services'
 import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
 
 export default {
   props: {
@@ -139,7 +147,12 @@ export default {
     })
 
     const onUpdatePayment = () => {
-      if (paymentAmountMissing.value - payment.value.amount < 0) {
+      // paymentFields.value.paymentReservationId = paymentReservationId.value
+      if (
+        parseInt(payment.value.amount) > paymentAmountMissing.value ||
+        payment.value.amountReceivedClient < payment.value.amount ||
+        paymentAmountMissing.value - payment.value.amount < 0
+      ) {
         isOpenDialog.value = false
         swal.fire({
           title: '¡Error al registrar pago!',
@@ -151,6 +164,19 @@ export default {
           isOpenDialog.value = false
           store.commit('setRefreshPaymentRelation', true)
         })
+      }
+    }
+    const calculateAmountReturned = () => {
+      if (payment.value.amountReceivedClient - payment.value.amount < 0) {
+        ElMessage({
+          showClose: true,
+          message:
+            'Los datos ingresados no son correctos, rectifique e intente de nuevo.',
+          type: 'error'
+        })
+      } else {
+        payment.value.amountReturnedClient =
+          payment.value.amountReceivedClient - payment.value.amount
       }
     }
     const validateAmount = () => {
@@ -174,7 +200,9 @@ export default {
     return {
       isOpenDialog,
       payment,
+      paymentAmountMissing,
       onUpdatePayment,
+      calculateAmountReturned,
       validateAmount,
       ValidateAmountReceivedClient,
       ValidatePaymentMethodClient

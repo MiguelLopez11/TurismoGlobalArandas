@@ -60,46 +60,6 @@ export default {
     const refreshPaymentRelation = computed(
       () => store.getters.getRefreshPaymentRelation
     )
-    // const refreshTable = () => {
-    //   if (router.params.ReservationHotelId) {
-    //     console.log('holi')
-    //     getPaymentsRelationByReservationHotel(
-    //       router.params.ReservationHotelId,
-    //       data => {
-    //         paymentsRelation.value = data
-    //         store.commit('setPaymentReservationId', data.paymentReservationId)
-    //         store.commit('setPaymentAmountTotal', data.amountMissing)
-    //       }
-    //     )
-    //   } else if (router.params.ReservationTourId) {
-    //     getPaymentsRelationByReservationTour(
-    //       router.params.ReservationTourId,
-    //       data => {
-    //         paymentsRelation.value = data
-    //         store.commit('setPaymentReservationId', data.paymentReservationId)
-    //         store.commit('setPaymentAmountTotal', data.amountMissing)
-    //       }
-    //     )
-    //   } else if (router.params.ReservationVehicleId) {
-    //     getPaymentsRelationByReservationVehicle(
-    //       router.params.ReservationVehicleId,
-    //       data => {
-    //         paymentsRelation.value = data
-    //         store.commit('setPaymentReservationId', data.paymentReservationId)
-    //         store.commit('setPaymentAmountTotal', data.amountMissing)
-    //       }
-    //     )
-    //   } else if (router.params.ReservationFlightId) {
-    //     getPaymentsRelationByReservationFlight(
-    //       router.params.ReservationFlightId,
-    //       data => {
-    //         paymentsRelation.value = data
-    //         store.commit('setPaymentReservationId', data.paymentReservationId)
-    //         store.commit('setPaymentAmountTotal', data.amountMissing)
-    //       }
-    //     )
-    //   }
-    // }
     const onPaymentReservationHotels = () => {
       getPaymentsRelationByReservationHotel(
         router.params.ReservationHotelId,
@@ -139,15 +99,6 @@ export default {
           store.commit('setPaymentAmountTotal', data.amountMissing)
         }
       )
-    } else if (router.params.ReservationFlightId) {
-      getPaymentsRelationByReservationFlight(
-        router.params.ReservationFlightId,
-        data => {
-          paymentsRelation.value = data
-          store.commit('setPaymentReservationId', data.paymentReservationId)
-          store.commit('setPaymentAmountTotal', data.amountMissing)
-        }
-      )
     }
     if (router.params.ReservationHotelId) {
       onPaymentReservationHotels()
@@ -159,14 +110,16 @@ export default {
       onPaymentReservationFlights()
     }
     watch(refreshPaymentRelation, NewValue => {
-      if (router.params.ReservationHotelId) {
-        onPaymentReservationHotels()
-      } else if (router.params.ReservationTourId) {
-        onPaymentReservationTours()
-      } else if (router.params.ReservationVehicleId) {
-        onPaymentReservationVehicles()
-      } else if (router.params.ReservationFlightId) {
-        onPaymentReservationFlights()
+      if (NewValue) {
+        if (router.params.ReservationHotelId) {
+          location.reload()
+        } else if (router.params.ReservationTourId) {
+          location.reload()
+        } else if (router.params.ReservationVehicleId) {
+          location.reload()
+        } else if (router.params.ReservationFlightId) {
+          location.reload()
+        }
       }
     })
     return {
