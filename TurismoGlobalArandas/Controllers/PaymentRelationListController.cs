@@ -21,7 +21,7 @@ namespace TurismoGlobalArandas.Controllers
             var payments = await _context.PaymentRelationLists
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
-           
+
             return Ok(payments);
         }
         [HttpGet("{PaymentId}")]
@@ -39,9 +39,10 @@ namespace TurismoGlobalArandas.Controllers
         [HttpGet("PaymentReservationHotel/{PaymentReservationId}")]
         public async Task<ActionResult> getPaymentRelationListByPaymentReservationHotel(int PaymentReservationId)
         {
+            #region comprobar monto faltante en reservación
             var payments = await _context.PaymentRelationLists
                 .Where(w => !w.IsDeleted)
-                .Where(f => f.PaymentReservationId == PaymentReservationId)
+                .Where(w => w.PaymentReservationId == PaymentReservationId)
                 .ToListAsync();
             decimal? total = 0;
             foreach (var payment in payments)
@@ -55,8 +56,84 @@ namespace TurismoGlobalArandas.Controllers
             {
                 return BadRequest();
             }
+            #endregion
+            #region tomar todas las reservaciones
             decimal? AmountMissing = paymentRelation.AmountTotal - total;
             paymentRelation.AmountMissing = AmountMissing;
+            //RESERVACION HOTELERIA
+            var reservationHotel = await _context.ReservationHotels.
+                        FirstOrDefaultAsync(f => f.ReservationHotelId == paymentRelation.ReservationHotelId);
+            //RESERVACION VUELOS
+            var reservationFlight = await _context.ReservationFlights.
+                        FirstOrDefaultAsync(f => f.FlightId == paymentRelation.ReservationFlightId);
+            //RESERVACIONES TOURS
+            var reservationTour = await _context.ReservationTours.
+                        FirstOrDefaultAsync(f => f.ReservationTourId == paymentRelation.ReservationTourId);
+            var reservationVehicle = await _context.ReservationVehicles.
+                        FirstOrDefaultAsync(f => f.ReservationVehicleId == paymentRelation.ReservationVehicleId);
+            #endregion 
+            if (paymentRelation.AmountMissing == 0)
+            {
+                if (paymentRelation.ReservationHotelId != null)
+                {
+                    reservationHotel.IsSoldOut = true;
+                    _context.ReservationHotels.Update(reservationHotel);
+                    await _context.SaveChangesAsync();
+                }
+                if (paymentRelation.ReservationFlightId != null)
+                {
+                    
+                    reservationFlight.IsSoldOut = true;
+                    _context.ReservationFlights.Update(reservationFlight);
+                    await _context.SaveChangesAsync();
+                }
+                if (paymentRelation.ReservationTourId != null)
+                {
+                    
+                    reservationTour.IsSoldOut = true;
+                    _context.ReservationTours.Update(reservationTour);
+                    await _context.SaveChangesAsync();
+                }
+                if (paymentRelation.ReservationVehicleId != null)
+                {
+                    
+                    reservationVehicle.IsSoldOut = true;
+                    _context.ReservationVehicles.Update(reservationVehicle);
+                    await _context.SaveChangesAsync();
+                }
+                paymentRelation.StatusPaymentRelationId = 2;
+            }
+            else
+            {
+                if (paymentRelation.ReservationHotelId != null)
+                {
+                    reservationHotel.IsSoldOut = false;
+                    _context.ReservationHotels.Update(reservationHotel);
+                    await _context.SaveChangesAsync();
+                }
+                if (paymentRelation.ReservationFlightId != null)
+                {
+
+                    reservationFlight.IsSoldOut = false;
+                    _context.ReservationFlights.Update(reservationFlight);
+                    await _context.SaveChangesAsync();
+                }
+                if (paymentRelation.ReservationTourId != null)
+                {
+
+                    reservationTour.IsSoldOut = false;
+                    _context.ReservationTours.Update(reservationTour);
+                    await _context.SaveChangesAsync();
+                }
+                if (paymentRelation.ReservationVehicleId != null)
+                {
+
+                    reservationVehicle.IsSoldOut = false;
+                    _context.ReservationVehicles.Update(reservationVehicle);
+                    await _context.SaveChangesAsync();
+                }
+                paymentRelation.StatusPaymentRelationId = 1;
+            }
             _context.PaymentsRelationReservations.Update(paymentRelation);
             await _context.SaveChangesAsync();
             return Ok(payments);
@@ -64,7 +141,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<PaymentRelationList>> PostPaymentRelationList(PaymentRelationList payment)
         {
-            payment.PaymentDate = DateTime.Now;
+            payment.PaymentDate = DateTime.Today;
             _context.PaymentRelationLists.Add(payment);
             await _context.SaveChangesAsync();
             return CreatedAtAction("getPaymentRelationList", new { PaymentId = payment.PaymentId }, payment);
@@ -84,6 +161,9 @@ namespace TurismoGlobalArandas.Controllers
             paymentOld.PaymentId = payment.PaymentId;
             paymentOld.Invoice = payment.Invoice;
             paymentOld.Amount = payment.Amount;
+            paymentOld.AmountReceivedClient = payment.AmountReceivedClient;
+            paymentOld.AmountReturnedClient = payment.AmountReturnedClient;
+            paymentOld.PaymentMethodClient = payment.PaymentMethodClient;
             paymentOld.PaymentDate = payment.PaymentDate;
             paymentOld.Observations = payment.Observations;
             paymentOld.PaymentReservationId = payment.PaymentReservationId;

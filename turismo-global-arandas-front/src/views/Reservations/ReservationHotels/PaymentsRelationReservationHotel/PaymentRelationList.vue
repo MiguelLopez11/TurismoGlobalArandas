@@ -70,7 +70,7 @@ import { ref, watch, provide, inject } from 'vue'
 import PaymentsRelationListServices from '@/Services/PaymentRelationList.Services'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 import PaymentRelationListAddNew from './PaymentRelationAddNew.vue'
-import PaymentRealtionEdit from './PaymentRealtionEdit.vue'
+import PaymentRealtionEdit from './PaymentRelationEdit.vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
@@ -97,7 +97,6 @@ export default {
     const isAddPaymentRelation = ref(false)
     const isEditPaymentRelation = ref(false)
     const paymentReservationId = ref(0)
-    // const amountMissing = ref()
     setTimeout(() => {
       paymentReservationId.value = parseInt(
         store.getters.getPaymentReservationId
@@ -133,9 +132,7 @@ export default {
     watch(
       [isAddPaymentRelation, isEditPaymentRelation],
       ([newValueA, newValueB]) => {
-        if (!newValueA || !newValueB) {
-          refreshTable()
-        }
+        refreshTable()
       }
     )
     const onEditPayment = paymentId => {

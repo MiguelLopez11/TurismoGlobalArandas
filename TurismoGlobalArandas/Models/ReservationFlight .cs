@@ -8,8 +8,7 @@ namespace TurismoGlobalArandas.Models
         [Key] 
         public int FlightId { get; set; } 
         public string? Invoice { get; set; }
-        public DateTime? TravelDateStart { get; set; } = null;
-        public DateTime? TravelDateEnd { get; set; } = null;
+        public DateTime? DateTravel { get; set; } = null;
         public DateTime? DateSale { get; set; } = null;
         public string? DepartureAirport { get; set; }
         public string? ArrivalAirport { get; set; }
@@ -27,6 +26,7 @@ namespace TurismoGlobalArandas.Models
         public string? PaymentMethodClient { get; set; }
         public string? ContactPhone { get; set; }
         public int? StatusFlightId { get; set; }
+        public bool IsSoldOut { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("CustomerId")]
