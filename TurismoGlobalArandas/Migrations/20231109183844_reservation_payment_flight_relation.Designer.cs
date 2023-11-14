@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231109183844_reservation_payment_flight_relation")]
+    partial class reservation_payment_flight_relation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -654,6 +657,7 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PaymentMethodClient")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PaymentReservationId")
@@ -820,9 +824,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<DateTime?>("DateSale")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateTravel")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("DepartureAirport")
                         .HasColumnType("nvarchar(max)");
 
@@ -830,9 +831,6 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSoldOut")
                         .HasColumnType("bit");
 
                     b.Property<string>("PaymentMethodAgency")
@@ -849,6 +847,12 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.Property<int?>("StatusFlightId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime?>("TravelDateEnd")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("TravelDateStart")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("isMultidestinationFlight")
                         .HasColumnType("bit");
@@ -1077,9 +1081,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<bool>("IsNational")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsSoldOut")
-                        .HasColumnType("bit");
-
                     b.Property<decimal?>("MinorCost")
                         .HasColumnType("decimal(18, 2)");
 
@@ -1135,9 +1136,6 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsSoldOut")
                         .HasColumnType("bit");
 
                     b.Property<decimal?>("PriceNeto")

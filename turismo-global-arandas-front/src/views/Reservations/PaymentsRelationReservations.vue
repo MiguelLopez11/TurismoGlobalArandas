@@ -139,6 +139,15 @@ export default {
           store.commit('setPaymentAmountTotal', data.amountMissing)
         }
       )
+    } else if (router.params.ReservationFlightId) {
+      getPaymentsRelationByReservationFlight(
+        router.params.ReservationFlightId,
+        data => {
+          paymentsRelation.value = data
+          store.commit('setPaymentReservationId', data.paymentReservationId)
+          store.commit('setPaymentAmountTotal', data.amountMissing)
+        }
+      )
     }
     if (router.params.ReservationHotelId) {
       onPaymentReservationHotels()

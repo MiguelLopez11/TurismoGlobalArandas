@@ -19,6 +19,7 @@ namespace TurismoGlobalArandas.Models
         [Column(TypeName = "decimal(18, 2)")]
         public decimal? PriceNeto { get; set; }
         public string? Description { get; set; }
+        public bool IsSoldOut { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("ProviderId")]
