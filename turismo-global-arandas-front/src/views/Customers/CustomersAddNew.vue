@@ -78,22 +78,13 @@
     </el-row>
     <el-divider />
     <el-row :gutter="25" justify="end">
-      <el-col :span="3">
+      <el-col :span="8">
         <el-button
           color="#7367F0"
           class="w-100"
           native-type="submit"
           size="large"
           >Guardar</el-button
-        >
-      </el-col>
-      <el-col :span="3">
-        <el-button
-          class="w-100"
-          color="#F1F1F2"
-          size="large"
-          @click="isAddingCustomer"
-          >Cancelar</el-button
         >
       </el-col>
     </el-row>

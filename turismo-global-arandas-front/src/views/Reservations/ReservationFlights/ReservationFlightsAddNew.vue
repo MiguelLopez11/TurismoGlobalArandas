@@ -16,17 +16,13 @@
           <Field name="travelDate" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div class="mb-2">
-                <span>Fecha del viaje</span>
+                <span>Fecha de reservación del vuelo</span>
               </div>
               <el-date-picker
-                v-model="rangeDatesTravel"
+                v-model="reservationFlightFields.dateTravel"
                 class="w-100"
-                type="daterange"
-                range-separator="A"
-                start-placeholder="Fecha de salida"
-                end-placeholder="Fecha de llegada"
                 size="large"
-                @change="onSelectTravelDate"
+                placeholder="Selecciona la fecha que reservará el vuelo"
                 :validate-event="false"
                 :model-value="value"
                 v-bind="field"
@@ -133,7 +129,7 @@
             </v-select>
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="8">
           <Field name="confirmationKey" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
@@ -162,7 +158,6 @@
                 :validate-event="false"
                 v-bind="field"
                 :model-value="value"
-                type="number"
               />
             </el-form-item>
           </Field>
@@ -180,7 +175,6 @@
                 :validate-event="false"
                 v-bind="field"
                 :model-value="value"
-                type="number"
               />
             </el-form-item>
           </Field>
@@ -249,6 +243,8 @@
                 v-bind="field"
                 :validate-event="false"
                 :model-value="value"
+                type="textarea"
+                :autosize="{ minRows: 4, maxRows: 8 }"
               />
             </el-form-item>
           </Field>
@@ -269,6 +265,8 @@
                 v-bind="field"
                 :validate-event="false"
                 :model-value="value"
+                type="textarea"
+                :autosize="{ minRows: 4, maxRows: 8 }"
               />
             </el-form-item>
           </Field>
@@ -319,30 +317,40 @@
       </el-row>
     </Form>
   </el-dialog>
+  <el-dialog v-model="isAddedCustomer" @add-customer="onAddedCustomer">
+    <customers-add-new />
+  </el-dialog>
 </template>
 
 <script>
-import { ref, inject } from 'vue'
-import { Field, Form } from 'vee-validate'
+import { ref, inject, provide } from 'vue'
 import CustomerServices from '@/Services/Customers.Services'
 import ReservationFlightServices from '@/Services/ReservationFlights.Services'
+import CustomersAddNew from '@/views/Customers/CustomersAddNew.vue'
+import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 import * as yup from 'yup'
 
 export default {
   components: {
-    Form,
-    Field
+    CustomersAddNew
   },
   setup () {
     const isOpenDialog = inject('addReservationFlight')
     const swal = inject('$swal')
     const ReservationFlightFormRef = ref(null)
     const customers = ref([])
-    const rangeDatesTravel = ref()
+    const isAddedCustomer = ref(false)
+    provide('AddTypeReservation', isAddedCustomer)
     const { getCustomers } = CustomerServices()
     const { createReservationFlight } = ReservationFlightServices()
+    const {
+      createPaymentRelation
+      // getPaymentRelation,
+      // updatePaymentRelation,
+      // getPaymentsRelationByReservationHotel
+    } = PaymentsRelationReservationServices()
     const validationSchema = yup.object({
-      travelDate: yup.array().required('Este campo es requerido'),
+      travelDate: yup.date().required('Este campo es requerido'),
       departureAirport: yup.string().required('Este campo es requerido'),
       arrivalAirport: yup.string().required('Este campo es requerido'),
       airline: yup.string().required('Este campo es requerido'),
@@ -366,8 +374,7 @@ export default {
     const reservationFlightFields = ref({
       flightId: 0,
       invoice: null,
-      travelDateStart: null,
-      travelDateEnd: null,
+      dateTravel: null,
       dateSale: null,
       departureAirport: null,
       arrivalAirport: null,
@@ -391,18 +398,27 @@ export default {
     getCustomers(data => {
       customers.value = data
     })
-    const onSelectTravelDate = () => {
-      reservationFlightFields.value.travelDateStart = rangeDatesTravel.value[0]
-      reservationFlightFields.value.travelDateEnd = rangeDatesTravel.value[1]
+    const onAddedCustomer = value => {
+      isAddedCustomer.value = !isAddedCustomer.value
+      reservationFlightFields.value.customerId = value
     }
     const onSubmit = () => {
-      console.log('holi')
       createReservationFlight(reservationFlightFields.value, data => {
         swal.fire({
           title: '¡Nueva comisión registrada!',
           text: 'La nueva comisión se ha registrado correctamente',
           icon: 'success'
         })
+        createPaymentRelation(
+          {
+            amountTotal: reservationFlightFields.value.priceNeto,
+            amountMissing: null,
+            reservationFlightId: data.flightId,
+            statusPaymentRelationId: 1,
+            isDeleted: false
+          },
+          data => {}
+        )
         isOpenDialog.value = false
         reservationFlightFields.value = JSON.parse(
           JSON.stringify(reservationFlightFieldsBlank)
@@ -415,11 +431,11 @@ export default {
       isOpenDialog,
       ReservationFlightFormRef,
       customers,
+      isAddedCustomer,
       onSubmit,
-      rangeDatesTravel,
       reservationFlightFields,
-      onSelectTravelDate,
-      validationSchema
+      validationSchema,
+      onAddedCustomer
     }
   }
 }

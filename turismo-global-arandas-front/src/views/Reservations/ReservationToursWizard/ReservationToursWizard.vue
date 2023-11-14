@@ -337,7 +337,9 @@ export default {
               statusPaymentRelationId: 1,
               isDeleted: false
             },
-            data => {}
+            data => {
+              paymentReservationId.value = data.paymentReservationId
+            }
           )
         })
       })
@@ -404,8 +406,6 @@ export default {
         if (
           reservationTour.value.ownerName &&
           reservationTour.value.numberAdults &&
-          reservationTour.value.numberMinors &&
-          reservationTour.value.minorCost &&
           reservationTour.value.adultCost
         ) {
           onUpdateReservation()
@@ -422,10 +422,6 @@ export default {
           reservationTour.value.publicRate &&
           reservationTour.value.netPrice
         ) {
-          getPaymentRelation(paymentReservationId.value, data => {
-            data.amountTotal = reservationTour.value.netPrice
-            updatePaymentRelation(data, response => {})
-          })
           onUpdateReservation()
           resolve(true)
         } else {
@@ -435,6 +431,10 @@ export default {
       })
     }
     const onComplete = () => {
+      getPaymentRelation(paymentReservationId.value, data => {
+        data.amountTotal = reservationTour.value.netPrice
+        updatePaymentRelation(data, response => {})
+      })
       swal
         .fire({
           title: 'Reservación registrada correctamente',

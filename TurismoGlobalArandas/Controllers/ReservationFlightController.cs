@@ -58,8 +58,7 @@ namespace TurismoGlobalArandas.Controllers
             }
             FlightOld.FlightId = reservationFlight.FlightId;
             FlightOld.Invoice = reservationFlight.Invoice;
-            FlightOld.TravelDateStart = reservationFlight.TravelDateStart;
-            FlightOld.TravelDateEnd = reservationFlight.TravelDateEnd;
+            FlightOld.DateTravel = reservationFlight.DateTravel;
             FlightOld.DateSale = reservationFlight.DateSale;
             FlightOld.DepartureAirport = reservationFlight.DepartureAirport;
             FlightOld.ArrivalAirport = reservationFlight.ArrivalAirport;
@@ -74,7 +73,21 @@ namespace TurismoGlobalArandas.Controllers
             FlightOld.PaymentMethodAgency = reservationFlight.PaymentMethodAgency;
             FlightOld.PaymentMethodClient = reservationFlight.PaymentMethodClient;
             FlightOld.ContactPhone = reservationFlight.ContactPhone;
+            FlightOld.IsSoldOut = reservationFlight.IsSoldOut;
             FlightOld.IsDeleted = reservationFlight.IsDeleted;
+            var ReservationPaymentRelation = await _context.PaymentsRelationReservations
+                .Include(i => i.reservationFlight)
+                .FirstOrDefaultAsync(f => f.ReservationFlightId == FlightId);
+            if (ReservationPaymentRelation.AmountTotal == null && reservationFlight.PriceNeto != null)
+            {
+                if (ReservationPaymentRelation.AmountMissing == null)
+                {
+                    ReservationPaymentRelation.AmountMissing = reservationFlight.PriceNeto;
+                }
+                ReservationPaymentRelation.AmountTotal = reservationFlight.PriceNeto;
+                _context.PaymentsRelationReservations.Update(ReservationPaymentRelation);
+                await _context.SaveChangesAsync();
+            }
             _context.ReservationFlights.Update(FlightOld);
             await _context.SaveChangesAsync();
             return Ok("El vuelo se actualizo correctamente");

@@ -83,8 +83,21 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.IsInternational = reservationTours.IsInternational;
             ReservationOld.IsNational = reservationTours.IsNational;
             ReservationOld.IncludeTransportation = reservationTours.IncludeTransportation;
+            ReservationOld.IsSoldOut = reservationTours.IsSoldOut;
             ReservationOld.IsDeleted = reservationTours.IsDeleted;
-
+            var ReservationPaymentRelation = await _context.PaymentsRelationReservations
+                .Include(i => i.ReservationHotels)
+                .FirstOrDefaultAsync(f => f.ReservationTourId == ReservationTourId);
+            if (ReservationPaymentRelation.AmountTotal == null && reservationTours.NetPrice != null)
+            {
+                if (ReservationPaymentRelation.AmountMissing == null)
+                {
+                    ReservationPaymentRelation.AmountMissing = reservationTours.NetPrice;
+                }
+                ReservationPaymentRelation.AmountTotal = reservationTours.NetPrice;
+                _context.PaymentsRelationReservations.Update(ReservationPaymentRelation);
+                await _context.SaveChangesAsync();
+            }
             _context.ReservationTours.Update(ReservationOld);
             await _context.SaveChangesAsync();
             return Ok("Actualización correcta");

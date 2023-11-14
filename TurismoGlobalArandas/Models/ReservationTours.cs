@@ -27,6 +27,7 @@ namespace TurismoGlobalArandas.Models
         public bool IsInternational { get; set; }
         public bool IsNational { get; set; }
         public bool IncludeTransportation { get; set; }
+        public bool IsSoldOut { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("DestinationId")]

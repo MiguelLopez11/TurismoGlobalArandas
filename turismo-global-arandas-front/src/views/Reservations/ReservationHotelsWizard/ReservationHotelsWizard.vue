@@ -693,8 +693,8 @@ export default {
     } = ReservationHotelGroupServices()
     const {
       createPaymentRelation,
-      getPaymentRelation,
-      updatePaymentRelation,
+      // getPaymentRelation,
+      // updatePaymentRelation,
       getPaymentsRelationByReservationHotel
     } = PaymentsRelationReservationServices()
     const store = useStore()
@@ -916,24 +916,6 @@ export default {
         icon: 'error'
       })
     }
-    const onComplete = () => {
-      getPaymentRelation(paymentReservationId.value, data => {
-        data.amountTotal = reservationHotel.value.totalCost
-        updatePaymentRelation(data, response => {
-          swal
-            .fire({
-              title: 'Reservación registrada correctamente',
-              text: 'La reservación se ha cargado al sistema satisfactoriamente.',
-              icon: 'success'
-            })
-            .then(result => {
-              if (result.isConfirmed) {
-                redirect.push('/ReservacionesHoteleria')
-              }
-            })
-        })
-      })
-    }
     const onSelectTravelDate = () => {
       reservationHotel.value.travelDateStart = rangeDatesTravel.value[0]
       reservationHotel.value.travelDateEnd = rangeDatesTravel.value[1]
@@ -1089,6 +1071,24 @@ export default {
           reject(new Error('Error'))
         }
       })
+    }
+    const onComplete = () => {
+      // getPaymentRelation(paymentReservationId.value, data => {
+      //   data.amountTotal = reservationHotel.value.totalCost
+      //   updatePaymentRelation(data, response => {
+      swal
+        .fire({
+          title: 'Reservación registrada correctamente',
+          text: 'La reservación se ha cargado al sistema satisfactoriamente.',
+          icon: 'success'
+        })
+        .then(result => {
+          if (result.isConfirmed) {
+            redirect.push('/ReservacionesHoteleria')
+          }
+        })
+      // })
+      // })
     }
     return {
       reservationHotelFields,
