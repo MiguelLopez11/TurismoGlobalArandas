@@ -96,6 +96,7 @@
             class="w-100"
             native-type="submit"
             size="large"
+            :disabled="paymentFields.amount > paymentAmountMissing || paymentFields.amountReceivedClient < paymentFields.amount || paymentAmountMissing == 0"
             >Guardar</el-button
           >
         </el-col>
@@ -223,6 +224,7 @@ export default {
       onSubmit,
       validationSchema,
       paymentFields,
+      paymentAmountMissing,
       paymentFormRef,
       calculateAmountReturned
     }

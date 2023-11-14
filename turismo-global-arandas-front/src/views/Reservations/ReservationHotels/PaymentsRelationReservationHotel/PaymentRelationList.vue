@@ -72,7 +72,6 @@ import PaymentsRelationReservationServices from '@/Services/PaymentRelationReser
 import PaymentRelationListAddNew from './PaymentRelationAddNew.vue'
 import PaymentRealtionEdit from './PaymentRelationEdit.vue'
 import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
 
 export default {
   components: { PaymentRelationListAddNew, PaymentRealtionEdit },
@@ -83,7 +82,6 @@ export default {
     } = PaymentsRelationListServices()
     PaymentsRelationReservationServices()
     const store = useStore()
-    const redirect = useRouter()
     const paymentsRelationList = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
@@ -152,12 +150,13 @@ export default {
         .then(result => {
           if (result.isConfirmed) {
             deletePaymentRelationList(PaymentId, data => {
+              store.commit('setRefreshPaymentRelation', true)
               swal.fire({
                 title: 'pago eliminado!',
                 text: 'El pago ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
-              redirect.go(0)
+              refreshTable()
             })
           } else {
             isloading.value = false

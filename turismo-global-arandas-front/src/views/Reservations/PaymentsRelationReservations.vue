@@ -60,47 +60,7 @@ export default {
     const refreshPaymentRelation = computed(
       () => store.getters.getRefreshPaymentRelation
     )
-    const refreshTable = () => {
-      if (router.params.ReservationHotelId) {
-        console.log('holi')
-        getPaymentsRelationByReservationHotel(
-          router.params.ReservationHotelId,
-          data => {
-            paymentsRelation.value = data
-            store.commit('setPaymentReservationId', data.paymentReservationId)
-            store.commit('setPaymentAmountTotal', data.amountMissing)
-          }
-        )
-      } else if (router.params.ReservationTourId) {
-        getPaymentsRelationByReservationTour(
-          router.params.ReservationTourId,
-          data => {
-            paymentsRelation.value = data
-            store.commit('setPaymentReservationId', data.paymentReservationId)
-            store.commit('setPaymentAmountTotal', data.amountMissing)
-          }
-        )
-      } else if (router.params.ReservationVehicleId) {
-        getPaymentsRelationByReservationVehicle(
-          router.params.ReservationVehicleId,
-          data => {
-            paymentsRelation.value = data
-            store.commit('setPaymentReservationId', data.paymentReservationId)
-            store.commit('setPaymentAmountTotal', data.amountMissing)
-          }
-        )
-      } else if (router.params.ReservationFlightId) {
-        getPaymentsRelationByReservationFlight(
-          router.params.ReservationFlightId,
-          data => {
-            paymentsRelation.value = data
-            store.commit('setPaymentReservationId', data.paymentReservationId)
-            store.commit('setPaymentAmountTotal', data.amountMissing)
-          }
-        )
-      }
-    }
-    if (router.params.ReservationHotelId) {
+    const onPaymentReservationHotels = () => {
       getPaymentsRelationByReservationHotel(
         router.params.ReservationHotelId,
         data => {
@@ -109,16 +69,8 @@ export default {
           store.commit('setPaymentAmountTotal', data.amountMissing)
         }
       )
-    } else if (router.params.ReservationTourId) {
-      getPaymentsRelationByReservationTour(
-        router.params.ReservationTourId,
-        data => {
-          paymentsRelation.value = data
-          store.commit('setPaymentReservationId', data.paymentReservationId)
-          store.commit('setPaymentAmountTotal', data.amountMissing)
-        }
-      )
-    } else if (router.params.ReservationVehicleId) {
+    }
+    const onPaymentReservationVehicles = () => {
       getPaymentsRelationByReservationVehicle(
         router.params.ReservationVehicleId,
         data => {
@@ -127,7 +79,18 @@ export default {
           store.commit('setPaymentAmountTotal', data.amountMissing)
         }
       )
-    } else if (router.params.ReservationFlightId) {
+    }
+    const onPaymentReservationTours = () => {
+      getPaymentsRelationByReservationTour(
+        router.params.ReservationTourId,
+        data => {
+          paymentsRelation.value = data
+          store.commit('setPaymentReservationId', data.paymentReservationId)
+          store.commit('setPaymentAmountTotal', data.amountMissing)
+        }
+      )
+    }
+    const onPaymentReservationFlights = () => {
       getPaymentsRelationByReservationFlight(
         router.params.ReservationFlightId,
         data => {
@@ -137,8 +100,27 @@ export default {
         }
       )
     }
+    if (router.params.ReservationHotelId) {
+      onPaymentReservationHotels()
+    } else if (router.params.ReservationTourId) {
+      onPaymentReservationTours()
+    } else if (router.params.ReservationVehicleId) {
+      onPaymentReservationVehicles()
+    } else if (router.params.ReservationFlightId) {
+      onPaymentReservationFlights()
+    }
     watch(refreshPaymentRelation, NewValue => {
-      refreshTable()
+      if (NewValue) {
+        if (router.params.ReservationHotelId) {
+          location.reload()
+        } else if (router.params.ReservationTourId) {
+          location.reload()
+        } else if (router.params.ReservationVehicleId) {
+          location.reload()
+        } else if (router.params.ReservationFlightId) {
+          location.reload()
+        }
+      }
     })
     return {
       paymentsRelation,
