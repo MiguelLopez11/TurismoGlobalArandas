@@ -516,12 +516,92 @@
               />
             </el-form-item>
           </el-col>
+          <el-col :span="8">
+            <div class="mb-2">
+              <span class="text-danger">*</span>
+              <span>Fecha de salida</span>
+            </div>
+            <el-form-item>
+              <el-date-picker
+                v-model="reservationHotelGroup.dateStart"
+                class="w-100"
+                type="date"
+                placeholder="Selecciona la fecha de salida"
+                size="large"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <div class="mb-2">
+              <span class="text-danger">*</span>
+              <span>Fecha de regreso</span>
+            </div>
+            <el-form-item>
+              <el-date-picker
+                v-model="reservationHotelGroup.dateEnd"
+                class="w-100"
+                type="date"
+                placeholder="Selecciona la fecha de regreso"
+                size="large"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <label>TARIFA X PAX BASE DBL </label>
+              </div>
+              <el-input
+                placeholder="Ingresa el costo publico del cliente"
+                size="large"
+                v-model="reservationHotelGroup.rangePublicClient"
+                type="number"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <label>Tarifa por junior </label>
+              </div>
+              <el-input
+                placeholder="Ingresa la tarifa por junior"
+                size="large"
+                v-model="reservationHotelGroup.rangeJunior"
+                type="number"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <label>Tarifa por menor </label>
+              </div>
+              <el-input
+                placeholder="Ingresa la tarifa por menor"
+                size="large"
+                v-model="reservationHotelGroup.rangeMinor"
+                type="number"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item>
+              <div>
+                <label>Numero de noches </label>
+              </div>
+              <el-input
+                placeholder="Ingresa la cantidad de noches"
+                size="large"
+                v-model="reservationHotelGroup.nightsNumber"
+                type="number"
+              />
+            </el-form-item>
+          </el-col>
         </el-row>
         <el-row v-if="reservationHotel.typeReservationGroupId === 1">
           <el-col :md="24" :lg="24">
-            <group-rate-list
-              :ReservationHotelGroupId="reservationHotelGroupId"
-            />
+            <group-rate-list />
           </el-col>
         </el-row>
       </tab-content>
@@ -660,8 +740,7 @@ export default {
   props: {
     reservationHotelId: {
       type: Number,
-      required: false,
-      default: null
+      required: false
     }
   },
   setup (props) {
@@ -691,12 +770,8 @@ export default {
       updateReservationHotelGroup,
       comprobateIfExist
     } = ReservationHotelGroupServices()
-    const {
-      createPaymentRelation,
-      // getPaymentRelation,
-      // updatePaymentRelation,
-      getPaymentsRelationByReservationHotel
-    } = PaymentsRelationReservationServices()
+    const { createPaymentRelation, getPaymentsRelationByReservationHotel } =
+      PaymentsRelationReservationServices()
     const store = useStore()
     const redirect = useRouter()
     // DATA
@@ -747,7 +822,16 @@ export default {
       dateArrival: null,
       coordinator: null,
       phoneNumber: null,
-      reservationHotelId: reservationHotelId.value || props.reservationHotelId,
+      dateStart: null,
+      dateEnd: null,
+      rangePublicClient: null,
+      rangeJunior: null,
+      rangeMinor: null,
+      nightsNumber: null,
+      rangeNight: null,
+      rangeTotal: null,
+      reservationHotelId:
+        reservationHotelId.value || parseInt(props.reservationHotelId),
       isDeleted: false
     })
     // METHODS
@@ -759,9 +843,11 @@ export default {
         }
       }
     )
-    if (props.reservationHotelId === null) {
+    // IF IS A NEW RESERVATION
+    if (parseInt(props.reservationHotelId) === 0) {
       createReservationHotel(reservationHotelFields.value, data => {
         reservationHotelId.value = data.reservationHotelId
+        reservationHotel.value = data
         store.commit('setReservationHotelId', data.reservationHotelId)
         createPaymentRelation(
           {
@@ -771,74 +857,98 @@ export default {
             statusPaymentRelationId: 1,
             isDeleted: false
           },
-          data => {
-            paymentReservationId.value = data.paymentReservationId
+          item => {
+            paymentReservationId.value = item.paymentReservationId
           }
         )
-        refreshReservationHotel()
       })
+      // IF IS A EXIST RESERVATION
     } else {
-      getReservationHotel(props.reservationHotelId, data => {
+      getReservationHotel(parseInt(props.reservationHotelId), data => {
+        reservationHotelId.value = data.reservationHotelId
         store.commit('setReservationHotelId', data.reservationHotelId)
         reservationHotel.value = data
         rangeDatesTravel.value.push(data.travelDateStart)
         rangeDatesTravel.value.push(data.travelDateEnd)
-        getPaymentsRelationByReservationHotel(data.reservationHotelId, data => {
-          paymentReservationId.value = data.paymentReservationId
+        getPaymentsRelationByReservationHotel(reservationHotelId.value, res => {
+          paymentReservationId.value = res.paymentReservationId
         })
-        if (data.destinationId) {
-          getHotelByDestinationId(data.destinationId, data => {
-            hotels.value = data
-          })
-        }
-        if (data.typeReservationId === 2 && data.typeReservationGroupId === 1) {
-          getReservationHotelGroupByreservationHotel(
-            props.reservationHotelId,
-            data => {
-              reservationHotelGroup.value = data
-              if (reservationHotelGroup.value.dateArrival) {
-                reservationHotelGroup.value.dateArrival = format(
-                  new Date(reservationHotelGroup.value.dateArrival),
-                  'yyyy-MM-dd HH:mm'
-                )
-              } else {
-                reservationHotelGroup.value.dateArrival = new Date()
-              }
+        if (reservationHotel.value.destinationId) {
+          getHotelByDestinationId(
+            reservationHotel.value.destinationId,
+            resp => {
+              hotels.value = resp
             }
           )
-          comprobateIfExist(data.reservationHotelId, data => {
+        }
+        if (
+          reservationHotel.value.typeReservationId === 2 &&
+          reservationHotel.value.typeReservationGroupId === 1
+        ) {
+          comprobateIfExist(reservationHotel.value.reservationHotelId, data => {
             const { status } = data
             if (status === 404) {
               createReservationHotelGroup(
                 reservationHotelGroupfields.value,
                 data => {
                   getReservationHotelGroupByreservationHotel(
-                    props.reservationHotelId,
-                    data => {
-                      reservationHotelGroup.value = data
-                      reservationHotelGroup.value.dateArrival = format(
-                        new Date(reservationHotelGroup.value.dateArrival),
-                        'yyyy-MM-dd HH:mm'
+                    data.reservationHotelId,
+                    item => {
+                      reservationHotelGroup.value = item
+                      store.commit(
+                        'setReservationHotelGroupId',
+                        item.reservationHotelGroupId
                       )
+                      if (reservationHotelGroup.value.dateArrival) {
+                        reservationHotelGroup.value.dateArrival = format(
+                          new Date(reservationHotelGroup.value.dateArrival),
+                          'yyyy-MM-dd HH:mm'
+                        )
+                      } else {
+                        reservationHotelGroup.value.dateArrival = new Date()
+                      }
                     }
                   )
                 }
               )
+            } else {
+              getReservationHotelGroupByreservationHotel(
+                reservationHotelId.value,
+                data => {
+                  reservationHotelGroup.value = data
+                  store.commit(
+                    'setReservationHotelGroupId',
+                    data.reservationHotelGroupId
+                  )
+                  if (reservationHotelGroup.value.dateArrival) {
+                    reservationHotelGroup.value.dateArrival = format(
+                      new Date(reservationHotelGroup.value.dateArrival),
+                      'yyyy-MM-dd HH:mm'
+                    )
+                  } else {
+                    reservationHotelGroup.value.dateArrival = new Date()
+                  }
+                }
+              )
             }
           })
-        }
-      })
-      getIndividualRateByReservationHotel(props.reservationHotelId, data => {
-        if (data.individualRateId) {
-          individualRate.value = data
         } else {
-          individualRateFields.value.reservationHotelId =
-            reservationHotelId.value || props.reservationHotelId
-          createIndividualRate(individualRateFields.value, data => {
-            getIndividualRate(data.individualRateId, items => {
-              individualRate.value = items
-            })
-          })
+          getIndividualRateByReservationHotel(
+            parseInt(props.reservationHotelId),
+            data => {
+              if (data.individualRateId) {
+                individualRate.value = data
+              } else {
+                individualRateFields.value.reservationHotelId =
+                  reservationHotelId.value || parseInt(props.reservationHotelId)
+                createIndividualRate(individualRateFields.value, data => {
+                  getIndividualRate(data.individualRateId, items => {
+                    individualRate.value = items
+                  })
+                })
+              }
+            }
+          )
         }
       })
     }
@@ -858,7 +968,11 @@ export default {
         })
       }
     }
-
+    const refreshReservationHotel = () => {
+      getReservationHotel(reservationHotelId.value, data => {
+        reservationHotel.value = data
+      })
+    }
     getCustomers(data => {
       customers.value = data
     })
@@ -895,14 +1009,7 @@ export default {
         })
       }
     }
-    const refreshReservationHotel = () => {
-      getReservationHotel(
-        reservationHotelId.value || props.reservationHotelId,
-        data => {
-          reservationHotel.value = data
-        }
-      )
-    }
+
     const onUpdateReservation = () => {
       updateReservationHotel(reservationHotel.value, data => {
         reservationHotel.value = data
@@ -977,7 +1084,7 @@ export default {
             reservationHotel.value.typeReservationGroupId === 1
           ) {
             comprobateIfExist(
-              reservationHotelId.value || props.reservationHotelId,
+              reservationHotel.value.reservationHotelId,
               data => {
                 const { status } = data
                 if (status === 404) {
@@ -985,11 +1092,13 @@ export default {
                     reservationHotelId.value
                   createReservationHotelGroup(
                     reservationHotelGroupfields.value,
-                    data => {
-                      reservationHotelGroupId.value =
-                        data.reservationHotelGroupId
+                    item => {
+                      store.commit(
+                        'setReservationHotelGroupId',
+                        item.reservationHotelGroupId
+                      )
                       getReservationHotelGroupByreservationHotel(
-                        reservationHotelId.value,
+                        item.reservationHotelId,
                         data => {
                           reservationHotelGroup.value = data
                           reservationHotelGroup.value.dateArrival = format(
@@ -1006,7 +1115,7 @@ export default {
           } else {
             if (!individualRate.value.individualRateId) {
               individualRateFields.value.reservationHotelId =
-                reservationHotelId.value || props.reservationHotelId
+                reservationHotelId.value || parseInt(props.reservationHotelId)
               createIndividualRate(individualRateFields.value, data => {
                 getIndividualRate(data.individualRateId, items => {
                   individualRate.value = items
@@ -1046,9 +1155,38 @@ export default {
             reject(new Error('Error'))
           }
         } else {
-          if (reservationHotelGroup.value.groupName) {
+          //     confirmationKey: null,
+          // dateArrival: null,
+          // coordinator: null,
+          // phoneNumber: null,
+          // dateStart: null,
+          // dateEnd: null,
+          // rangePublicClient: null,
+          // rangeJunior: null,
+          // rangeMinor: null,
+          // nightsNumber: null,
+          // rangeNight: null,
+          // rangeTotal: null,
+          if (
+            reservationHotelGroup.value.groupName &&
+            reservationHotelGroup.value.dateArrival &&
+            reservationHotelGroup.value.coordinator &&
+            reservationHotelGroup.value.phoneNumber &&
+            reservationHotelGroup.value.dateStart &&
+            reservationHotelGroup.value.dateEnd &&
+            reservationHotelGroup.value.rangePublicClient &&
+            reservationHotelGroup.value.rangeJunior &&
+            reservationHotelGroup.value.rangeMinor &&
+            reservationHotelGroup.value.nightsNumber
+          ) {
             reservationHotelGroup.value.dateArrival = dateArrival.toISOString()
-            updateReservationHotelGroup(reservationHotelGroup.value, data => {})
+            updateReservationHotelGroup(reservationHotelGroup.value, data => {
+              swal.fire({
+                title: 'Tarifa registrada correctamente',
+                text: 'La tarifa de la reservación de grupo se ha cargado al sistema satisfactoriamente.',
+                icon: 'success'
+              })
+            })
             resolve(true)
           } else {
             onMessageErrorSteps()

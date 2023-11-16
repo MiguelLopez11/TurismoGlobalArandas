@@ -114,7 +114,6 @@ export default {
       })
     }
     watch(isAddedEmployee, newValue => {
-      console.log(newValue)
       if (!newValue) {
         refreshTable()
       }

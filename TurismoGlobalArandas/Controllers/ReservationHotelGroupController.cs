@@ -112,6 +112,12 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.DateArrival = reservationHotelGroup.DateArrival;
             ReservationOld.Coordinator = reservationHotelGroup.Coordinator;
             ReservationOld.PhoneNumber = reservationHotelGroup.PhoneNumber;
+            ReservationOld.DateStart = reservationHotelGroup.DateStart;
+            ReservationOld.DateEnd = reservationHotelGroup.DateEnd;
+            ReservationOld.RangePublicClient = reservationHotelGroup.RangePublicClient;
+            ReservationOld.RangeJunior = reservationHotelGroup.RangeJunior;
+            ReservationOld.RangeMinor = reservationHotelGroup.RangeMinor;
+            ReservationOld.NightsNumber = reservationHotelGroup.NightsNumber;
             ReservationOld.ReservationHotelId = reservationHotelGroup.ReservationHotelId;
             ReservationOld.IsDeleted = reservationHotelGroup.IsDeleted;
 

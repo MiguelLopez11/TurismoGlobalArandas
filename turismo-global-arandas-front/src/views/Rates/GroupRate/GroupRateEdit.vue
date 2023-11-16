@@ -88,11 +88,12 @@
         </div>
         <el-form-item>
           <el-date-picker
-            v-model="groupRate.dateStart"
+            v-model="reservationHotelGroup.dateStart"
             class="w-100"
             type="date"
             placeholder="Selecciona la fecha limite del pago"
             size="large"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -103,11 +104,12 @@
         </div>
         <el-form-item>
           <el-date-picker
-            v-model="groupRate.dateEnd"
+            v-model="reservationHotelGroup.dateEnd"
             class="w-100"
             type="date"
             placeholder="Selecciona la fecha limite del pago"
             size="large"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -119,8 +121,9 @@
           <el-input
             placeholder="Ingresa el costo publico del cliente"
             size="large"
-            v-model="groupRate.rangePublicClient"
+            v-model="reservationHotelGroup.rangePublicClient"
             type="number"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -132,8 +135,9 @@
           <el-input
             placeholder="Ingresa la tarifa por junior"
             size="large"
-            v-model="groupRate.rangeJunior"
+            v-model="reservationHotelGroup.rangeJunior"
             type="number"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -145,8 +149,9 @@
           <el-input
             placeholder="Ingresa la tarifa por menor"
             size="large"
-            v-model="groupRate.rangeMinor"
+            v-model="reservationHotelGroup.rangeMinor"
             type="number"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -158,8 +163,9 @@
           <el-input
             placeholder="Ingresa la cantidad de noches"
             size="large"
-            v-model="groupRate.nightsNumber"
+            v-model="reservationHotelGroup.nightsNumber"
             type="number"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -234,8 +240,11 @@
 
 <script>
 import { ref, inject, watch } from 'vue'
+// import { useStore } from 'vuex'
 
 import GroupRateServices from '@/Services/GroupRate.Services'
+// import ReservationHotelGroupServices from '@/Services/ReservationHotelGroup.Services'
+
 export default {
   props: {
     groupRateId: {
@@ -245,10 +254,19 @@ export default {
   },
   setup (props) {
     const isOpenDialog = inject('editHabitation')
+    // const store = useStore()
     const { getGroupRate, updateGroupRate } = GroupRateServices()
+    // const { getReservationHotelGroup } = ReservationHotelGroupServices()
+    // const reservationHotelGroupId = ref(
+    //   parseInt(store.getters.getReservationHotelGroupId)
+    // )
     const habitationFormRef = ref(null)
     const groupRate = ref([])
+    const reservationHotelGroup = ref([])
 
+    // getReservationHotelGroup(reservationHotelGroupId.value, data => {
+    //   reservationHotelGroup.value = data
+    // })
     const onUpdateGroupRate = () => {
       updateGroupRate(groupRate.value, data => {
         isOpenDialog.value = false
@@ -264,6 +282,7 @@ export default {
     return {
       isOpenDialog,
       groupRate,
+      reservationHotelGroup,
       habitationFormRef,
       onUpdateGroupRate
     }

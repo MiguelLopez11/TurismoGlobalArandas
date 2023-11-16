@@ -1,6 +1,6 @@
 <template>
   <el-container class="app-container">
-    <el-aside v-if="Token" class="responsive-sidebar" :style="{ height: windowHeight + 'px' }">
+    <el-aside v-if="Token" class="responsive-sidebar">
       <Sidebar />
     </el-aside>
     <el-container>
@@ -67,6 +67,7 @@ body,
 
 /* Set the container to full height */
 .app-container {
+  height: 100% !important;
   flex: 1;
   display: flex;
   /* flex-direction: column; */
@@ -76,11 +77,11 @@ body,
   width: 25% !important;
   background-color: #fff;
   flex: 0 0 25%;
-  min-height: 0;
-  overflow-y: auto !important;
   z-index: 1000;
 }
-
+body.swal2-shown.swal2-height-auto{
+      height: inherit !important;
+}
 .el-main {
   background-color: #e6eef9;
   flex: 1;
@@ -95,6 +96,7 @@ body,
 /* Media query for smaller screens */
 @media (max-width: 768px) {
   .responsive-sidebar {
+    height: 0;
     width: 0;
     flex: 0 0 0;
   }

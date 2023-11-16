@@ -30,16 +30,16 @@
           </Field>
         </el-col>
         <el-col :span="8">
-            <el-form-item >
-              <div>
-                <label> Tipo de habitación </label>
-              </div>
-              <el-input
-                placeholder="Ingresa el tipo de habitación"
-                size="large"
-                v-model="habitationFields.typeHabitation"
-              />
-            </el-form-item>
+          <el-form-item>
+            <div>
+              <label> Tipo de habitación </label>
+            </div>
+            <el-input
+              placeholder="Ingresa el tipo de habitación"
+              size="large"
+              v-model="habitationFields.typeHabitation"
+            />
+          </el-form-item>
         </el-col>
         <el-col :span="8">
           <Field name="contactPhone" v-slot="{ value, field, errorMessage }">
@@ -60,17 +60,17 @@
           </Field>
         </el-col>
         <el-col v-if="reservationHotel.typeReservationId !== 1" :span="8">
-            <el-form-item >
-              <div>
-                <label> Anticipo </label>
-              </div>
-              <el-input
-                placeholder="Ingresa el monto del anticipo"
-                size="large"
-                v-model="habitationFields.advancePayment"
-                type="number"
-              />
-            </el-form-item>
+          <el-form-item>
+            <div>
+              <label> Anticipo </label>
+            </div>
+            <el-input
+              placeholder="Ingresa el monto del anticipo"
+              size="large"
+              v-model="habitationFields.advancePayment"
+              type="number"
+            />
+          </el-form-item>
         </el-col>
         <el-col :span="8">
           <Field name="ages" v-slot="{ value, field, errorMessage }">
@@ -124,31 +124,31 @@
           </Field>
         </el-col>
         <el-col v-if="reservationHotel.typeReservationId !== 1" :span="8">
-            <el-form-item >
-              <div>
-                <label>Costo</label>
-              </div>
-              <el-input
-                placeholder="Ingresa el costo de la habitación"
-                size="large"
-                v-model="habitationFields.cost"
-                type="number"
-              />
-            </el-form-item>
+          <el-form-item>
+            <div>
+              <label>Costo</label>
+            </div>
+            <el-input
+              placeholder="Ingresa el costo de la habitación"
+              size="large"
+              v-model="habitationFields.cost"
+              type="number"
+            />
+          </el-form-item>
         </el-col>
         <el-col :span="8">
-            <el-form-item>
-              <div>
-                <label>Observaciones</label>
-              </div>
-              <el-input
-                placeholder="Ingresa las observaciones de la habitación"
-                size="large"
-                v-model="habitationFields.observations"
-                type="textarea"
-                :autosize="{ minRows: 4, maxRows: 8 }"
-              />
-            </el-form-item>
+          <el-form-item>
+            <div>
+              <label>Observaciones</label>
+            </div>
+            <el-input
+              placeholder="Ingresa las observaciones de la habitación"
+              size="large"
+              v-model="habitationFields.observations"
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 8 }"
+            />
+          </el-form-item>
         </el-col>
       </el-row>
       <el-divider />
@@ -230,9 +230,11 @@ export default {
       observations: null,
       isDeleted: false
     })
-    getReservationHotel(reservationHotelId.value, data => {
-      reservationHotel.value = data
-    })
+    if (reservationHotelId.value) {
+      getReservationHotel(reservationHotelId.value, data => {
+        reservationHotel.value = data
+      })
+    }
     const habitationFieldsBlank = ref(
       JSON.parse(JSON.stringify(habitationFields))
     )

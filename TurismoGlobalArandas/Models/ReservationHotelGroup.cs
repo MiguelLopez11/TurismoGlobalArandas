@@ -12,6 +12,16 @@ namespace TurismoGlobalArandas.Models
         public DateTime? DateArrival { get; set; }
         public string? Coordinator { get; set; }
         public string? PhoneNumber { get; set; }
+        public DateTime? DateStart { get; set; }
+        public DateTime? DateEnd { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? RangePublicClient { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? RangeJunior { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? RangeMinor { get; set; }
+        public int? NightsNumber { get; set; }
+        
         public int? ReservationHotelId { get; set; }
         public bool IsDeleted { get; set; }
 
