@@ -16,7 +16,10 @@
           @click="
             () => {
               $router.push({
-                name: 'ReservacionesHoteleria-AddNew'
+                name: 'ReservacionesHoteleria-AddNew',
+                params: {
+                  ReservationHotelId: null
+                }
               })
             }
           "
@@ -180,7 +183,7 @@
       </el-col>
     </el-row>
   </el-dialog>
-      <!-- <el-col :lg="8" :md="8">
+  <!-- <el-col :lg="8" :md="8">
         <v-select
           v-model="statusPaymentCriteria"
           class="w-100"

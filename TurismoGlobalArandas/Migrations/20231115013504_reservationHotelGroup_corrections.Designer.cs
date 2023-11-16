@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231115013504_reservationHotelGroup_corrections")]
+    partial class reservationHotelGroup_corrections
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -387,12 +390,6 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.Property<string>("Observations")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("RangeNight")
-                        .HasColumnType("decimal(18, 2)");
-
-                    b.Property<decimal?>("RangeTotal")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<int>("ReservationHotelGroupId")
                         .HasColumnType("int");
@@ -993,7 +990,13 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<decimal?>("RangeMinor")
                         .HasColumnType("decimal(18, 2)");
 
+                    b.Property<decimal?>("RangeNight")
+                        .HasColumnType("decimal(18, 2)");
+
                     b.Property<decimal?>("RangePublicClient")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal?>("RangeTotal")
                         .HasColumnType("decimal(18, 2)");
 
                     b.Property<int?>("ReservationHotelId")

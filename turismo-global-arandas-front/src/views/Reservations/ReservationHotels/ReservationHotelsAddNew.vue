@@ -1,6 +1,6 @@
 <template>
   <el-card>
-    <reservation-hotels-wizard />
+    <reservation-hotels-wizard :reservationHotelId="0"/>
   </el-card>
 </template>
 

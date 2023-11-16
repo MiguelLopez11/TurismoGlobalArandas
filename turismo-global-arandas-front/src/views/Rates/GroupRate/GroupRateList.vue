@@ -1,5 +1,5 @@
 <template>
-  <group-rate-add-new :reservationHotelGroupId="reservationHotelGroupId" />
+  <group-rate-add-new />
   <group-rate-edit :groupRateId="groupRateId" />
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
@@ -59,21 +59,17 @@
 </template>
 
 <script>
-import { ref, watch, inject, provide } from 'vue'
+import { ref, watch, inject, provide, computed } from 'vue'
 import GroupRateServices from '@/Services/GroupRate.Services'
 import groupRateAddNew from './groupRateAddNew.vue'
 import GroupRateEdit from './GroupRateEdit.vue'
+import { useStore } from 'vuex'
 export default {
   components: { groupRateAddNew, GroupRateEdit },
-  props: {
-    ReservationHotelGroupId: {
-      type: Number,
-      required: true
-    }
-  },
-  setup (props) {
+  setup () {
     const { getGroupRateByReservationHotelGroup, deleteGroupRate } =
       GroupRateServices()
+    const store = useStore()
     const groupRates = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
@@ -84,7 +80,9 @@ export default {
     const isAddGroupRate = ref(false)
     const isEditGroupRate = ref(false)
     const groupRateId = ref()
-    const reservationHotelGroupId = ref(props.ReservationHotelGroupId)
+    const reservationHotelGroupId = computed(
+      () => store.getters.getReservationHotelGroupId
+    )
     provide('addGroupRate', isAddGroupRate)
     provide('editHabitation', isEditGroupRate)
     const fields = ref([
@@ -104,10 +102,15 @@ export default {
       { value: 'observations', text: 'observaciones' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getGroupRateByReservationHotelGroup(reservationHotelGroupId.value, data => {
-      groupRates.value = data
-      isloading.value = false
-    })
+    if (reservationHotelGroupId.value !== null && reservationHotelGroupId.value !== 0) {
+      getGroupRateByReservationHotelGroup(
+        reservationHotelGroupId.value,
+        data => {
+          groupRates.value = data
+          isloading.value = false
+        }
+      )
+    }
     const refreshTable = () => {
       isloading.value = true
       getGroupRateByReservationHotelGroup(
@@ -131,19 +134,19 @@ export default {
     const onDeleteHabitation = habitationReservationId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar un habitación, ¿Estas seguro?',
+          title: 'Estás a punto de eliminar una tarifa, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar habitación',
+          confirmButtonText: 'Si, eliminar tarifa',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
             deleteGroupRate(habitationReservationId, data => {
               swal.fire({
-                title: 'Habitación eliminada!',
-                text: 'La habitación ha sido eliminada satisfactoriamente .',
+                title: 'Tarifa eliminada!',
+                text: 'La tarifa ha sido eliminada satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()
@@ -154,7 +157,6 @@ export default {
         })
     }
     const onEditHabitation = item => {
-      console.log(item)
       isEditGroupRate.value = !isEditGroupRate.value
       groupRateId.value = parseInt(item)
     }
