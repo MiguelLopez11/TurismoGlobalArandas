@@ -10,6 +10,11 @@ namespace TurismoGlobalArandas.Models
         public string? Invoice { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal? Amount { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? AmountReceivedClient { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? AmountReturnedClient { get; set; }
+        public string? PaymentMethodClient { get; set; }
         public DateTime? PaymentDate { get; set; }
         public string? Observations { get; set; }
         public int? PaymentReservationId { get; set; }

@@ -62,6 +62,17 @@
                       @click="onDeleteReservationFlight(items.flightId)"
                       >Eliminar</el-dropdown-item
                     >
+                    <el-dropdown-item
+                    @click="
+                      $router.push({
+                        name: 'PaymentsRelationReservatioFlight',
+                        params: {
+                          ReservationFlightId: items.flightId
+                        }
+                      })
+                    "
+                    >Relación de pagos</el-dropdown-item
+                  >
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>

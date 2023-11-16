@@ -67,6 +67,17 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(Payment);
         }
+        [HttpGet("ReservationFlight/{ReservationFlightId}")]
+        public async Task<ActionResult> getPaymentRelationByReservationFlight(int ReservationFlightId)
+        {
+            var Payment = await _context.PaymentsRelationReservations
+                .FirstOrDefaultAsync(f => f.ReservationFlightId == ReservationFlightId);
+            if (Payment == null)
+            {
+                return NotFound();
+            }
+            return Ok(Payment);
+        }
         [HttpPost]
         public async Task<ActionResult<PaymentsRelationReservations>> PostPaymentRelationReservationHotel(PaymentsRelationReservations payment)
         {
@@ -92,6 +103,7 @@ namespace TurismoGlobalArandas.Controllers
             paymentOld.ReservationHotelId = payment.ReservationHotelId;
             paymentOld.ReservationTourId = payment.ReservationTourId;
             paymentOld.ReservationVehicleId = payment.ReservationVehicleId;
+            paymentOld.ReservationFlightId = payment.ReservationFlightId;
             paymentOld.StatusPaymentRelationId = payment.StatusPaymentRelationId;
             paymentOld.IsDeleted = payment.IsDeleted;
 

@@ -258,6 +258,14 @@ const routes = [
     }
   },
   {
+    path: '/RelacionPagosReservacionVuelos/:ReservationFlightId',
+    name: 'PaymentsRelationReservatioFlight',
+    component: () => import('../views/Reservations/PaymentsRelationReservations'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/ReservacionesTours',
     name: 'ReservationsTour',
     component: () => import('../views/Reservations/ReservationTours/ReservationTourList'),

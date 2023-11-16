@@ -6,24 +6,7 @@
       :validation-schema="validationSchema"
       @submit="onSubmit"
     >
-      <el-row :gutter="35" justify="center">
-        <el-col :span="8">
-          <Field name="invoice" v-slot="{ value, field, errorMessage }">
-            <el-form-item :error="errorMessage" required>
-              <div>
-                <label> Folio </label>
-              </div>
-              <el-input
-                placeholder="Ingresa el folio del pago"
-                size="large"
-                v-bind="field"
-                v-model="paymentFields.invoice"
-                :validate-event="false"
-                :model-value="value"
-              />
-            </el-form-item>
-          </Field>
-        </el-col>
+      <el-row :gutter="35">
         <el-col :span="8">
           <Field name="amount" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage">
@@ -37,6 +20,55 @@
                 v-model="paymentFields.amount"
                 :validate-event="false"
                 :model-value="value"
+              />
+            </el-form-item>
+          </Field>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <div>
+              <label> Cantidad que recibe </label>
+            </div>
+            <el-input
+              placeholder="Ingresa el la cantidad con la que paga el cliente"
+              size="large"
+              v-model="paymentFields.amountReceivedClient"
+              @change="calculateAmountReturned()"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+            <el-form-item>
+              <div>
+                <label> Cantidad cambio al cliente </label>
+              </div>
+              <el-input
+                placeholder="Ingresa el la cantidad de cambio que recibe el cliente"
+                size="large"
+                v-model="paymentFields.amountReturnedClient"
+                disabled
+                :min="1"
+              />
+            </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <Field
+            name="paymentMethodClient"
+            v-slot="{ value, field, errorMessage }"
+          >
+            <el-form-item :error="errorMessage">
+              <div>
+                <label> Metodo de pago del cliente </label>
+              </div>
+              <el-input
+                placeholder="Ingresa cual fue el método de pago del cliente"
+                size="large"
+                v-model="paymentFields.paymentMethodClient"
+                type="textarea"
+                v-bind="field"
+                :validate-event="false"
+                :model-value="value"
+                :autosize="{ minRows: 4, maxRows: 8 }"
               />
             </el-form-item>
           </Field>
@@ -64,6 +96,7 @@
             class="w-100"
             native-type="submit"
             size="large"
+            :disabled="paymentFields.amount > paymentAmountMissing || paymentFields.amountReceivedClient < paymentFields.amount || paymentAmountMissing == 0"
             >Guardar</el-button
           >
         </el-col>
@@ -90,6 +123,7 @@ import PaymentsRelationListServices from '@/Services/PaymentRelationList.Service
 import * as yup from 'yup'
 import { ref, inject } from 'vue'
 import { useStore } from 'vuex'
+import { ElMessage } from 'element-plus'
 // import { useRouter } from 'vue-router'
 
 export default {
@@ -100,28 +134,30 @@ export default {
     const paymentFormRef = ref(null)
     // const redirect = useRouter()
     const { createPaymentRelationList } = PaymentsRelationListServices()
-    const paymentAmountTotal = ref()
+    const paymentAmountMissing = ref()
     const paymentReservationId = ref()
     const validationSchema = yup.object({
-      invoice: yup.string().required('Este campo es requerido').label('Nombre'),
       amount: yup
         .number()
         .test('is-decimal', 'invalid decimal', value =>
           (value + '').match(/^\d+(\.\d+)?$/)
         )
-        .required('Este campo es requerido')
-        .label('Nombre')
+        .required('Este campo es requerido'),
+      paymentMethodClient: yup.string().required('Este campo es requerido')
     })
     setTimeout(() => {
       paymentReservationId.value = parseInt(
         store.getters.getPaymentReservationId
       )
-      paymentAmountTotal.value = parseInt(store.getters.getPaymentAmountTotal)
+      paymentAmountMissing.value = parseInt(store.getters.getPaymentAmountTotal)
     }, 1000)
     const paymentFields = ref({
       paymentId: 0,
       invoice: null,
       amount: null,
+      amountReceivedClient: null,
+      amountReturnedClient: null,
+      paymentMethodClient: null,
       paymentDate: null,
       observations: null,
       paymentReservationId: null,
@@ -131,11 +167,7 @@ export default {
 
     const onSubmit = () => {
       paymentFields.value.paymentReservationId = paymentReservationId.value
-      console.log(
-        parseInt(paymentFields.value.amount),
-        paymentAmountTotal.value
-      )
-      if (parseInt(paymentFields.value.amount) > paymentAmountTotal.value) {
+      if (parseInt(paymentFields.value.amount) > paymentAmountMissing.value) {
         isOpenDialog.value = false
         paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
         paymentFormRef.value.resetForm()
@@ -145,26 +177,56 @@ export default {
           icon: 'error'
         })
       } else {
-        createPaymentRelationList(paymentFields.value, data => {
-          swal.fire({
-            title: '¡Nuevo pago registrado!',
-            text: 'El pago se ha registrado correctamente',
-            icon: 'success'
-          })
+        if (
+          paymentFields.value.amountReceivedClient < paymentFields.value.amount
+        ) {
           isOpenDialog.value = false
           paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
           paymentFormRef.value.resetForm()
-          // redirect.go(0)
-        })
+          swal.fire({
+            title: '¡Error al registrar pago!',
+            text: 'El pago que se desea registrar, Contiene datos erroneos',
+            icon: 'error'
+          })
+        } else {
+          createPaymentRelationList(paymentFields.value, data => {
+            swal.fire({
+              title: '¡Nuevo pago registrado!',
+              text: 'El pago se ha registrado correctamente',
+              icon: 'success'
+            })
+            store.commit('setRefreshPaymentRelation', true)
+            isOpenDialog.value = false
+            paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
+            paymentFormRef.value.resetForm()
+          })
+        }
       }
     }
-
+    const calculateAmountReturned = () => {
+      if (
+        paymentFields.value.amountReceivedClient - paymentFields.value.amount <
+        0
+      ) {
+        ElMessage({
+          showClose: true,
+          message:
+            'Los datos ingresados no son correctos, rectifique e intente de nuevo.',
+          type: 'error'
+        })
+      } else {
+        paymentFields.value.amountReturnedClient =
+          paymentFields.value.amountReceivedClient - paymentFields.value.amount
+      }
+    }
     return {
       isOpenDialog,
       onSubmit,
       validationSchema,
       paymentFields,
-      paymentFormRef
+      paymentAmountMissing,
+      paymentFormRef,
+      calculateAmountReturned
     }
   }
 }

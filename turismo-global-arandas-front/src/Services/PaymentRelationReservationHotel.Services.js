@@ -16,6 +16,11 @@ export default function PaymentsRelationReservationServices () {
       callback(response.data)
     })
   }
+  const getPaymentsRelationByReservationFlight = (ReservationFlightId, callback) => {
+    axiosPrivate.get(`/paymentRelationReservations/ReservationFlight/${ReservationFlightId}`).then((response) => {
+      callback(response.data)
+    })
+  }
   const getPaymentRelation = (PaymentReservationId, callback) => {
     axiosPrivate.get(`/paymentRelationReservations/${PaymentReservationId}`).then((response) => {
       callback(response.data)
@@ -40,6 +45,7 @@ export default function PaymentsRelationReservationServices () {
     getPaymentsRelationByReservationHotel,
     getPaymentsRelationByReservationTour,
     getPaymentsRelationByReservationVehicle,
+    getPaymentsRelationByReservationFlight,
     getPaymentRelation,
     createPaymentRelation,
     updatePaymentRelation,

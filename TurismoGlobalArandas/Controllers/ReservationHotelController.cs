@@ -85,7 +85,6 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.TypeHabitation = Reservation.TypeHabitation;
             ReservationOld.Agent = Reservation.Agent;
             ReservationOld.PaymentLimitDateProvider = Reservation.PaymentLimitDateProvider;
-            //ReservationOld.NumberHabitations = Reservation.NumberHabitations;
             ReservationOld.PhoneContact = Reservation.PhoneContact;
             ReservationOld.Observations = Reservation.Observations;
             ReservationOld.GroupCoordinator = Reservation.GroupCoordinator;
@@ -103,8 +102,21 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.HotelId = Reservation.HotelId;
             ReservationOld.DestinationId = Reservation.DestinationId;
             ReservationOld.ProviderId = Reservation.ProviderId;
+            ReservationOld.IsSoldOut = Reservation.IsSoldOut;
             ReservationOld.IsDeleted = Reservation.IsDeleted;
-
+            var ReservationPaymentRelation = await _context.PaymentsRelationReservations
+                .Include(i => i.ReservationHotels)
+                .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
+            if(ReservationPaymentRelation.AmountTotal == null && Reservation.TotalCost != null)
+            {
+                if(ReservationPaymentRelation.AmountMissing == null)
+                {
+                    ReservationPaymentRelation.AmountMissing = Reservation.TotalCost;
+                }
+                ReservationPaymentRelation.AmountTotal = Reservation.TotalCost;
+                _context.PaymentsRelationReservations.Update(ReservationPaymentRelation);
+                await _context.SaveChangesAsync();
+            }
             _context.ReservationHotels.Update(ReservationOld);
             await _context.SaveChangesAsync();
             return Ok("Actualización correcta");
