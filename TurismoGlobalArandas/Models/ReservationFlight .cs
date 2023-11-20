@@ -27,8 +27,11 @@ namespace TurismoGlobalArandas.Models
         public string? ContactPhone { get; set; }
         public int? StatusFlightId { get; set; }
         public bool IsSoldOut { get; set; }
+        public int? EmployeeId { get; set; } = null;
         public bool IsDeleted { get; set; }
 
+        [ForeignKey("EmployeeId")]
+        public Employees? Employees { get; set; }
         [ForeignKey("CustomerId")]
         public Customers? Customers { get; set; }
 

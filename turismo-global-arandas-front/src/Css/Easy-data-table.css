@@ -43,3 +43,6 @@ div.scrollable-card {
   max-height: 100%; /* Ajusta la altura máxima según sea necesario */
   overflow-y: auto; /* Agrega una barra de desplazamiento vertical si el contenido excede la altura máxima */
 }
+.filter-icon {
+  cursor: pointer;
+}

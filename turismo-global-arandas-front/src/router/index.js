@@ -34,6 +34,14 @@ const routes = [
     }
   },
   {
+    path: '/ReservacionesEmpleados',
+    name: 'ReservationsByEmpleados',
+    component: () => import('../views/Employees/ReservationsByEmployee/ReservationByEmployeeList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/Usuarios',
     name: 'Users',
     component: () => import('../views/Users/UserList'),

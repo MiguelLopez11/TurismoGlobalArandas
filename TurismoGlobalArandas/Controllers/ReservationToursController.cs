@@ -68,6 +68,7 @@ namespace TurismoGlobalArandas.Controllers
                 return BadRequest($"La reservación con el ID {ReservationTourId} no existe");
             }
             ReservationOld.ReservationTourId = reservationTours.ReservationTourId;
+            ReservationOld.Invoice = reservationTours.Invoice;
             ReservationOld.TourName = reservationTours.TourName;
             ReservationOld.DestinationId = reservationTours.DestinationId;
             ReservationOld.DateSale = reservationTours.DateSale;

@@ -5,24 +5,8 @@
         <el-input
           v-model="searchValue"
           size="large"
-          placeholder="Buscar reservación..."
+          placeholder="Buscar reservación por folio..."
         />
-      </el-col>
-      <el-col :xs="10" :sm="12" :md="6" :xl="3" :lg="4">
-        <el-button
-          class="w-100"
-          size="large"
-          color="#7367F0"
-          @click="
-            () => {
-              $router.push({
-                name: 'ReservacionesHoteleria-AddNew'
-              })
-            }
-          "
-        >
-          <i> Agregar reservación </i>
-        </el-button>
       </el-col>
     </el-row>
     <el-row class="mt-3">
@@ -40,60 +24,13 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="reservationHotels"
+            :items="employees"
             :search-field="searchField"
             :search-value="searchValue"
             :filter-options="filterOptions"
           >
             <template #header-actions="header">
               {{ header.text }}
-            </template>
-            <template #item-actions="items">
-              <el-dropdown>
-                <span class="bi bi-three-dots-vertical"> </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      @click="
-                        () => {
-                          $router.push({
-                            name: 'Edit-ReservationHotels',
-                            params: {
-                              ReservationHotelId: items.reservationHotelId
-                            }
-                          })
-                        }
-                      "
-                      >Editar</el-dropdown-item
-                    >
-                    <el-dropdown-item
-                      @click="
-                        onDeleteReservationHotel(items.reservationHotelId)
-                      "
-                      >Cancelar reservación</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                  <el-dropdown-item
-                    @click="
-                      $router.push({
-                        name: 'PaymentsRelationReservatioHotel',
-                        params: {
-                          ReservationHotelId: items.reservationHotelId
-                        }
-                      })
-                    "
-                    >Relación de pagos</el-dropdown-item
-                  >
-                </template>
-              </el-dropdown>
-            </template>
-            <template #item-destinations="items">
-              <span>{{
-                items.destinations ? items.destinations.name : ''
-              }}</span>
-            </template>
-            <template #item-hotel="items">
-              <span>{{ items.hotels ? items.hotels.name : '' }}</span>
             </template>
             <template #item-isDeleted="items">
               <el-tag
@@ -147,10 +84,10 @@
   <el-dialog
     v-model="showStatusReservationFilter"
     title="Filtrar reservaciones"
-    width="50%"
+    width="80%"
     center
   >
-    <el-row :gutter="35" align="center">
+    <el-row :gutter="35">
       <el-col :lg="8" :md="8">
         <v-select
           v-model="statusReservationCriteria"
@@ -183,36 +120,31 @@
 </template>
 
 <script>
-import { ref, watch, provide, inject, computed } from 'vue'
-import ReservationServices from '@/Services/ReservationHotel.Services'
+import { ref, computed } from 'vue'
+import EmployeeServices from '@/Services/Employees.Services'
+
 export default {
   setup () {
-    const { getReservationHotels, deleteReservationHotel } =
-      ReservationServices()
-    const reservationHotels = ref([])
-    const swal = inject('$swal')
+    const { getReservationsByEmployee } = EmployeeServices()
+    const employees = ref([])
     const filter = ref(null)
     const perPage = ref(5)
     const currentPage = ref(1)
+    const perPageSelect = ref([5, 10, 25, 50, 100])
     const isloading = ref(true)
     const searchValue = ref('')
-    const searchField = ref('reservationInvoice')
-    const isAddedEmployee = ref(false)
+    const searchField = ref('invoice')
+    const employeeId = window.sessionStorage.getItem('EmployeeId')
     const statusReservationCriteria = ref(null)
     const statusPaymentCriteria = ref(null)
     const showStatusReservationFilter = ref(false)
     const showStatusPaymentFilter = ref(false)
-    provide('AddEmployee', isAddedEmployee)
     const fields = ref([
-      { value: 'reservationInvoice', text: 'Folio' },
-      { value: 'travelDateStart', text: 'Fecha de salida' },
-      { value: 'travelDateEnd', text: 'Fecha de regreso' },
-      { value: 'hotel', text: 'Hotel' },
-      { value: 'destinations', text: 'Destino' },
+      { value: 'invoice', text: 'Folio' },
+      { value: 'origin', text: 'Tipo de reservación' },
       { value: 'dateSale', text: 'Fecha de venta' },
-      { value: 'isSoldOut', text: 'Estado de pago' },
-      { value: 'isDeleted', text: 'Estado reservación' },
-      { value: 'actions', text: 'Acciones' }
+      { value: 'isDeleted', text: 'Estatus de reservación' },
+      { value: 'isSoldOut', text: 'Estatus de pago' }
     ])
     const filterOptions = computed(() => {
       const filterOptionsArray = []
@@ -260,61 +192,19 @@ export default {
         value: null
       }
     ])
-    getReservationHotels(data => {
-      reservationHotels.value = data
+    getReservationsByEmployee(employeeId, data => {
+      employees.value = data
       isloading.value = false
     })
-    const refreshTable = () => {
-      isloading.value = true
-      getReservationHotels(data => {
-        reservationHotels.value = data
-        isloading.value = false
-      })
-    }
-    watch(
-      [isAddedEmployee, statusReservationCriteria, statusPaymentCriteria],
-      (newValueA, newValueB, newValueC) => {
-        if (!newValueA) {
-          refreshTable()
-        }
-        refreshTable()
-      }
-    )
-    const onDeleteReservationHotel = reservationHotelId => {
-      swal
-        .fire({
-          title: 'Estás a punto de cancelar una reservación, ¿Estas seguro?',
-          text: '¡No podrás revertir esto!',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Si, cancelar reservación',
-          cancelButtonText: 'Cancelar'
-        })
-        .then(result => {
-          if (result.isConfirmed) {
-            deleteReservationHotel(reservationHotelId, data => {
-              swal.fire({
-                title: 'Reservación cancelada!',
-                text: 'La reservación ha sido cancelada satisfactoriamente .',
-                icon: 'success'
-              })
-              refreshTable()
-            })
-          } else {
-            isloading.value = false
-          }
-        })
-    }
     return {
       filter,
       perPage,
       currentPage,
+      perPageSelect,
       isloading,
       searchValue,
       searchField,
       fields,
-      reservationHotels,
-      isAddedEmployee,
       showStatusReservationFilter,
       showStatusPaymentFilter,
       filterOptions,
@@ -322,13 +212,10 @@ export default {
       statusPaymentCriteria,
       filterStatusReservation,
       filterStatusPayment,
-      refreshTable,
-      onDeleteReservationHotel
+      employees
     }
   }
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

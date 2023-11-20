@@ -11,6 +11,11 @@ export default function EmployeeServices () {
       callback(response.data)
     })
   }
+  const getReservationsByEmployee = (employeeId, callback) => {
+    axiosPrivate.get(`/Employees/ReservationsByEmployee/${employeeId}`).then((response) => {
+      callback(response.data)
+    })
+  }
   const createEmployee = (data, callback) => {
     axiosPrivate.post('/Employees', data).then((response) => {
       callback(response.data)
@@ -29,6 +34,7 @@ export default function EmployeeServices () {
   return {
     getEmployees,
     getEmployee,
+    getReservationsByEmployee,
     createEmployee,
     updateEmployee,
     deleteEmployee
