@@ -188,9 +188,11 @@ export default {
     const { getReservationHotel } = ReservationHotelServices()
     const { getHabitation, updateHabitation } = HabitationServices()
 
-    getReservationHotel(reservationHotelId.value, data => {
-      reservationHotel.value = data
-    })
+    if (reservationHotelId.value) {
+      getReservationHotel(reservationHotelId.value, data => {
+        reservationHotel.value = data
+      })
+    }
     watch(isOpenDialog, newValue => {
       if (newValue) {
         const hotelId = computed(() => store.getters.getHotelId)

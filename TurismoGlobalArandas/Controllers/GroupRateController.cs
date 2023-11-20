@@ -76,12 +76,6 @@ namespace TurismoGlobalArandas.Controllers
             GroupRateOld.MinorsCharge = GroupRate.MinorsCharge;
             GroupRateOld.MinorsWithoutCharge = GroupRate.MinorsWithoutCharge;
             GroupRateOld.AgesMinors = GroupRate.AgesMinors;
-            GroupRateOld.DateStart = GroupRate.DateStart;
-            GroupRateOld.DateEnd = GroupRate.DateEnd;
-            GroupRateOld.RangePublicClient = GroupRate.RangePublicClient;
-            GroupRateOld.RangeJunior = GroupRate.RangeJunior;
-            GroupRateOld.RangeMinor = GroupRate.RangeMinor;
-            GroupRateOld.NightsNumber = GroupRate.NightsNumber;
             GroupRateOld.RangeNight = GroupRate.RangeNight;
             GroupRateOld.RangeTotal = GroupRate.RangeTotal;
             GroupRateOld.Observations = GroupRate.Observations;

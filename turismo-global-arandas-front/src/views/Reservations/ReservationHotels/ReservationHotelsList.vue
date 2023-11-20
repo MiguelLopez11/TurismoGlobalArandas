@@ -16,7 +16,10 @@
           @click="
             () => {
               $router.push({
-                name: 'ReservacionesHoteleria-AddNew'
+                name: 'ReservacionesHoteleria-AddNew',
+                params: {
+                  ReservationHotelId: null
+                }
               })
             }
           "
