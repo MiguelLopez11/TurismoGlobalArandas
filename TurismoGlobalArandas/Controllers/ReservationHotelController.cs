@@ -79,7 +79,7 @@ namespace TurismoGlobalArandas.Controllers
                 return BadRequest($"La habitacion con el ID {ReservationHotelId} no existe");
             }
             ReservationOld.ReservationHotelId = Reservation.ReservationHotelId;
-            ReservationOld.ReservationInvoice = Reservation.ReservationInvoice;
+            ReservationOld.Invoice = Reservation.Invoice;
             ReservationOld.TravelDateStart = Reservation.TravelDateStart;
             ReservationOld.TravelDateEnd = Reservation.TravelDateEnd;
             ReservationOld.TypeHabitation = Reservation.TypeHabitation;

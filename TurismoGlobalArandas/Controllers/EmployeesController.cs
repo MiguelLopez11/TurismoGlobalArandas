@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Models;
@@ -24,6 +25,25 @@ namespace UConnect.Controllers
                 .ToListAsync();
             return Ok(employee);
         }
+        [HttpGet("ReservationsByEmployee/{EmployeeId}")]
+        public IActionResult ObtenerDatosDesdeVista(int EmployeeId, DateTime? startDate = null, DateTime? endDate = null)
+        {
+            try
+            {
+                var result = _context.ReservationsByEmployeeView
+                    .FromSqlInterpolated($"EXEC ReservationsByEmployee {EmployeeId}")
+                    .AsEnumerable()
+                    .Where(r => startDate == null || endDate == null || (r.DateSale >= startDate && r.DateSale <= endDate))
+                    .ToList();
+
+
+                return Ok(result);
+            }catch (Exception ex)
+            {
+                return BadRequest(ex.Message); 
+            }
+        }
+
         [HttpGet("{EmployeeId}")]
         public async Task<ActionResult> GetEmpleadosById(int EmployeeId)
         {

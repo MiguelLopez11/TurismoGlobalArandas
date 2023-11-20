@@ -770,8 +770,10 @@ export default {
       updateReservationHotelGroup,
       comprobateIfExist
     } = ReservationHotelGroupServices()
-    const { createPaymentRelation, getPaymentsRelationByReservationHotel } =
-      PaymentsRelationReservationServices()
+    const {
+      createPaymentRelation,
+      getPaymentsRelationByReservationHotel
+    } = PaymentsRelationReservationServices()
     const store = useStore()
     const redirect = useRouter()
     // DATA
@@ -794,7 +796,7 @@ export default {
     const reservationHotelId = ref()
     const rangeDatesTravel = ref([])
     const reservationHotelGroup = ref([])
-    const employyeId = window.sessionStorage.getItem('EmployeeId')
+    const employeeId = window.sessionStorage.getItem('EmployeeId')
     const reservationHotelGroupId = ref(0)
     const paymentReservationId = ref(0)
     let dateArrival = new Date()
@@ -805,6 +807,7 @@ export default {
     // MODELS DATA
     const reservationHotelFields = ref({
       reservationHotelId: 0,
+      employeeId: 0,
       isDeleted: false
     })
     const individualRateFields = ref({
@@ -843,8 +846,8 @@ export default {
         }
       }
     )
-    // IF IS A NEW RESERVATION
-    if (parseInt(props.reservationHotelId) === 0) {
+    if (props.reservationHotelId === null) {
+      reservationHotelFields.value.employeeId = employeeId
       createReservationHotel(reservationHotelFields.value, data => {
         reservationHotelId.value = data.reservationHotelId
         reservationHotel.value = data
@@ -1055,7 +1058,6 @@ export default {
     const validationClient = () => {
       return new Promise((resolve, reject) => {
         if (reservationHotel.value.customerId) {
-          reservationHotel.value.employeeId = employyeId
           onUpdateReservation()
           resolve(true)
         } else {
@@ -1211,9 +1213,6 @@ export default {
       })
     }
     const onComplete = () => {
-      // getPaymentRelation(paymentReservationId.value, data => {
-      //   data.amountTotal = reservationHotel.value.totalCost
-      //   updatePaymentRelation(data, response => {
       swal
         .fire({
           title: 'Reservación registrada correctamente',
@@ -1225,8 +1224,6 @@ export default {
             redirect.push('/ReservacionesHoteleria')
           }
         })
-      // })
-      // })
     }
     return {
       reservationHotelFields,

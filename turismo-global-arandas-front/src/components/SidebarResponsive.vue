@@ -110,6 +110,12 @@ export default {
             title: 'Empleados',
             path: '/Empleados',
             icon: 'bi bi-file-person'
+          },
+          {
+            index: '3-2',
+            title: 'Reservaciones del empleado',
+            path: '/ReservacionesEmpleados',
+            icon: 'bi bi-bar-chart-steps'
           }
         ]
       },

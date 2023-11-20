@@ -8,7 +8,7 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int ReservationHotelId { get; set; }
-        public string? ReservationInvoice { get; set; } = null;
+        public string? Invoice { get; set; } = null;
         public DateTime? TravelDateStart { get; set; } = null;
         public DateTime? TravelDateEnd { get; set; } = null;
         public string? TypeHabitation { get; set; } = null;

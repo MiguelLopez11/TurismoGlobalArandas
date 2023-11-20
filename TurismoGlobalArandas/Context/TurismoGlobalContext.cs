@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using TurismoGlobalArandas.Models;
-using UConnect.Entities;
 using System.Reflection.Emit;
+using TurismoGlobalArandas.Models;
+using TurismoGlobalArandas.Models.Identity;
+using UConnect.Entities;
 
 namespace TurismoGlobalArandas.Context
 {
@@ -12,6 +12,7 @@ namespace TurismoGlobalArandas.Context
         public TurismoGlobalContext(DbContextOptions<TurismoGlobalContext> options) : base(options)
         {
         }
+        public DbSet<ReservationsByEmployeeView> ReservationsByEmployeeView { get; set; }
         public DbSet<AditionalServices> AditionalServices { get; set; }
         public DbSet<Customers> Customers { get; set; }
         public DbSet<Destinations> Destinations { get; set; }
@@ -46,6 +47,7 @@ namespace TurismoGlobalArandas.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+            builder.Entity<ReservationsByEmployeeView>().HasNoKey().ToView(null);
             builder.Entity<AditionalServices>().HasData(new AditionalServices { AditionalServiceId = 1, Name = "Servicio de reservación de vuelo", Description = null, IsDeleted = false });
             builder.Entity<AditionalServices>().HasData(new AditionalServices { AditionalServiceId = 2, Name = "Servicio de reservación de vehiculo", Description = null, IsDeleted = false });
             builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 1, Name = "Individual", Description = null, IsDeleted = false });

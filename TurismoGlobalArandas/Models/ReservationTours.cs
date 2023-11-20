@@ -8,6 +8,7 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int ReservationTourId { get; set; }
+        public string? Invoice { get; set; }
         public string? TourName { get; set; }
         public int? DestinationId { get; set; }
         public DateTime? DateSale { get; set; }
@@ -28,7 +29,11 @@ namespace TurismoGlobalArandas.Models
         public bool IsNational { get; set; }
         public bool IncludeTransportation { get; set; }
         public bool IsSoldOut { get; set; }
+        public int? EmployeeId { get; set; } = null;
         public bool IsDeleted { get; set; }
+
+        [ForeignKey("EmployeeId")]
+        public Employees? Employees { get; set; }
 
         [ForeignKey("DestinationId")]
         public Destinations? Destinations { get; set; }
