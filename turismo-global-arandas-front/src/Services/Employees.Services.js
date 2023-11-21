@@ -11,8 +11,8 @@ export default function EmployeeServices () {
       callback(response.data)
     })
   }
-  const getReservationsByEmployee = (employeeId, callback) => {
-    axiosPrivate.get(`/Employees/ReservationsByEmployee/${employeeId}`).then((response) => {
+  const getReservationsByEmployee = (employeeId, data, callback) => {
+    axiosPrivate.post(`/Employees/ReservationsByEmployee/${employeeId}`, data).then((response) => {
       callback(response.data)
     })
   }
