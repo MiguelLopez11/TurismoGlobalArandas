@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Models;
+using UConnect.Entities;
 
 namespace UConnect.Controllers
 {
@@ -11,10 +13,12 @@ namespace UConnect.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
+        private readonly UserManager<User> _userManager;
         private readonly TurismoGlobalContext _context;
-        public EmployeesController(TurismoGlobalContext context)
+        public EmployeesController(TurismoGlobalContext context, UserManager<User> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [HttpGet]
@@ -25,23 +29,31 @@ namespace UConnect.Controllers
                 .ToListAsync();
             return Ok(employee);
         }
-        [HttpGet("ReservationsByEmployee/{EmployeeId}")]
-        public IActionResult ObtenerDatosDesdeVista(int EmployeeId, DateTime? startDate = null, DateTime? endDate = null)
+        [HttpPost("ReservationsByEmployee/{EmployeeId}")]
+        public async Task<ActionResult> ObtenerDatosDesdeVista(int EmployeeId, [FromBody] List<DateTime> dates)
         {
-            try
+
+            var user = _userManager.Users
+                .FirstOrDefault(f => f.EmployeeId == EmployeeId);
+            var userRole = await _userManager.GetRolesAsync(user);
+            if (userRole[0].Equals("ADMINISTRADOR"))
             {
-                var result = _context.ReservationsByEmployeeView
+                var datosVista = _context.ReservationsByEmployeeView
+                    .FromSqlRaw("SELECT * FROM All_Reservations")
+                    .AsEnumerable()
+                    .Where(r => dates == null || dates.Count == 0 || (r.DateSale >= dates[0] && r.DateSale <= dates[dates.Count - 1]))
+                    .ToList();
+                    
+                return Ok(datosVista);
+            }
+            var result = _context.ReservationsByEmployeeView
                     .FromSqlInterpolated($"EXEC ReservationsByEmployee {EmployeeId}")
                     .AsEnumerable()
-                    .Where(r => startDate == null || endDate == null || (r.DateSale >= startDate && r.DateSale <= endDate))
+                    .Where(r => dates == null || dates.Count == 0 || (r.DateSale >= dates[0] && r.DateSale <= dates[dates.Count - 1]))
                     .ToList();
 
+            return Ok(result);
 
-                return Ok(result);
-            }catch (Exception ex)
-            {
-                return BadRequest(ex.Message); 
-            }
         }
 
         [HttpGet("{EmployeeId}")]

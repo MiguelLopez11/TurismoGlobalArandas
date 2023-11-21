@@ -846,7 +846,7 @@ export default {
         }
       }
     )
-    if (props.reservationHotelId === null) {
+    if (props.reservationHotelId === null || props.reservationHotelId === 0) {
       reservationHotelFields.value.employeeId = employeeId
       createReservationHotel(reservationHotelFields.value, data => {
         reservationHotelId.value = data.reservationHotelId
@@ -1157,18 +1157,6 @@ export default {
             reject(new Error('Error'))
           }
         } else {
-          //     confirmationKey: null,
-          // dateArrival: null,
-          // coordinator: null,
-          // phoneNumber: null,
-          // dateStart: null,
-          // dateEnd: null,
-          // rangePublicClient: null,
-          // rangeJunior: null,
-          // rangeMinor: null,
-          // nightsNumber: null,
-          // rangeNight: null,
-          // rangeTotal: null,
           if (
             reservationHotelGroup.value.groupName &&
             reservationHotelGroup.value.dateArrival &&

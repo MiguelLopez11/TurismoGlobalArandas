@@ -1,6 +1,36 @@
 <template>
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
+      <el-col :span="8">
+        <el-form-item>
+          <v-select
+            v-if="employeeId === 1"
+            v-model="employeeIdfilter"
+            label="name"
+            class="w-100"
+            :options="employeesFilter"
+            :reduce="employee => employee.employeeId"
+          >
+            <template #option="{ name, lastname }">
+              <label>{{ name }} {{ lastname }}</label>
+            </template>
+          </v-select>
+        </el-form-item>
+      </el-col>
+      <el-col :span="8">
+        <el-form-item>
+          <el-date-picker
+            v-model="rangeDatesTravel"
+            class="w-100"
+            type="daterange"
+            range-separator="A"
+            start-placeholder="Fecha de salida"
+            end-placeholder="Fecha de llegada"
+            size="large"
+            @change="onSelectTravelDate"
+          />
+        </el-form-item>
+      </el-col>
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
         <el-input
           v-model="searchValue"
@@ -120,13 +150,15 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import EmployeeServices from '@/Services/Employees.Services'
 
 export default {
   setup () {
-    const { getReservationsByEmployee } = EmployeeServices()
+    const { getReservationsByEmployee, getEmployees } = EmployeeServices()
     const employees = ref([])
+    const employeesFilter = ref([])
+    const rangeDatesTravel = ref([])
     const filter = ref(null)
     const perPage = ref(5)
     const currentPage = ref(1)
@@ -134,7 +166,8 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('invoice')
-    const employeeId = window.sessionStorage.getItem('EmployeeId')
+    const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
+    const employeeIdfilter = ref()
     const statusReservationCriteria = ref(null)
     const statusPaymentCriteria = ref(null)
     const showStatusReservationFilter = ref(false)
@@ -146,6 +179,40 @@ export default {
       { value: 'isDeleted', text: 'Estatus de reservación' },
       { value: 'isSoldOut', text: 'Estatus de pago' }
     ])
+    getEmployees(data => {
+      employeesFilter.value = data
+    })
+    getReservationsByEmployee(
+      employeeIdfilter.value || employeeId,
+      rangeDatesTravel.value,
+      data => {
+        employees.value = data
+        isloading.value = false
+      }
+    )
+    watch((rangeDatesTravel, employeeIdfilter), (newValueA, newValueB) => {
+      if (newValueA || newValueB) {
+        refreshTable()
+      }
+    })
+    const refreshTable = () => {
+      getReservationsByEmployee(
+        employeeIdfilter.value || employeeId,
+        rangeDatesTravel.value,
+        data => {
+          employees.value = data
+          isloading.value = false
+        }
+      )
+    }
+    const onSelectTravelDate = () => {
+      rangeDatesTravel.value[0] = rangeDatesTravel.value[0]
+        .toISOString()
+        .split('.')[0]
+      rangeDatesTravel.value[1] = rangeDatesTravel.value[1]
+        .toISOString()
+        .split('.')[0]
+    }
     const filterOptions = computed(() => {
       const filterOptionsArray = []
       if (statusReservationCriteria.value !== null) {
@@ -192,10 +259,6 @@ export default {
         value: null
       }
     ])
-    getReservationsByEmployee(employeeId, data => {
-      employees.value = data
-      isloading.value = false
-    })
     return {
       filter,
       perPage,
@@ -212,7 +275,12 @@ export default {
       statusPaymentCriteria,
       filterStatusReservation,
       filterStatusPayment,
-      employees
+      employeeId,
+      employeeIdfilter,
+      employees,
+      employeesFilter,
+      onSelectTravelDate,
+      rangeDatesTravel
     }
   }
 }
