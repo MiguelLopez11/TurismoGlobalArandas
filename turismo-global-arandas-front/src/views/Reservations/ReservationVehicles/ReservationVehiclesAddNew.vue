@@ -226,6 +226,7 @@ export default {
     const providers = ref([])
     const { getProviders } = ProviderServices()
     const { createReservationVehicle } = ReservationVehicleServices()
+    const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     const validationSchema = yup.object({
       invoice: yup.string().required('Este campo es requerido'),
       dateTravel: yup.date().required('Este campo es requerido'),
@@ -255,6 +256,7 @@ export default {
       pricePublic: null,
       priceNeto: null,
       description: null,
+      employeeId: employeeId,
       isDeleted: false
     })
     const reservationVehiclesFieldsBlank = ref(

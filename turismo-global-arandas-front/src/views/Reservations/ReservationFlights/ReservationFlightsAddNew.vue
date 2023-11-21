@@ -341,13 +341,11 @@ export default {
     const customers = ref([])
     const isAddedCustomer = ref(false)
     provide('AddTypeReservation', isAddedCustomer)
+    const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     const { getCustomers } = CustomerServices()
     const { createReservationFlight } = ReservationFlightServices()
     const {
       createPaymentRelation
-      // getPaymentRelation,
-      // updatePaymentRelation,
-      // getPaymentsRelationByReservationHotel
     } = PaymentsRelationReservationServices()
     const validationSchema = yup.object({
       travelDate: yup.date().required('Este campo es requerido'),
@@ -390,6 +388,7 @@ export default {
       paymentMethodClient: null,
       contactPhone: null,
       statusFlightId: null,
+      employeeId: employeeId,
       isDeleted: false
     })
     const reservationFlightFieldsBlank = ref(

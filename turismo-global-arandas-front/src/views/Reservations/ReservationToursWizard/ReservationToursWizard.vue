@@ -306,6 +306,7 @@ export default {
     const isAddDestination = ref(false)
     const reservationTourId = ref(0)
     const paymentReservationId = ref(0)
+    const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     // OPEN CLOSE COMPONENT
     provide('addDestination', isAddDestination)
     const swal = inject('$swal')
@@ -321,10 +322,12 @@ export default {
       isInternational: false,
       isNational: false,
       includeTransportation: false,
+      employeeId: null,
       isDeleted: false
     })
     // if im not editing, create a new reservation else, get a reservationTour from the API
     if (!props.ReservationTourId) {
+      reservationTourFields.value.employeeId = employeeId
       createReservationTour(reservationTourFields.value, data => {
         getReservationTour(data.reservationTourId, data => {
           reservationTour.value = data
