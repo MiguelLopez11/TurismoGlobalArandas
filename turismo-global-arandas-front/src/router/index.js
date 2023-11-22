@@ -408,6 +408,14 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/PagosProveedor',
+    name: 'PaymentProvider',
+    component: () => import('../views/PaymentProviders/PaymentProviderList'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 

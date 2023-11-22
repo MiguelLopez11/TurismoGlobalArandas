@@ -796,7 +796,7 @@ export default {
     const reservationHotelId = ref()
     const rangeDatesTravel = ref([])
     const reservationHotelGroup = ref([])
-    const employeeId = window.sessionStorage.getItem('EmployeeId')
+    const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     const reservationHotelGroupId = ref(0)
     const paymentReservationId = ref(0)
     let dateArrival = new Date()

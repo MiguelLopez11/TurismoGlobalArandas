@@ -246,6 +246,12 @@ export default {
             title: 'Gastos fijos',
             path: '/GastosFijos',
             icon: 'bi bi-credit-card-2-front'
+          },
+          {
+            index: '6-5',
+            title: 'Pagos proveedores',
+            path: '/PagosProveedor',
+            icon: 'bi bi-currency-dollar'
           }
         ]
       }
