@@ -212,6 +212,7 @@ import { ref, inject } from 'vue'
 import { Field, Form } from 'vee-validate'
 import ProviderServices from '@/Services/Provider.Services'
 import ReservationVehicleServices from '@/Services/ReservationVehicle.Services'
+import PaymentProviders from '@/Services/paymentProviders.Services'
 import * as yup from 'yup'
 
 export default {
@@ -225,6 +226,7 @@ export default {
     const reservationVehicleFormRef = ref(null)
     const providers = ref([])
     const { getProviders } = ProviderServices()
+    const { createPaymentProvider } = PaymentProviders()
     const { createReservationVehicle } = ReservationVehicleServices()
     const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     const validationSchema = yup.object({
@@ -267,6 +269,10 @@ export default {
     })
     const onSubmit = () => {
       createReservationVehicle(reservationVehiclesFields.value, data => {
+        createPaymentProvider(
+          { reservationVehicleId: data.reservationVehicleId, isDeleted: false },
+          data => {}
+        )
         swal.fire({
           title: '¡Nueva comisión registrada!',
           text: 'La nueva comisión se ha registrado correctamente',

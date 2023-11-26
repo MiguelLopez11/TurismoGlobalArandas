@@ -19,6 +19,10 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult<PaymentProviders>> getPaymentProviders()
         {
             var Payments = await _context.PaymentProviders
+                .Include(i => i.ReservationHotels)
+                .Include(i => i.reservationFlight)
+                .Include(i => i.ReservationVehicles)
+                .Include(i => i.ReservationTours)
                 .ToListAsync();
             return Ok(Payments);
         }
@@ -33,9 +37,56 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(Payment);
         }
+        [HttpGet("ReservacionHotel/{ReservationHotelId}")]
+        public async Task<ActionResult> getPaymentProviderByReservationHotel(int ReservationHotelId)
+        {
+            var Payment = await _context.PaymentProviders
+                .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
+            if (Payment == null)
+            {
+                return NotFound();
+            }
+            return Ok(Payment);
+        }
+        [HttpGet("ReservacionTour/{ReservationTourId}")]
+        public async Task<ActionResult> getPaymentProviderByReservationTour(int ReservationTourId)
+        {
+            var Payment = await _context.PaymentProviders
+                .FirstOrDefaultAsync(f => f.ReservationTourId == ReservationTourId);
+            if (Payment == null)
+            {
+                return NotFound();
+            }
+            return Ok(Payment);
+        }
+        [HttpGet("ReservacionVuelo/{ReservationFlightId}")]
+        public async Task<ActionResult> getPaymentProviderByReservationFlight(int ReservationFlightId)
+        {
+            var Payment = await _context.PaymentProviders
+                .FirstOrDefaultAsync(f => f.ReservationFlightId == ReservationFlightId);
+            if (Payment == null)
+            {
+                return NotFound();
+            }
+            return Ok(Payment);
+        }
+        [HttpGet("ReservacionVehiculo/{ReservationVehicleId}")]
+        public async Task<ActionResult> getPaymentProviderByReservationVehicle(int ReservationVehicleId)
+        {
+            var Payment = await _context.PaymentProviders
+                .FirstOrDefaultAsync(f => f.ReservationVehicleId == ReservationVehicleId);
+            if (Payment == null)
+            {
+                return NotFound();
+            }
+            return Ok(Payment);
+        }
         [HttpPost]
         public async Task<ActionResult<PaymentProviders>> PostPaymentProvider(PaymentProviders payment)
         {
+            var Invoice = _context.GetInvoice();
+            payment.Invoice = Invoice;
+            payment.PaymentDate = DateTime.Today;
             _context.PaymentProviders.Add(payment);
             await _context.SaveChangesAsync();
             return CreatedAtAction("getPaymentProvider", new { PaymentId = payment.PaymentId }, payment);

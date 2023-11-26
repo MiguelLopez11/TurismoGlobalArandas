@@ -711,6 +711,7 @@ import IndividualRateServices from '@/Services/IndividualRate.Services'
 import ServicesProviderServices from '@/Services/ProviderServices.Services'
 import ReservationHotelGroupServices from '@/Services/ReservationHotelGroup.Services'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
+import PaymentProviders from '@/Services/paymentProviders.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
@@ -770,10 +771,9 @@ export default {
       updateReservationHotelGroup,
       comprobateIfExist
     } = ReservationHotelGroupServices()
-    const {
-      createPaymentRelation,
-      getPaymentsRelationByReservationHotel
-    } = PaymentsRelationReservationServices()
+    const { createPaymentRelation, getPaymentsRelationByReservationHotel } =
+      PaymentsRelationReservationServices()
+    const { createPaymentProvider } = PaymentProviders()
     const store = useStore()
     const redirect = useRouter()
     // DATA
@@ -863,6 +863,10 @@ export default {
           item => {
             paymentReservationId.value = item.paymentReservationId
           }
+        )
+        createPaymentProvider(
+          { reservationHotelId: reservationHotelId.value, isDeleted: false },
+          data => {}
         )
       })
       // IF IS A EXIST RESERVATION

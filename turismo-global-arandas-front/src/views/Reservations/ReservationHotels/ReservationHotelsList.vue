@@ -75,18 +75,29 @@
                       "
                       >Cancelar reservación</el-dropdown-item
                     >
+                    <el-dropdown-item
+                      @click="
+                        $router.push({
+                          name: 'PaymentsRelationReservatioHotel',
+                          params: {
+                            ReservationHotelId: items.reservationHotelId
+                          }
+                        })
+                      "
+                      >Relación de pagos</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      @click="
+                        $router.push({
+                          name: 'PaymentProvider-Details-ReservationHotel',
+                          params: {
+                            ReservationHotelId: items.reservationHotelId
+                          }
+                        })
+                      "
+                      >Relación de pagos a proveedores</el-dropdown-item
+                    >
                   </el-dropdown-menu>
-                  <el-dropdown-item
-                    @click="
-                      $router.push({
-                        name: 'PaymentsRelationReservatioHotel',
-                        params: {
-                          ReservationHotelId: items.reservationHotelId
-                        }
-                      })
-                    "
-                    >Relación de pagos</el-dropdown-item
-                  >
                 </template>
               </el-dropdown>
             </template>
@@ -100,6 +111,7 @@
             </template>
             <template #item-isDeleted="items">
               <el-tag
+                effect="dark"
                 class="ml-2"
                 :type="items.isDeleted === false ? 'success' : 'danger'"
               >
@@ -108,6 +120,7 @@
             </template>
             <template #item-isSoldOut="items">
               <el-tag
+                effect="dark"
                 class="ml-2"
                 :type="items.isSoldOut !== false ? 'success' : 'warning'"
               >
@@ -332,6 +345,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

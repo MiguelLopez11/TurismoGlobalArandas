@@ -4,10 +4,10 @@
       <Sidebar />
     </el-aside>
     <el-container>
-      <el-header v-if="Token" class="header-home">
-        <Navbar />
-      </el-header>
       <el-main class="main-content">
+        <el-header v-if="Token" class="mb-5 p-0">
+          <Navbar />
+        </el-header>
         <router-view />
       </el-main>
     </el-container>
@@ -79,8 +79,8 @@ body,
   flex: 0 0 25%;
   z-index: 1000;
 }
-body.swal2-shown.swal2-height-auto{
-      height: inherit !important;
+body.swal2-shown.swal2-height-auto {
+  height: inherit !important;
 }
 .el-main {
   background-color: #e6eef9;
@@ -90,7 +90,6 @@ body.swal2-shown.swal2-height-auto{
   min-height: 0;
   overflow-y: auto;
 }
-
 /* ... (other styles) */
 
 /* Media query for smaller screens */

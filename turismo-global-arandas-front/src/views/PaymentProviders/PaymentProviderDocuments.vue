@@ -2,11 +2,14 @@
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
-        <el-input
-          v-model="searchValue"
+        <el-button
+          class="w-100"
           size="large"
-          placeholder="Buscar pago..."
-        />
+          color="#7367F0"
+          @click="isAddFile = !isAddFile"
+        >
+          <i> registrar nuevo vuelo </i>
+        </el-button>
       </el-col>
     </el-row>
     <el-row class="mt-3">
@@ -24,7 +27,7 @@
             :rows-per-page="10"
             :loading="isloading"
             :headers="fields"
-            :items="paymentProviders"
+            :items="files"
             :search-field="searchField"
             :search-value="searchValue"
           >
@@ -36,68 +39,62 @@
                 <span class="bi bi-three-dots-vertical"> </span>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item
-                      @click="
-                        () => {
-                          $router.push({
-                            name: 'PaymentProvider-Details',
-                            params: {
-                              PaymentProviderId: items.paymentId
-                            }
-                          })
-                        }
-                      "
-                      >Detalles</el-dropdown-item
+                    <el-dropdown-item @click="onDownloadFile(items)"
+                      >Descargar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="onDeletePaymentMethod(items.paymentId)"
+                      @click="onDeletePaymentMethod(items.fileId)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
             </template>
-            <template #item-isDeleted="items">
-              <el-tag
-                class="ml-2"
-                effect="dark"
-                :type="items.isDeleted === false ? 'success' : 'danger'"
-              >
-                {{ items.isDeleted === false ? 'Activo' : 'Cancelado' }}
-              </el-tag>
-            </template>
-            <template #item-reservation="items">
-              <el-tag class="ml-2" effect="dark">
-                {{
-                  items.reservationHotelId
-                    ? 'Reservacion Hoteleria'
-                    : null || items.reservationTourId
-                    ? 'Reservacion Tours'
-                    : null || items.reservationFlightId
-                    ? 'Reservacion vuelos'
-                    : null || items.reservationVehicleId
-                    ? 'Reservacion vehiculos'
-                    : null
-                }}
-              </el-tag>
-            </template>
           </EasyDataTable>
         </div>
       </el-col>
     </el-row>
   </el-card>
+  <el-dialog v-model="isAddFile">
+    <el-upload
+      v-model:file-list="uploadFiles"
+      drag
+      action=""
+      multiple
+      :show-file-list="true"
+      :auto-upload="false"
+    >
+      <template #trigger>
+        <h1 class="bi bi-cloud-arrow-up" />
+        <div class="m-2">Arrastra tu archivo aqui o <em>Click aqui</em></div>
+        <el-button type="primary">Seleccionar archivo</el-button>
+      </template>
+
+      <template #tip>
+        <div class="el-upload__tip">solamente archivos pdf/word/excel</div>
+      </template>
+    </el-upload>
+    <el-row :gutter="25" justify="end">
+      <el-col :span="24">
+        <el-button size="large" type="success" @click="handleSuccess"
+          >cargar archivos</el-button
+        >
+      </el-col>
+    </el-row>
+  </el-dialog>
 </template>
 
 <script>
 import { ref, inject } from 'vue'
-import PaymentProviders from '@/Services/paymentProviders.Services'
-// import PaymentMethodsAddNew from './PaymentMethodsAddNew.vue'
-
+import FileServices from '@/Services/Files.Service'
+import { useStore } from 'vuex'
 export default {
-  //   components: { PaymentMethodsAddNew },
   setup () {
-    const { getPaymentProviders, deletePaymentProviderd } = PaymentProviders()
-    const paymentProviders = ref([])
+    const { getFiles, deleteFile, downloadFile, uploadFile } = FileServices()
+    const store = useStore()
+    const uploadFiles = ref([])
+    const files = ref([])
+    const isAddFile = ref(false)
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -106,23 +103,41 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('invoice')
+    const paymentProviderId = ref()
+    setTimeout(() => {
+      paymentProviderId.value = parseInt(store.getters.getPaymentProviderId)
+      getFiles(paymentProviderId.value, data => {
+        files.value = data
+        isloading.value = false
+      })
+    }, 1000)
     const fields = ref([
-      { value: 'invoice', text: 'Folio' },
-      { value: 'paymentDate', text: 'Fecha de pago' },
-      { value: 'observations', text: 'Observaciones' },
-      { value: 'reservation', text: 'Reservacion' },
-      { value: 'isDeleted', text: 'Estatus pago proveedor' },
+      { value: 'name', text: 'Nombre' },
+      { value: 'type', text: 'Tipo de archivo' },
+      { value: 'uploadDate', text: 'Fecha de carga' },
       { value: 'actions', text: 'Acciones' }
     ])
-    getPaymentProviders(data => {
-      paymentProviders.value = data
-      isloading.value = false
-    })
     const refreshTable = () => {
       isloading.value = true
-      getPaymentProviders(data => {
-        paymentProviders.value = data
+      getFiles(paymentProviderId.value, data => {
+        files.value = data
         isloading.value = false
+      })
+    }
+    const onDownloadFile = file => {
+      downloadFile(file.fileId, data => {
+        const blob = new Blob([data])
+
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', `${file.name}`)
+
+        document.body.appendChild(link)
+        link.click()
+
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
       })
     }
     const onDeletePaymentMethod = paymentProviderId => {
@@ -137,7 +152,7 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deletePaymentProviderd(paymentProviderId, data => {
+            deleteFile(paymentProviderId, data => {
               swal.fire({
                 title: 'Metodo de pago eliminado!',
                 text: 'El metodo de pago ha sido eliminado satisfactoriamente .',
@@ -150,6 +165,17 @@ export default {
           }
         })
     }
+    const handleSuccess = async () => {
+      const formData = new FormData()
+      uploadFiles.value.forEach(file => {
+        formData.append('files', file.raw)
+      })
+      uploadFile(paymentProviderId.value, formData, data => {
+        isAddFile.value = false
+        refreshTable()
+      })
+    }
+
     return {
       filter,
       perPage,
@@ -159,9 +185,14 @@ export default {
       searchValue,
       searchField,
       fields,
-      paymentProviders,
+      uploadFiles,
+      files,
+      paymentProviderId,
+      isAddFile,
       refreshTable,
-      onDeletePaymentMethod
+      onDownloadFile,
+      onDeletePaymentMethod,
+      handleSuccess
     }
   }
 }
