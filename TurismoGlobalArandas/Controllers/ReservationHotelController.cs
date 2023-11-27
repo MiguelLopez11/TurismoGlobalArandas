@@ -52,7 +52,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ReservationHotel>> PostReservationHotel(ReservationHotel Reservation)
         {
-            
+            Reservation.Invoice = _context.GetInvoiceReservationHotel();
             Reservation.DateSale = DateTime.Now;
             _context.ReservationHotels.Add(Reservation);
             await _context.SaveChangesAsync();

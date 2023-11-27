@@ -22,6 +22,12 @@
                 Cerrar sesión
               </span>
             </el-dropdown-item>
+          <el-dropdown-item @click="() => {$router.push('/ReservacionesEmpleados')}">
+              <span>
+                <i class="bi bi-card-text"></i>
+                Mis ventas
+              </span>
+            </el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>

@@ -109,6 +109,61 @@ namespace TurismoGlobalArandas.Context
                 return "00001";
             }
         }
-
+        public string GetInvoicePaymentRelationList()
+        {
+            string ultimoFolio = PaymentRelationLists.Max(t => t.Invoice);
+            if (ultimoFolio != null)
+            {
+                int nuevoFolioNumerico = int.Parse(ultimoFolio) + 1;
+                string nuevoFolio = nuevoFolioNumerico.ToString("D5");
+                return nuevoFolio;
+            }
+            else
+            {
+                return "00001";
+            }
+        }
+        public string GetInvoiceReservationHotel()
+        {
+            string ultimoFolio = ReservationHotels.Max(t => t.Invoice);
+            if (ultimoFolio != null)
+            {
+                int nuevoFolioNumerico = int.Parse(ultimoFolio) + 1;
+                string nuevoFolio = nuevoFolioNumerico.ToString("D5");
+                return nuevoFolio;
+            }
+            else
+            {
+                return "00001";
+            }
+        }
+        public string GetInvoiceReservationTours()
+        {
+            string ultimoFolio = ReservationTours.Max(t => t.Invoice);
+            if (ultimoFolio != null)
+            {
+                int nuevoFolioNumerico = int.Parse(ultimoFolio) + 1;
+                string nuevoFolio = nuevoFolioNumerico.ToString("D5");
+                return nuevoFolio;
+            }
+            else
+            {
+                return "00001";
+            }
+        }
+        public string GetInvoiceReservationVehicles()
+        {
+            string ultimoFolio = ReservationVehicles.Max(t => t.Invoice);
+            if (ultimoFolio != null)
+            {
+                int nuevoFolioNumerico = int.Parse(ultimoFolio) + 1;
+                string nuevoFolio = nuevoFolioNumerico.ToString("D5");
+                return nuevoFolio;
+            }
+            else
+            {
+                return "00001";
+            }
+        }
     }
 }
