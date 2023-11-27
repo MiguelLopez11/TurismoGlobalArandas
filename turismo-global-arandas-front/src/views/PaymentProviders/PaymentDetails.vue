@@ -10,6 +10,7 @@
             placeholder="Folio"
             size="large"
             v-model="payment.invoice"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -24,6 +25,7 @@
             type="date"
             placeholder="Selecciona la fecha del viaje"
             size="large"
+            disabled
           />
         </el-form-item>
       </el-col>
@@ -62,7 +64,9 @@ export default {
     const {
       getPaymentProvider,
       getPaymentProviderByReservationHotel,
-      getPaymentProviderByReservationTour
+      getPaymentProviderByReservationTour,
+      getPaymentProviderByReservationFlight,
+      getPaymentProviderByReservationVehicle
     } = PaymentProviders()
     const router = useRoute()
     const store = useStore()
@@ -91,6 +95,24 @@ export default {
         }
       )
     }
+    const onPaymentProviderByReservationFlight = () => {
+      getPaymentProviderByReservationFlight(
+        router.params.ReservationFlightId,
+        data => {
+          payment.value = data
+          store.commit('setPaymentProviderId', data.paymentId)
+        }
+      )
+    }
+    const onPaymentProviderByReservationVehicle = () => {
+      getPaymentProviderByReservationVehicle(
+        router.params.ReservationVehicleId,
+        data => {
+          payment.value = data
+          store.commit('setPaymentProviderId', data.paymentId)
+        }
+      )
+    }
     // IF
     if (router.params.PaymentProviderId) {
       onPaymentProvider()
@@ -98,6 +120,10 @@ export default {
       onPaymentProviderByReservationHotel()
     } else if (router.params.ReservationTourId) {
       onPaymentProviderByReservationTour()
+    } else if (router.params.ReservationFlightId) {
+      onPaymentProviderByReservationFlight()
+    } else if (router.params.ReservationVehicleId) {
+      onPaymentProviderByReservationVehicle()
     }
     return {
       payment

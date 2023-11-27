@@ -426,7 +426,7 @@ const routes = [
     }
   },
   {
-    path: '/PagosProveedor/DetallesPago/ReservationHotel/:ReservationHotelId',
+    path: '/PagosProveedor/DetallesPago/ReservacionHotel/:ReservationHotelId',
     name: 'PaymentProvider-Details-ReservationHotel',
     component: () => import('../views/PaymentProviders/PaymentDetails'),
     meta: {
@@ -434,8 +434,24 @@ const routes = [
     }
   },
   {
-    path: '/PagosProveedor/DetallesPago/ReservationTour/:ReservationTourId',
+    path: '/PagosProveedor/DetallesPago/ReservacionTour/:ReservationTourId',
     name: 'PaymentProvider-Details-ReservationTour',
+    component: () => import('../views/PaymentProviders/PaymentDetails'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/PagosProveedor/DetallesPago/ReservacionVuelo/:ReservationFlightId',
+    name: 'PaymentProvider-Details-ReservationFlight',
+    component: () => import('../views/PaymentProviders/PaymentDetails'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/PagosProveedor/DetallesPago/ReservacionVehiculo/:ReservationVehicleId',
+    name: 'PaymentProvider-Details-ReservationVehicle',
     component: () => import('../views/PaymentProviders/PaymentDetails'),
     meta: {
       requiresAuth: true
