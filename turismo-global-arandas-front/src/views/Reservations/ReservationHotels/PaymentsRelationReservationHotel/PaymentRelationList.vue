@@ -16,6 +16,7 @@
           size="large"
           color="#7367F0"
           @click="isAddPaymentRelation = !isAddPaymentRelation"
+          :disabled="!paymentsRelation.amountTotal"
         >
           <i> Registrar nuevo pago </i>
         </el-button>
@@ -80,9 +81,10 @@ export default {
       getPaymentRelationListByPaymentReservationHotel,
       deletePaymentRelationList
     } = PaymentsRelationListServices()
-    PaymentsRelationReservationServices()
+    const { getPaymentRelation } = PaymentsRelationReservationServices()
     const store = useStore()
     const paymentsRelationList = ref([])
+    const paymentsRelation = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
     const perPage = ref(5)
@@ -106,6 +108,9 @@ export default {
           isloading.value = false
         }
       )
+      getPaymentRelation(paymentReservationId.value, data => {
+        paymentsRelation.value = data
+      })
     }, 1000)
     provide('addPaymentRelation', isAddPaymentRelation)
     provide('editPaymentRelation', isEditPaymentRelation)
@@ -173,6 +178,7 @@ export default {
       searchField,
       fields,
       paymentsRelationList,
+      paymentsRelation,
       isAddPaymentRelation,
       paymentReservationId,
       paymenRelationtId,

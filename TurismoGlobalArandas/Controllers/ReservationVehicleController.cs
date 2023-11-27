@@ -41,6 +41,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ReservationVehicle>> PostReservationVehicle(ReservationVehicle reservationVehicle)
         {
+            reservationVehicle.Invoice = _context.GetInvoiceReservationVehicles();
             reservationVehicle.DateSale = DateTime.Now; 
             _context.ReservationVehicles.Add(reservationVehicle);
             await _context.SaveChangesAsync();

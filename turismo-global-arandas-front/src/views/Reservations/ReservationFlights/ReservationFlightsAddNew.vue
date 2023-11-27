@@ -398,6 +398,7 @@ export default {
       customers.value = data
     })
     const onAddedCustomer = value => {
+      console.log(value)
       isAddedCustomer.value = !isAddedCustomer.value
       reservationFlightFields.value.customerId = value
     }

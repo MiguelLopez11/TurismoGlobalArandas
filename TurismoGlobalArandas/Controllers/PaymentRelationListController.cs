@@ -141,6 +141,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<PaymentRelationList>> PostPaymentRelationList(PaymentRelationList payment)
         {
+            payment.Invoice = _context.GetInvoicePaymentRelationList();
             payment.PaymentDate = DateTime.Today;
             _context.PaymentRelationLists.Add(payment);
             await _context.SaveChangesAsync();

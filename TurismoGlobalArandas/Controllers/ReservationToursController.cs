@@ -41,7 +41,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ReservationTours>> PostReservationTour(ReservationTours reservation)
         {
-
+            reservation.Invoice = _context.GetInvoiceReservationTours();
             _context.ReservationTours.Add(reservation);
             await _context.SaveChangesAsync();
             return CreatedAtAction(

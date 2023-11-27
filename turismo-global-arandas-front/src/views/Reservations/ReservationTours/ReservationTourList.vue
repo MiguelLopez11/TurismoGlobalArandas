@@ -124,6 +124,7 @@ export default {
     const searchValue = ref('')
     const searchField = ref('reservationInvoice')
     const fields = ref([
+      { value: 'invoice', text: 'Folio' },
       { value: 'tourName', text: 'Nombre del tour' },
       { value: 'dateSale', text: 'Fecha de venta' },
       { value: 'dateActivity', text: 'Fecha del tour' },
