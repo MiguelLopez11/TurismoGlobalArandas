@@ -8,6 +8,7 @@ using TurismoGlobalArandas.Context;
 using Microsoft.OpenApi.Models;
 using UConnect.Entities;
 using Newtonsoft.Json;
+using Microsoft.Extensions.FileProviders;
 
 namespace TurismoGlobalArandas
 {
@@ -20,6 +21,9 @@ namespace TurismoGlobalArandas
             var builder = WebApplication.CreateBuilder(args);
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             ConfigurationManager configuration = builder.Configuration;
+            
+            
+            
             //CONECTION DATABASE
             builder.Services.AddDbContext<TurismoGlobalContext>(options =>
             {
@@ -111,14 +115,23 @@ namespace TurismoGlobalArandas
                     }
                 );
             });
+           
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
             var app = builder.Build();
+            var env = app.Environment;
+            //SERVICE FILES UPLOAD
+            if (app.Environment != null)
+            {
+                app.UseStaticFiles();
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Resource")),
+                    RequestPath = "/Resource/Files"
+                });
+            }
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment()) { }
             app.UseSwagger();
             app.UseSwaggerUI();

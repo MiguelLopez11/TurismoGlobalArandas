@@ -19,6 +19,7 @@ namespace TurismoGlobalArandas.Context
         public DbSet<Employees> Employees { get; set; }
         public DbSet<ExpensesEventual> ExpensesEventuals { get; set; }
         public DbSet<ExpensesFixed> ExpensesFixeds { get; set; }
+        public DbSet<Files> Files { get; set; }
         public DbSet<GroupRate> GroupRates { get; set; }
         public DbSet<Habitations> Habitations { get; set; }
         public DbSet<HabitationsReservation> HabitationsReservations { get; set; }
@@ -83,6 +84,30 @@ namespace TurismoGlobalArandas.Context
             builder.Entity<ServicesProvider>().HasData(new ServicesProvider { ServiceId = 14, Name = "", ProviderId = 9, Color = null, CommissionAgency = 15, CommissionClient = 10, CommissionEmployee = 05, Description = null, IsDeleted = false });
             builder.Entity<StatusFlight>().HasData(new StatusFlight { StatusFlightId = 1, Name = "Activo", Description = null, IsDeleted = false });
             builder.Entity<StatusFlight>().HasData(new StatusFlight { StatusFlightId = 2, Name = "Cancelado", Description = null, IsDeleted = false });
+        }
+        public string GetInvoice()
+        {
+            // Obtener el último folio existente
+            string ultimoFolio = PaymentProviders.Max(t => t.Invoice);
+
+            // Verificar si hay un último folio existente
+            if (ultimoFolio != null)
+            {
+                // Convertir el último folio a un número y luego incrementarlo
+                int nuevoFolioNumerico = int.Parse(ultimoFolio) + 1;
+
+                // Formatear el nuevo folio como una cadena
+                string nuevoFolio = nuevoFolioNumerico.ToString("D5");
+
+                // Actualizar el folio en la base de datos (opcional, dependiendo de tu lógica)
+                // Devolver el nuevo folio formateado
+                return nuevoFolio;
+            }
+            else
+            {
+                // Si no hay folios existentes, iniciar desde 1
+                return "00001";
+            }
         }
 
     }

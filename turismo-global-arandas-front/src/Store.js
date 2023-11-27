@@ -8,7 +8,8 @@ const store = createStore({
     PaymentReservationId: null,
     paymentAmountTotal: null,
     refreshPaymentRelation: false,
-    reservationHotelGroupId: null
+    reservationHotelGroupId: null,
+    paymentProviderId: null
   },
   mutations: {
     setReservationHotelId (state, id) {
@@ -31,6 +32,9 @@ const store = createStore({
     },
     setReservationHotelGroupId (state, id) {
       state.reservationHotelGroupId = id
+    },
+    setPaymentProviderId (state, id) {
+      state.paymentProviderId = id
     }
   },
   getters: {
@@ -40,7 +44,8 @@ const store = createStore({
     getPaymentReservationId: state => state.paymentReservationId,
     getPaymentAmountTotal: state => state.paymentAmountTotal,
     getRefreshPaymentRelation: state => state.refreshPaymentRelation,
-    getReservationHotelGroupId: state => state.reservationHotelGroupId
+    getReservationHotelGroupId: state => state.reservationHotelGroupId,
+    getPaymentProviderId: state => state.paymentProviderId
   }
 })
 

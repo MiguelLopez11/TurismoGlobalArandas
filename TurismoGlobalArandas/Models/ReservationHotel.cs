@@ -55,9 +55,8 @@ namespace TurismoGlobalArandas.Models
         [ForeignKey("TypeReservationGroupId")]
         public TypeReservationGrupal? TypeReservationGrupal { get; set; }
 
-
-
         [ForeignKey("ProviderId")]
         public Providers? Providers { get; set; }
+
     }
 }

@@ -67,9 +67,6 @@ export default {
   justify-content: flex-end;
   align-items: flex-start;
 }
-.el-header {
-  display: inline-table;
-}
 .right-button {
   margin: 5px;
 }

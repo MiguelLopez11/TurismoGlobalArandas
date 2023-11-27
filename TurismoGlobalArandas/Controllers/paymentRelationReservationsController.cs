@@ -19,6 +19,10 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult<PaymentsRelationReservations>> getPaymentsRelationReservation()
         {
             var Payments = await _context.PaymentsRelationReservations
+                .Include(i => i.ReservationHotels)
+                .Include(i => i.reservationFlight)
+                .Include(i => i.ReservationVehicles)
+                .Include(i => i.ReservationTours)
                 .ToListAsync();
             return Ok(Payments);
         }

@@ -328,6 +328,7 @@ import CustomerServices from '@/Services/Customers.Services'
 import ReservationFlightServices from '@/Services/ReservationFlights.Services'
 import CustomersAddNew from '@/views/Customers/CustomersAddNew.vue'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
+import PaymentProviders from '@/Services/paymentProviders.Services'
 import * as yup from 'yup'
 
 export default {
@@ -344,9 +345,8 @@ export default {
     const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     const { getCustomers } = CustomerServices()
     const { createReservationFlight } = ReservationFlightServices()
-    const {
-      createPaymentRelation
-    } = PaymentsRelationReservationServices()
+    const { createPaymentRelation } = PaymentsRelationReservationServices()
+    const { createPaymentProvider } = PaymentProviders()
     const validationSchema = yup.object({
       travelDate: yup.date().required('Este campo es requerido'),
       departureAirport: yup.string().required('Este campo es requerido'),
@@ -403,11 +403,6 @@ export default {
     }
     const onSubmit = () => {
       createReservationFlight(reservationFlightFields.value, data => {
-        swal.fire({
-          title: '¡Nueva comisión registrada!',
-          text: 'La nueva comisión se ha registrado correctamente',
-          icon: 'success'
-        })
         createPaymentRelation(
           {
             amountTotal: reservationFlightFields.value.priceNeto,
@@ -418,6 +413,15 @@ export default {
           },
           data => {}
         )
+        createPaymentProvider(
+          { reservationFlightId: data.flightId, isDeleted: false },
+          data => {}
+        )
+        swal.fire({
+          title: '¡Nueva comisión registrada!',
+          text: 'La nueva comisión se ha registrado correctamente',
+          icon: 'success'
+        })
         isOpenDialog.value = false
         reservationFlightFields.value = JSON.parse(
           JSON.stringify(reservationFlightFieldsBlank)

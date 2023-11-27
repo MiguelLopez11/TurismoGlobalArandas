@@ -64,6 +64,7 @@
             </template>
             <template #item-isDeleted="items">
               <el-tag
+                effect="dark"
                 class="ml-2"
                 :type="items.isDeleted === false ? 'success' : 'danger'"
               >
@@ -72,6 +73,7 @@
             </template>
             <template #item-isSoldOut="items">
               <el-tag
+                effect="dark"
                 class="ml-2"
                 :type="items.isSoldOut !== false ? 'success' : 'warning'"
               >

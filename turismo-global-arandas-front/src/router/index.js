@@ -416,6 +416,46 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/PagosProveedor/DetallesPago/:PaymentProviderId',
+    name: 'PaymentProvider-Details',
+    component: () => import('../views/PaymentProviders/PaymentDetails'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/PagosProveedor/DetallesPago/ReservacionHotel/:ReservationHotelId',
+    name: 'PaymentProvider-Details-ReservationHotel',
+    component: () => import('../views/PaymentProviders/PaymentDetails'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/PagosProveedor/DetallesPago/ReservacionTour/:ReservationTourId',
+    name: 'PaymentProvider-Details-ReservationTour',
+    component: () => import('../views/PaymentProviders/PaymentDetails'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/PagosProveedor/DetallesPago/ReservacionVuelo/:ReservationFlightId',
+    name: 'PaymentProvider-Details-ReservationFlight',
+    component: () => import('../views/PaymentProviders/PaymentDetails'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/PagosProveedor/DetallesPago/ReservacionVehiculo/:ReservationVehicleId',
+    name: 'PaymentProvider-Details-ReservationVehicle',
+    component: () => import('../views/PaymentProviders/PaymentDetails'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 

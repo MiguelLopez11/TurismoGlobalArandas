@@ -275,6 +275,7 @@ import { ref, provide, watch, inject } from 'vue'
 import ReservationTourServices from '@/Services/ReservationTours.Services'
 import DestinationServices from '@/Services/Destinations.Services'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
+import PaymentProviders from '@/Services/paymentProviders.Services'
 // COMPONENTS
 import DestinationAddNew from '@/views/Destinations/DestinationAddNew.vue'
 // LIBRARIES
@@ -299,6 +300,7 @@ export default {
       getPaymentRelation,
       updatePaymentRelation
     } = PaymentsRelationReservationServices()
+    const { createPaymentProvider } = PaymentProviders()
     const redirect = useRouter()
     //   DATA
     const reservationTour = ref([])
@@ -345,6 +347,13 @@ export default {
             }
           )
         })
+        createPaymentProvider(
+          {
+            reservationTourId: data.reservationTourId,
+            isDeleted: false
+          },
+          data => {}
+        )
       })
     } else {
       getReservationTour(props.ReservationTourId, data => {

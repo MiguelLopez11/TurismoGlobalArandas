@@ -66,23 +66,32 @@
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
-                      @click="
-                        onDeleteReservationTour(items.reservationTourId)
-                      "
+                      @click="onDeleteReservationTour(items.reservationTourId)"
                       >Eliminar</el-dropdown-item
                     >
+                    <el-dropdown-item
+                      @click="
+                        $router.push({
+                          name: 'PaymentsRelationReservatioTour',
+                          params: {
+                            ReservationTourId: items.reservationTourId
+                          }
+                        })
+                      "
+                      >Relación de pagos</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      @click="
+                        $router.push({
+                          name: 'PaymentProvider-Details-ReservationTour',
+                          params: {
+                            ReservationTourId: items.reservationTourId
+                          }
+                        })
+                      "
+                      >Relación de pagos a proveedores</el-dropdown-item
+                    >
                   </el-dropdown-menu>
-                  <el-dropdown-item
-                    @click="
-                      $router.push({
-                        name: 'PaymentsRelationReservatioTour',
-                        params: {
-                          ReservationTourId: items.reservationTourId
-                        }
-                      })
-                    "
-                    >Relación de pagos</el-dropdown-item
-                  >
                 </template>
               </el-dropdown>
             </template>
