@@ -317,8 +317,8 @@
       </el-row>
     </Form>
   </el-dialog>
-  <el-dialog v-model="isAddedCustomer" @add-customer="onAddedCustomer">
-    <customers-add-new />
+  <el-dialog v-model="isAddedCustomer">
+    <customers-add-new @add-customer="onAddedCustomer" />
   </el-dialog>
 </template>
 
@@ -398,9 +398,11 @@ export default {
       customers.value = data
     })
     const onAddedCustomer = value => {
-      console.log(value)
       isAddedCustomer.value = !isAddedCustomer.value
       reservationFlightFields.value.customerId = value
+      getCustomers(data => {
+        customers.value = data
+      })
     }
     const onSubmit = () => {
       createReservationFlight(reservationFlightFields.value, data => {
