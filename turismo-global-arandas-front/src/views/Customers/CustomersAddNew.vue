@@ -143,7 +143,6 @@ export default {
     const customerFieldsBlank = ref(JSON.parse(JSON.stringify(customerFields)))
 
     const onSubmit = () => {
-      isAddingCustomer()
       createCustomer(customerFields.value, data => {
         emit('add-customer', data.customerId)
         swal.fire({
@@ -155,16 +154,12 @@ export default {
         CustomerFormRef.value.resetForm()
       })
     }
-    const isAddingCustomer = () => {
-      emit('change-adding-customer')
-    }
 
     return {
       onSubmit,
       validationSchema,
       customerFields,
-      CustomerFormRef,
-      isAddingCustomer
+      CustomerFormRef
     }
   }
 }
