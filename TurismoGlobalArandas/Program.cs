@@ -3,12 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using System;
 using TurismoGlobalArandas.Context;
 using Microsoft.OpenApi.Models;
 using UConnect.Entities;
-using Newtonsoft.Json;
 using Microsoft.Extensions.FileProviders;
+using TurismoGlobalArandas.Models;
 
 namespace TurismoGlobalArandas
 {
@@ -21,9 +20,6 @@ namespace TurismoGlobalArandas
             var builder = WebApplication.CreateBuilder(args);
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
             ConfigurationManager configuration = builder.Configuration;
-            
-            
-            
             //CONECTION DATABASE
             builder.Services.AddDbContext<TurismoGlobalContext>(options =>
             {
@@ -56,7 +52,7 @@ namespace TurismoGlobalArandas
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ClockSkew = TimeSpan.Zero,
+                        ClockSkew = TimeSpan.MaxValue,
                         ValidAudience = configuration["JWT:ValidAudience"],
                         ValidIssuer = configuration["JWT:ValidIssuer"],
                         IssuerSigningKey = new SymmetricSecurityKey(
@@ -64,6 +60,11 @@ namespace TurismoGlobalArandas
                         )
                     };
                 });
+
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddHttpContextAccessor();
             //CORS
             builder.Services.AddCors(options =>
             {
@@ -115,31 +116,37 @@ namespace TurismoGlobalArandas
                     }
                 );
             });
-           
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            
+
             var app = builder.Build();
             var env = app.Environment;
             //SERVICE FILES UPLOAD
             if (app.Environment != null)
             {
                 app.UseStaticFiles();
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Resource")),
-                    RequestPath = "/Resource/Files"
-                });
+                app.UseStaticFiles(
+                    new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(
+                            Path.Combine(app.Environment.ContentRootPath, "Resource")
+                        ),
+                        RequestPath = "/Resource/Files"
+                    }
+                );
             }
 
-            if (app.Environment.IsDevelopment()) { }
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
             app.UseSwagger();
             app.UseSwaggerUI();
+            app.UseCors(MyAllowSpecificOrigins);
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseCors(MyAllowSpecificOrigins);
 
             app.MapControllers();
 

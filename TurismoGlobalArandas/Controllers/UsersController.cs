@@ -83,48 +83,58 @@ namespace TurismoGlobalArandas.Controllers
                     var userRoles = await _userManager.GetRolesAsync(user);
 
                     var authClaims = new List<Claim>
-                    {
-                        new Claim(ClaimTypes.Name, user.UserName),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    };
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
 
                     foreach (var userRole in userRoles)
                     {
                         authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                     }
 
+                    DateTime expirationTime;
+
+                    // Verificar si el token ha expirado
+                    if (user.RefreshTokenExpiryTime < DateTime.UtcNow)
+                    {
+                        // Si ha expirado, generar un nuevo token de actualización y configurar la nueva expiración
+                        var refreshTokenValidityInDays = int.Parse(_configuration["JWT:RefreshTokenValidityInDays"]);
+                        expirationTime = DateTime.UtcNow.Add(TimeSpan.FromDays(refreshTokenValidityInDays));
+                        user.RefreshToken = GenerateRefreshToken();
+                        user.RefreshTokenExpiryTime = expirationTime;
+                    }
+                    else
+                    {
+                        // Si no ha expirado, utilizar la expiración existente
+                        expirationTime = user.RefreshTokenExpiryTime;
+                    }
+
+
                     var token = CreateToken(authClaims);
-                    var refreshToken = GenerateRefreshToken();
-
-                    _ = int.TryParse(
-                        _configuration["JWT:RefreshTokenValidityInDays"],
-                        out int refreshTokenValidityInDays
-                    );
-
-                    user.RefreshToken = refreshToken;
-                    user.RefreshTokenExpiryTime = DateTime.Now.AddDays(refreshTokenValidityInDays);
 
                     await _userManager.UpdateAsync(user);
-                    return Ok(
-                        new
-                        {
-                            Token = new JwtSecurityTokenHandler().WriteToken(token),
-                            RefreshToken = refreshToken,
-                            Expiration = token.ValidTo,
-                            Role = userRoles[0],
-                            UserName = user.UserName,
-                            EmployeeId = user.EmployeeId,
-                            Status = 200
-                        }
-                    );
+
+                    return Ok(new
+                    {
+                        Token = new JwtSecurityTokenHandler().WriteToken(token),
+                        RefreshToken = user.RefreshToken,
+                        Expiration = token.ValidTo,
+                        Role = userRoles[0],
+                        UserName = user.UserName,
+                        EmployeeId = user.EmployeeId,
+                        Status = 200
+                    });
                 }
+
                 return Unauthorized();
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest();
+                return StatusCode(500, ex.Message);
             }
         }
+
 
         [HttpPost]
         [Route("Register")]
