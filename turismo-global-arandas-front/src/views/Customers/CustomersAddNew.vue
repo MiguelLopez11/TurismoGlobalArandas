@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { ref, inject } from 'vue'
+import { ref } from 'vue'
 import { Field, Form } from 'vee-validate'
 import CustomerServices from '@/Services/Customers.Services'
 import * as yup from 'yup'
@@ -113,7 +113,6 @@ export default {
     Field
   },
   setup (props, { emit }) {
-    const swal = inject('$swal')
     const { createCustomer } = CustomerServices()
     const CustomerFormRef = ref(null)
     const validationSchema = yup.object({
@@ -145,11 +144,6 @@ export default {
     const onSubmit = () => {
       createCustomer(customerFields.value, data => {
         emit('add-customer', data.customerId)
-        swal.fire({
-          title: '¡Nuevo cliente registrado!',
-          text: 'El cliente se ha registrado correctamente',
-          icon: 'success'
-        })
         customerFields.value = JSON.parse(JSON.stringify(customerFieldsBlank))
         CustomerFormRef.value.resetForm()
       })
