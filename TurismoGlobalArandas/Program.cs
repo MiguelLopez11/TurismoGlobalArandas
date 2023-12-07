@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using UConnect.Entities;
 using Microsoft.Extensions.FileProviders;
 using TurismoGlobalArandas.Models;
+using TurismoGlobalArandas.Services;
 
 namespace TurismoGlobalArandas
 {
@@ -65,6 +66,8 @@ namespace TurismoGlobalArandas
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddHttpContextAccessor();
+            builder.Services.AddHostedService<NotificacionService>();
+            builder.Services.AddScoped<TurismoGlobalContext>();
             //CORS
             builder.Services.AddCors(options =>
             {

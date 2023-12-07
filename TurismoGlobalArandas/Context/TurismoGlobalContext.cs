@@ -25,7 +25,7 @@ namespace TurismoGlobalArandas.Context
         public DbSet<HabitationsReservation> HabitationsReservations { get; set; }
         public DbSet<Hotels> Hotels { get; set; }
         public DbSet<IndividualRate> IndividualRates { get; set; }
-        public DbSet<Itinerary> Itineraries { get; set; }
+        public DbSet<Notifications> Notifications { get; set; }
         public DbSet<PaymentConcept> PaymentConcepts { get; set; }
         public DbSet<PaymentMethods> PaymentMethods { get; set; }
         public DbSet<PaymentProviders> PaymentProviders { get; set; }
