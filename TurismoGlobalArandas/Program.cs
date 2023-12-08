@@ -109,16 +109,6 @@ namespace TurismoGlobalArandas
             // Construir la aplicación
             var app = builder.Build();
 
-            // Configuración de archivos estáticos
-            if (app.Environment != null)
-            {
-                app.UseStaticFiles();
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    FileProvider = new PhysicalFileProvider(Path.Combine(app.Environment.ContentRootPath, "Resource")),
-                    RequestPath = "/Resource/Files"
-                });
-            }
 
             // Configuración para desarrollo
             if (app.Environment.IsDevelopment())
