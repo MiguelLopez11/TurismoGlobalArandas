@@ -19,15 +19,12 @@ namespace TurismoGlobalArandas.Controllers
     public class ReservationHotelController : ControllerBase
     {
         private readonly TurismoGlobalContext _context;
-        private readonly UserManager<User> _userManager;
 
         public ReservationHotelController(
-            TurismoGlobalContext context,
-            UserManager<User> userManager
+            TurismoGlobalContext context
         )
         {
             _context = context;
-            _userManager = userManager;
         }
 
         [HttpGet]
@@ -62,36 +59,16 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(Reservation);
         }
 
-        [Authorize]
         [HttpPost]
         public async Task<ActionResult<ReservationHotel>> PostReservationHotel(
             ReservationHotel Reservation
         )
         {
-            //USERS DATA
-            var userName = User.Identity.Name;
-            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.UserName == userName);
-            if (user == null)
-            {
-                BadRequest();
-            }
-            var employee = await _context.Employees.FirstOrDefaultAsync(
-                u => u.EmployeeId == user.EmployeeId
-            );
-            if (employee == null)
-            {
-                BadRequest();
-            }
             //REGISTER RESERVATION
             Reservation.Invoice = _context.GetInvoiceReservationHotel();
             Reservation.DateSale = DateTime.Now;
             _context.ReservationHotels.Add(Reservation);
-            await _context.SaveChangesAsync();
-            //REFRESH DATA RESERVATION
-            //await _context.Entry(Reservation).ReloadAsync();
-            //REGISTER AUDIT
-            //_auditoriaService.RegistrarAuditoria("Reservacion hoteleria", Reservation.ReservationHotelId, "Nuevo registro", null, null, null, (employee.Name + " " + employee.Lastname));
-            return CreatedAtAction(
+            await _context.SaveChangesAsync(); return CreatedAtAction(
                 "getReservationHotelById",
                 new { ReservationHotelId = Reservation.ReservationHotelId },
                 Reservation
@@ -183,7 +160,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpGet("DescargarDatosEnPDF")]
         public async Task<ActionResult> DescargarDatosEnPDF()
         {
-            await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+            await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(
                 new LaunchOptions { Headless = true }
             );
@@ -212,7 +189,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpGet("DescargarReciboEnPDF")]
         public async Task<ActionResult> DescargarReciboEnPDF()
         {
-            await new BrowserFetcher().DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+            await new BrowserFetcher().DownloadAsync();
             await using var browser = await Puppeteer.LaunchAsync(
                 new LaunchOptions { Headless = true }
             );

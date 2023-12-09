@@ -5,7 +5,9 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Models;
+using TurismoGlobalArandas.Models.Identity;
 using UConnect.Entities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UConnect.Controllers
 {
@@ -32,27 +34,39 @@ namespace UConnect.Controllers
         [HttpPost("ReservationsByEmployee/{EmployeeId}")]
         public async Task<ActionResult> ObtenerDatosDesdeVista(int EmployeeId, [FromBody] List<DateTime> dates)
         {
-
-            var user = _userManager.Users
-                .FirstOrDefault(f => f.EmployeeId == EmployeeId);
-            var userRole = await _userManager.GetRolesAsync(user);
-            if (userRole[0].Equals("ADMINISTRADOR"))
+            try
             {
-                var datosVista = _context.ReservationsByEmployeeView
-                    .FromSqlRaw("SELECT * FROM All_Reservations")
-                    .AsEnumerable()
-                    .Where(r => dates == null || dates.Count == 0 || (r.DateSale >= dates[0] && r.DateSale <= dates[dates.Count - 1]))
-                    .ToList();
-                    
-                return Ok(datosVista);
-            }
-            var result = _context.ReservationsByEmployeeView
-                    .FromSqlInterpolated($"EXEC ReservationsByEmployee {EmployeeId}")
-                    .AsEnumerable()
-                    .Where(r => dates == null || dates.Count == 0 || (r.DateSale >= dates[0] && r.DateSale <= dates[dates.Count - 1]))
-                    .ToList();
 
-            return Ok(result);
+                var user = _userManager.Users
+                    .FirstOrDefault(f => f.EmployeeId == EmployeeId);
+                if (user == null)
+                {
+                    return BadRequest();
+                }
+                var userRole = await _userManager.GetRolesAsync(user);
+                if (userRole[0].Equals("ADMINISTRADOR"))
+                {
+                    var datosVista = _context.ReservationsByEmployeeView
+                        .FromSqlRaw("SELECT * FROM All_Reservations")
+                        .AsEnumerable()
+                        .Where(r => dates == null || dates.Count == 0 || (r.DateSale >= dates[0] && r.DateSale <= dates[dates.Count - 1]))
+                        .ToList();
+
+                    return Ok(datosVista);
+                }
+                var result = _context.ReservationsByEmployeeView
+                        .FromSqlInterpolated($"EXEC ReservationsByEmployee {EmployeeId}")
+                        .AsEnumerable()
+                        .Where(r => dates == null || dates.Count == 0 || (r.DateSale >= dates[0] && r.DateSale <= dates[dates.Count - 1]))
+                        .ToList();
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                var result = Array.Empty<ReservationsByEmployeeView>();
+                return Ok(result);
+            }
 
         }
 

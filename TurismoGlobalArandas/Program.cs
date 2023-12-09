@@ -12,6 +12,7 @@ using System.Text;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Models;
 //using TurismoGlobalArandas.Services;
+//using TurismoGlobalArandas.Services;
 using UConnect.Entities;
 
 namespace TurismoGlobalArandas
@@ -63,7 +64,7 @@ namespace TurismoGlobalArandas
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             //builder.Services.AddHostedService<NotificacionService>();
-            //builder.Services.AddScoped<TurismoGlobalContext>();
+            builder.Services.AddScoped<TurismoGlobalContext>();
 
             // Configuración de CORS
             builder.Services.AddCors(options =>

@@ -8,7 +8,7 @@
           color="#7367F0"
           @click="isAddFile = !isAddFile"
         >
-          <i> registrar nuevo vuelo </i>
+          <i> cargar nuevo documento </i>
         </el-button>
       </el-col>
     </el-row>
@@ -143,19 +143,19 @@ export default {
     const onDeletePaymentMethod = paymentProviderId => {
       swal
         .fire({
-          title: 'Estás a punto de eliminar un metodo de pago, ¿Estas seguro?',
+          title: 'Estás a punto de eliminar un archivo, ¿Estas seguro?',
           text: '¡No podrás revertir esto!',
           icon: 'warning',
           showCancelButton: true,
-          confirmButtonText: 'Si, eliminar metodo de pago',
+          confirmButtonText: 'Si, eliminar archivo',
           cancelButtonText: 'Cancelar'
         })
         .then(result => {
           if (result.isConfirmed) {
             deleteFile(paymentProviderId, data => {
               swal.fire({
-                title: 'Metodo de pago eliminado!',
-                text: 'El metodo de pago ha sido eliminado satisfactoriamente .',
+                title: 'Archivo eliminado!',
+                text: 'El archivo ha sido eliminado satisfactoriamente .',
                 icon: 'success'
               })
               refreshTable()

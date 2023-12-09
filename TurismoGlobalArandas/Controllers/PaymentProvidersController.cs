@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
@@ -59,6 +60,7 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(Payment);
         }
+        [Authorize]
         [HttpGet("ReservacionVuelo/{ReservationFlightId}")]
         public async Task<ActionResult> getPaymentProviderByReservationFlight(int ReservationFlightId)
         {

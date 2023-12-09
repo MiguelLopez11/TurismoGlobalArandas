@@ -271,8 +271,6 @@ namespace TurismoGlobalArandas.Controllers
                 }
             );
         }
-
-        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [Route("revoke/{username}")]
         public async Task<IActionResult> Revoke(string username)
@@ -286,8 +284,6 @@ namespace TurismoGlobalArandas.Controllers
 
             return NoContent();
         }
-
-        [Authorize(Roles = "Administrador")]
         [HttpPost]
         [Route("revoke-all")]
         public async Task<IActionResult> RevokeAll()
