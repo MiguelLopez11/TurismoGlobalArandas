@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
+using TurismoGlobalArandas.Entities;
 using TurismoGlobalArandas.Models;
 using TurismoGlobalArandas.Models.Identity;
-using UConnect.Entities;
 
 namespace TurismoGlobalArandas.Context
 {

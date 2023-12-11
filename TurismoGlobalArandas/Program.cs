@@ -10,10 +10,9 @@ using System;
 using System.IO;
 using System.Text;
 using TurismoGlobalArandas.Context;
+using TurismoGlobalArandas.Entities;
 using TurismoGlobalArandas.Models;
-//using TurismoGlobalArandas.Services;
-//using TurismoGlobalArandas.Services;
-using UConnect.Entities;
+using TurismoGlobalArandas.Services;
 
 namespace TurismoGlobalArandas
 {
@@ -21,104 +20,111 @@ namespace TurismoGlobalArandas
     {
         public static void Main(string[] args)
         {
-            // Crear el constructor de la aplicación
             var builder = WebApplication.CreateBuilder(args);
             var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
-            // Configuración de la aplicación
             var configuration = builder.Configuration;
-
-            // Configuración de la base de datos
             builder.Services.AddDbContext<TurismoGlobalContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             });
-
-            // Configuración de Identity
             builder.Services
-                .AddIdentity<User, IdentityRole>()
+                .AddIdentity<User, IdentityRole>(options =>
+                {
+                    // Configuración de opciones de seguridad del usuario
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.SignIn.RequireConfirmedAccount = false;
+                })
                 .AddEntityFrameworkStores<TurismoGlobalContext>()
                 .AddDefaultTokenProviders();
-
-            // Configuración de la autenticación JWT
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            builder.Services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
-                    options.SaveToken = true;
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters()
+                    options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-                        ClockSkew = TimeSpan.MaxValue,
-                        ValidAudience = configuration["JWT:ValidAudience"],
-                        ValidIssuer = configuration["JWT:ValidIssuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
+                        ValidIssuer = configuration["Jwt:Issuer"],
+                        ValidAudience = configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(configuration["Jwt:Key"])
+                        )
                     };
                 });
 
-            // Configuración de servicios
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            //builder.Services.AddHostedService<NotificacionService>();
+            builder.Services.AddHostedService<NotificacionService>();
             builder.Services.AddScoped<TurismoGlobalContext>();
 
             // Configuración de CORS
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(MyAllowSpecificOrigins, policy =>
-                {
-                    policy.WithOrigins("http://localhost:8080", "https://turismoglobalarandas.onrender.com")
-                          .AllowAnyHeader()
-                          .AllowCredentials()
-                          .AllowAnyMethod();
-                });
+                options.AddPolicy(
+                    MyAllowSpecificOrigins,
+                    policy =>
+                    {
+                        policy
+                            .WithOrigins(
+                                "http://localhost:8080",
+                                "https://turismoglobalarandas.onrender.com"
+                            )
+                            .AllowAnyHeader()
+                            .AllowCredentials()
+                            .AllowAnyMethod();
+                    }
+                );
             });
 
-            // Configuración de Swagger
             builder.Services.AddSwaggerGen(option =>
             {
-                option.SwaggerDoc("v1", new OpenApiInfo { Title = "TurismoGlobalArandas_WebServices", Version = "v1" });
-                option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    In = ParameterLocation.Header,
-                    Description = "Please enter a valid token",
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    BearerFormat = "JWT",
-                    Scheme = "Bearer"
-                });
-                option.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
+                // Resto de configuración...
+
+                option.AddSecurityDefinition(
+                    "Bearer",
+                    new OpenApiSecurityScheme
                     {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
+                        In = ParameterLocation.Header,
+                        Description = "Please enter a valid token",
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.Http,
+                        BearerFormat = "JWT",
+                        Scheme = "Bearer"
                     }
-                });
+                );
+
+                option.AddSecurityRequirement(
+                    new OpenApiSecurityRequirement
+                    {
+                        {
+                            new OpenApiSecurityScheme
+                            {
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.SecurityScheme,
+                                    Id = "Bearer"
+                                }
+                            },
+                            Array.Empty<string>()
+                        }
+                    }
+                );
             });
-
-            // Construir la aplicación
             var app = builder.Build();
-
-
-            // Configuración para desarrollo
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            // Configuración general
             app.UseSwagger();
             app.UseSwaggerUI();
             app.UseCors(MyAllowSpecificOrigins);

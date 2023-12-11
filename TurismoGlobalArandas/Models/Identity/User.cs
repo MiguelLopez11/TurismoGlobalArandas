@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using TurismoGlobalArandas.Models;
 
-namespace UConnect.Entities
+namespace TurismoGlobalArandas.Entities
 {
     public class User : IdentityUser
     {

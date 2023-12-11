@@ -57,7 +57,6 @@ namespace TurismoGlobalArandas.Controllers
             }
             MethodOld.PaymentMethodId = method.PaymentMethodId;
             MethodOld.Name = method.Name;
-            MethodOld.Description = method.Description;
             MethodOld.IsDeleted = method.IsDeleted;
 
             _context.PaymentMethods.Update(MethodOld);

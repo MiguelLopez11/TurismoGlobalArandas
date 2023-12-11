@@ -1,4 +1,4 @@
-﻿namespace UConnect.Entities.Identity
+﻿namespace TurismoGlobalArandas.Models.Identity.Repository
 {
     public class Response
     {

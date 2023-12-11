@@ -20,8 +20,24 @@ namespace TurismoGlobalArandas.Controllers
         {
             var notifications = await _context.Notifications
                 .Where(w => !w.IsDeleted)
+                .OrderByDescending(o => o.NotificationId)
                 .ToListAsync();
             return Ok(notifications);
+        }
+        [HttpPut("Readed/{NotificationId}")]
+        public async Task<ActionResult> NotificationReaded(int NotificationId)
+        {
+            var notification = await _context.Notifications
+                .FirstOrDefaultAsync(f => f.NotificationId == NotificationId);
+
+            if (notification == null)
+            {
+                return NotFound();
+            }
+            notification.IsReaded = true;
+            _context.Notifications.Update(notification);
+            await _context.SaveChangesAsync();
+            return Ok("Notificación leída");
         }
     }
 }

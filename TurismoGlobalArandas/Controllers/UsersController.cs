@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -7,10 +6,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using UConnect.Entities.Identity;
-using UConnect.Entities;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
+using TurismoGlobalArandas.Models.Identity.Repository;
+using TurismoGlobalArandas.Entities;
 
 namespace TurismoGlobalArandas.Controllers
 {
@@ -38,7 +37,7 @@ namespace TurismoGlobalArandas.Controllers
             _configuration = configuration;
             passwordHasher = passwordHash;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
@@ -52,7 +51,7 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<IActionResult> GetUser(string UserId)
         {
             var user = await _userManager.FindByIdAsync(UserId);
-            var password =  _userManager.PasswordHasher.ToString();
+            var password = _userManager.PasswordHasher.ToString();
             var userRole = await _userManager.GetRolesAsync(user);
             var roleId = await _roleManager.FindByNameAsync(userRole[0]);
             if (user == null)
@@ -75,9 +74,8 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
-            try
-            {
                 var user = await _userManager.FindByNameAsync(model.Username);
+                DateTime expirationTime;
                 if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
                 {
                     var userRoles = await _userManager.GetRolesAsync(user);
@@ -93,7 +91,6 @@ namespace TurismoGlobalArandas.Controllers
                         authClaims.Add(new Claim(ClaimTypes.Role, userRole));
                     }
 
-                    DateTime expirationTime;
 
                     // Verificar si el token ha expirado
                     if (user.RefreshTokenExpiryTime < DateTime.UtcNow)
@@ -109,12 +106,8 @@ namespace TurismoGlobalArandas.Controllers
                         // Si no ha expirado, utilizar la expiración existente
                         expirationTime = user.RefreshTokenExpiryTime;
                     }
-
-
                     var token = CreateToken(authClaims);
-
                     await _userManager.UpdateAsync(user);
-
                     return Ok(new
                     {
                         Token = new JwtSecurityTokenHandler().WriteToken(token),
@@ -128,11 +121,7 @@ namespace TurismoGlobalArandas.Controllers
                 }
 
                 return Unauthorized();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            
         }
 
 
@@ -242,7 +231,7 @@ namespace TurismoGlobalArandas.Controllers
                 return BadRequest("Invalid access token or refresh token");
             }
             string username = principal.Identity.Name;
-            if(username == null || username.Length == 0)
+            if (username == null || username.Length == 0)
             {
                 return BadRequest();
             }
@@ -273,6 +262,7 @@ namespace TurismoGlobalArandas.Controllers
         }
         [HttpPost]
         [Route("revoke/{username}")]
+        [Authorize]
         public async Task<IActionResult> Revoke(string username)
         {
             var user = await _userManager.FindByNameAsync(username);
@@ -314,16 +304,16 @@ namespace TurismoGlobalArandas.Controllers
         private JwtSecurityToken CreateToken(List<Claim> authClaims)
         {
             var authSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_configuration["JWT:Secret"])
+                Encoding.UTF8.GetBytes(_configuration["JWT:Key"])
             );
             _ = int.TryParse(
-                _configuration["JWT:TokenValidityInMinutes"],
+                _configuration["JWT:RefreshTokenValidityInDays"],
                 out int tokenValidityInMinutes
             );
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["JWT:ValidIssuer"],
-                audience: _configuration["JWT:ValidAudience"],
+                issuer: _configuration["JWT:Issuer"],
+                audience: _configuration["JWT:Audience"],
                 expires: DateTime.Now.AddMinutes(tokenValidityInMinutes),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(

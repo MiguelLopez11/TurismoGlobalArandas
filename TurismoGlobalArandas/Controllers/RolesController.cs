@@ -3,8 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
-using UConnect.Entities;
-using UConnect.Entities.Identity;
 
 namespace UConnect.Controllers
 {

@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
+using TurismoGlobalArandas.Entities;
 using TurismoGlobalArandas.Models;
 using TurismoGlobalArandas.Models.Identity;
-using UConnect.Entities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UConnect.Controllers
@@ -15,12 +15,12 @@ namespace UConnect.Controllers
     [ApiController]
     public class EmployeesController : ControllerBase
     {
-        private readonly UserManager<User> _userManager;
         private readonly TurismoGlobalContext _context;
+        private readonly UserManager<User> _userManager;
         public EmployeesController(TurismoGlobalContext context, UserManager<User> userManager)
         {
             _context = context;
-            _userManager = userManager;
+             _userManager = userManager;
         }
 
         [HttpGet]
@@ -49,7 +49,7 @@ namespace UConnect.Controllers
                     var datosVista = _context.ReservationsByEmployeeView
                         .FromSqlRaw("SELECT * FROM All_Reservations")
                         .AsEnumerable()
-                        .Where(r => dates == null || dates.Count == 0 || (r.DateSale >= dates[0] && r.DateSale <= dates[dates.Count - 1]))
+                        .Where(r => dates == null || dates.Count == 0 || (dates.Any(date => r.DateSale == date.Date) || (r.DateSale >= dates[0].Date && r.DateSale <= dates[dates.Count - 1].Date)))
                         .ToList();
 
                     return Ok(datosVista);
@@ -64,6 +64,7 @@ namespace UConnect.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.ToString());
                 var result = Array.Empty<ReservationsByEmployeeView>();
                 return Ok(result);
             }

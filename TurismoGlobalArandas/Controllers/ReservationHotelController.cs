@@ -7,7 +7,6 @@ using System.IO;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Models;
 using Microsoft.AspNetCore.Identity;
-using UConnect.Entities;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Azure;
@@ -20,9 +19,7 @@ namespace TurismoGlobalArandas.Controllers
     {
         private readonly TurismoGlobalContext _context;
 
-        public ReservationHotelController(
-            TurismoGlobalContext context
-        )
+        public ReservationHotelController(TurismoGlobalContext context)
         {
             _context = context;
         }
@@ -68,7 +65,8 @@ namespace TurismoGlobalArandas.Controllers
             Reservation.Invoice = _context.GetInvoiceReservationHotel();
             Reservation.DateSale = DateTime.Now;
             _context.ReservationHotels.Add(Reservation);
-            await _context.SaveChangesAsync(); return CreatedAtAction(
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(
                 "getReservationHotelById",
                 new { ReservationHotelId = Reservation.ReservationHotelId },
                 Reservation
@@ -214,6 +212,6 @@ namespace TurismoGlobalArandas.Controllers
             );
             return File(pdfContent, "application/pdf", "converted.pdf");
         }
-#endregion
+        #endregion
     }
 }

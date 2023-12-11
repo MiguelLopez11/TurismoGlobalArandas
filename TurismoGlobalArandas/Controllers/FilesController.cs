@@ -215,9 +215,6 @@ namespace TurismoGlobalArandas.Controllers
         }
         private string GetTypeByMimeType(string mimeType)
         {
-            // Este método realiza un mapeo simple de representaciones MIME a extensiones de archivo comunes.
-            // Puedes extender este mapeo según tus necesidades específicas.
-
             switch (mimeType)
             {
                 case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
@@ -226,9 +223,8 @@ namespace TurismoGlobalArandas.Controllers
                     return "xlsx";
                 case "application/pdf":
                     return "pdf";
-                // Agrega más casos según sea necesario...
                 default:
-                    return string.Empty; // En caso de no encontrar una correspondencia
+                    return string.Empty;
             }
         }
     }

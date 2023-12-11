@@ -95,7 +95,6 @@ export default {
     provide('addPaymentMethod', isAddPaymentConcept)
     const fields = ref([
       { value: 'name', text: 'Nombre' },
-      { value: 'description', text: 'Descripción' },
       { value: 'actions', text: 'Acciones' }
     ])
     getPaymentConcepts(data => {

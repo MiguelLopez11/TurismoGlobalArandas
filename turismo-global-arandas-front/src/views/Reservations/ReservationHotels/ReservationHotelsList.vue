@@ -212,7 +212,7 @@ export default {
     const currentPage = ref(1)
     const isloading = ref(true)
     const searchValue = ref('')
-    const searchField = ref('reservationInvoice')
+    const searchField = ref('invoice')
     const isAddedEmployee = ref(false)
     const statusReservationCriteria = ref(null)
     const statusPaymentCriteria = ref(null)
@@ -220,7 +220,7 @@ export default {
     const showStatusPaymentFilter = ref(false)
     provide('AddEmployee', isAddedEmployee)
     const fields = ref([
-      { value: 'reservationInvoice', text: 'Folio' },
+      { value: 'invoice', text: 'Folio' },
       { value: 'travelDateStart', text: 'Fecha de salida' },
       { value: 'travelDateEnd', text: 'Fecha de regreso' },
       { value: 'hotel', text: 'Hotel' },

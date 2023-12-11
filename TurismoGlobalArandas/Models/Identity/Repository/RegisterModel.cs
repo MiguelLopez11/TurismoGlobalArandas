@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace UConnect.Entities.Identity
+namespace TurismoGlobalArandas.Models.Identity.Repository
 {
     public class RegisterModel
     {

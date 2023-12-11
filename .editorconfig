@@ -20,3 +20,6 @@ dotnet_diagnostic.CS8981.severity = none
 
 # CS0169: El campo 'Program._configuration' nunca se usa
 dotnet_diagnostic.CS0169.severity = none
+
+# CS8629: Un tipo que acepta valores NULL puede ser nulo.
+dotnet_diagnostic.CS8629.severity = none

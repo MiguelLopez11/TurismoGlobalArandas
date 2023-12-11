@@ -59,7 +59,6 @@ namespace TurismoGlobalArandas.Controllers
             }
             ConceptOld.PaymentConceptId = concept.PaymentConceptId;
             ConceptOld.Name = concept.Name;
-            ConceptOld.Description = concept.Description;
             ConceptOld.IsDeleted = concept.IsDeleted;
 
             _context.PaymentConcepts.Update(ConceptOld);

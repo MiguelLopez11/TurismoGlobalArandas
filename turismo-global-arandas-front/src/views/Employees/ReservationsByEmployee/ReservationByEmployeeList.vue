@@ -214,6 +214,7 @@ export default {
       rangeDatesTravel.value[1] = rangeDatesTravel.value[1]
         .toISOString()
         .split('.')[0]
+      refreshTable()
     }
     const filterOptions = computed(() => {
       const filterOptionsArray = []

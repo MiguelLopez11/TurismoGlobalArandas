@@ -16,18 +16,6 @@
             </el-form-item>
           </Field>
         </el-col>
-        <el-col :span="8">
-            <el-form-item>
-              <div>
-                <label> Descripción </label>
-              </div>
-              <el-input
-                placeholder="Ingresa una descripción del concepto"
-                size="large"
-                v-model="paymentMethod.description"
-              />
-            </el-form-item>
-        </el-col>
       </el-row>
       <el-divider />
       <el-row :gutter="25" justify="end">
