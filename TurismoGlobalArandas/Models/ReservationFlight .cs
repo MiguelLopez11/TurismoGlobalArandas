@@ -10,10 +10,12 @@ namespace TurismoGlobalArandas.Models
         public string? Invoice { get; set; }
         public DateTime? DateTravel { get; set; } = null;
         public DateTime? DateSale { get; set; } = null;
-        public string? DepartureAirport { get; set; }
-        public string? ArrivalAirport { get; set; }
+        public DateTime? PaymentLimitDate { get; set; } = null;
+        public DateTime? PaymentLimitDateProvider { get; set; } = null;
+        public int? RouteDepartureAirportId { get; set; }
+        public int? RouteArrivalAirportId { get; set; }
         public int? CustomerId { get; set; } = null;
-        public string? Airline { get; set; }
+        public int? AirlineId { get; set; }
         public string? ConfirmationKey { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal? PriceNeto { get; set; }
@@ -32,6 +34,15 @@ namespace TurismoGlobalArandas.Models
 
         [ForeignKey("EmployeeId")]
         public Employees? Employees { get; set; }
+
+        [ForeignKey("RouteDepartureAirportId")]
+        public Routes? DepartureAirport { get; set; }
+
+        [ForeignKey("RouteArrivalAirportId")]
+        public Routes? ArrivalAirport { get; set; }
+        [ForeignKey("AirlineId")]
+        public Airline? Airline { get; set; }
+
         [ForeignKey("CustomerId")]
         public Customers? Customers { get; set; }
 

@@ -88,6 +88,9 @@
                 </template>
               </el-dropdown>
             </template>
+            <template #item-customer="items">
+              {{items.customers.name}} {{items.customers.lastname}}
+            </template>
           </EasyDataTable>
         </div>
       </el-col>
@@ -119,13 +122,13 @@ export default {
     provide('addReservationFlight', isAddReservationFlight)
     const fields = ref([
       { value: 'invoice', text: 'Folio' },
-      { value: 'travelDateStart', text: 'Fecha desde' },
-      { value: 'travelDateEnd', text: 'Fecha hasta' },
+      { value: 'dateTravel', text: 'Fecha del viaje' },
       { value: 'dateSale', text: 'Fecha de venta' },
-      { value: 'departureAirport', text: 'Aeropuerto de salida' },
-      { value: 'arrivalAirport', text: 'Aeropuerto de llegada' },
+      // { value: 'departureAirport.routeName', text: 'Aeropuerto de salida' },
+      // { value: 'arrivalAirport.routeName', text: 'Aeropuerto de llegada' },
+      // { value: 'airline.name', text: 'Aerolinea' },
       { value: 'confirmationKey', text: 'Clave de confirmación' },
-      { value: 'customer.name', text: 'Cliente' },
+      { value: 'customer', text: 'Cliente' },
       { value: 'paymentMethodAgency', text: 'Método de pago agencia' },
       { value: 'paymentMethodClient', text: 'Método de pago cliente' },
       { value: 'contactPhone', text: 'Telefono de contacto' },

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231213003608_reservationsToExpire_view")]
+    partial class reservationsToExpire_view
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -661,12 +664,6 @@ namespace TurismoGlobalArandas.Migrations
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.Identity.ReservationsToExpire", b =>
                 {
-                    b.Property<string>("Invoice")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Origin")
-                        .HasColumnType("nvarchar(max)");
-
                     b.ToTable((string)null);
 
                     b.ToView(null, (string)null);
@@ -1089,11 +1086,8 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<int?>("AirlineId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DateTravel")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ReservationFlightId")
-                        .HasColumnType("int");
+                    b.Property<TimeSpan?>("DateTravel")
+                        .HasColumnType("time");
 
                     b.Property<int?>("RouteArrivalAirportId")
                         .HasColumnType("int");
@@ -1104,8 +1098,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasKey("ReservationFlightDestinationId");
 
                     b.HasIndex("AirlineId");
-
-                    b.HasIndex("ReservationFlightId");
 
                     b.HasIndex("RouteArrivalAirportId");
 
@@ -2033,10 +2025,6 @@ namespace TurismoGlobalArandas.Migrations
                         .WithMany()
                         .HasForeignKey("AirlineId");
 
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationFlight", "ReservationFlight")
-                        .WithMany()
-                        .HasForeignKey("ReservationFlightId");
-
                     b.HasOne("TurismoGlobalArandas.Models.Routes", "ArrivalAirport")
                         .WithMany()
                         .HasForeignKey("RouteArrivalAirportId");
@@ -2050,8 +2038,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Navigation("ArrivalAirport");
 
                     b.Navigation("DepartureAirport");
-
-                    b.Navigation("ReservationFlight");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotel", b =>

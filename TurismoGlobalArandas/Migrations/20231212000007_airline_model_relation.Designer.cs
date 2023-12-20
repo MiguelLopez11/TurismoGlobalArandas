@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20231212000007_airline_model_relation")]
+    partial class airline_model_relation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -659,19 +662,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.ToView(null, (string)null);
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.Identity.ReservationsToExpire", b =>
-                {
-                    b.Property<string>("Invoice")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Origin")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.ToTable((string)null);
-
-                    b.ToView(null, (string)null);
-                });
-
             modelBuilder.Entity("TurismoGlobalArandas.Models.IndividualRate", b =>
                 {
                     b.Property<int>("IndividualRateId")
@@ -1025,12 +1015,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<bool>("IsSoldOut")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("PaymentLimitDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("PaymentLimitDateProvider")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("PaymentMethodAgency")
                         .HasColumnType("nvarchar(max)");
 
@@ -1076,42 +1060,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasIndex("StatusFlightId");
 
                     b.ToTable("ReservationFlights");
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationFlightDestinations", b =>
-                {
-                    b.Property<int>("ReservationFlightDestinationId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationFlightDestinationId"));
-
-                    b.Property<int?>("AirlineId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DateTravel")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("ReservationFlightId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RouteArrivalAirportId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("RouteDepartureAirportId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReservationFlightDestinationId");
-
-                    b.HasIndex("AirlineId");
-
-                    b.HasIndex("ReservationFlightId");
-
-                    b.HasIndex("RouteArrivalAirportId");
-
-                    b.HasIndex("RouteDepartureAirportId");
-
-                    b.ToTable("ReservationFlightDestinations");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotel", b =>
@@ -1365,12 +1313,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("OwnerName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("PaymentLimitDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("PaymentLimitDateProvider")
-                        .HasColumnType("datetime2");
-
                     b.Property<decimal?>("PublicRate")
                         .HasColumnType("decimal(18, 2)");
 
@@ -1420,12 +1362,6 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.Property<bool>("IsSoldOut")
                         .HasColumnType("bit");
-
-                    b.Property<DateTime?>("PaymentLimitDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("PaymentLimitDateProvider")
-                        .HasColumnType("datetime2");
 
                     b.Property<decimal?>("PriceNeto")
                         .HasColumnType("decimal(18, 2)");
@@ -2025,33 +1961,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Navigation("Employees");
 
                     b.Navigation("StatusFlight");
-                });
-
-            modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationFlightDestinations", b =>
-                {
-                    b.HasOne("TurismoGlobalArandas.Models.Airline", "Airline")
-                        .WithMany()
-                        .HasForeignKey("AirlineId");
-
-                    b.HasOne("TurismoGlobalArandas.Models.ReservationFlight", "ReservationFlight")
-                        .WithMany()
-                        .HasForeignKey("ReservationFlightId");
-
-                    b.HasOne("TurismoGlobalArandas.Models.Routes", "ArrivalAirport")
-                        .WithMany()
-                        .HasForeignKey("RouteArrivalAirportId");
-
-                    b.HasOne("TurismoGlobalArandas.Models.Routes", "DepartureAirport")
-                        .WithMany()
-                        .HasForeignKey("RouteDepartureAirportId");
-
-                    b.Navigation("Airline");
-
-                    b.Navigation("ArrivalAirport");
-
-                    b.Navigation("DepartureAirport");
-
-                    b.Navigation("ReservationFlight");
                 });
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.ReservationHotel", b =>

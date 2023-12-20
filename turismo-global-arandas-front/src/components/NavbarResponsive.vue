@@ -11,29 +11,31 @@
         </el-badge>
         <template #dropdown>
           <i class="el-icon-bell"></i>
-          <el-dropdown-menu trigger="click">
-            <el-dropdown-item
-              v-for="notification in notifications"
-              :key="notification.id"
-            >
-              <el-timeline
-                :class="{ 'unread-notification': !notification.isReaded }"
+          <el-dropdown-menu>
+            <el-scrollbar height="500px">
+              <el-dropdown-item
+                v-for="notification in notifications"
+                :key="notification.id"
               >
-                <el-timeline-item
-                  :timestamp="notification.created"
-                  @click="handleCommand(notification.notificationId)"
+                <el-timeline
+                  :class="{ 'unread-notification': !notification.isReaded }"
                 >
-                  <div>
-                    <strong> {{ notification.title }} </strong>
-                  </div>
-                  <div :style="{ maxWidth: '500px', whiteSpace: 'pre-wrap' }">
-                    <span>
-                      {{ notification.message }}
-                    </span>
-                  </div>
-                </el-timeline-item>
-              </el-timeline>
-            </el-dropdown-item>
+                  <el-timeline-item
+                    :timestamp="notification.created"
+                    @click="handleCommand(notification.notificationId)"
+                  >
+                    <div>
+                      <strong> {{ notification.title }} </strong>
+                    </div>
+                    <div :style="{ maxWidth: '500px', whiteSpace: 'pre-wrap' }">
+                      <span>
+                        {{ notification.message }}
+                      </span>
+                    </div>
+                  </el-timeline-item>
+                </el-timeline>
+              </el-dropdown-item>
+            </el-scrollbar>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -92,7 +94,7 @@ export default {
     })
     const handleCommand = notificationId => {
       isReadNotification(notificationId, data => {})
-      console.log(notificationId)
+      location.reload()
     }
     const closeSession = () => {
       window.sessionStorage.removeItem('Token')
@@ -130,7 +132,7 @@ export default {
   margin: 5px;
 }
 .unread-notification {
-  background-color: #e4ecf7; /* Cambia este color según tus preferencias */
+  background-color: #d3d3d3; /* Cambia este color según tus preferencias */
 }
 .notification-badge {
   margin-left: 5px; /* Ajusta el margen según tus necesidades */
