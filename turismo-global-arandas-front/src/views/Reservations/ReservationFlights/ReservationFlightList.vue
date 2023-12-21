@@ -38,6 +38,7 @@
             :items="reservationFlights"
             :search-field="searchField"
             :search-value="searchValue"
+            :filter-options="filterOptions"
           >
             <template #header-actions="header">
               {{ header.text }}
@@ -60,20 +61,20 @@
                     >
                     <el-dropdown-item
                       @click="onDeleteReservationFlight(items.flightId)"
-                      >Eliminar</el-dropdown-item
+                      >Cancelar vuelo</el-dropdown-item
                     >
                     <el-dropdown-item
-                    @click="
-                      $router.push({
-                        name: 'PaymentsRelationReservatioFlight',
-                        params: {
-                          ReservationFlightId: items.flightId
-                        }
-                      })
-                    "
-                    >Relación de pagos</el-dropdown-item
-                  >
-                  <el-dropdown-item
+                      @click="
+                        $router.push({
+                          name: 'PaymentsRelationReservatioFlight',
+                          params: {
+                            ReservationFlightId: items.flightId
+                          }
+                        })
+                      "
+                      >Relación de pagos</el-dropdown-item
+                    >
+                    <el-dropdown-item
                       @click="
                         $router.push({
                           name: 'PaymentProvider-Details-ReservationFlight',
@@ -89,17 +90,58 @@
               </el-dropdown>
             </template>
             <template #item-customer="items">
-              {{items.customers.name}} {{items.customers.lastname}}
+              {{ items.customers.name }} {{ items.customers.lastname }}
+            </template>
+            <template #item-isDeleted="items">
+              <el-tag
+                effect="dark"
+                class="ml-2"
+                :type="items.isDeleted === false ? 'success' : 'danger'"
+              >
+                {{ items.isDeleted === false ? 'Activo' : 'Cancelado' }}
+              </el-tag>
+            </template>
+            <template #header-isDeleted="header">
+              <div class="filter-column">
+                <img
+                  src="@/Images/Filter-icon.jpg"
+                  width="15"
+                  height="15"
+                  class="filter-icon"
+                  @click.stop="
+                    showStatusReservationFilter = !showStatusReservationFilter
+                  "
+                />
+                {{ header.text }}
+              </div>
             </template>
           </EasyDataTable>
         </div>
       </el-col>
     </el-row>
   </el-card>
+  <el-dialog
+    v-model="showStatusReservationFilter"
+    title="Filtrar reservaciones"
+    width="50%"
+    center
+  >
+    <el-row :gutter="35" align="middle">
+      <el-col :lg="8" :md="8">
+        <v-select
+          v-model="statusReservationCriteria"
+          class="w-100"
+          label="label"
+          :options="filterStatusReservation"
+          :reduce="item => item.value"
+        ></v-select>
+      </el-col>
+    </el-row>
+  </el-dialog>
 </template>
 
 <script>
-import { ref, watch, provide, inject } from 'vue'
+import { ref, watch, provide, inject, computed } from 'vue'
 import reservationFlightservices from '@/Services/ReservationFlights.Services'
 import ReservationFlightsAddNew from './ReservationFlightsAddNew.vue'
 // import RoleAddNew from './RoleAddNew.vue'
@@ -119,20 +161,43 @@ export default {
     const searchValue = ref('')
     const searchField = ref('invoice')
     const isAddReservationFlight = ref(false)
+    const statusReservationCriteria = ref(null)
+    const showStatusReservationFilter = ref(false)
     provide('addReservationFlight', isAddReservationFlight)
     const fields = ref([
       { value: 'invoice', text: 'Folio' },
       { value: 'dateTravel', text: 'Fecha del viaje' },
       { value: 'dateSale', text: 'Fecha de venta' },
-      // { value: 'departureAirport.routeName', text: 'Aeropuerto de salida' },
-      // { value: 'arrivalAirport.routeName', text: 'Aeropuerto de llegada' },
-      // { value: 'airline.name', text: 'Aerolinea' },
       { value: 'confirmationKey', text: 'Clave de confirmación' },
       { value: 'customer', text: 'Cliente' },
-      { value: 'paymentMethodAgency', text: 'Método de pago agencia' },
-      { value: 'paymentMethodClient', text: 'Método de pago cliente' },
       { value: 'contactPhone', text: 'Telefono de contacto' },
+      { value: 'isDeleted', text: 'Estado reservación' },
       { value: 'actions', text: 'Acciones' }
+    ])
+    const filterOptions = computed(() => {
+      const filterOptionsArray = []
+      if (statusReservationCriteria.value !== null) {
+        filterOptionsArray.push({
+          field: 'isDeleted',
+          comparison: '=',
+          criteria: statusReservationCriteria.value === 'true'
+        })
+      }
+      return filterOptionsArray
+    })
+    const filterStatusReservation = ref([
+      {
+        label: 'Activo',
+        value: 'false'
+      },
+      {
+        label: 'Cancelado',
+        value: 'true'
+      },
+      {
+        label: 'Mostrar todo',
+        value: null
+      }
     ])
     getReservationFlights(data => {
       reservationFlights.value = data
@@ -184,6 +249,10 @@ export default {
       searchValue,
       searchField,
       fields,
+      filterOptions,
+      filterStatusReservation,
+      statusReservationCriteria,
+      showStatusReservationFilter,
       reservationFlights,
       isAddReservationFlight,
       refreshTable,

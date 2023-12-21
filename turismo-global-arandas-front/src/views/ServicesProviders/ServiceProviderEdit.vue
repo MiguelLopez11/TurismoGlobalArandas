@@ -83,6 +83,7 @@
               <div>
                 <label>Color representativo</label>
               </div>
+              {{serviceProvider}}
               <div style="display: block !important">
                 <el-color-picker v-model="serviceProvider.color" size="large" />
               </div>

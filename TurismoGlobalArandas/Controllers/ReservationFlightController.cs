@@ -24,8 +24,7 @@ namespace TurismoGlobalArandas.Controllers
                 .Include(i => i.ArrivalAirport)
                 .Include(i => i.Airline)
                 .Include(i => i.Customers)
-                .Include(i => i.StatusFlight)
-                .Where(w => !w.IsDeleted)
+                .Include(i => i.StatusFlight) 
                 .ToListAsync();
             return Ok(flights);
         }

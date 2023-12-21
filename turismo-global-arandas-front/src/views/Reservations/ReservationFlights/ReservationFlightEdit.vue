@@ -277,22 +277,25 @@
           </Field>
         </el-col>
       </el-row>
-      <el-row v-if="reservationFlight.isMultidestinationFlight">
-        <el-col :span="8">
-          <el-form-item>
-            <div>
-              <label>Número de Destinos</label>
-            </div>
-            <el-input-number
-              size="large"
-              v-model="destinationsNumber"
-              :min="1"
-              @change="onChangeDestinations"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <template v-if="!reservationFlight.isSimpleFlight">
+      <template
+        v-if="
+          reservationFlight.isMultidestinationFlight ||
+          reservationFlight.isRoundFlight
+        "
+      >
+        <el-row v-if="reservationFlight.isMultidestinationFlight" justify="end">
+          <el-col :span="8">
+            <el-form-item label="Número de Destinos">
+              <el-input-number
+                placeholder="Número de Destinos"
+                size="large"
+                v-model="destinationsNumber"
+                :min="1"
+                @change="onChangeDestinations"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <template
           v-for="(destination, index) in destinationsFlight"
           :key="index"
@@ -428,7 +431,7 @@ import AirlineServices from '@/Services/Airline.Services'
 import RouteServices from '@/Services/Routes.Services'
 import ReservationFlightDestinationsServices from '@/Services/ReservationFlightDestinations.Services'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, inject, provide } from 'vue'
+import { ref, inject, provide, watch } from 'vue'
 
 export default {
   setup () {
@@ -470,6 +473,7 @@ export default {
     getRoutes(data => {
       routes.value = data
     })
+    watch(reservationFlight, NewValue => {})
     const refreshDestinations = () => {
       getReservationFlightDestinationByFlightId(
         router.params.FlightId,
@@ -482,8 +486,24 @@ export default {
     const onUpdateFlight = () => {
       if (!reservationFlight.value.isSimpleFlight) {
         destinationsFlight.value.forEach(response => {
-          updateReservationFlightDestination(response, data => {})
+          try {
+            updateReservationFlightDestination(response, data => {})
+          } catch (error) {
+            console.log(error)
+          }
         })
+      }
+      if (
+        reservationFlight.value.isSimpleFlight === false &&
+        reservationFlight.value.isRoundFlight === false &&
+        reservationFlight.value.isMultidestinationFlight === false
+      ) {
+        swal.fire({
+          title: 'Error al guardar vuelo',
+          text: 'Debe seleccionar un tipo de vuelo.',
+          icon: 'error'
+        })
+        return false
       }
       updateReservationFlight(reservationFlight.value, data => {
         swal
@@ -564,26 +584,32 @@ export default {
       const newDestinations = destinationsNumber.value
       const delta = newDestinations - currentDestinations
       if (delta >= 1) {
-        for (let i = 0; i < delta; i++) {
-          createReservationFlightDestination(
-            { reservationFlightId: router.params.FlightId },
-            data => {
-              refreshDestinations()
-            }
-          )
-        }
+        onAddDestination(delta)
       } else {
         const destinationsToRemove = Math.abs(delta)
-        for (let j = 0; j < destinationsToRemove; j++) {
-          const destinationsNumber = destinationsFlight.value.length - j
-          deleteReservationFlightDestination(
-            destinationsFlight.value[destinationsNumber]
-              .reservationFlightDestinationId,
-            data => {}
-          )
-        }
+        onDeleteDestination(destinationsToRemove)
         refreshDestinations()
       }
+    }
+    const onAddDestination = delta => {
+      for (let i = 0; i < delta; i++) {
+        createReservationFlightDestination(
+          { reservationFlightId: router.params.FlightId },
+          data => {
+            refreshDestinations()
+          }
+        )
+      }
+    }
+    const onDeleteDestination = delta => {
+      for (let j = 0; j < delta; j++) {
+        deleteReservationFlightDestination(
+          destinationsFlight.value[destinationsFlight.value.length - j - 1]
+            .reservationFlightDestinationId,
+          data => {}
+        )
+      }
+      refreshDestinations()
     }
     return {
       reservationFlight,
