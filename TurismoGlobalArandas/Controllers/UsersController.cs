@@ -37,7 +37,6 @@ namespace TurismoGlobalArandas.Controllers
             _configuration = configuration;
             passwordHasher = passwordHash;
         }
-        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {

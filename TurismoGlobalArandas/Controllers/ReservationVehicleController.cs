@@ -22,7 +22,7 @@ namespace TurismoGlobalArandas.Controllers
         {
             var reservationVehicles = await _context.ReservationVehicles
                 .Include(i => i.Providers)
-                .Where(w => !w.IsDeleted).ToListAsync();
+                .ToListAsync();
             return Ok(reservationVehicles);
         }
         [HttpGet("{ReservationVehicleId}")]
@@ -30,7 +30,6 @@ namespace TurismoGlobalArandas.Controllers
         {
             var reservationVehicle = await _context.ReservationVehicles
                 .Include(i => i.Providers)
-                .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.ReservationVehicleId == ReservationVehicleId);
             if (reservationVehicle == null)
             {

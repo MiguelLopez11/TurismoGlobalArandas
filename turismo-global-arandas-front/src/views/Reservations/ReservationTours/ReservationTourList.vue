@@ -43,6 +43,7 @@
             :items="reservationTours"
             :search-field="searchField"
             :search-value="searchValue"
+            :filter-options="filterOptions"
           >
             <template #header-actions="header">
               {{ header.text }}
@@ -100,15 +101,56 @@
                 items.destinations ? items.destinations.name : ''
               }}</span>
             </template>
+            <template #item-isDeleted="items">
+              <el-tag
+                effect="dark"
+                class="ml-2"
+                :type="items.isDeleted === false ? 'success' : 'danger'"
+              >
+                {{ items.isDeleted === false ? 'Activo' : 'Cancelado' }}
+              </el-tag>
+            </template>
+            <template #header-isDeleted="header">
+              <div class="filter-column">
+                <img
+                  src="@/Images/Filter-icon.jpg"
+                  width="15"
+                  height="15"
+                  class="filter-icon"
+                  @click.stop="
+                    showStatusReservationFilter = !showStatusReservationFilter
+                  "
+                />
+                {{ header.text }}
+              </div>
+            </template>
           </EasyDataTable>
         </div>
       </el-col>
     </el-row>
   </el-card>
+  <el-dialog
+    v-model="showStatusReservationFilter"
+    title="Filtrar reservaciones"
+    width="50%"
+    center
+  >
+    <el-row :gutter="35" align="middle">
+      <el-col :lg="8" :md="8">
+        <v-select
+          v-model="statusReservationCriteria"
+          class="w-100"
+          label="label"
+          :options="filterStatusReservation"
+          :reduce="item => item.value"
+        ></v-select>
+      </el-col>
+    </el-row>
+  </el-dialog>
 </template>
 
 <script>
-import { ref, inject } from 'vue'
+import { ref, inject, computed } from 'vue'
 import ReservationTourServices from '@/Services/ReservationTours.Services'
 
 export default {
@@ -123,6 +165,8 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('reservationInvoice')
+    const statusReservationCriteria = ref(null)
+    const showStatusReservationFilter = ref(false)
     const fields = ref([
       { value: 'invoice', text: 'Folio' },
       { value: 'tourName', text: 'Nombre del tour' },
@@ -130,7 +174,33 @@ export default {
       { value: 'dateActivity', text: 'Fecha del tour' },
       { value: 'destinations', text: 'Destino' },
       { value: 'ownerName', text: 'Titular' },
+      { value: 'isDeleted', text: 'Estado reservación' },
       { value: 'actions', text: 'Acciones' }
+    ])
+    const filterOptions = computed(() => {
+      const filterOptionsArray = []
+      if (statusReservationCriteria.value !== null) {
+        filterOptionsArray.push({
+          field: 'isDeleted',
+          comparison: '=',
+          criteria: statusReservationCriteria.value === 'true'
+        })
+      }
+      return filterOptionsArray
+    })
+    const filterStatusReservation = ref([
+      {
+        label: 'Activo',
+        value: 'false'
+      },
+      {
+        label: 'Cancelado',
+        value: 'true'
+      },
+      {
+        label: 'Mostrar todo',
+        value: null
+      }
     ])
     getReservationTours(data => {
       reservationTours.value = data
@@ -176,6 +246,10 @@ export default {
       searchValue,
       searchField,
       fields,
+      filterOptions,
+      filterStatusReservation,
+      statusReservationCriteria,
+      showStatusReservationFilter,
       reservationTours,
       refreshTable,
       onDeleteReservationTour

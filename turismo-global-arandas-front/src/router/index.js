@@ -456,6 +456,22 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: '/Aerolineas',
+    name: 'Airlines',
+    component: () => import('../views/Airlines/AirlineList.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/Aerolineas/:AirlineId',
+    name: 'Edit-Airlines',
+    component: () => import('../views/Airlines/AirlineEdit.vue'),
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 

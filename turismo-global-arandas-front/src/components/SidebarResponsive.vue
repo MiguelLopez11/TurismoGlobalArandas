@@ -159,6 +159,12 @@ export default {
             title: 'Rutas',
             path: '/Rutas',
             icon: 'bi bi-sign-turn-right'
+          },
+          {
+            index: '4-7',
+            title: 'Aerolineas',
+            path: '/Aerolineas',
+            icon: 'bi bi-airplane'
           }
         ]
       },
