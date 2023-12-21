@@ -37,7 +37,6 @@ namespace TurismoGlobalArandas.Controllers
                 .Include(i => i.Airline)
                 .Include(i => i.Customers)
                 .Include(i => i.StatusFlight)
-                .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.FlightId == FlightId);
             if (flight == null)
             {
