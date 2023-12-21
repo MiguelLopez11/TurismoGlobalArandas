@@ -20,7 +20,11 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult<ReservationFlight>> getReservationFlights()
         {
             var flights = await _context.ReservationFlights
-                .Where(w => !w.IsDeleted)
+                .Include(i => i.DepartureAirport)
+                .Include(i => i.ArrivalAirport)
+                .Include(i => i.Airline)
+                .Include(i => i.Customers)
+                .Include(i => i.StatusFlight) 
                 .ToListAsync();
             return Ok(flights);
         }
@@ -28,6 +32,11 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getReservationFlightById(int FlightId)
         {
             var flight = await _context.ReservationFlights
+                .Include(i => i.DepartureAirport)
+                .Include(i => i.ArrivalAirport)
+                .Include(i => i.Airline)
+                .Include(i => i.Customers)
+                .Include(i => i.StatusFlight)
                 .Where(w => !w.IsDeleted)
                 .FirstOrDefaultAsync(f => f.FlightId == FlightId);
             if (flight == null)
@@ -39,6 +48,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ReservationFlight>> PostReservationFlight(ReservationFlight flight)
         {
+            flight.Invoice = _context.GetInvoiceReservationFlight();
             flight.DateSale = DateTime.Now;
             _context.ReservationFlights.Add(flight);
             await _context.SaveChangesAsync();
@@ -60,6 +70,8 @@ namespace TurismoGlobalArandas.Controllers
             FlightOld.Invoice = reservationFlight.Invoice;
             FlightOld.DateTravel = reservationFlight.DateTravel;
             FlightOld.DateSale = reservationFlight.DateSale;
+            FlightOld.PaymentLimitDate = reservationFlight.PaymentLimitDate;
+            FlightOld.PaymentLimitDateProvider = reservationFlight.PaymentLimitDateProvider;
             FlightOld.DepartureAirport = reservationFlight.DepartureAirport;
             FlightOld.ArrivalAirport = reservationFlight.ArrivalAirport;
             FlightOld.CustomerId = reservationFlight.CustomerId;

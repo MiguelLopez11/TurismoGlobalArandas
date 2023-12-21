@@ -1,70 +1,98 @@
 <template>
   <el-card>
-    <Form v-slot="{ errors }" @submit="onUpdateCommission">
+    <Form v-slot="{ errors }" @submit="onUpdateFlight">
       <el-row :gutter="35">
-        <el-col :span="8">
+        <el-col :span="8" v-if="reservationFlight.isSimpleFlight">
           <Field name="travelDate" :rules="validateTravelDate">
             <el-form-item :error="errors.travelDate" required>
               <div>
                 <span>Fecha del viaje</span>
               </div>
               <el-date-picker
-                v-model="rangeDatesTravel"
+                v-model="reservationFlight.dateTravel"
                 class="w-100"
-                type="daterange"
-                range-separator="A"
-                start-placeholder="Fecha de salida"
-                end-placeholder="Fecha de llegada"
                 size="large"
-                @change="onSelectTravelDate"
               />
             </el-form-item>
           </Field>
         </el-col>
-        <el-col :span="8">
-          <Field name="departureAirport" :rules="validateDepartureAirport">
-            <el-form-item :error="errors.departureAirport" required>
-              <div>
-                <label> Aeropuerto de salida </label>
-              </div>
-              <el-input
-                placeholder="Ingresa el aeropuerto de salida para el cliente"
-                size="large"
-                v-model="reservationFlight.departureAirport"
-              >
-              </el-input>
-            </el-form-item>
-          </Field>
+        <el-col :span="8" v-if="reservationFlight.isSimpleFlight">
+          <el-form-item>
+            <v-select
+              class="w-100"
+              label="routeName"
+              v-model="reservationFlight.routeDepartureAirportId"
+              :options="routes"
+              :reduce="route => route.routeId"
+            >
+              <template #header>
+                <span class="text-danger">*</span>
+                <label>Ruta del aeropuerto de salida</label>
+              </template>
+              <template #search="{ attributes, events }">
+                <input
+                  class="vs__search"
+                  :required="!reservationFlight.routeDepartureAirportId"
+                  v-bind="attributes"
+                  v-on="events"
+                />
+              </template>
+            </v-select>
+          </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <Field name="arrivalAirport" :rules="validateArrivalAirport">
-            <el-form-item :error="errors.arrivalAirport" required>
-              <div>
-                <label> Aeropuerto de llegada </label>
-              </div>
-              <el-input
-                placeholder="Ingresa el aeropuerto de llegada para el cliente"
-                size="large"
-                v-model="reservationFlight.arrivalAirport"
-              >
-              </el-input>
-            </el-form-item>
-          </Field>
+        <el-col :span="8" v-if="reservationFlight.isSimpleFlight">
+          <el-form-item>
+            <v-select
+              class="w-100"
+              label="routeName"
+              v-model="reservationFlight.routeArrivalAirportId"
+              :options="routes"
+              :reduce="route => route.routeId"
+            >
+              <template #header>
+                <span class="text-danger">*</span>
+                <label>Ruta del aeropuerto de llegada</label>
+              </template>
+              <template #search="{ attributes, events }">
+                <input
+                  class="vs__search"
+                  :required="!reservationFlight.routeArrivalAirportId"
+                  v-bind="attributes"
+                  v-on="events"
+                />
+              </template>
+            </v-select>
+          </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <Field name="airline" :rules="validateAirline">
-            <el-form-item :error="errors.airline" required>
-              <div>
-                <label>AeroLinea</label>
-              </div>
-              <el-input
-                placeholder="Ingresa la aerolinea en la que viajará el cliente"
-                size="large"
-                v-model="reservationFlight.airline"
-              >
-              </el-input>
-            </el-form-item>
-          </Field>
+        <el-col :span="8" v-if="reservationFlight.isSimpleFlight">
+          <el-form-item>
+            <v-select
+              class="w-100"
+              label="name"
+              v-model="reservationFlight.airlineId"
+              :options="airlines"
+              :reduce="airline => airline.airlineId"
+            >
+              <template #selected-option="{ name, lastname }">
+                <label>{{ name }} {{ lastname }}</label>
+              </template>
+              <template #option="{ name, lastname }">
+                <label>{{ name }} {{ lastname }}</label>
+              </template>
+              <template #header>
+                <span class="text-danger">*</span>
+                <label>aerolinea</label>
+              </template>
+              <template #search="{ attributes, events }">
+                <input
+                  class="vs__search"
+                  :required="!reservationFlight.airlineId"
+                  v-bind="attributes"
+                  v-on="events"
+                />
+              </template>
+            </v-select>
+          </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item>
@@ -108,7 +136,7 @@
             </v-select>
           </el-form-item>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="8">
           <Field name="confirmationKey" :rules="validateConfirmationKey">
             <el-form-item :error="errors.confirmationKey" required>
               <div>
@@ -249,6 +277,124 @@
           </Field>
         </el-col>
       </el-row>
+      <template
+        v-if="
+          reservationFlight.isMultidestinationFlight ||
+          reservationFlight.isRoundFlight
+        "
+      >
+        <el-row v-if="reservationFlight.isMultidestinationFlight" justify="end">
+          <el-col :span="8">
+            <el-form-item label="Número de Destinos">
+              <el-input-number
+                placeholder="Número de Destinos"
+                size="large"
+                v-model="destinationsNumber"
+                :min="1"
+                @change="onChangeDestinations"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <template
+          v-for="(destination, index) in destinationsFlight"
+          :key="index"
+        >
+          <el-row :gutter="25" class="border mt-2">
+            <el-col :span="8">
+              <el-form-item>
+                <div>
+                  <span>Fecha de reservación del vuelo</span>
+                </div>
+                <el-date-picker
+                  v-model="destination.dateTravel"
+                  class="w-100"
+                  size="large"
+                  placeholder="Selecciona la fecha que reservará el vuelo"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <v-select
+                  class="w-100"
+                  label="routeName"
+                  v-model="destination.routeDepartureAirportId"
+                  :options="routes"
+                  :reduce="route => route.routeId"
+                >
+                  <template #header>
+                    <span class="text-danger">*</span>
+                    <label>Ruta del aeropuerto de salida</label>
+                  </template>
+                  <template #search="{ attributes, events }">
+                    <input
+                      class="vs__search"
+                      :required="!destination.routeDepartureAirportId"
+                      v-bind="attributes"
+                      v-on="events"
+                    />
+                  </template>
+                </v-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <v-select
+                  class="w-100"
+                  label="routeName"
+                  v-model="destination.routeArrivalAirportId"
+                  :options="routes"
+                  :reduce="route => route.routeId"
+                >
+                  <template #header>
+                    <span class="text-danger">*</span>
+                    <label>Ruta del aeropuerto de llegada</label>
+                  </template>
+                  <template #search="{ attributes, events }">
+                    <input
+                      class="vs__search"
+                      :required="!destination.routeArrivalAirportId"
+                      v-bind="attributes"
+                      v-on="events"
+                    />
+                  </template>
+                </v-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <v-select
+                  class="w-100"
+                  label="name"
+                  v-model="destination.airlineId"
+                  :options="airlines"
+                  :reduce="airline => airline.airlineId"
+                >
+                  <template #selected-option="{ name, lastname }">
+                    <label>{{ name }} {{ lastname }}</label>
+                  </template>
+                  <template #option="{ name, lastname }">
+                    <label>{{ name }} {{ lastname }}</label>
+                  </template>
+                  <template #header>
+                    <span class="text-danger">*</span>
+                    <label>aerolinea</label>
+                  </template>
+                  <template #search="{ attributes, events }">
+                    <input
+                      class="vs__search"
+                      :required="!destination.airlineId"
+                      v-bind="attributes"
+                      v-on="events"
+                    />
+                  </template>
+                </v-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </template>
+      </template>
       <el-divider />
       <el-row :gutter="25" justify="end">
         <el-col :span="3">
@@ -281,17 +427,31 @@
 <script>
 import ReservationFlightServices from '@/Services/ReservationFlights.Services'
 import CustomerServices from '@/Services/Customers.Services'
+import AirlineServices from '@/Services/Airline.Services'
+import RouteServices from '@/Services/Routes.Services'
+import ReservationFlightDestinationsServices from '@/Services/ReservationFlightDestinations.Services'
 import { useRoute, useRouter } from 'vue-router'
-import { ref, inject, provide } from 'vue'
+import { ref, inject, provide, watch } from 'vue'
 
 export default {
   setup () {
     const { getReservationFlight, updateReservationFlight } =
       ReservationFlightServices()
     const { getCustomers } = CustomerServices()
-    const rangeDatesTravel = ref([])
+    const { getAirlines } = AirlineServices()
+    const { getRoutes } = RouteServices()
+    const {
+      getReservationFlightDestinationByFlightId,
+      createReservationFlightDestination,
+      updateReservationFlightDestination,
+      deleteReservationFlightDestination
+    } = ReservationFlightDestinationsServices()
     const customers = ref([])
     const reservationFlight = ref([])
+    const airlines = ref([])
+    const routes = ref([])
+    const destinationsFlight = ref([])
+    const destinationsNumber = ref(null)
     const router = useRoute()
     const redirect = useRouter()
     const swal = inject('$swal')
@@ -299,17 +459,52 @@ export default {
     provide('AddCustomer', isAddedCustomer)
     getReservationFlight(router.params.FlightId, data => {
       reservationFlight.value = data
-      rangeDatesTravel.value.push(data.travelDateStart)
-      rangeDatesTravel.value.push(data.travelDateEnd)
+    })
+    getReservationFlightDestinationByFlightId(router.params.FlightId, data => {
+      destinationsFlight.value = data
+      destinationsNumber.value = destinationsFlight.value.length
     })
     getCustomers(data => {
       customers.value = data
     })
-    const onSelectTravelDate = () => {
-      reservationFlight.value.travelDateStart = rangeDatesTravel.value[0]
-      reservationFlight.value.travelDateEnd = rangeDatesTravel.value[1]
+    getAirlines(data => {
+      airlines.value = data
+    })
+    getRoutes(data => {
+      routes.value = data
+    })
+    watch(reservationFlight, NewValue => {})
+    const refreshDestinations = () => {
+      getReservationFlightDestinationByFlightId(
+        router.params.FlightId,
+        data => {
+          destinationsFlight.value = data
+          destinationsNumber.value = destinationsFlight.value.length
+        }
+      )
     }
-    const onUpdateCommission = () => {
+    const onUpdateFlight = () => {
+      if (!reservationFlight.value.isSimpleFlight) {
+        destinationsFlight.value.forEach(response => {
+          try {
+            updateReservationFlightDestination(response, data => {})
+          } catch (error) {
+            console.log(error)
+          }
+        })
+      }
+      if (
+        reservationFlight.value.isSimpleFlight === false &&
+        reservationFlight.value.isRoundFlight === false &&
+        reservationFlight.value.isMultidestinationFlight === false
+      ) {
+        swal.fire({
+          title: 'Error al guardar vuelo',
+          text: 'Debe seleccionar un tipo de vuelo.',
+          icon: 'error'
+        })
+        return false
+      }
       updateReservationFlight(reservationFlight.value, data => {
         swal
           .fire({
@@ -319,35 +514,31 @@ export default {
           })
           .then(result => {
             if (result.isConfirmed) {
-              rangeDatesTravel.value = []
               redirect.push('/ReservacionesVuelos')
             }
           })
       })
     }
     const validateTravelDate = () => {
-      if (
-        !reservationFlight.value.travelDateStart &&
-        !reservationFlight.value.travelDateEnd
-      ) {
+      if (!reservationFlight.value.dateTravel) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateDepartureAirport = () => {
-      if (!reservationFlight.value.departureAirport) {
+      if (!reservationFlight.value.routeDepartureAirportId) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateArrivalAirport = () => {
-      if (!reservationFlight.value.arrivalAirport) {
+      if (!reservationFlight.value.routeArrivalAirportId) {
         return 'Este campo es requerido'
       }
       return true
     }
     const validateAirline = () => {
-      if (!reservationFlight.value.airline) {
+      if (!reservationFlight.value.airlineId) {
         return 'Este campo es requerido'
       }
       return true
@@ -388,14 +579,47 @@ export default {
       }
       return true
     }
-
+    const onChangeDestinations = () => {
+      const currentDestinations = destinationsFlight.value.length
+      const newDestinations = destinationsNumber.value
+      const delta = newDestinations - currentDestinations
+      if (delta >= 1) {
+        onAddDestination(delta)
+      } else {
+        const destinationsToRemove = Math.abs(delta)
+        onDeleteDestination(destinationsToRemove)
+        refreshDestinations()
+      }
+    }
+    const onAddDestination = delta => {
+      for (let i = 0; i < delta; i++) {
+        createReservationFlightDestination(
+          { reservationFlightId: router.params.FlightId },
+          data => {
+            refreshDestinations()
+          }
+        )
+      }
+    }
+    const onDeleteDestination = delta => {
+      for (let j = 0; j < delta; j++) {
+        deleteReservationFlightDestination(
+          destinationsFlight.value[destinationsFlight.value.length - j - 1]
+            .reservationFlightDestinationId,
+          data => {}
+        )
+      }
+      refreshDestinations()
+    }
     return {
       reservationFlight,
       customers,
+      routes,
+      airlines,
+      destinationsFlight,
+      destinationsNumber,
       isAddedCustomer,
-      rangeDatesTravel,
-      onSelectTravelDate,
-      onUpdateCommission,
+      onUpdateFlight,
       validateTravelDate,
       validateDepartureAirport,
       validateArrivalAirport,
@@ -405,7 +629,8 @@ export default {
       validatePriceNeto,
       validatePaymentMethodAgency,
       validatePaymentMethodClient,
-      validateContactPhone
+      validateContactPhone,
+      onChangeDestinations
     }
   }
 }

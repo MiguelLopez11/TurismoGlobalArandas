@@ -11,6 +11,8 @@ namespace TurismoGlobalArandas.Models
         public string? Invoice { get; set; }
         public DateTime? DateSale { get; set; }
         public DateTime? DateTravel { get; set; }
+        public DateTime? PaymentLimitDate { get; set; } = null;
+        public DateTime? PaymentLimitDateProvider { get; set; } = null;
         public string? DepartureLocation { get; set; }
         public string? ArrivalLocation { get; set; }
         public int? ProviderId { get; set; }

@@ -13,7 +13,9 @@ namespace TurismoGlobalArandas.Context
         {
         }
         public DbSet<ReservationsByEmployeeView> ReservationsByEmployeeView { get; set; }
+        public DbSet<ReservationsToExpire> ReservationsToExpire { get; set; }
         public DbSet<AditionalServices> AditionalServices { get; set; }
+        public DbSet<Airline> Airlines { get; set; }
         public DbSet<Customers> Customers { get; set; }
         public DbSet<Destinations> Destinations { get; set; }
         public DbSet<Employees> Employees { get; set; }
@@ -34,6 +36,7 @@ namespace TurismoGlobalArandas.Context
         public DbSet<Providers> Providers { get; set; }
         public DbSet<ReservationHotel> ReservationHotels { get; set; }
         public DbSet<ReservationFlight> ReservationFlights { get; set; }
+        public DbSet<ReservationFlightDestinations> ReservationFlightDestinations { get; set; }
         public DbSet<ReservationHotelGroup> ReservationHotelGroups { get; set; }
         public DbSet<ReservationHotelsServicesAditionals> ReservationHotelsServicesAditionals { get; set; }
         public DbSet<ReservationTours> ReservationTours { get; set; }
@@ -50,6 +53,7 @@ namespace TurismoGlobalArandas.Context
         {
             base.OnModelCreating(builder);
             builder.Entity<ReservationsByEmployeeView>().HasNoKey().ToView(null);
+            builder.Entity<ReservationsToExpire>().HasNoKey().ToView(null);
             builder.Entity<AditionalServices>().HasData(new AditionalServices { AditionalServiceId = 1, Name = "Servicio de reservación de vuelo", Description = null, IsDeleted = false });
             builder.Entity<AditionalServices>().HasData(new AditionalServices { AditionalServiceId = 2, Name = "Servicio de reservación de vehiculo", Description = null, IsDeleted = false });
             builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 1, Name = "Individual", Description = null, IsDeleted = false });
@@ -112,6 +116,20 @@ namespace TurismoGlobalArandas.Context
         public string GetInvoicePaymentRelationList()
         {
             string ultimoFolio = PaymentRelationLists.Max(t => t.Invoice);
+            if (ultimoFolio != null)
+            {
+                int nuevoFolioNumerico = int.Parse(ultimoFolio) + 1;
+                string nuevoFolio = nuevoFolioNumerico.ToString("D5");
+                return nuevoFolio;
+            }
+            else
+            {
+                return "00001";
+            }
+        }
+        public string GetInvoiceReservationFlight()
+        {
+            string ultimoFolio = ReservationFlights.Max(t => t.Invoice);
             if (ultimoFolio != null)
             {
                 int nuevoFolioNumerico = int.Parse(ultimoFolio) + 1;

@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Azure;
+using System.Linq;
 
 namespace TurismoGlobalArandas.Controllers
 {
@@ -55,7 +56,6 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(Reservation);
         }
-
         [HttpPost]
         public async Task<ActionResult<ReservationHotel>> PostReservationHotel(
             ReservationHotel Reservation

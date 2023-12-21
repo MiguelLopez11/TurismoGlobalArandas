@@ -69,7 +69,7 @@ namespace TurismoGlobalArandas.Controllers
             );
         }
 
-        [HttpPut("{ServicecId}")]
+        [HttpPut("{ServiceId}")]
         public async Task<ActionResult> PutService(int ServiceId, ServicesProvider service)
         {
             if (service.ServiceId != ServiceId)

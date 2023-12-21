@@ -8,23 +8,25 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int ReservationTourId { get; set; }
-        public string? Invoice { get; set; }
-        public string? TourName { get; set; }
-        public int? DestinationId { get; set; }
-        public DateTime? DateSale { get; set; }
-        public DateTime? DateActivity { get; set; }
-        public string? OwnerName { get; set; }
-        public int? NumberAdults { get; set; }
-        public int? NumberMinors { get; set; }
+        public string? Invoice { get; set; } = null;
+        public string? TourName { get; set; } = null;
+        public int? DestinationId { get; set; } = null;
+        public DateTime? DateSale { get; set; } = null;
+        public DateTime? DateActivity { get; set; } = null;
+        public DateTime? PaymentLimitDate { get; set; } = null;
+        public DateTime? PaymentLimitDateProvider { get; set; } = null;
+        public string? OwnerName { get; set; } = null;
+        public int? NumberAdults { get; set; } = null;
+        public int? NumberMinors { get; set; } = null;
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal? AdultCost { get; set; }
+        public decimal? AdultCost { get; set; } = null;
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal? MinorCost { get; set; }
+        public decimal? MinorCost { get; set; } = null;
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal? PublicRate { get; set; }
+        public decimal? PublicRate { get; set; } = null;
         [Column(TypeName = "decimal(18, 2)")]
-        public decimal? NetPrice { get; set; }
-        public string? ExchangeRate { get; set; }
+        public decimal? NetPrice { get; set; } = null;
+        public string? ExchangeRate { get; set; } = null;
         public bool IsInternational { get; set; }
         public bool IsNational { get; set; }
         public bool IncludeTransportation { get; set; }

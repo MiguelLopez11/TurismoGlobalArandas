@@ -72,6 +72,8 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.Invoice = reservationVehicle.Invoice;
             ReservationOld.DateSale = reservationVehicle.DateSale;
             ReservationOld.DateTravel = reservationVehicle.DateTravel;
+            ReservationOld.PaymentLimitDate = reservationVehicle.PaymentLimitDate;
+            ReservationOld.PaymentLimitDateProvider = reservationVehicle.PaymentLimitDateProvider;
             ReservationOld.DepartureLocation = reservationVehicle.DepartureLocation;
             ReservationOld.ArrivalLocation = reservationVehicle.ArrivalLocation;
             ReservationOld.ProviderId = reservationVehicle.ProviderId;

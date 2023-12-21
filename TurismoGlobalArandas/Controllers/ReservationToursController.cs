@@ -72,6 +72,8 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.TourName = reservationTours.TourName;
             ReservationOld.DestinationId = reservationTours.DestinationId;
             ReservationOld.DateSale = reservationTours.DateSale;
+            ReservationOld.PaymentLimitDate = reservationTours.PaymentLimitDate;
+            ReservationOld.PaymentLimitDateProvider = reservationTours.PaymentLimitDateProvider;
             ReservationOld.DateActivity = reservationTours.DateActivity;
             ReservationOld.OwnerName = reservationTours.OwnerName;
             ReservationOld.NumberAdults = reservationTours.NumberAdults;
