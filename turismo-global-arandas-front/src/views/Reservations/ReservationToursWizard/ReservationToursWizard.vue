@@ -38,6 +38,48 @@
               <el-form-item>
                 <v-select
                   class="w-100"
+                  v-model="reservationTour.customerId"
+                  label="name"
+                  :options="customers"
+                  :reduce="customer => customer.customerId"
+                >
+                  <template #selected-option="{ name, lastname }">
+                    <label>{{ name }} {{ lastname }}</label>
+                  </template>
+                  <template #option="{ name, lastname }">
+                    <label>{{ name }} {{ lastname }}</label>
+                  </template>
+                  <template #header>
+                    <span class="text-danger">*</span>
+                    <label> Cliente</label>
+                  </template>
+                  <template #list-footer>
+                    <el-button
+                      class="w-100"
+                      @click="
+                        () => {
+                          isAddedCustomer = !isAddedCustomer
+                        }
+                      "
+                    >
+                      Agregar nuevo cliente</el-button
+                    >
+                  </template>
+                  <template #search="{ attributes, events }">
+                    <input
+                      class="vs__search"
+                      :required="!reservationTour.customerId"
+                      v-bind="attributes"
+                      v-on="events"
+                    />
+                  </template>
+                </v-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <v-select
+                  class="w-100"
                   label="name"
                   v-model="reservationTour.destinationId"
                   :options="destinations"
@@ -267,6 +309,9 @@
     </form-wizard>
   </el-card>
   <destination-add-new />
+  <el-dialog v-model="isAddedCustomer">
+    <customers-add-new @add-customer="onAddedCustomer" />
+  </el-dialog>
 </template>
 
 <script>
@@ -276,8 +321,10 @@ import ReservationTourServices from '@/Services/ReservationTours.Services'
 import DestinationServices from '@/Services/Destinations.Services'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 import PaymentProviders from '@/Services/paymentProviders.Services'
+import CustomerServices from '@/Services/Customers.Services'
 // COMPONENTS
 import DestinationAddNew from '@/views/Destinations/DestinationAddNew.vue'
+import CustomersAddNew from '@/views/Customers/CustomersAddNew.vue'
 // LIBRARIES
 import { useRouter } from 'vue-router'
 export default {
@@ -288,7 +335,8 @@ export default {
     }
   },
   components: {
-    DestinationAddNew
+    DestinationAddNew,
+    CustomersAddNew
   },
   setup (props) {
     const { getReservationTour, createReservationTour, updateReservationTour } =
@@ -301,11 +349,14 @@ export default {
       updatePaymentRelation
     } = PaymentsRelationReservationServices()
     const { createPaymentProvider } = PaymentProviders()
+    const { getCustomers } = CustomerServices()
     const redirect = useRouter()
     //   DATA
     const reservationTour = ref([])
     const destinations = ref([])
+    const customers = ref([])
     const isAddDestination = ref(false)
+    const isAddedCustomer = ref(false)
     const reservationTourId = ref(0)
     const paymentReservationId = ref(0)
     const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
@@ -325,6 +376,7 @@ export default {
       isNational: false,
       includeTransportation: false,
       employeeId: null,
+      customerId: null,
       isDeleted: false
     })
     // if im not editing, create a new reservation else, get a reservationTour from the API
@@ -371,6 +423,9 @@ export default {
     getDestinations(data => {
       destinations.value = data
     })
+    getCustomers(data => {
+      customers.value = data
+    })
     const refreshReservationTour = () => {
       getReservationTour(
         props.ReservationTourId || reservationTourId.value,
@@ -395,6 +450,13 @@ export default {
         title: 'Datos requeridos',
         text: 'Verifique los datos requeridos con un * e intentelo de nuevo.',
         icon: 'error'
+      })
+    }
+    const onAddedCustomer = value => {
+      isAddedCustomer.value = !isAddedCustomer.value
+      reservationTour.value.customerId = value
+      getCustomers(data => {
+        customers.value = data
       })
     }
     // VALIDATIONS PROMISES
@@ -462,10 +524,13 @@ export default {
     return {
       reservationTour,
       destinations,
+      customers,
       isAddDestination,
+      isAddedCustomer,
       validationGeneralData,
       validationClientData,
       validationCloseReservation,
+      onAddedCustomer,
       onComplete
     }
   }

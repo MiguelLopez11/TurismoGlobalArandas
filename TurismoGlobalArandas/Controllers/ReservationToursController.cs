@@ -40,6 +40,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ReservationTours>> PostReservationTour(ReservationTours reservation)
         {
+            reservation.DateSale = DateTime.Now;
             reservation.Invoice = _context.GetInvoiceReservationTours();
             _context.ReservationTours.Add(reservation);
             await _context.SaveChangesAsync();
@@ -69,6 +70,7 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.ReservationTourId = reservationTours.ReservationTourId;
             ReservationOld.Invoice = reservationTours.Invoice;
             ReservationOld.TourName = reservationTours.TourName;
+            ReservationOld.CustomerId = reservationTours.CustomerId;
             ReservationOld.DestinationId = reservationTours.DestinationId;
             ReservationOld.DateSale = reservationTours.DateSale;
             ReservationOld.PaymentLimitDate = reservationTours.PaymentLimitDate;

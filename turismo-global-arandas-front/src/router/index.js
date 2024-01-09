@@ -226,6 +226,14 @@ const routes = [
     }
   },
   {
+    path: '/ReservacionesVuelosHoteleria',
+    name: 'ReservationFlight-ReservationHotel',
+    component: () => import('../views/Reservations/ReservationFlights/ReservationFlightReservadedByReservationHotelList'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/TiposReservacionesGrupales',
     name: 'TypeReservationsGroup',
     component: () => import('../views/TypeReservationsGroup/TypeReservationsGroupList'),

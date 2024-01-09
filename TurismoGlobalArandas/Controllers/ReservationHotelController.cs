@@ -1,16 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PuppeteerSharp.Media;
 using PuppeteerSharp;
-using System.IO;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using Azure;
-using System.Linq;
 
 namespace TurismoGlobalArandas.Controllers
 {
@@ -91,6 +84,25 @@ namespace TurismoGlobalArandas.Controllers
             {
                 return BadRequest($"La habitacion con el ID {ReservationHotelId} no existe");
             }
+            if (Reservation.TypeReservationId == 1 && ReservationOld.TypeReservationId == 2 || Reservation.TypeReservationId == 2 && ReservationOld.TypeReservationId == 2 && ReservationOld.TypeReservationGroupId == 1 && Reservation.TypeReservationGroupId == 2)
+            {
+                var reservationHotelGroup = await _context.ReservationHotelGroups
+                    .FirstOrDefaultAsync(f => f.ReservationHotelId == Reservation.ReservationHotelId);
+                if (reservationHotelGroup != null)
+                {
+
+                    var groupRates = await _context.GroupRates
+                        .Where(w => w.ReservationHotelGroupId == reservationHotelGroup.ReservationHotelGroupId)
+                        .ToListAsync();
+                    foreach (var item in groupRates)
+                    {
+                        _context.GroupRates.Remove(item);
+                        await _context.SaveChangesAsync();
+                    }
+                    _context.ReservationHotelGroups.Remove(reservationHotelGroup);
+                    await _context.SaveChangesAsync();
+                }
+            }
             ReservationOld.ReservationHotelId = Reservation.ReservationHotelId;
             ReservationOld.Invoice = Reservation.Invoice;
             ReservationOld.TravelDateStart = Reservation.TravelDateStart;
@@ -131,6 +143,8 @@ namespace TurismoGlobalArandas.Controllers
                 _context.PaymentsRelationReservations.Update(ReservationPaymentRelation);
                 await _context.SaveChangesAsync();
             }
+
+
             _context.ReservationHotels.Update(ReservationOld);
             await _context.SaveChangesAsync();
 
@@ -138,7 +152,7 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpDelete("{ReservationHotelId}")]
-        public async Task<IActionResult> DeleteReservationHotel(int ReservationHotelId)
+        public async Task<IActionResult> CancelReservationHotel(int ReservationHotelId)
         {
             var Reservation = await _context.ReservationHotels.FirstOrDefaultAsync(
                 f => f.ReservationHotelId == ReservationHotelId
@@ -153,7 +167,77 @@ namespace TurismoGlobalArandas.Controllers
             await _context.SaveChangesAsync();
             return Ok("registro archivado");
         }
+        [HttpDelete("Delete/{ReservationHotelId}")]
+        public async Task<IActionResult> DeleteReservationHotel(int ReservationHotelId)
+        {
+            //RESERVACIÓN HOTELERIA
+            var Reservation = await _context.ReservationHotels.FirstOrDefaultAsync(
+                f => f.ReservationHotelId == ReservationHotelId
+            );
+            if (Reservation == null)
+            {
+                return NotFound();
+            }
+            //IndividualRate 
+            var individualRate = await _context.IndividualRates
+                   .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
+            if (individualRate != null)
+            {
+                _context.IndividualRates.Remove(individualRate);
+            }
+            //RELACION DE PAGO CLIENTE
+            var paymentRelation = await _context.PaymentsRelationReservations
+                .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
+            if (paymentRelation != null)
+            {
+            //LISTA DE PAGOS CLIENTE
+                var paymentRelationList = await _context.PaymentRelationLists
+                .Where(w => w.PaymentReservationId == paymentRelation.PaymentReservationId)
+                .ToListAsync();
+                foreach (var item in paymentRelationList)
+                {
+                    _context.PaymentRelationLists.Remove(item);
+                }
+                _context.PaymentsRelationReservations.Remove(paymentRelation);
+            }
+            
+            
+            //RESERVACION GRUPAL HOTELERIA
+            var reservationHotelGroup = await _context.ReservationHotelGroups
+                    .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
+            if (reservationHotelGroup != null)
+            {
 
+                var groupRates = await _context.GroupRates
+                    .Where(w => w.ReservationHotelGroupId == reservationHotelGroup.ReservationHotelGroupId)
+                    .ToListAsync();
+                foreach (var item in groupRates)
+                {
+                    _context.GroupRates.Remove(item);
+                }
+                _context.ReservationHotelGroups.Remove(reservationHotelGroup);
+            }
+            //SERVICIOS ADICIONALES HOTELERIA
+            var AditionalServices = await _context.ReservationHotelsServicesAditionals
+                    .Where(w => w.ReservationHotelId == ReservationHotelId)
+                    .ToListAsync();
+            foreach (var item in AditionalServices)
+            {
+                _context.ReservationHotelsServicesAditionals.Remove(item);
+            }
+            //RELACION DE PAGOS A PROVEEDORES
+            var PaymentProviders = await _context.PaymentProviders
+                    .Where(w => w.ReservationHotelId == ReservationHotelId)
+                    .ToListAsync();
+            foreach (var item in PaymentProviders)
+            {
+                _context.PaymentProviders.Remove(item);
+            }
+            
+            _context.ReservationHotels.Remove(Reservation);
+            await _context.SaveChangesAsync();
+            return Ok("registro eliminado");
+        }
         #region CREATE PDF
         [HttpGet("DescargarDatosEnPDF")]
         public async Task<ActionResult> DescargarDatosEnPDF()

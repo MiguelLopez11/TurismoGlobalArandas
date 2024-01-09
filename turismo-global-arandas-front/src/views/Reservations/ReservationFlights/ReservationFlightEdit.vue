@@ -413,7 +413,9 @@
             size="large"
             @click="
               () => {
-                $router.push('/ReservacionesVuelos')
+                reservationFlight.isReservadedByHotel
+                  ? $router.push('/ReservacionesVuelosHoteleria')
+                  : $router.push('/ReservacionesVuelos')
               }
             "
             >Cancelar</el-button

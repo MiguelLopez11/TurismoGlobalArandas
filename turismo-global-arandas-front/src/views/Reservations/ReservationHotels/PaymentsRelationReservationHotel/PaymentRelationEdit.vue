@@ -48,23 +48,32 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <Field
-            name="paymentMethodClient"
-            :rules="ValidatePaymentMethodClient"
-          >
-            <el-form-item :error="errors.paymentMethodClient">
-              <div>
-                <label> Metodo de pago del cliente </label>
-              </div>
-              <el-input
-                placeholder="Ingresa cual fue el método de pago del cliente"
-                size="large"
-                v-model="payment.paymentMethodClient"
-                type="textarea"
-                :autosize="{ minRows: 4, maxRows: 8 }"
-              />
-            </el-form-item>
-          </Field>
+          <el-form-item>
+            <div>
+              <label> Metodo de pago del cliente </label>
+            </div>
+            <v-select
+              v-model="payment.paymentMethodId"
+              class="w-100"
+              label="name"
+              :options="paymentMethods"
+              :reduce="method => method.paymentMethodId"
+            ></v-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <div>
+              <label> Detalles de pago </label>
+            </div>
+            <el-input
+              placeholder="Ingresa detalles del pago"
+              size="large"
+              v-model="payment.detailsPayment"
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 8 }"
+            />
+          </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item>
@@ -118,6 +127,7 @@
 <script>
 import { ref, inject, watch } from 'vue'
 import PaymentsRelationListServices from '@/Services/PaymentRelationList.Services'
+import PaymentMethodsServices from '@/Services/PaymentMethods.Services'
 import { useStore } from 'vuex'
 import { ElMessage } from 'element-plus'
 
@@ -131,6 +141,7 @@ export default {
   setup (props) {
     const isOpenDialog = inject('editPaymentRelation')
     const payment = ref([])
+    const paymentMethods = ref([])
     const store = useStore()
     const swal = inject('$swal')
     const paymentAmountMissing = ref(
@@ -138,6 +149,10 @@ export default {
     )
     const { getPaymentRelationList, updatePaymentRelationList } =
       PaymentsRelationListServices()
+    const { getPaymentMethods } = PaymentMethodsServices()
+    getPaymentMethods(data => {
+      paymentMethods.value = data
+    })
     watch(isOpenDialog, newValue => {
       if (newValue) {
         getPaymentRelationList(props.PaymentId, data => {
@@ -200,6 +215,7 @@ export default {
     return {
       isOpenDialog,
       payment,
+      paymentMethods,
       paymentAmountMissing,
       onUpdatePayment,
       calculateAmountReturned,

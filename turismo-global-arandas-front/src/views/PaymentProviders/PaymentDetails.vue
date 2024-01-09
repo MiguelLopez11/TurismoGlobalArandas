@@ -29,6 +29,21 @@
           />
         </el-form-item>
       </el-col>
+      <!-- <el-col :span="8">
+        <el-form-item>
+          <div>
+            <label>Cantidad a pagar</label>
+          </div>
+          <el-date-picker
+            v-model="payment.paymentDate"
+            class="w-100"
+            type="date"
+            placeholder="Selecciona la fecha del viaje"
+            size="large"
+            disabled
+          />
+        </el-form-item>
+      </el-col> -->
       <el-col :span="8">
         <el-form-item>
           <div>

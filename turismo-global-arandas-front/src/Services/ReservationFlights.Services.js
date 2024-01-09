@@ -6,6 +6,11 @@ export default function ReservationFlightServices () {
       callback(response.data)
     })
   }
+  const getReservationFlightsReservadedByReservationHotel = (callback) => {
+    axiosPrivate.get('/ReservationFlight/ReservadedByReservationHotel').then((response) => {
+      callback(response.data)
+    })
+  }
   const getReservationFlight = (reservationFlightId, callback) => {
     axiosPrivate.get(`/ReservationFlight/${reservationFlightId}`).then((response) => {
       callback(response.data)
@@ -28,6 +33,7 @@ export default function ReservationFlightServices () {
   }
   return {
     getReservationFlights,
+    getReservationFlightsReservadedByReservationHotel,
     getReservationFlight,
     createReservationFlight,
     updateReservationFlight,

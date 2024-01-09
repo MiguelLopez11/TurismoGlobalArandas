@@ -69,6 +69,7 @@ namespace TurismoGlobalArandas.Controllers
             //RESERVACIONES TOURS
             var reservationTour = await _context.ReservationTours.
                         FirstOrDefaultAsync(f => f.ReservationTourId == paymentRelation.ReservationTourId);
+            //RESERVACIONES VEHICULOS
             var reservationVehicle = await _context.ReservationVehicles.
                         FirstOrDefaultAsync(f => f.ReservationVehicleId == paymentRelation.ReservationVehicleId);
             #endregion 
@@ -101,7 +102,6 @@ namespace TurismoGlobalArandas.Controllers
                     _context.ReservationVehicles.Update(reservationVehicle);
                     await _context.SaveChangesAsync();
                 }
-                paymentRelation.StatusPaymentRelationId = 2;
             }
             else
             {
@@ -132,7 +132,6 @@ namespace TurismoGlobalArandas.Controllers
                     _context.ReservationVehicles.Update(reservationVehicle);
                     await _context.SaveChangesAsync();
                 }
-                paymentRelation.StatusPaymentRelationId = 1;
             }
             _context.PaymentsRelationReservations.Update(paymentRelation);
             await _context.SaveChangesAsync();
@@ -164,9 +163,10 @@ namespace TurismoGlobalArandas.Controllers
             paymentOld.Amount = payment.Amount;
             paymentOld.AmountReceivedClient = payment.AmountReceivedClient;
             paymentOld.AmountReturnedClient = payment.AmountReturnedClient;
-            paymentOld.PaymentMethodClient = payment.PaymentMethodClient;
             paymentOld.PaymentDate = payment.PaymentDate;
             paymentOld.Observations = payment.Observations;
+            paymentOld.PaymentMethods = payment.PaymentMethods;
+            paymentOld.DetailsPayment = payment.DetailsPayment;
             paymentOld.PaymentReservationId = payment.PaymentReservationId;
             paymentOld.IsDeleted = payment.IsDeleted;
 

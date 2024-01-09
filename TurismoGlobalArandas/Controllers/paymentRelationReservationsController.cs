@@ -108,7 +108,6 @@ namespace TurismoGlobalArandas.Controllers
             paymentOld.ReservationTourId = payment.ReservationTourId;
             paymentOld.ReservationVehicleId = payment.ReservationVehicleId;
             paymentOld.ReservationFlightId = payment.ReservationFlightId;
-            paymentOld.StatusPaymentRelationId = payment.StatusPaymentRelationId;
             paymentOld.IsDeleted = payment.IsDeleted;
 
             _context.PaymentsRelationReservations.Update(paymentOld);
