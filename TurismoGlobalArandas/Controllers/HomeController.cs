@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
+using TurismoGlobalArandas.Models.Identity;
 
 namespace TurismoGlobalArandas.Controllers
 {
@@ -10,10 +12,12 @@ namespace TurismoGlobalArandas.Controllers
     public class HomeController : ControllerBase
     {
         private readonly TurismoGlobalContext _context;
+
         public HomeController(TurismoGlobalContext context)
         {
             _context = context;
         }
+
         [HttpGet("ReservationsByMonth")]
         public async Task<ActionResult> getReservationHotelByMonth()
         {
@@ -70,16 +74,28 @@ namespace TurismoGlobalArandas.Controllers
                     group =>
                         new
                         {
-                            Mes = group.Key.Mes,
-                            Tipo = group.Key.Tipo,
                             Cantidad = group.Count()
                         }
                 )
-                .GroupBy(r => r.Mes)
-                .Select(group => new { Mes = group.Key, Reservaciones = group.ToList() })
-                .ToList();
+                .ToArray();
 
             return Ok(reservacionesPorMes);
         }
+        [HttpPost("AllReservations")]
+        public  ActionResult ObtenerDatosDesdeVista(
+        )
+        {
+                var datosVista =  _context.GetAllReservationsViews
+                    .FromSqlRaw("SELECT * FROM Get_All_Reservations")
+                    .AsEnumerable()
+                    .ToList();
+
+                return Ok(datosVista);
+            
+        }
+
+
+
     }
 }
+

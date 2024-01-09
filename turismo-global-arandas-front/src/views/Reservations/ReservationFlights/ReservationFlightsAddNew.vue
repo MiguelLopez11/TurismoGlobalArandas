@@ -576,7 +576,6 @@ export default {
           destinationsFlightFields.value.forEach(item => {
             item.reservationFlightId = data.flightId
             createReservationFlightDestination(item, response => {
-              console.log(response)
             })
           })
         }

@@ -57,6 +57,7 @@ import {
   CategoryScale,
   LinearScale
 } from 'chart.js'
+import HomeServices from '@/Services/Home.Services'
 import { ref } from 'vue'
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
@@ -66,16 +67,34 @@ export default {
     Bar
   },
   setup () {
+    const cantidad = []
+    const { getReservationsByMonth } = HomeServices()
+    getReservationsByMonth(data => {
+    })
     const chartData = ref({
-      labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Agos', 'Sep', 'Oct', 'Nov', 'Dic'],
+      labels: [
+        'Ene',
+        'Feb',
+        'Mar',
+        'Abr',
+        'May',
+        'Jun',
+        'Jul',
+        'Agos',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dic'
+      ],
       datasets: [
         {
           label: 'Reservasiones',
           backgroundColor: '#887EF2',
-          data: [100, 200, 50, 10, 250, 80, 86]
+          data: cantidad.value
         }
       ]
     })
+
     const chartOptions = ref({
       responsive: true
     })

@@ -192,12 +192,18 @@ export default {
               },
               {
                 index: '5-1-3',
+                title: 'Reservaciones Vuelos de hoteleria',
+                path: '/ReservacionesVuelosHoteleria',
+                icon: 'bi bi-airplane-engines'
+              },
+              {
+                index: '5-1-4',
                 title: 'Reservaciones Tours',
                 path: '/ReservacionesTours',
                 icon: 'bi bi-bus-front'
               },
               {
-                index: '5-1-4',
+                index: '5-1-5',
                 title: 'Reservaciones Vehiculos',
                 path: '/ReservacionesVehiculos',
                 icon: 'bi bi-truck'

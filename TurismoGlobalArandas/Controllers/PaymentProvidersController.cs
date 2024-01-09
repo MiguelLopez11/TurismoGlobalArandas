@@ -31,6 +31,10 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getPaymentProvider(int PaymentId)
         {
             var Payment = await _context.PaymentProviders
+                .Include(i => i.ReservationHotels)
+                .Include(i => i.reservationFlight)
+                .Include(i => i.ReservationVehicles)
+                .Include(i => i.ReservationTours)
                 .FirstOrDefaultAsync(f => f.PaymentId == PaymentId);
             if (Payment == null)
             {
@@ -42,6 +46,10 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getPaymentProviderByReservationHotel(int ReservationHotelId)
         {
             var Payment = await _context.PaymentProviders
+                .Include(i => i.ReservationHotels)
+                .Include(i => i.reservationFlight)
+                .Include(i => i.ReservationVehicles)
+                .Include(i => i.ReservationTours)
                 .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
             if (Payment == null)
             {
@@ -53,6 +61,10 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getPaymentProviderByReservationTour(int ReservationTourId)
         {
             var Payment = await _context.PaymentProviders
+                .Include(i => i.ReservationHotels)
+                .Include(i => i.reservationFlight)
+                .Include(i => i.ReservationVehicles)
+                .Include(i => i.ReservationTours)
                 .FirstOrDefaultAsync(f => f.ReservationTourId == ReservationTourId);
             if (Payment == null)
             {
@@ -65,6 +77,10 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getPaymentProviderByReservationFlight(int ReservationFlightId)
         {
             var Payment = await _context.PaymentProviders
+                .Include(i => i.ReservationHotels)
+                .Include(i => i.reservationFlight)
+                .Include(i => i.ReservationVehicles)
+                .Include(i => i.ReservationTours)
                 .FirstOrDefaultAsync(f => f.ReservationFlightId == ReservationFlightId);
             if (Payment == null)
             {
@@ -76,6 +92,10 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult> getPaymentProviderByReservationVehicle(int ReservationVehicleId)
         {
             var Payment = await _context.PaymentProviders
+                .Include(i => i.ReservationHotels)
+                .Include(i => i.reservationFlight)
+                .Include(i => i.ReservationVehicles)
+                .Include(i => i.ReservationTours)
                 .FirstOrDefaultAsync(f => f.ReservationVehicleId == ReservationVehicleId);
             if (Payment == null)
             {

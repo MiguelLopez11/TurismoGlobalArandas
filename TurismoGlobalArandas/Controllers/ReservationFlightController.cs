@@ -24,7 +24,19 @@ namespace TurismoGlobalArandas.Controllers
                 .Include(i => i.ArrivalAirport)
                 .Include(i => i.Airline)
                 .Include(i => i.Customers)
-                .Include(i => i.StatusFlight) 
+                .Where(w => !w.IsReservadedByHotel)
+                .ToListAsync();
+            return Ok(flights);
+        }
+        [HttpGet("ReservadedByReservationHotel")]
+        public async Task<ActionResult<ReservationFlight>> getReservationFlightsReservadedByReservationHotel()
+        {
+            var flights = await _context.ReservationFlights
+                .Include(i => i.DepartureAirport)
+                .Include(i => i.ArrivalAirport)
+                .Include(i => i.Airline)
+                .Include(i => i.Customers)
+                .Where(w => w.IsReservadedByHotel)
                 .ToListAsync();
             return Ok(flights);
         }
@@ -36,7 +48,6 @@ namespace TurismoGlobalArandas.Controllers
                 .Include(i => i.ArrivalAirport)
                 .Include(i => i.Airline)
                 .Include(i => i.Customers)
-                .Include(i => i.StatusFlight)
                 .FirstOrDefaultAsync(f => f.FlightId == FlightId);
             if (flight == null)
             {

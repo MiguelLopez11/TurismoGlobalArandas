@@ -5,6 +5,7 @@
       backButtonText="Atras"
       doneButtonText="Finalizar"
       color="#7367F0"
+      @on-change="refreshDateArribal"
       @on-complete="onComplete"
     >
       <tab-content
@@ -471,6 +472,7 @@
               <span>Fecha y hora de llegada</span>
             </div>
             <el-form-item>
+              {{ reservationHotelGroup.dateArrival }}
               <VueDatePicker
                 v-model="reservationHotelGroup.dateArrival"
                 placeholder="Seleccionar fecha..."
@@ -605,7 +607,12 @@
           </el-col>
         </el-row>
       </tab-content>
-      <tab-content lazy title="Servicios adicionales" icon="bi bi-receipt">
+      <tab-content
+        lazy
+        title="Servicios adicionales"
+        icon="bi bi-receipt"
+        :beforeChange="validationAditionalServices"
+      >
         <ReservationHotelsAditionalServiceList />
       </tab-content>
       <tab-content
@@ -622,7 +629,7 @@
                 <label>Politicas de cancelación</label>
               </div>
               <el-input
-                placeholder="Ingresa el descuento extra"
+                placeholder="Ingresa la politica de cancelación"
                 size="large"
                 v-model="reservationHotel.cancellationPolicy"
                 type="textarea"
@@ -637,7 +644,7 @@
                 <label>Codigo de voucher</label>
               </div>
               <el-input
-                placeholder="Ingresa el descuento extra"
+                placeholder="Ingresa el código de voucher"
                 size="large"
                 v-model="reservationHotel.codeVoicher"
               />
@@ -712,6 +719,8 @@ import ServicesProviderServices from '@/Services/ProviderServices.Services'
 import ReservationHotelGroupServices from '@/Services/ReservationHotelGroup.Services'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 import PaymentProviders from '@/Services/paymentProviders.Services'
+import ReservationHotelAditionalService from '@/Services/ReservationHotelAditionalService.Service'
+import GroupRateServices from '@/Services/GroupRate.Services'
 // Components
 import CustomersAddNew from '@/views/Customers/CustomersAddNew'
 import HabitationReservationList from '@/views/HabitationReservation/HabitationReservationList'
@@ -723,7 +732,7 @@ import GroupRateList from '@/views/Rates/GroupRate/GroupRateList.vue'
 import ReservationHotelsAditionalServiceList from '../ReservationHotels/ReservationHotelsAditionalServices/ReservationHotelsAditionalServiceList.vue'
 // Libraries
 import { useStore } from 'vuex'
-import { ref, inject, provide, watch } from 'vue'
+import { ref, inject, provide, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { format } from 'date-fns'
 
@@ -774,6 +783,9 @@ export default {
     const { createPaymentRelation, getPaymentsRelationByReservationHotel } =
       PaymentsRelationReservationServices()
     const { createPaymentProvider } = PaymentProviders()
+    const { getReservationAditionalServiceByReservationHotelId } =
+      ReservationHotelAditionalService()
+    const { getGroupRateByReservationHotelGroup } = GroupRateServices()
     const store = useStore()
     const redirect = useRouter()
     // DATA
@@ -799,6 +811,7 @@ export default {
     const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     const reservationHotelGroupId = ref(0)
     const paymentReservationId = ref(0)
+    // const costAditionalServices = ref(null)
     let dateArrival = new Date()
     provide('AddTypeReservation', isAddedTypeReservation)
     provide('addDestination', isAddDestination)
@@ -959,6 +972,17 @@ export default {
         }
       })
     }
+    const refreshDateArribal = () => {
+      if (
+        reservationHotel.value.typeReservationId === 2 &&
+        reservationHotel.value.typeReservationGroupId === 1
+      ) {
+        reservationHotelGroup.value.dateArrival = format(
+          new Date(reservationHotelGroup.value.dateArrival),
+          'yyyy-MM-dd HH:mm'
+        )
+      }
+    }
     const refreshDataSelect = () => {
       getDestinations(data => {
         destinations.value = data
@@ -1084,6 +1108,9 @@ export default {
           reservationHotel.value.paymentLimitDate &&
           reservationHotel.value.paymentLimitDateProvider
         ) {
+          if (reservationHotel.value.typeReservationId === 1) {
+            reservationHotel.value.typeReservationGroupId = null
+          }
           onUpdateReservation()
           if (
             reservationHotel.value.typeReservationId === 2 &&
@@ -1169,23 +1196,92 @@ export default {
             reservationHotelGroup.value.dateStart &&
             reservationHotelGroup.value.dateEnd &&
             reservationHotelGroup.value.rangePublicClient &&
-            reservationHotelGroup.value.rangeJunior &&
-            reservationHotelGroup.value.rangeMinor &&
             reservationHotelGroup.value.nightsNumber
           ) {
             reservationHotelGroup.value.dateArrival = dateArrival.toISOString()
-            updateReservationHotelGroup(reservationHotelGroup.value, data => {
-              swal.fire({
-                title: 'Tarifa registrada correctamente',
-                text: 'La tarifa de la reservación de grupo se ha cargado al sistema satisfactoriamente.',
-                icon: 'success'
-              })
-            })
+            updateReservationHotelGroup(reservationHotelGroup.value, data => {})
             resolve(true)
           } else {
             onMessageErrorSteps()
             reject(new Error('Error'))
           }
+        }
+      })
+    }
+    const validationAditionalServices = () => {
+      return new Promise((resolve, reject) => {
+        const reservationHotelGroupId = computed(
+          () => store.getters.getReservationHotelGroupId
+        )
+
+        const totalAditionalServices = ref(0)
+        const totalGroupRates = ref(0)
+        const clientRate = ref(0)
+
+        reservationHotel.value.totalCost = 0
+
+        try {
+          // Total Cost aditional Services
+          getReservationAditionalServiceByReservationHotelId(
+            reservationHotelId.value,
+            data => {
+              if (data.length > 0) {
+                data.forEach(resp => {
+                  if (resp.reservationVehicle) {
+                    const priceNeto = parseFloat(
+                      resp.reservationVehicle.priceNeto
+                    )
+                    if (!isNaN(priceNeto)) {
+                      totalAditionalServices.value += priceNeto
+                    }
+                  }
+                  if (resp.reservationFlight) {
+                    const priceNeto = parseFloat(
+                      resp.reservationFlight.priceNeto
+                    )
+                    if (!isNaN(priceNeto)) {
+                      totalAditionalServices.value += priceNeto
+                    }
+                  }
+                  if (resp.aditionalServices) {
+                    const priceNeto = parseFloat(resp.aditionalServices.cost)
+                    if (!isNaN(priceNeto)) {
+                      totalAditionalServices.value += priceNeto
+                    }
+                  }
+                })
+              }
+              if (individualRate.value.clientRate) {
+                clientRate.value = individualRate.value.clientRate
+              } else {
+                clientRate.value = 0
+              }
+              reservationHotel.value.totalCost =
+                clientRate.value + totalAditionalServices.value
+            }
+          )
+
+          if (
+            reservationHotel.value.typeReservationId === 2 &&
+            reservationHotel.value.typeReservationGroupId === 1
+          ) {
+            getGroupRateByReservationHotelGroup(
+              reservationHotelGroupId.value,
+              data => {
+                data.forEach(resp => {
+                  const rangeTotal = parseFloat(resp.rangeTotal)
+                  if (!isNaN(rangeTotal)) {
+                    totalGroupRates.value += rangeTotal
+                  }
+                })
+                reservationHotel.value.totalCost += totalGroupRates.value
+              }
+            )
+          }
+
+          resolve(true)
+        } catch (error) {
+          reject(new Error('Error'))
         }
       })
     }
@@ -1248,7 +1344,9 @@ export default {
       validationClient,
       validationGeneral,
       validationRatesAndHabitations,
-      validationClosure
+      validationAditionalServices,
+      validationClosure,
+      refreshDateArribal
     }
   }
 }

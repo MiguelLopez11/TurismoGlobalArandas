@@ -12,7 +12,6 @@ import Vue3FormWizard from 'vue3-form-wizard'
 import store from './Store'
 import es from 'element-plus/dist/locale/es.mjs'
 import VueDatePicker from '@vuepic/vue-datepicker'
-
 import '@vuepic/vue-datepicker/dist/main.css'
 import 'vue3-form-wizard/dist/style.css'
 import 'vue3-easy-data-table/dist/style.css'

@@ -13,6 +13,7 @@ namespace TurismoGlobalArandas.Context
         {
         }
         public DbSet<ReservationsByEmployeeView> ReservationsByEmployeeView { get; set; }
+        public DbSet<GetAllReservationsView> GetAllReservationsViews { get; set; }
         public DbSet<ReservationsToExpire> ReservationsToExpire { get; set; }
         public DbSet<AditionalServices> AditionalServices { get; set; }
         public DbSet<Airline> Airlines { get; set; }
@@ -43,8 +44,6 @@ namespace TurismoGlobalArandas.Context
         public DbSet<ReservationVehicle> ReservationVehicles { get; set; }
         public DbSet<Routes> Routes { get; set; }
         public DbSet<ServicesProvider> ServicesProviders { get; set; }
-        public DbSet<StatusFlight> StatusFlight { get; set; }
-        public DbSet<StatusPaymentRelations> StatusPaymentRelations { get; set; }
         public DbSet<TypeReservation> TypeReservations { get; set; }
         public DbSet<TypeReservationGrupal> TypeReservationGrupals { get; set; }
 
@@ -60,8 +59,6 @@ namespace TurismoGlobalArandas.Context
             builder.Entity<TypeReservation>().HasData(new TypeReservation { TypeReservationId = 2, Name = "Grupal", Description = null, IsDeleted = false });
             builder.Entity<TypeReservationGrupal>().HasData(new TypeReservationGrupal { TypeReservationGrupalId = 1, Name = "Grupo", Description = null, IsDeleted = false });
             builder.Entity<TypeReservationGrupal>().HasData(new TypeReservationGrupal { TypeReservationGrupalId = 2, Name = "Individual", Description = null, IsDeleted = false });
-            builder.Entity<StatusPaymentRelations>().HasData(new StatusPaymentRelations { StatusId = 1, Name = "Pendiente", Description = null, IsDeleted = false });
-            builder.Entity<StatusPaymentRelations>().HasData(new StatusPaymentRelations { StatusId = 2, Name = "Liquidado", Description = null, IsDeleted = false });
             builder.Entity<Employees>().HasData(new Employees { EmployeeId = 1, Name = "Miguel", Lastname = "López Ortega", WorkStation="Developer", Address=null, PhoneNumber="3911001273", IsDeleted = false });
             builder.Entity<Providers>().HasData(new Providers { ProviderId = 1, Name = "Record", Email = null, PhoneNumber = null, IsDeleted = false });
             builder.Entity<Providers>().HasData(new Providers { ProviderId = 2, Name = "Check In", Email = null, PhoneNumber = null, IsDeleted = false });
@@ -86,8 +83,6 @@ namespace TurismoGlobalArandas.Context
             builder.Entity<ServicesProvider>().HasData(new ServicesProvider { ServiceId = 12, Name = "", ProviderId = 7, Color = null, CommissionAgency = 20, CommissionClient = 00, CommissionEmployee = 05, Description = null, IsDeleted = false });
             builder.Entity<ServicesProvider>().HasData(new ServicesProvider { ServiceId = 13, Name = "Traslados", ProviderId = 8, Color = null, CommissionAgency = 05, CommissionClient = 00, CommissionEmployee = 05, Description = null, IsDeleted = false });
             builder.Entity<ServicesProvider>().HasData(new ServicesProvider { ServiceId = 14, Name = "", ProviderId = 9, Color = null, CommissionAgency = 15, CommissionClient = 10, CommissionEmployee = 05, Description = null, IsDeleted = false });
-            builder.Entity<StatusFlight>().HasData(new StatusFlight { StatusFlightId = 1, Name = "Activo", Description = null, IsDeleted = false });
-            builder.Entity<StatusFlight>().HasData(new StatusFlight { StatusFlightId = 2, Name = "Cancelado", Description = null, IsDeleted = false });
         }
         public string GetInvoice()
         {

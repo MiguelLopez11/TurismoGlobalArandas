@@ -26,11 +26,17 @@ export default function ReservationHotelServices () {
       callback(response.data)
     })
   }
+  const RemoveReservationHotel = (reservationHotelId, callback) => {
+    axiosPrivate.delete(`/ReservationHotel/Delete/${reservationHotelId}`).then((response) => {
+      callback(response.data)
+    })
+  }
   return {
     getReservationHotels,
     getReservationHotel,
     createReservationHotel,
     updateReservationHotel,
-    deleteReservationHotel
+    deleteReservationHotel,
+    RemoveReservationHotel
   }
 }

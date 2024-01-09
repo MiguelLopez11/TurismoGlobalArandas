@@ -148,7 +148,7 @@ export default {
                 window.sessionStorage.setItem('Token', data.token)
                 window.sessionStorage.setItem('User', data.userName)
                 window.sessionStorage.setItem('EmployeeId', data.employeeId)
-                window.sessionStorage.setItem('Role', data.role)
+                window.sessionStorage.setItem('Role', data.role.toString())
                 redirect.go('/')
               }
             })

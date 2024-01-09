@@ -38,40 +38,46 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-            <el-form-item>
-              <div>
-                <label> Cantidad cambio al cliente </label>
-              </div>
-              <el-input
-                placeholder="Ingresa el la cantidad de cambio que recibe el cliente"
-                size="large"
-                v-model="paymentFields.amountReturnedClient"
-                disabled
-                :min="1"
-              />
-            </el-form-item>
+          <el-form-item>
+            <div>
+              <label> Cantidad cambio al cliente </label>
+            </div>
+            <el-input
+              placeholder="Ingresa el la cantidad de cambio que recibe el cliente"
+              size="large"
+              v-model="paymentFields.amountReturnedClient"
+              disabled
+              :min="1"
+            />
+          </el-form-item>
         </el-col>
         <el-col :span="8">
-          <Field
-            name="paymentMethodClient"
-            v-slot="{ value, field, errorMessage }"
-          >
-            <el-form-item :error="errorMessage">
-              <div>
-                <label> Metodo de pago del cliente </label>
-              </div>
-              <el-input
-                placeholder="Ingresa cual fue el método de pago del cliente"
-                size="large"
-                v-model="paymentFields.paymentMethodClient"
-                type="textarea"
-                v-bind="field"
-                :validate-event="false"
-                :model-value="value"
-                :autosize="{ minRows: 4, maxRows: 8 }"
-              />
-            </el-form-item>
-          </Field>
+          <el-form-item>
+            <div>
+              <label> Metodo de pago del cliente </label>
+            </div>
+            <v-select
+              v-model="paymentFields.paymentMethodId"
+              class="w-100"
+              label="name"
+              :options="paymentMethods"
+              :reduce="method => method.paymentMethodId"
+            ></v-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <div>
+              <label> Detalles de pago </label>
+            </div>
+            <el-input
+              placeholder="Ingresa detalles del pago"
+              size="large"
+              v-model="paymentFields.detailsPayment"
+              type="textarea"
+              :autosize="{ minRows: 4, maxRows: 8 }"
+            />
+          </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item>
@@ -96,7 +102,11 @@
             class="w-100"
             native-type="submit"
             size="large"
-            :disabled="paymentFields.amount > paymentAmountMissing || paymentFields.amountReceivedClient < paymentFields.amount || paymentAmountMissing == 0"
+            :disabled="
+              paymentFields.amount > paymentAmountMissing ||
+              paymentFields.amountReceivedClient < paymentFields.amount ||
+              paymentAmountMissing == 0
+            "
             >Guardar</el-button
           >
         </el-col>
@@ -120,6 +130,7 @@
 
 <script>
 import PaymentsRelationListServices from '@/Services/PaymentRelationList.Services'
+import PaymentMethodsServices from '@/Services/PaymentMethods.Services'
 import * as yup from 'yup'
 import { ref, inject } from 'vue'
 import { useStore } from 'vuex'
@@ -132,18 +143,22 @@ export default {
     const swal = inject('$swal')
     const store = useStore()
     const paymentFormRef = ref(null)
+    const paymentMethods = ref([])
     // const redirect = useRouter()
     const { createPaymentRelationList } = PaymentsRelationListServices()
+    const { getPaymentMethods } = PaymentMethodsServices()
     const paymentAmountMissing = ref()
     const paymentReservationId = ref()
+    getPaymentMethods(data => {
+      paymentMethods.value = data
+    })
     const validationSchema = yup.object({
       amount: yup
         .number()
         .test('is-decimal', 'invalid decimal', value =>
           (value + '').match(/^\d+(\.\d+)?$/)
         )
-        .required('Este campo es requerido'),
-      paymentMethodClient: yup.string().required('Este campo es requerido')
+        .required('Este campo es requerido')
     })
     setTimeout(() => {
       paymentReservationId.value = parseInt(
@@ -157,9 +172,10 @@ export default {
       amount: null,
       amountReceivedClient: null,
       amountReturnedClient: null,
-      paymentMethodClient: null,
       paymentDate: null,
       observations: null,
+      paymentMethodId: null,
+      detailsPayment: null,
       paymentReservationId: null,
       isDeleted: false
     })
@@ -195,11 +211,11 @@ export default {
               text: 'El pago se ha registrado correctamente',
               icon: 'success'
             })
-            store.commit('setRefreshPaymentRelation', true)
-            isOpenDialog.value = false
-            paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
-            paymentFormRef.value.resetForm()
           })
+          store.commit('setRefreshPaymentRelation', true)
+          isOpenDialog.value = false
+          paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
+          paymentFormRef.value.resetForm()
         }
       }
     }
@@ -224,6 +240,7 @@ export default {
       onSubmit,
       validationSchema,
       paymentFields,
+      paymentMethods,
       paymentAmountMissing,
       paymentFormRef,
       calculateAmountReturned

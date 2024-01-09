@@ -76,7 +76,7 @@
           <Field name="ages" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
-                <label>Edades</label>
+                <label>Edades de los menores</label>
               </div>
               <el-input
                 placeholder="Ingresa las edades de los menores"

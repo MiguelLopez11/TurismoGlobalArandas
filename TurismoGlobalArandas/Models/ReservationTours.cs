@@ -10,6 +10,7 @@ namespace TurismoGlobalArandas.Models
         public int ReservationTourId { get; set; }
         public string? Invoice { get; set; } = null;
         public string? TourName { get; set; } = null;
+        public int? CustomerId { get; set; } = null;
         public int? DestinationId { get; set; } = null;
         public DateTime? DateSale { get; set; } = null;
         public DateTime? DateActivity { get; set; } = null;
@@ -34,6 +35,8 @@ namespace TurismoGlobalArandas.Models
         public int? EmployeeId { get; set; } = null;
         public bool IsDeleted { get; set; }
 
+        [ForeignKey("CustomerId")]
+        public Customers? Customers { get; set; }
         [ForeignKey("EmployeeId")]
         public Employees? Employees { get; set; }
 

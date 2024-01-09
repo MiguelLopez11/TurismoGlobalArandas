@@ -28,6 +28,7 @@
         </el-button>
       </el-col>
     </el-row>
+    {{ userRole }}
     <el-row class="mt-3">
       <el-col :span="24">
         <div class="table-scroll">
@@ -74,6 +75,13 @@
                         onDeleteReservationHotel(items.reservationHotelId)
                       "
                       >Cancelar reservación</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      v-if="userRole.includes('ADMINISTRADOR')"
+                      @click="
+                        onRemoveReservationHotel(items.reservationHotelId)
+                      "
+                      >Eliminar reservación</el-dropdown-item
                     >
                     <el-dropdown-item
                       @click="
@@ -203,8 +211,11 @@ import { ref, watch, provide, inject, computed } from 'vue'
 import ReservationServices from '@/Services/ReservationHotel.Services'
 export default {
   setup () {
-    const { getReservationHotels, deleteReservationHotel } =
-      ReservationServices()
+    const {
+      getReservationHotels,
+      deleteReservationHotel,
+      RemoveReservationHotel
+    } = ReservationServices()
     const reservationHotels = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
@@ -218,6 +229,7 @@ export default {
     const statusPaymentCriteria = ref(null)
     const showStatusReservationFilter = ref(false)
     const showStatusPaymentFilter = ref(false)
+    const userRole = window.sessionStorage.getItem('Role')
     provide('AddEmployee', isAddedEmployee)
     const fields = ref([
       { value: 'invoice', text: 'Folio' },
@@ -296,6 +308,31 @@ export default {
         refreshTable()
       }
     )
+    const onRemoveReservationHotel = reservationHotelId => {
+      swal
+        .fire({
+          title: 'Estás a punto de cancelar una reservación, ¿Estas seguro?',
+          text: '¡No podrás revertir esto!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Si, cancelar reservación',
+          cancelButtonText: 'Cancelar'
+        })
+        .then(result => {
+          if (result.isConfirmed) {
+            RemoveReservationHotel(reservationHotelId, data => {
+              swal.fire({
+                title: 'Reservación eliminada!',
+                text: 'La reservación ha sido eliminada satisfactoriamente .',
+                icon: 'success'
+              })
+              refreshTable()
+            })
+          } else {
+            isloading.value = false
+          }
+        })
+    }
     const onDeleteReservationHotel = reservationHotelId => {
       swal
         .fire({
@@ -339,7 +376,9 @@ export default {
       filterStatusReservation,
       filterStatusPayment,
       refreshTable,
-      onDeleteReservationHotel
+      onRemoveReservationHotel,
+      onDeleteReservationHotel,
+      userRole
     }
   }
 }
