@@ -39,7 +39,7 @@
           <el-input
             placeholder="Ingresa la cantidad de juniors"
             size="large"
-            v-model="groupRateFields.typeHabitation"
+            v-model="groupRateFields.juniors"
             type="number"
           />
         </el-form-item>
@@ -235,7 +235,7 @@
 </template>
 
 <script>
-import { ref, inject } from 'vue'
+import { ref, inject, watch } from 'vue'
 import GroupRateServices from '@/Services/GroupRate.Services'
 import ReservationHotelGroupServices from '@/Services/ReservationHotelGroup.Services'
 import { useStore } from 'vuex'
@@ -284,7 +284,31 @@ export default {
       groupRateFields.value = JSON.parse(JSON.stringify(groupRateFieldsBlank))
       isOpenDialog.value = false
     }
-
+    watch(groupRateFields.value, NewValue => {
+      if (
+        NewValue.adults !== null &&
+        NewValue.juniors !== null &&
+        NewValue.minorsCharge !== null &&
+        NewValue.minorsWithoutCharge !== null
+      ) {
+        const rateNight =
+          (reservationHotelGroup.value.rangePublicClient !== null
+            ? parseFloat(reservationHotelGroup.value.rangePublicClient) *
+              parseFloat(NewValue.adults)
+            : 0) +
+          (reservationHotelGroup.value.rangeJunior !== null
+            ? parseFloat(reservationHotelGroup.value.rangeJunior) *
+              parseFloat(NewValue.juniors)
+            : 0) +
+          (reservationHotelGroup.value.rangeMinor !== null
+            ? parseFloat(reservationHotelGroup.value.rangeMinor) *
+              parseFloat(NewValue.minorsCharge)
+            : 0)
+        const rateTotal = rateNight * reservationHotelGroup.value.nightsNumber
+        groupRateFields.value.rangeNight = rateNight
+        groupRateFields.value.rangeTotal = rateTotal
+      }
+    })
     return {
       isOpenDialog,
       onSubmit,

@@ -12,12 +12,15 @@ import Vue3FormWizard from 'vue3-form-wizard'
 import store from './Store'
 import es from 'element-plus/dist/locale/es.mjs'
 import VueDatePicker from '@vuepic/vue-datepicker'
+import VueApexCharts from 'vue3-apexcharts'
+
 import '@vuepic/vue-datepicker/dist/main.css'
 import 'vue3-form-wizard/dist/style.css'
 import 'vue3-easy-data-table/dist/style.css'
 import './registerServiceWorker'
 import 'element-plus/dist/index.css'
 import 'sweetalert2/dist/sweetalert2.min.css'
+
 const app = createApp(App)
 const options = {
   confirmButtonColor: '#6366F1',
@@ -35,7 +38,7 @@ defineRule('userPassword', value => {
       value
     )
   ) {
-    return 'La contraseña debe de contener minimo 8 Caracteres, minusculas y mayusculas y mínimo un simbolo '
+    return 'La contraseña debe de contener mínimo 8 Caracteres, minúsculas y mayúsculas y mínimo un símbolo '
   }
   return true
 })
@@ -46,10 +49,14 @@ app.component('Form', Form)
 app.component('EasyDataTable', Vue3EasyDataTable)
 app.component('v-select', vSelect)
 app.component('VueDatePicker', VueDatePicker)
+
+// No necesitas registrar 'VueApexCharts' aquí
+
 app.use(VueSweetalert2, options)
 app.use(Vue3FormWizard)
 app.use(store)
 app.use(router)
+app.use(VueApexCharts)
 app.use(ElementPlus, {
   locale: es
 })

@@ -164,8 +164,9 @@ export default {
 
     // Manejar la lectura de notificaciones y actualizar
     const handleCommand = notificationId => {
-      isReadNotification(notificationId, data => {})
-      refreshNotifications()
+      isReadNotification(notificationId, data => {
+        refreshNotifications()
+      })
     }
 
     // Cerrar sesión del usuario

@@ -39,7 +39,7 @@
           <el-input
             placeholder="Ingresa la cantidad de juniors"
             size="large"
-            v-model="groupRate.typeHabitation"
+            v-model="groupRate.juniors"
             type="number"
           />
         </el-form-item>
