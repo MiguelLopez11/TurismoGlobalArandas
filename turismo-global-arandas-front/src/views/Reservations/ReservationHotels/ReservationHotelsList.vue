@@ -28,7 +28,6 @@
         </el-button>
       </el-col>
     </el-row>
-    {{ userRole }}
     <el-row class="mt-3">
       <el-col :span="24">
         <div class="table-scroll">

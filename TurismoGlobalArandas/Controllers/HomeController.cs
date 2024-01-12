@@ -19,7 +19,7 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpGet("ReservationsByMonth")]
-        public async Task<ActionResult> getReservationHotelByMonth()
+        public async Task<ActionResult> GetReservationHotelByMonth()
         {
             var reservacionesPorMes = (
                 await _context.ReservationHotels
@@ -74,25 +74,127 @@ namespace TurismoGlobalArandas.Controllers
                     group =>
                         new
                         {
+                            Mes = group.Key.Mes,
+                            Tipo = group.Key.Tipo,
                             Cantidad = group.Count()
                         }
                 )
                 .ToArray();
 
-            return Ok(reservacionesPorMes);
+            // Crear un array de 12 elementos con valores iniciales en 0
+            int[] cantidadesPorMes = new int[12];
+
+            // Llenar el array con las cantidades obtenidas
+            foreach (var item in reservacionesPorMes)
+            {
+                cantidadesPorMes[item.Mes - 1] += item.Cantidad;
+            }
+
+            return Ok(cantidadesPorMes);
         }
+
         [HttpPost("AllReservations")]
-        public  ActionResult ObtenerDatosDesdeVista(
+        public ActionResult ObtenerDatosDesdeVista(
         )
         {
-                var datosVista =  _context.GetAllReservationsViews
-                    .FromSqlRaw("SELECT * FROM Get_All_Reservations")
-                    .AsEnumerable()
-                    .ToList();
+            var datosVista = _context.GetAllReservationsViews
+                .FromSqlRaw("SELECT * FROM Get_All_Reservations")
+                .AsEnumerable()
+                .ToList();
 
-                return Ok(datosVista);
-            
+            return Ok(datosVista);
+
         }
+        [HttpGet("EmployeeWithMostReservations")]
+        public async Task<ActionResult> GetEmployeeWithMostReservations()
+        {
+            var employeeWithMostReservations = await (
+                from employee in _context.Employees
+                let hotelReservations = _context.ReservationHotels.Where(r => r.EmployeeId == employee.EmployeeId).ToList()
+                let flightReservations = _context.ReservationFlights.Where(r => r.EmployeeId == employee.EmployeeId).ToList()
+                let vehicleReservations = _context.ReservationVehicles.Where(r => r.EmployeeId == employee.EmployeeId).ToList()
+                let tourReservations = _context.ReservationTours.Where(r => r.EmployeeId == employee.EmployeeId).ToList()
+                select new
+                {
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeName = employee.Name,
+                    EmployeeLastName = employee.Lastname,
+                    TotalReservations = hotelReservations.Count + flightReservations.Count + vehicleReservations.Count + tourReservations.Count
+                })
+                .OrderByDescending(e => e.TotalReservations)
+                .FirstOrDefaultAsync();
+
+            if (employeeWithMostReservations == null)
+            {
+                return NotFound("No se encontró ningún empleado con reservaciones");
+            }
+
+            return Ok(employeeWithMostReservations);
+        }
+        [HttpGet("MostPopularDestination")]
+        public async Task<ActionResult> GetMostPopularDestination()
+        {
+            var mostPopularDestination = await (
+                from reservation in _context.ReservationHotels
+                where reservation.DateSale.Value.Year == DateTime.Now.Year
+                join destination in _context.Destinations on reservation.DestinationId equals destination.DestinationId into destinationsGroup
+                from destination in destinationsGroup.DefaultIfEmpty() // Left join
+                select new
+                {
+                    DestinationName = destination != null ? destination.Name : "Unknown",
+                    ReservationCount = destination != null ? 1 : 0
+                })
+                .GroupBy(x => new { x.DestinationName })
+                .Select(group => new
+                {
+                    Destination = group.Key.DestinationName,
+                    ReservationsCount = group.Sum(x => x.ReservationCount)
+                })
+                .OrderByDescending(x => x.ReservationsCount)
+                .FirstOrDefaultAsync();
+
+            if (mostPopularDestination == null)
+            {
+                return NotFound("No se encontraron reservaciones de hotelería");
+            }
+
+            return Ok(mostPopularDestination);
+        }
+        [HttpGet("ReservationsByEmployee")]
+        public async Task<ActionResult> GetReservationsByEmployee()
+        {
+            var employees = await _context.Employees.ToListAsync();
+
+            var reservationsByEmployee = employees.Select(employee =>
+            {
+                var hotelReservationsCount = _context.ReservationHotels
+                    .Count(r => r.EmployeeId == employee.EmployeeId);
+
+                var flightReservationsCount = _context.ReservationFlights
+                    .Count(r => r.EmployeeId == employee.EmployeeId);
+
+                var vehicleReservationsCount = _context.ReservationVehicles
+                    .Count(r => r.EmployeeId == employee.EmployeeId);
+
+                var tourReservationsCount = _context.ReservationTours
+                    .Count(r => r.EmployeeId == employee.EmployeeId);
+
+                return new
+                {
+                    EmployeeId = employee.EmployeeId,
+                    EmployeeName = employee.Name,
+                    HotelReservationsCount = hotelReservationsCount,
+                    FlightReservationsCount = flightReservationsCount,
+                    VehicleReservationsCount = vehicleReservationsCount,
+                    TourReservationsCount = tourReservationsCount,
+                    TotalReservationsCount = hotelReservationsCount + flightReservationsCount + vehicleReservationsCount + tourReservationsCount
+                };
+            }).ToList();
+
+            return Ok(reservationsByEmployee);
+        }
+
+
 
 
 

@@ -36,8 +36,8 @@
                   <template #selected-option="{ name, lastname }">
                     <label>{{ name }} {{ lastname }}</label>
                   </template>
-                  <template #option="{ name, lastname }">
-                    <label>{{ name }} {{ lastname }}</label>
+                  <template #option="{ name, lastname, phoneNumber }">
+                    <label>{{ name }} {{ lastname }} ({{ phoneNumber }})</label>
                   </template>
                   <template #header>
                     <span class="text-danger">*</span>
@@ -472,7 +472,6 @@
               <span>Fecha y hora de llegada</span>
             </div>
             <el-form-item>
-              {{ reservationHotelGroup.dateArrival }}
               <VueDatePicker
                 v-model="reservationHotelGroup.dateArrival"
                 placeholder="Seleccionar fecha..."

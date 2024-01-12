@@ -11,9 +11,27 @@ export default function HomeServices () {
       callback(response.data)
     })
   }
+  const EmployeeWithMostReservations = (callback) => {
+    axiosPrivate.get('/Home/EmployeeWithMostReservations').then((response) => {
+      callback(response.data)
+    })
+  }
+  const MostPopularDestination = (callback) => {
+    axiosPrivate.get('/Home/MostPopularDestination').then((response) => {
+      callback(response.data)
+    })
+  }
+  const getReservationsByEmployee = (callback) => {
+    axiosPrivate.get('/Home/ReservationsByEmployee').then((response) => {
+      callback(response.data)
+    })
+  }
 
   return {
     getReservationsByMonth,
-    getAllReservations
+    getAllReservations,
+    EmployeeWithMostReservations,
+    MostPopularDestination,
+    getReservationsByEmployee
   }
 }

@@ -478,7 +478,8 @@ const routes = [
     name: 'Edit-Airlines',
     component: () => import('../views/Airlines/AirlineEdit.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['ADMINISTRADOR']
     }
   }
 ]
@@ -487,7 +488,9 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
 const Token = window.sessionStorage.getItem('Token')
+
 router.beforeEach(async (to, from, next) => {
   if (['Login'].includes(to.name) && Token) {
     next({ name: 'Home' })
@@ -496,8 +499,30 @@ router.beforeEach(async (to, from, next) => {
       path: '/Login',
       query: { redirect: to.fullPath }
     })
+  } else if (to.meta.roles) {
+    // Verifica si se requieren roles para la ruta
+    const userRoles = obtenerRolesUsuario() // Implementa la función para obtener roles del usuario
+
+    if (userRoles.some(role => to.meta.roles.includes(role))) {
+      // El usuario tiene al menos uno de los roles requeridos
+      next()
+    } else {
+      // El usuario no tiene los roles necesarios
+      // Redirige o muestra un mensaje de error según tu lógica
+      next('/Unauthorized')
+    }
   } else {
+    // Rutas sin restricciones de roles
     next()
   }
 })
+
+// Función de ejemplo para obtener roles del usuario
+function obtenerRolesUsuario () {
+  // Obtén los roles del usuario desde donde sea que los almacenes (localStorage, sessionStorage, etc.)
+  // Devuelve un array de roles (por ejemplo, ['Admin', 'User'])
+  const roles = window.sessionStorage.getItem('Roles')
+  return roles ? JSON.parse(roles) : []
+}
+
 export default router

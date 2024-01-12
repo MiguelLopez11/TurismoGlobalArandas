@@ -1,28 +1,25 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <el-row :gutter="16" justify="center">
-    <el-col :span="16">
+  <el-row :gutter="10" justify="center">
+    <el-col :span="12">
       <el-card>
-        <el-row justify="center">
+        <el-row justify="center" align="middle">
           <el-col :span="6" :push="2">
             <strong>Informes de reservas</strong>
           </el-col>
-          <el-col :span="24" :push="9">
-            <span>Resumen semanal de reservaciones</span>
-          </el-col>
         </el-row>
-        <el-row justify="center">
-          <el-col :span="8" style="justify: center">
-            <h1>9999</h1>
-            <label> reservaciones totales de esta semana</label>
-          </el-col>
+        <el-row justify="center" align="middle">
           <el-col :span="12">
-            <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
+            <apexchart
+              type="bar"
+              :options="chartOptions"
+              :series="chartSeries"
+            />
           </el-col>
         </el-row>
       </el-card>
     </el-col>
-    <el-col :span="8">
+    <el-col :span="6">
       <el-card>
         <el-row>
           <el-col :span="24">
@@ -34,73 +31,176 @@
         </el-row>
         <el-row>
           <el-col :span="8">
-            <h1>9999</h1>
+            <h1>{{ employeeMostReservations.totalReservations }}</h1>
             <label> reservaciones</label>
           </el-col>
           <el-col :span="12">
-            <strong> Miguel López Ortega</strong>
+            <strong>
+              {{ employeeMostReservations.employeeName }}
+              {{ employeeMostReservations.employeeLastName }}</strong
+            >
+          </el-col>
+        </el-row>
+      </el-card>
+    </el-col>
+    <el-col :span="6">
+      <el-card>
+        <el-row>
+          <el-col :span="24">
+            <strong>Informes de reservaciones hoteleria</strong>
+          </el-col>
+          <el-col :span="24">
+            <span>Destino mas reservado del año:</span>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <h1>
+              {{ mostPopularDestination.reservationsCount }}
+            </h1>
+            <label> reservaciones</label>
+          </el-col>
+          <el-col :span="12">
+            <h3>
+              <strong>{{ mostPopularDestination.destination }}</strong>
+            </h3>
+          </el-col>
+        </el-row>
+      </el-card>
+    </el-col>
+  </el-row>
+  <el-row class="mt-2" :gutter="10">
+    <el-col>
+      <el-card>
+        <el-row justify="center">
+          <el-col :span="8" :push="2">
+            <strong>Informes de reservas</strong>
+          </el-col>
+          <el-col :span="24" :push="9">
+            <span>Resumen semanal de reservaciones</span>
+          </el-col>
+        </el-row>
+        <el-row justify="center" align="middle">
+          <el-col :span="8" style="justify: center">
+            <h1>{{ reservationCount }}</h1>
+            <h5>reservaciones totales de este año</h5>
+          </el-col>
+          <el-col :span="10">
+            <apexchart
+              ref="chartInstance"
+              type="pie"
+              :options="pieChartOptions"
+              :series="pieChartSeries"
+            />
           </el-col>
         </el-row>
       </el-card>
     </el-col>
   </el-row>
 </template>
-
 <script>
-import { Bar } from 'vue-chartjs'
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-} from 'chart.js'
+import { ref, onMounted, nextTick } from 'vue'
 import HomeServices from '@/Services/Home.Services'
-import { ref } from 'vue'
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
-  components: {
-    Bar
-  },
   setup () {
-    const cantidad = []
-    const { getReservationsByMonth } = HomeServices()
-    getReservationsByMonth(data => {
-    })
-    const chartData = ref({
-      labels: [
-        'Ene',
-        'Feb',
-        'Mar',
-        'Abr',
-        'May',
-        'Jun',
-        'Jul',
-        'Agos',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dic'
-      ],
-      datasets: [
-        {
-          label: 'Reservasiones',
-          backgroundColor: '#887EF2',
-          data: cantidad.value
-        }
-      ]
+    const reservations = ref([])
+    const reservationCount = ref(0)
+    const employeeMostReservations = ref([])
+    const mostPopularDestination = ref([])
+    const reservationsByEmployee = ref([])
+    const chartInstance = ref(null)
+    const {
+      getReservationsByMonth,
+      EmployeeWithMostReservations,
+      MostPopularDestination,
+      getReservationsByEmployee
+    } = HomeServices()
+
+    // Definir variables antes de su uso
+    const chartOptions = ref({
+      chart: {
+        type: 'bar'
+      },
+      xaxis: {
+        categories: [
+          'Ene',
+          'Feb',
+          'Mar',
+          'Abr',
+          'May',
+          'Jun',
+          'Jul',
+          'Ago',
+          'Sep',
+          'Oct',
+          'Nov',
+          'Dic'
+        ]
+      }
     })
 
-    const chartOptions = ref({
-      responsive: true
+    const chartSeries = ref([])
+    const pieChartOptions = ref({
+      chart: {
+        type: 'pie'
+      },
+      labels: [] // Sustituye con tus etiquetas
     })
+
+    const pieChartSeries = ref([25, 30, 45])
+
+    onMounted(async () => {
+      getReservationsByMonth(data => {
+        reservations.value = data
+        reservations.value.forEach(item => {
+          reservationCount.value += item
+        })
+        chartSeries.value = [
+          {
+            name: 'Reservaciones',
+            data: reservations.value
+          }
+        ]
+      })
+      EmployeeWithMostReservations(data => {
+        employeeMostReservations.value = data
+      })
+      MostPopularDestination(data => {
+        mostPopularDestination.value = data
+      })
+
+      // Mover estas asignaciones dentro del bloque onMounted
+      getReservationsByEmployee(data => {
+        reservationsByEmployee.value = data
+        const pieChartData = data.map(employee => ({
+          name: employee.employeeName,
+          data: employee.totalReservationsCount
+        }))
+
+        // Asignar datos al gráfico de pie
+        pieChartOptions.value.labels = pieChartData.map(item => item.name)
+        pieChartSeries.value = pieChartData.map(item => item.data)
+        nextTick(() => {
+          // Tu instancia de ApexCharts debería estar en una variable, por ejemplo chartInstance
+          // Asegúrate de tener una referencia a la instancia de ApexCharts
+          // chartInstance.updateOptions es un método de ApexCharts para actualizar las opciones
+          chartInstance.value.updateOptions({
+            labels: pieChartOptions.value.labels
+          })
+        })
+      })
+    })
+
     return {
-      chartData,
-      chartOptions
+      reservationCount,
+      chartOptions,
+      chartSeries,
+      employeeMostReservations,
+      mostPopularDestination,
+      pieChartOptions,
+      pieChartSeries,
+      chartInstance
     }
   }
 }
