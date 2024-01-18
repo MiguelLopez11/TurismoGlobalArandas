@@ -76,7 +76,7 @@
                       >Cancelar reservación</el-dropdown-item
                     >
                     <el-dropdown-item
-                      v-if="userRole.includes('ADMINISTRADOR')"
+                      v-if="userRole.includes('administrador' || 'GERENTE GENERAL')"
                       @click="
                         onRemoveReservationHotel(items.reservationHotelId)
                       "

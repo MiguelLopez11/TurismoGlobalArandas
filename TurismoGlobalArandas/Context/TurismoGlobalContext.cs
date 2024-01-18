@@ -31,6 +31,7 @@ namespace TurismoGlobalArandas.Context
         public DbSet<Notifications> Notifications { get; set; }
         public DbSet<PaymentConcept> PaymentConcepts { get; set; }
         public DbSet<PaymentMethods> PaymentMethods { get; set; }
+        public DbSet<PaymentProviderList> PaymentProviderLists { get; set; }
         public DbSet<PaymentProviders> PaymentProviders { get; set; }
         public DbSet<PaymentRelationList> PaymentRelationLists { get; set; }
         public DbSet<PaymentsRelationReservations> PaymentsRelationReservations { get; set; }
@@ -87,7 +88,7 @@ namespace TurismoGlobalArandas.Context
         public string GetInvoice()
         {
             // Obtener el último folio existente
-            string ultimoFolio = PaymentProviders.Max(t => t.Invoice);
+            string ultimoFolio = PaymentProviderLists.Max(t => t.Invoice);
 
             // Verificar si hay un último folio existente
             if (ultimoFolio != null)

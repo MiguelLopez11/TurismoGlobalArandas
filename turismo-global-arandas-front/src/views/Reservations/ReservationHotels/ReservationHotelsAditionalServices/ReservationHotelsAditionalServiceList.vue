@@ -43,7 +43,7 @@
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item
-                      @click="onDeleteReservationFlight(items.id)"
+                      @click="onDeleteAditionalService(items.id)"
                       >Eliminar</el-dropdown-item
                     >
                   </el-dropdown-menu>
@@ -51,9 +51,21 @@
               </el-dropdown>
             </template>
             <template #item-cost="items">
-              {{items.reservationFlightId ? items.reservationFlight.priceNeto : '' }}
-              {{items.reservationVehicleId ? items.reservationVehicle.priceNeto : '' }}
-              {{!items.reservationFlightId && !items.reservationVehicleId ? items.aditionalServices.cost : ''}}
+              {{
+                items.reservationFlightId
+                  ? items.reservationFlight.priceNeto
+                  : ''
+              }}
+              {{
+                items.reservationVehicleId
+                  ? items.reservationVehicle.priceNeto
+                  : ''
+              }}
+              {{
+                !items.reservationFlightId && !items.reservationVehicleId
+                  ? items.aditionalServices.cost
+                  : ''
+              }}
             </template>
           </EasyDataTable>
         </div>
@@ -65,15 +77,23 @@
 <script>
 import { ref, watch, provide, inject, computed } from 'vue'
 import ReservationHotelAditionalService from '@/Services/ReservationHotelAditionalService.Service'
+import ReservationFlightServices from '@/Services/ReservationFlights.Services'
+import ReservationVehicleServices from '@/Services/ReservationVehicle.Services'
 import ReservationHotlesAditionalServiceAddNew from './ReservationHotlesAditionalServiceAddNew.vue'
+import PaymentProviders from '@/Services/paymentProviders.Services'
 import { useStore } from 'vuex'
 export default {
   components: { ReservationHotlesAditionalServiceAddNew },
   setup () {
     const {
       getReservationAditionalServiceByReservationHotelId,
+      getReservationHotelAditionalService,
       deleteReservationHotelAditionalService
     } = ReservationHotelAditionalService()
+    const { deleteReservationFlight } = ReservationFlightServices()
+    const { deleteReservationVehicle } = ReservationVehicleServices()
+    const { deletePaymentProvider, getPaymentProviderByReservationFlight } =
+      PaymentProviders()
     const store = useStore()
     const servicesAditional = ref([])
     const swal = inject('$swal')
@@ -117,7 +137,7 @@ export default {
         refreshTable()
       }
     })
-    const onDeleteReservationFlight = id => {
+    const onDeleteAditionalService = id => {
       swal
         .fire({
           title:
@@ -130,6 +150,24 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
+            getReservationHotelAditionalService(id, data => {
+              // console.log(data)
+              if (data.reservationFlightId) {
+                deleteReservationFlight(data.reservationFlightId, data => {})
+                getPaymentProviderByReservationFlight(
+                  data.reservationFlightId,
+                  resp => {
+                    deletePaymentProvider(
+                      resp.paymentProviderId,
+                      response => {}
+                    )
+                  }
+                )
+              }
+              if (data.reservationVehicleId) {
+                deleteReservationVehicle(data.reservationVehicleId, data => {})
+              }
+            })
             deleteReservationHotelAditionalService(id, data => {
               swal.fire({
                 title: 'Servicio Cancelado!',
@@ -155,7 +193,7 @@ export default {
       servicesAditional,
       isAddReservationAditionalService,
       refreshTable,
-      onDeleteReservationFlight
+      onDeleteAditionalService
     }
   }
 }

@@ -4,12 +4,12 @@
       <el-col :span="8">
         <el-form-item>
           <div>
-            <label>Folio</label>
+            <label>Monto Total</label>
           </div>
           <el-input
-            placeholder="Folio"
+            placeholder="Monto total"
             size="large"
-            v-model="payment.invoice"
+            v-model="payment.amountTotal"
             disabled
           />
         </el-form-item>
@@ -17,51 +17,20 @@
       <el-col :span="8">
         <el-form-item>
           <div>
-            <label>Fecha de reservación</label>
-          </div>
-          <el-date-picker
-            v-model="payment.paymentDate"
-            class="w-100"
-            type="date"
-            placeholder="Selecciona la fecha del viaje"
-            size="large"
-            disabled
-          />
-        </el-form-item>
-      </el-col>
-      <!-- <el-col :span="8">
-        <el-form-item>
-          <div>
-            <label>Cantidad a pagar</label>
-          </div>
-          <el-date-picker
-            v-model="payment.paymentDate"
-            class="w-100"
-            type="date"
-            placeholder="Selecciona la fecha del viaje"
-            size="large"
-            disabled
-          />
-        </el-form-item>
-      </el-col> -->
-      <el-col :span="8">
-        <el-form-item>
-          <div>
-            <label>Observaciones</label>
+            <label>Monto Faltante</label>
           </div>
           <el-input
-            placeholder="Ingresa las observaciones de la habitación"
-            v-model="payment.observations"
+            placeholder="Monto Faltante"
             size="large"
-            type="textarea"
-            :autosize="{ minRows: 4, maxRows: 8 }"
+            v-model="payment.amountMissing"
+            disabled
           />
         </el-form-item>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="24">
-        <payment-provider-documents />
+        <payment-provider-detail-list />
       </el-col>
     </el-row>
   </el-card>
@@ -69,12 +38,12 @@
 
 <script>
 import PaymentProviders from '@/Services/paymentProviders.Services'
-import PaymentProviderDocuments from './PaymentProviderDocuments.vue'
+import PaymentProviderDetailList from './PaymentProviderDetailList.vue'
 import { useRoute } from 'vue-router'
-import { ref } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useStore } from 'vuex'
 export default {
-  components: { PaymentProviderDocuments },
+  components: { PaymentProviderDetailList },
   setup () {
     const {
       getPaymentProvider,
@@ -86,10 +55,14 @@ export default {
     const router = useRoute()
     const store = useStore()
     const payment = ref([])
+    const refreshPaymentProvider = computed(
+      () => store.getters.getRefreshPaymentProvider
+    )
     const onPaymentProvider = () => {
       getPaymentProvider(router.params.PaymentProviderId, data => {
         payment.value = data
-        store.commit('setPaymentProviderId', data.paymentId)
+        store.commit('setPaymentProviderId', data.paymentProviderId)
+        store.commit('setPaymentProviderAmountMissing', data.amountMissing)
       })
     }
     const onPaymentProviderByReservationHotel = () => {
@@ -97,7 +70,8 @@ export default {
         router.params.ReservationHotelId,
         data => {
           payment.value = data
-          store.commit('setPaymentProviderId', data.paymentId)
+          store.commit('setPaymentProviderId', data.paymentProviderId)
+          store.commit('setPaymentProviderAmountMissing', data.amountMissing)
         }
       )
     }
@@ -106,7 +80,8 @@ export default {
         router.params.ReservationTourId,
         data => {
           payment.value = data
-          store.commit('setPaymentProviderId', data.paymentId)
+          store.commit('setPaymentProviderId', data.paymentProviderId)
+          store.commit('setPaymentProviderAmountMissing', data.amountMissing)
         }
       )
     }
@@ -115,7 +90,8 @@ export default {
         router.params.ReservationFlightId,
         data => {
           payment.value = data
-          store.commit('setPaymentProviderId', data.paymentId)
+          store.commit('setPaymentProviderId', data.paymentProviderId)
+          store.commit('setPaymentProviderAmountMissing', data.amountMissing)
         }
       )
     }
@@ -124,7 +100,8 @@ export default {
         router.params.ReservationVehicleId,
         data => {
           payment.value = data
-          store.commit('setPaymentProviderId', data.paymentId)
+          store.commit('setPaymentProviderId', data.paymentProviderId)
+          store.commit('setPaymentProviderAmountMissing', data.amountMissing)
         }
       )
     }
@@ -140,6 +117,21 @@ export default {
     } else if (router.params.ReservationVehicleId) {
       onPaymentProviderByReservationVehicle()
     }
+    watch(refreshPaymentProvider, NewValue => {
+      if (NewValue) {
+        if (router.params.PaymentProviderId) {
+          location.reload()
+        } else if (router.params.ReservationHotelId) {
+          location.reload()
+        } else if (router.params.ReservationTourId) {
+          location.reload()
+        } else if (router.params.ReservationVehicleId) {
+          location.reload()
+        } else if (router.params.ReservationFlightId) {
+          location.reload()
+        }
+      }
+    })
     return {
       payment
     }

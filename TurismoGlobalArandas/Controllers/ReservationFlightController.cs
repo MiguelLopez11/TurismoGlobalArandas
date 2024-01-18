@@ -97,17 +97,26 @@ namespace TurismoGlobalArandas.Controllers
             FlightOld.ContactPhone = reservationFlight.ContactPhone;
             FlightOld.IsSoldOut = reservationFlight.IsSoldOut;
             FlightOld.IsDeleted = reservationFlight.IsDeleted;
+
             var ReservationPaymentRelation = await _context.PaymentsRelationReservations
                 .Include(i => i.reservationFlight)
                 .FirstOrDefaultAsync(f => f.ReservationFlightId == FlightId);
-            if (ReservationPaymentRelation.AmountTotal == null && reservationFlight.PriceNeto != null)
+
+            var PaymentProviders = await _context.PaymentProviders
+                .Include(i => i.reservationFlight)
+                .FirstOrDefaultAsync(f => f.ReservationFlightId == FlightId);
+
+            if (ReservationPaymentRelation.AmountTotal == null && PaymentProviders.AmountTotal == null && reservationFlight.PriceNeto != null)
             {
-                if (ReservationPaymentRelation.AmountMissing == null)
+                if (ReservationPaymentRelation.AmountMissing == null && PaymentProviders.AmountMissing == null)
                 {
                     ReservationPaymentRelation.AmountMissing = reservationFlight.PriceNeto;
+                    PaymentProviders.AmountMissing = reservationFlight.PriceNeto;
                 }
                 ReservationPaymentRelation.AmountTotal = reservationFlight.PriceNeto;
+                PaymentProviders.AmountTotal = reservationFlight.PriceNeto;
                 _context.PaymentsRelationReservations.Update(ReservationPaymentRelation);
+                _context.PaymentProviders.Update(PaymentProviders);
                 await _context.SaveChangesAsync();
             }
             _context.ReservationFlights.Update(FlightOld);

@@ -194,6 +194,46 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(reservationsByEmployee);
         }
 
+        [HttpGet("TotalRevenue")]
+        public async Task<ActionResult> GetTotalRevenue([FromQuery] List<DateTime> dateRange)
+        {
+            if (dateRange == null || dateRange.Count != 2)
+            {
+                return BadRequest("Se requiere una lista de dos fechas.");
+            }
+
+            DateTime startDate = dateRange[0];
+            DateTime endDate = dateRange[1];
+
+            if (startDate > endDate)
+            {
+                return BadRequest("La fecha de inicio no puede ser mayor que la fecha de fin.");
+            }
+
+            var totalRevenue = await (
+                from hotelReservation in _context.ReservationHotels
+                where hotelReservation.DateSale >= startDate && hotelReservation.DateSale <= endDate
+                select hotelReservation.TotalCost
+            )
+            .Concat(
+                from flightReservation in _context.ReservationFlights
+                where flightReservation.DateSale >= startDate && flightReservation.DateSale <= endDate
+                select flightReservation.PriceNeto
+            )
+            .Concat(
+                from vehicleReservation in _context.ReservationVehicles
+                where vehicleReservation.DateSale >= startDate && vehicleReservation.DateSale <= endDate
+                select vehicleReservation.PriceNeto
+            )
+            .Concat(
+                from tourReservation in _context.ReservationTours
+                where tourReservation.DateSale >= startDate && tourReservation.DateSale <= endDate
+                select tourReservation.NetPrice
+            )
+            .SumAsync();
+
+            return Ok(totalRevenue);
+        }
 
 
 

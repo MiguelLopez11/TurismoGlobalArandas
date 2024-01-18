@@ -24,7 +24,7 @@
             </el-form-item>
           </Field>
         </el-col>
-        <el-col :span="8">
+        <!-- <el-col :span="8">
           <el-form-item>
             <div>
               <label> Cantidad que recibe </label>
@@ -50,11 +50,11 @@
               :min="1"
             />
           </el-form-item>
-        </el-col>
+        </el-col> -->
         <el-col :span="8">
           <el-form-item>
             <div>
-              <label> Metodo de pago del cliente </label>
+              <label> Metodo de pago </label>
             </div>
             <v-select
               v-model="paymentFields.paymentMethodId"
@@ -68,15 +68,15 @@
         <el-col :span="8">
           <el-form-item>
             <div>
-              <label> Detalles de pago </label>
+              <label> Concepto de pago </label>
             </div>
-            <el-input
-              placeholder="Ingresa detalles del pago"
-              size="large"
-              v-model="paymentFields.detailsPayment"
-              type="textarea"
-              :autosize="{ minRows: 4, maxRows: 8 }"
-            />
+            <v-select
+              v-model="paymentFields.paymentConceptId"
+              class="w-100"
+              label="name"
+              :options="paymentConcepts"
+              :reduce="concept => concept.paymentConceptId"
+            ></v-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -103,9 +103,8 @@
             native-type="submit"
             size="large"
             :disabled="
-              paymentFields.amount > paymentAmountMissing ||
-              paymentFields.amountReceivedClient < paymentFields.amount ||
-              paymentAmountMissing == 0
+              paymentFields.amount > paymentProviderAmountMissing ||
+              paymentProviderAmountMissing === 0
             "
             >Guardar</el-button
           >
@@ -129,8 +128,9 @@
 </template>
 
 <script>
-import PaymentsRelationListServices from '@/Services/PaymentRelationList.Services'
+import PaymentProvidersServices from '@/Services/paymentProviders.Services'
 import PaymentMethodsServices from '@/Services/PaymentMethods.Services'
+import PaymentConceptsServices from '@/Services/PaymentConcepts.Services'
 import * as yup from 'yup'
 import { ref, inject } from 'vue'
 import { useStore } from 'vuex'
@@ -139,18 +139,23 @@ import { ElMessage } from 'element-plus'
 
 export default {
   setup () {
-    const isOpenDialog = inject('addPaymentRelation')
+    const isOpenDialog = inject('addPaymentProviderItem')
     const swal = inject('$swal')
     const store = useStore()
     const paymentFormRef = ref(null)
     const paymentMethods = ref([])
+    const paymentConcepts = ref([])
     // const redirect = useRouter()
-    const { createPaymentRelationList } = PaymentsRelationListServices()
+    const { createPaymentProviderList } = PaymentProvidersServices()
     const { getPaymentMethods } = PaymentMethodsServices()
-    const paymentAmountMissing = ref()
-    const paymentReservationId = ref()
+    const { getPaymentConcepts } = PaymentConceptsServices()
+    const paymentProviderAmountMissing = ref()
+    const paymentProviderId = ref()
     getPaymentMethods(data => {
       paymentMethods.value = data
+    })
+    getPaymentConcepts(data => {
+      paymentConcepts.value = data
     })
     const validationSchema = yup.object({
       amount: yup
@@ -161,29 +166,30 @@ export default {
         .required('Este campo es requerido')
     })
     setTimeout(() => {
-      paymentReservationId.value = parseInt(
-        store.getters.getPaymentReservationId
+      paymentProviderId.value = parseInt(store.getters.getPaymentProviderId)
+      paymentProviderAmountMissing.value = parseInt(
+        store.getters.getPaymentProviderAmountMissing
       )
-      paymentAmountMissing.value = parseInt(store.getters.getPaymentAmountTotal)
     }, 1000)
     const paymentFields = ref({
       paymentId: 0,
       invoice: null,
       amount: null,
-      amountReceivedClient: null,
-      amountReturnedClient: null,
-      paymentDate: null,
-      observations: null,
       paymentMethodId: null,
-      detailsPayment: null,
-      paymentReservationId: null,
+      paymentConceptId: null,
+      paymentDate: null,
+      paymentProviderId: null,
+      observations: null,
       isDeleted: false
     })
     const paymentFieldsBlank = ref(JSON.parse(JSON.stringify(paymentFields)))
 
     const onSubmit = () => {
-      paymentFields.value.paymentReservationId = paymentReservationId.value
-      if (parseInt(paymentFields.value.amount) > paymentAmountMissing.value) {
+      paymentFields.value.paymentProviderId = paymentProviderId.value
+      if (
+        parseInt(paymentFields.value.amount) >
+        paymentProviderAmountMissing.value
+      ) {
         isOpenDialog.value = false
         paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
         paymentFormRef.value.resetForm()
@@ -205,14 +211,14 @@ export default {
             icon: 'error'
           })
         } else {
-          createPaymentRelationList(paymentFields.value, data => {
+          createPaymentProviderList(paymentFields.value, data => {
             swal.fire({
               title: '¡Nuevo pago registrado!',
               text: 'El pago se ha registrado correctamente',
               icon: 'success'
             })
           })
-          store.commit('setRefreshPaymentRelation', true)
+          store.commit('setRefreshPaymentProvider', true)
           isOpenDialog.value = false
           paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
           paymentFormRef.value.resetForm()
@@ -241,7 +247,8 @@ export default {
       validationSchema,
       paymentFields,
       paymentMethods,
-      paymentAmountMissing,
+      paymentConcepts,
+      paymentProviderAmountMissing,
       paymentFormRef,
       calculateAmountReturned
     }

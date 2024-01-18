@@ -1,6 +1,7 @@
 <template>
-  <payment-relation-list-add-new />
-  <payment-realtion-edit :PaymentId="paymenRelationtId" />
+  <payment-provider-detail-add-new />
+  <!-- <payment-relation-list-add-new />
+  <payment-realtion-edit :PaymentId="paymenRelationtId" /> -->
   <el-card class="scrollable-card">
     <el-row :gutter="25" justify="end">
       <el-col :xs="13" :sm="12" :md="6" :xl="6" :lg="8">
@@ -15,7 +16,7 @@
           class="w-100"
           size="large"
           color="#7367F0"
-          @click="isAddPaymentRelation = !isAddPaymentRelation"
+          @click="isAddPaymentProviderItem = !isAddPaymentProviderItem"
           :disabled="!paymentsRelation.amountTotal"
         >
           <i> Registrar nuevo pago </i>
@@ -49,8 +50,8 @@
                 <span class="bi bi-three-dots-vertical"> </span>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="onEditPayment(items.paymentId)"
-                      >Editar</el-dropdown-item
+                    <el-dropdown-item @click="$router.push({name:'PaymentProvider-Documents', params: {PaymentProviderId: items.paymentProviderId} })"
+                      >Documentos</el-dropdown-item
                     >
                     <el-dropdown-item @click="onDeletePayment(items.paymentId)"
                       >Eliminar</el-dropdown-item
@@ -68,19 +69,17 @@
 
 <script>
 import { ref, watch, provide, inject } from 'vue'
-import PaymentsRelationListServices from '@/Services/PaymentRelationList.Services'
+import PaymentProvidersServices from '@/Services/paymentProviders.Services'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
-import PaymentRelationListAddNew from './PaymentRelationAddNew.vue'
-import PaymentRealtionEdit from './PaymentRelationEdit.vue'
+import PaymentProviderDetailAddNew from './PaymentProviderDetailAddNew.vue'
+// import PaymentRealtionEdit from './PaymentRelationEdit.vue'
 import { useStore } from 'vuex'
 
 export default {
-  components: { PaymentRelationListAddNew, PaymentRealtionEdit },
+  components: { PaymentProviderDetailAddNew },
   setup () {
-    const {
-      getPaymentRelationListByPaymentReservationHotel,
-      deletePaymentRelationList
-    } = PaymentsRelationListServices()
+    const { getPaymentProviderList, deletePaymentProviderList } =
+      PaymentProvidersServices()
     const { getPaymentRelation } = PaymentsRelationReservationServices()
     const store = useStore()
     const paymentsRelationList = ref([])
@@ -94,54 +93,44 @@ export default {
     const isloading = ref(true)
     const searchValue = ref('')
     const searchField = ref('invoice')
-    const isAddPaymentRelation = ref(false)
+    const isAddPaymentProviderItem = ref(false)
     const isEditPaymentRelation = ref(false)
-    const paymentReservationId = ref(0)
+    const paymentProviderId = ref(0)
     setTimeout(() => {
-      paymentReservationId.value = parseInt(
-        store.getters.getPaymentReservationId
-      )
-      getPaymentRelationListByPaymentReservationHotel(
-        paymentReservationId.value,
-        data => {
-          paymentsRelationList.value = data
-          isloading.value = false
-        }
-      )
-      getPaymentRelation(paymentReservationId.value, data => {
+      paymentProviderId.value = parseInt(store.getters.getPaymentProviderId)
+      getPaymentProviderList(paymentProviderId.value, data => {
+        paymentsRelationList.value = data
+        isloading.value = false
+      })
+      getPaymentRelation(paymentProviderId.value, data => {
         paymentsRelation.value = data
       })
     }, 1000)
-    provide('addPaymentRelation', isAddPaymentRelation)
+    provide('addPaymentProviderItem', isAddPaymentProviderItem)
     provide('editPaymentRelation', isEditPaymentRelation)
     const fields = ref([
       { value: 'invoice', text: 'Folio' },
       { value: 'amount', text: 'Monto' },
       { value: 'paymentDate', text: 'Fecha de pago' },
+      { value: 'paymentMethods.name', text: 'Metodo de pago' },
+      { value: 'paymentConcept.name', text: 'Concepto de pago' },
       { value: 'observations', text: 'Observaciones' },
       { value: 'actions', text: 'Acciones' }
     ])
 
     const refreshTable = () => {
       isloading.value = true
-      getPaymentRelationListByPaymentReservationHotel(
-        paymentReservationId.value,
-        data => {
-          paymentsRelationList.value = data
-          isloading.value = false
-        }
-      )
+      getPaymentProviderList(paymentProviderId.value, data => {
+        paymentsRelationList.value = data
+        isloading.value = false
+      })
     }
     watch(
-      [isAddPaymentRelation, isEditPaymentRelation],
+      [isAddPaymentProviderItem, isEditPaymentRelation],
       ([newValueA, newValueB]) => {
         refreshTable()
       }
     )
-    const onEditPayment = paymentId => {
-      isEditPaymentRelation.value = true
-      paymenRelationtId.value = paymentId
-    }
     const onDeletePayment = PaymentId => {
       swal
         .fire({
@@ -154,8 +143,8 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deletePaymentRelationList(PaymentId, data => {
-              store.commit('setRefreshPaymentRelation', true)
+            deletePaymentProviderList(PaymentId, data => {
+              store.commit('setRefreshPaymentProvider', true)
               swal.fire({
                 title: 'pago eliminado!',
                 text: 'El pago ha sido eliminado satisfactoriamente .',
@@ -179,11 +168,10 @@ export default {
       fields,
       paymentsRelationList,
       paymentsRelation,
-      isAddPaymentRelation,
-      paymentReservationId,
+      isAddPaymentProviderItem,
+      paymentProviderId,
       paymenRelationtId,
       refreshTable,
-      onEditPayment,
       onDeletePayment
     }
   }

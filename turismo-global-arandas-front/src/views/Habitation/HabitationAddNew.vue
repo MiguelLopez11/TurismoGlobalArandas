@@ -102,6 +102,7 @@
                 v-model="habitationFields.adults"
                 :validate-event="false"
                 :model-value="value"
+                type="number"
               />
             </el-form-item>
           </Field>
@@ -119,6 +120,7 @@
                 v-model="habitationFields.minors"
                 :validate-event="false"
                 :model-value="value"
+                type="number"
               />
             </el-form-item>
           </Field>

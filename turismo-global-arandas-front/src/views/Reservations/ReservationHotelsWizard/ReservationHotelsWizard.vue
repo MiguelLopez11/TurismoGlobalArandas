@@ -910,6 +910,7 @@ export default {
               createReservationHotelGroup(
                 reservationHotelGroupfields.value,
                 data => {
+                  console.log('se ha creado una reservacion de grupo')
                   getReservationHotelGroupByreservationHotel(
                     data.reservationHotelId,
                     item => {
@@ -1095,6 +1096,7 @@ export default {
     }
     const validationGeneral = () => {
       return new Promise((resolve, reject) => {
+        // SI NO HAY CAMPOS INCORRECTOS
         if (
           reservationHotel.value.typeReservationId &&
           reservationHotel.value.destinationId &&
@@ -1107,18 +1109,22 @@ export default {
           reservationHotel.value.paymentLimitDate &&
           reservationHotel.value.paymentLimitDateProvider
         ) {
-          if (reservationHotel.value.typeReservationId === 1) {
-            reservationHotel.value.typeReservationGroupId = null
-          }
-          onUpdateReservation()
+          // if (reservationHotel.value.typeReservationId === 1) {
+          //   reservationHotel.value.typeReservationGroupId = null
+          //   onUpdateReservation()
+          // }
+
+          // SI ES UNA RESERVACION DE GRUPO GRUPAL
           if (
             reservationHotel.value.typeReservationId === 2 &&
             reservationHotel.value.typeReservationGroupId === 1
           ) {
+            // COMPROBAR SI EXISTE UNA RESERVACION DE GRUPO DE LA RESERVA DE HOTELERIA
             comprobateIfExist(
               reservationHotel.value.reservationHotelId,
               data => {
                 const { status } = data
+                // SI NO HAY UNA RESERVACION DE GRUPO RELACIONADO, LO GENERA
                 if (status === 404) {
                   reservationHotelGroupfields.value.reservationHotelId =
                     reservationHotelId.value
@@ -1129,15 +1135,16 @@ export default {
                         'setReservationHotelGroupId',
                         item.reservationHotelGroupId
                       )
-                      getReservationHotelGroupByreservationHotel(
-                        item.reservationHotelId,
-                        data => {
-                          reservationHotelGroup.value = data
-                          reservationHotelGroup.value.dateArrival = format(
-                            new Date(reservationHotelGroup.value.dateArrival),
-                            'yyyy-MM-dd HH:mm'
-                          )
-                        }
+                    }
+                  )
+                  // TRAER RESERVACION GRUPAL
+                  getReservationHotelGroupByreservationHotel(
+                    reservationHotelId.value,
+                    data => {
+                      reservationHotelGroup.value = data
+                      reservationHotelGroup.value.dateArrival = format(
+                        new Date(reservationHotelGroup.value.dateArrival),
+                        'yyyy-MM-dd HH:mm'
                       )
                     }
                   )

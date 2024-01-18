@@ -69,14 +69,14 @@
       </el-card>
     </el-col>
   </el-row>
-  <el-row class="mt-2" :gutter="10">
-    <el-col>
+  <el-row class="mt-2">
+    <el-col :span="24">
       <el-card>
-        <el-row justify="center">
-          <el-col :span="8" :push="2">
+        <el-row justify="center" >
+          <el-col :span="24">
             <strong>Informes de reservas</strong>
           </el-col>
-          <el-col :span="24" :push="9">
+          <el-col :span="24">
             <span>Resumen semanal de reservaciones</span>
           </el-col>
         </el-row>

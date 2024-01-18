@@ -1,6 +1,6 @@
 import { axiosPrivate } from '@/common/axiosPrivate.js'
 
-export default function PaymentProviders () {
+export default function PaymentProvidersServices () {
   const getPaymentProviders = (callback) => {
     axiosPrivate.get('/PaymentProviders').then((response) => {
       callback(response.data)
@@ -41,8 +41,23 @@ export default function PaymentProviders () {
       callback(response.data)
     })
   }
-  const deletePaymentProviderd = (PaymentMethodId, callback) => {
+  const deletePaymentProvider = (PaymentMethodId, callback) => {
     axiosPrivate.delete(`/PaymentProviders/${PaymentMethodId}`).then((response) => {
+      callback(response.data)
+    })
+  }
+  const getPaymentProviderList = (paymentProviderId, callback) => {
+    axiosPrivate.get(`PaymentProviderList/PaymentsProvider/${paymentProviderId}`).then((response) => {
+      callback(response.data)
+    })
+  }
+  const createPaymentProviderList = (data, callback) => {
+    axiosPrivate.post('/PaymentProviderList', data).then((response) => {
+      callback(response.data)
+    })
+  }
+  const deletePaymentProviderList = (paymentProviderId, callback) => {
+    axiosPrivate.delete(`/PaymentProviderList/${paymentProviderId}`).then((response) => {
       callback(response.data)
     })
   }
@@ -55,6 +70,9 @@ export default function PaymentProviders () {
     getPaymentProviderByReservationVehicle,
     createPaymentProvider,
     updatePaymentProvider,
-    deletePaymentProviderd
+    deletePaymentProvider,
+    getPaymentProviderList,
+    createPaymentProviderList,
+    deletePaymentProviderList
   }
 }

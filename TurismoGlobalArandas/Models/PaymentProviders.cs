@@ -6,14 +6,18 @@ namespace TurismoGlobalArandas.Models
     public class PaymentProviders
     {
         [Key]
-        public int PaymentId { get; set; }
-        public string? Invoice { get; set; }
-        public DateTime PaymentDate { get; set; }
+        public int PaymentProviderId { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? AmountTotal { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? AmountMissing { get; set; }
+        public DateTime ReservationDate { get; set; } = DateTime.Now;
         public int? ReservationHotelId { get; set; }
         public int? ReservationTourId { get; set; }
         public int? ReservationFlightId { get; set; }
         public int? ReservationVehicleId { get; set; }
-        public string? Observations { get; set; }
+        public int? PaymentMethodId { get; set; }
+        public int? PaymentConceptId { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("ReservationHotelId")]
@@ -24,5 +28,9 @@ namespace TurismoGlobalArandas.Models
         public ReservationVehicle? ReservationVehicles { get; set; }
         [ForeignKey("ReservationFlightId")]
         public ReservationFlight? reservationFlight { get; set; }
+        [ForeignKey("PaymentMethodId")]
+        public PaymentMethods? PaymentMethod { get; set; }
+        [ForeignKey("PaymentConceptId")]
+        public PaymentConcept? PaymentConcept { get; set; }
     }
 }

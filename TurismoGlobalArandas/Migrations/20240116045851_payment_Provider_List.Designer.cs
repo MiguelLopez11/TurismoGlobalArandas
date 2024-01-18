@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20240116045851_payment_Provider_List")]
+    partial class payment_Provider_List
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -824,9 +827,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("Invoice")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Observations")
                         .HasColumnType("nvarchar(max)");
 
@@ -839,16 +839,7 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<int?>("PaymentMethodId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PaymentProviderId")
-                        .HasColumnType("int");
-
                     b.HasKey("PaymentId");
-
-                    b.HasIndex("PaymentConceptId");
-
-                    b.HasIndex("PaymentMethodId");
-
-                    b.HasIndex("PaymentProviderId");
 
                     b.ToTable("PaymentProviderLists");
                 });
@@ -870,11 +861,8 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("PaymentConceptId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PaymentMethodId")
-                        .HasColumnType("int");
+                    b.Property<string>("Observations")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime2");
@@ -892,10 +880,6 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("PaymentProviderId");
-
-                    b.HasIndex("PaymentConceptId");
-
-                    b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("ReservationFlightId");
 
@@ -1946,39 +1930,8 @@ namespace TurismoGlobalArandas.Migrations
                     b.Navigation("reservationHotel");
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentProviderList", b =>
-                {
-                    b.HasOne("TurismoGlobalArandas.Models.PaymentConcept", "PaymentConcept")
-                        .WithMany()
-                        .HasForeignKey("PaymentConceptId");
-
-                    b.HasOne("TurismoGlobalArandas.Models.PaymentMethods", "PaymentMethods")
-                        .WithMany()
-                        .HasForeignKey("PaymentMethodId");
-
-                    b.HasOne("TurismoGlobalArandas.Models.PaymentProviders", "PaymentProviders")
-                        .WithMany()
-                        .HasForeignKey("PaymentProviderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PaymentConcept");
-
-                    b.Navigation("PaymentMethods");
-
-                    b.Navigation("PaymentProviders");
-                });
-
             modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentProviders", b =>
                 {
-                    b.HasOne("TurismoGlobalArandas.Models.PaymentConcept", "PaymentConcept")
-                        .WithMany()
-                        .HasForeignKey("PaymentConceptId");
-
-                    b.HasOne("TurismoGlobalArandas.Models.PaymentMethods", "PaymentMethod")
-                        .WithMany()
-                        .HasForeignKey("PaymentMethodId");
-
                     b.HasOne("TurismoGlobalArandas.Models.ReservationFlight", "reservationFlight")
                         .WithMany()
                         .HasForeignKey("ReservationFlightId");
@@ -1994,10 +1947,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasOne("TurismoGlobalArandas.Models.ReservationVehicle", "ReservationVehicles")
                         .WithMany()
                         .HasForeignKey("ReservationVehicleId");
-
-                    b.Navigation("PaymentConcept");
-
-                    b.Navigation("PaymentMethod");
 
                     b.Navigation("ReservationHotels");
 

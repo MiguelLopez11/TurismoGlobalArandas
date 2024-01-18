@@ -7,6 +7,7 @@
     @select="handleSelect"
     size="large"
     class="w-100"
+    @focus="onChange"
   >
     <template #default="{ item }">
       <label>
@@ -45,9 +46,6 @@ export default {
     const query = ref('')
     const suggestions = ref([]) // Cambiado de {} a []
     const route = useRouter()
-    getAllReservations(data => {
-      suggestions.value = data
-    })
 
     const querySearchAsync = (queryString, cb) => {
       const results = queryString
@@ -103,11 +101,16 @@ export default {
           })
       }
     }
-
+    const onChange = () => {
+      getAllReservations(data => {
+        suggestions.value = data
+      })
+    }
     return {
       query,
       querySearchAsync,
-      handleSelect
+      handleSelect,
+      onChange
     }
   }
 }

@@ -153,13 +153,9 @@ export default {
     // Método para realizar la búsqueda de reservaciones
     const searchReservations = async query => {
       const searchQueryValue = query.toLowerCase()
-      console.log('Search Query:', searchQueryValue)
-
       searchResults.value = reservations.value.filter(reservation =>
         reservation.name.toLowerCase().includes(searchQueryValue)
       )
-
-      console.log('Search Results:', searchResults.value)
     }
 
     // Manejar la lectura de notificaciones y actualizar
@@ -215,5 +211,8 @@ export default {
 }
 .notification-badge {
   margin-left: 5px; /* Ajusta el margen según tus necesidades */
+}
+strong{
+  color: #5D5A68;
 }
 </style>

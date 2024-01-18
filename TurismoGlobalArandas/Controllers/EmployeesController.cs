@@ -156,5 +156,6 @@ namespace UConnect.Controllers
             await _context.SaveChangesAsync();
             return Ok("Empleado archivado");
         }
+
     }
 }

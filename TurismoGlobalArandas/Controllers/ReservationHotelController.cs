@@ -129,18 +129,28 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.ProviderId = Reservation.ProviderId;
             ReservationOld.IsSoldOut = Reservation.IsSoldOut;
             ReservationOld.IsDeleted = Reservation.IsDeleted;
-
             var ReservationPaymentRelation = await _context.PaymentsRelationReservations
                 .Include(i => i.ReservationHotels)
                 .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
-            if (ReservationPaymentRelation.AmountTotal == null && Reservation.TotalCost != null)
+            var PaymentProvider = await _context.PaymentProviders
+                .Include(i => i.ReservationHotels)
+                .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
+            //if (ReservationOld.TotalCost != Reservation.TotalCost)
+            //{
+
+            //}
+            if (ReservationPaymentRelation.AmountTotal == null && PaymentProvider.AmountTotal == null && Reservation.TotalCost != null)
             {
-                if (ReservationPaymentRelation.AmountMissing == null)
+                if (ReservationPaymentRelation.AmountMissing == null && PaymentProvider.AmountMissing == null)
                 {
                     ReservationPaymentRelation.AmountMissing = Reservation.TotalCost;
+                    PaymentProvider.AmountMissing = Reservation.TotalCost;
                 }
+                
                 ReservationPaymentRelation.AmountTotal = Reservation.TotalCost;
+                PaymentProvider.AmountTotal = Reservation.TotalCost;
                 _context.PaymentsRelationReservations.Update(ReservationPaymentRelation);
+                _context.PaymentProviders.Update(PaymentProvider);
                 await _context.SaveChangesAsync();
             }
 
@@ -184,6 +194,7 @@ namespace TurismoGlobalArandas.Controllers
             if (individualRate != null)
             {
                 _context.IndividualRates.Remove(individualRate);
+                await _context.SaveChangesAsync();
             }
             //RELACION DE PAGO CLIENTE
             var paymentRelation = await _context.PaymentsRelationReservations
@@ -197,6 +208,7 @@ namespace TurismoGlobalArandas.Controllers
                 foreach (var item in paymentRelationList)
                 {
                     _context.PaymentRelationLists.Remove(item);
+                    await _context.SaveChangesAsync();
                 }
                 _context.PaymentsRelationReservations.Remove(paymentRelation);
             }
@@ -214,6 +226,8 @@ namespace TurismoGlobalArandas.Controllers
                 foreach (var item in groupRates)
                 {
                     _context.GroupRates.Remove(item);
+                    await _context.SaveChangesAsync();
+                
                 }
                 _context.ReservationHotelGroups.Remove(reservationHotelGroup);
             }
@@ -232,6 +246,7 @@ namespace TurismoGlobalArandas.Controllers
             foreach (var item in PaymentProviders)
             {
                 _context.PaymentProviders.Remove(item);
+                await _context.SaveChangesAsync();
             }
             
             _context.ReservationHotels.Remove(Reservation);

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20240116230805_payment_Provider_list_relations")]
+    partial class payment_Provider_list_relations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -844,10 +847,6 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.HasKey("PaymentId");
 
-                    b.HasIndex("PaymentConceptId");
-
-                    b.HasIndex("PaymentMethodId");
-
                     b.HasIndex("PaymentProviderId");
 
                     b.ToTable("PaymentProviderLists");
@@ -869,6 +868,9 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
+
+                    b.Property<string>("Observations")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("PaymentConceptId")
                         .HasColumnType("int");
@@ -1948,23 +1950,11 @@ namespace TurismoGlobalArandas.Migrations
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentProviderList", b =>
                 {
-                    b.HasOne("TurismoGlobalArandas.Models.PaymentConcept", "PaymentConcept")
-                        .WithMany()
-                        .HasForeignKey("PaymentConceptId");
-
-                    b.HasOne("TurismoGlobalArandas.Models.PaymentMethods", "PaymentMethods")
-                        .WithMany()
-                        .HasForeignKey("PaymentMethodId");
-
                     b.HasOne("TurismoGlobalArandas.Models.PaymentProviders", "PaymentProviders")
                         .WithMany()
                         .HasForeignKey("PaymentProviderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("PaymentConcept");
-
-                    b.Navigation("PaymentMethods");
 
                     b.Navigation("PaymentProviders");
                 });

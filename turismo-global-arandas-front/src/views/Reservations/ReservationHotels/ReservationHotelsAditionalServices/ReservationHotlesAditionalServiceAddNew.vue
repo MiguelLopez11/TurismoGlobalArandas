@@ -914,7 +914,12 @@ export default {
               data => {}
             )
             createPaymentProvider(
-              { reservationFlightId: data.flightId, isDeleted: false },
+              {
+                reservationFlightId: data.flightId,
+                amountTotal: reservationFlightFields.value.priceNeto,
+                amountMissing: reservationFlightFields.value.priceNeto,
+                isDeleted: false
+              },
               data => {}
             )
             reservationAditionalFields.value.reservationFlightId = data.flightId
@@ -957,6 +962,8 @@ export default {
             createPaymentProvider(
               {
                 reservationVehicleId: data.reservationVehicleId,
+                amountTotal: reservationFlightFields.value.priceNeto,
+                amountMissing: reservationFlightFields.value.priceNeto,
                 isDeleted: false
               },
               data => {}
