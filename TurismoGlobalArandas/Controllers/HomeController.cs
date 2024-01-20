@@ -206,7 +206,7 @@ namespace TurismoGlobalArandas.Controllers
                     return new
                     {
                         EmployeeId = employee.EmployeeId,
-                        EmployeeName = employee.Name,
+                        EmployeeName = employee.Name + " " + employee.Lastname,
                         HotelReservationsCount = hotelReservationsCount,
                         FlightReservationsCount = flightReservationsCount,
                         VehicleReservationsCount = vehicleReservationsCount,

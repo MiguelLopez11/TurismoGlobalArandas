@@ -44,6 +44,9 @@
             <template #header-actions="header">
               {{ header.text }}
             </template>
+            <template #item-employee="items">
+              {{ items.employees ? items.employees.name + ' ' + items.employees.lastname : '' }}
+            </template>
             <template #item-actions="items">
               <el-dropdown>
                 <span class="bi bi-three-dots-vertical"> </span>
@@ -125,6 +128,7 @@ export default {
       { value: 'amount', text: 'Monto' },
       { value: 'paymentDate', text: 'Fecha de pago' },
       { value: 'observations', text: 'Observaciones' },
+      { value: 'employee', text: 'Empleado receptor' },
       { value: 'actions', text: 'Acciones' }
     ])
 

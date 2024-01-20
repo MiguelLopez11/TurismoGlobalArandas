@@ -12,7 +12,7 @@ namespace TurismoGlobalArandas.Models
         public double? PublicRate { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public double? ClientRate { get; set; }
-        public int? ExtraDiscount { get; set; }
+        public string? ExtraDiscount { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("ReservationHotelId")]

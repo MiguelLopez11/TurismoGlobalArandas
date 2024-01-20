@@ -413,13 +413,28 @@
                   <div>
                     <label>Descuento extra</label>
                   </div>
-                  <el-input
+                  <v-select
+                    class="w-100"
+                    label="name"
+                    v-model="individualRate.extraDiscount"
+                    :options="serviceProvider"
+                    :reduce="service => service.color"
+                    @close="onCalculateRate"
+                  >
+                    <template #selected-option>
+                      <el-tag effect="dark" :color="individualRate.extraDiscount"></el-tag>
+                    </template>
+                    <template #option="{ color }">
+                      <el-tag effect="dark" :color="color"> </el-tag>
+                    </template>
+                  </v-select>
+                  <!-- <el-input
                     placeholder="Ingresa el descuento extra"
                     size="large"
                     v-model="individualRate.extraDiscount"
                   >
                     <template #append>%</template>
-                  </el-input>
+                  </el-input> -->
                 </el-form-item>
               </el-col>
               <el-col :span="8">
@@ -807,6 +822,7 @@ export default {
     const reservationHotelId = ref()
     const rangeDatesTravel = ref([])
     const reservationHotelGroup = ref([])
+    const serviceProvider = ref([])
     const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     const reservationHotelGroupId = ref(0)
     const paymentReservationId = ref(0)
@@ -1108,6 +1124,12 @@ export default {
           reservationHotel.value.paymentLimitDate &&
           reservationHotel.value.paymentLimitDateProvider
         ) {
+          getServiceProviderByProviderId(
+            reservationHotel.value.providerId,
+            data => {
+              serviceProvider.value.push(data)
+            }
+          )
           if (reservationHotel.value.typeReservationId === 1) {
             reservationHotel.value.typeReservationGroupId = null
           }
@@ -1334,6 +1356,7 @@ export default {
       isAddHotel,
       isAddProvider,
       reservationHotelGroupId,
+      serviceProvider,
       onAddedCustomer,
       onGetHotel,
       onComplete,

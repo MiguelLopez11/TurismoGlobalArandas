@@ -77,6 +77,26 @@
             </el-form-item>
           </Field>
         </el-col>
+        <el-col :span="8">
+          <Field
+            name="discountExtra"
+            :rules="validateDiscountExtra"
+          >
+            <el-form-item :error="errors.discountExtra">
+              <div>
+                <label>Descuento extra</label>
+              </div>
+              <el-input
+                placeholder="Ingresa el descuentro extra que tiene el serivicio"
+                size="large"
+                v-model="serviceProvider.discountExtra"
+                type="number"
+              >
+                <template #append>%</template>
+              </el-input>
+            </el-form-item>
+          </Field>
+        </el-col>
         <el-col :span="4">
           <Field name="color" :rules="validateColor" required>
             <el-form-item :error="errors.color">
@@ -185,6 +205,12 @@ export default {
       }
       return true
     }
+    const validateDiscountExtra = () => {
+      if (!serviceProvider.value.discountExtra) {
+        return 'Este campo es requerido'
+      }
+      return true
+    }
     const validateColor = () => {
       if (!serviceProvider.value.color) {
         return 'Este campo es requerido'
@@ -205,6 +231,7 @@ export default {
       validateCommissionAgency,
       validateCommissionClient,
       validateCommissionEmployee,
+      validateDiscountExtra,
       validateColor,
       validateProvider
     }

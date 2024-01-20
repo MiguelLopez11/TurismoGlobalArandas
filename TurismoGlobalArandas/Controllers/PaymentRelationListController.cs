@@ -24,6 +24,7 @@ namespace TurismoGlobalArandas.Controllers
         public async Task<ActionResult<PaymentRelationList>> getPaymentsRelationList()
         {
             var payments = await _context.PaymentRelationLists
+                .Include(i => i.Employees)
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
 
@@ -50,6 +51,8 @@ namespace TurismoGlobalArandas.Controllers
         {
             #region comprobar monto faltante en reservación
             var payments = await _context.PaymentRelationLists
+                .Include(i => i.Employees)
+
                 .Where(w => !w.IsDeleted)
                 .Where(w => w.PaymentReservationId == PaymentReservationId)
                 .ToListAsync();

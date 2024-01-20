@@ -149,6 +149,7 @@ export default {
     const { getPaymentMethods } = PaymentMethodsServices()
     const paymentAmountMissing = ref()
     const paymentReservationId = ref()
+    const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     getPaymentMethods(data => {
       paymentMethods.value = data
     })
@@ -177,6 +178,7 @@ export default {
       paymentMethodId: null,
       detailsPayment: null,
       paymentReservationId: null,
+      employeeId: parseInt(employeeId),
       isDeleted: false
     })
     const paymentFieldsBlank = ref(JSON.parse(JSON.stringify(paymentFields)))

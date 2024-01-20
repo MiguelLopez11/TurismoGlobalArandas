@@ -39,6 +39,27 @@
         </el-row>
       </el-card>
     </el-col>
+
+    <el-col :span="14" v-for="item in reservationsByEmployee" :key="item" class="mt-2">
+      <el-card>
+        <el-row>
+          <el-col :span="8">
+            <strong>Informes de Empleados</strong>
+          </el-col>
+          <el-col :span="8">
+            <span>Empleado: {{item.employeeName}}</span>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="8">
+            <label>Total de reservaciones Hoteleria:  <strong>{{item.hotelReservationsCount}}</strong></label>
+            <label>Total de reservaciones Vuelos:  <strong>{{item.flightReservationsCount}}</strong></label>
+            <label>Total de reservaciones Vehiculos:  <strong>{{item.vehicleReservationsCount}}</strong></label>
+            <label>Total de reservaciones Tours:  <strong>{{item.tourReservationsCount}}</strong></label>
+          </el-col>
+        </el-row>
+      </el-card>
+    </el-col>
   </el-row>
 </template>
 
@@ -47,12 +68,16 @@ import HomeServices from '@/Services/Home.Services'
 import { ref, onMounted } from 'vue'
 export default {
   setup () {
-    const { getTotalRevenue, getReservationsByMonth } = HomeServices()
+    const { getTotalRevenue, getReservationsByMonth, getReservationsByEmployee } = HomeServices()
     const totalRevenue = ref()
     const reservationsByMonth = ref([])
+    const reservationsByEmployee = ref([])
 
     getTotalRevenue(data => {
       totalRevenue.value = data
+    })
+    getReservationsByEmployee(data => {
+      reservationsByEmployee.value = data
     })
     const chartSeries = ref([])
 
@@ -110,6 +135,7 @@ export default {
     })
     return {
       totalRevenue,
+      reservationsByEmployee,
       chartSeries,
       chartOptions
     }

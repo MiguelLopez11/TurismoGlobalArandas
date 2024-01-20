@@ -122,6 +122,29 @@
             </el-form-item>
           </Field>
         </el-col>
+        <el-col :span="8">
+          <Field
+            name="discountExtra"
+            v-slot="{ value, field, errorMessage }"
+          >
+            <el-form-item :error="errorMessage" required>
+              <div>
+                <label>Descuento extra</label>
+              </div>
+              <el-input
+                placeholder="Ingresa el descuentro extra que tiene el serivicio"
+                size="large"
+                v-bind="field"
+                v-model="serviceProviderFields.discountExtra"
+                :validate-event="false"
+                :model-value="value"
+                type="number"
+              >
+                <template #append>%</template>
+              </el-input>
+            </el-form-item>
+          </Field>
+        </el-col>
         <el-col :span="4">
           <Field name="color" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
@@ -218,6 +241,10 @@ export default {
         .number()
         .required('Este campo es requerido')
         .label('Comision empleado'),
+      discountExtra: yup
+        .number()
+        .required('Este campo es requerido')
+        .label('Descuento extra'),
       color: yup
         .string()
         .required('Este campo es requerido')
@@ -243,8 +270,8 @@ export default {
     const onSubmit = () => {
       createServiceProvider(serviceProviderFields.value, data => {
         swal.fire({
-          title: '¡Nueva comisión registrada!',
-          text: 'La nueva comisión se ha registrado correctamente',
+          title: '¡Nuevo servicio de proveedor registrado!',
+          text: 'EL servicio se ha registrado correctamente',
           icon: 'success'
         })
         isOpenDialog.value = false
