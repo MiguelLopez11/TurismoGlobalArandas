@@ -83,11 +83,11 @@ namespace TurismoGlobalArandas.Controllers
                 .FirstOrDefaultAsync(f => f.ReservationHotelId == ReservationHotelId);
             if (reservation == null)
             {
-                return StatusCode(404, "No se encuentra una reservación de grupo");
+                return Ok(new { status = 404, message = "No se encuentra una reservación de grupo" });
             }
             else
             {
-                return StatusCode(200, "Si existe una reservación en grupo");
+                return Ok(new { status = 200, message = "Si existe una reservacion de grupo" });
             }
         }
 

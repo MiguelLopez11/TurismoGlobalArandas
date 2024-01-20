@@ -50,7 +50,13 @@
                 <span class="bi bi-three-dots-vertical"> </span>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="$router.push({name:'PaymentProvider-Documents', params: {PaymentProviderId: items.paymentProviderId} })"
+                    <el-dropdown-item
+                      @click="
+                        $router.push({
+                          name: 'PaymentProvider-Documents',
+                          params: { PaymentProviderId: items.paymentProviderId }
+                        })
+                      "
                       >Documentos</el-dropdown-item
                     >
                     <el-dropdown-item @click="onDeletePayment(items.paymentId)"
@@ -77,7 +83,8 @@ import { useStore } from 'vuex'
 
 export default {
   components: { PaymentProviderDetailAddNew },
-  setup () {
+  emits: ['refresh-payment-provider'],
+  setup (props, { emit }) {
     const { getPaymentProviderList, deletePaymentProviderList } =
       PaymentProvidersServices()
     const { getPaymentRelation } = PaymentsRelationReservationServices()
@@ -94,7 +101,6 @@ export default {
     const searchValue = ref('')
     const searchField = ref('invoice')
     const isAddPaymentProviderItem = ref(false)
-    const isEditPaymentRelation = ref(false)
     const paymentProviderId = ref(0)
     setTimeout(() => {
       paymentProviderId.value = parseInt(store.getters.getPaymentProviderId)
@@ -107,7 +113,6 @@ export default {
       })
     }, 1000)
     provide('addPaymentProviderItem', isAddPaymentProviderItem)
-    provide('editPaymentRelation', isEditPaymentRelation)
     const fields = ref([
       { value: 'invoice', text: 'Folio' },
       { value: 'amount', text: 'Monto' },
@@ -119,18 +124,20 @@ export default {
     ])
 
     const refreshTable = () => {
-      isloading.value = true
-      getPaymentProviderList(paymentProviderId.value, data => {
-        paymentsRelationList.value = data
-        isloading.value = false
-      })
+      setTimeout(() => {
+        isloading.value = true
+        getPaymentProviderList(paymentProviderId.value, data => {
+          paymentsRelationList.value = data
+          isloading.value = false
+          emit('refresh-payment-provider')
+        })
+      }, 2000)
     }
-    watch(
-      [isAddPaymentProviderItem, isEditPaymentRelation],
-      ([newValueA, newValueB]) => {
+    watch(isAddPaymentProviderItem, newValue => {
+      if (!newValue) {
         refreshTable()
       }
-    )
+    })
     const onDeletePayment = PaymentId => {
       swal
         .fire({

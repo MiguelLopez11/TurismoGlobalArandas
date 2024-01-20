@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
+using TurismoGlobalArandas.Models;
 using TurismoGlobalArandas.Models.Identity;
 
 namespace TurismoGlobalArandas.Controllers
@@ -26,18 +27,19 @@ namespace TurismoGlobalArandas.Controllers
                     .Where(r => r.DateSale.Value.Year == DateTime.Now.Year)
                     .Where(w => !w.IsDeleted)
                     .Select(
-                        r => new { Mes = r.DateSale.Value.Month, Tipo = "Reservación de vuelo" }
+                        r => new { Mes = r.DateSale.Value.Month, Tipo = "Reservación de hoteleria" }
                     )
                     .Concat(
                         _context.ReservationFlights
                             .Where(r => r.DateSale.Value.Year == DateTime.Now.Year)
+                            .Where(w => !w.IsReservadedByHotel)
                             .Where(w => !w.IsDeleted)
                             .Select(
                                 r =>
                                     new
                                     {
                                         Mes = r.DateSale.Value.Month,
-                                        Tipo = "Reservación de Hotelería"
+                                        Tipo = "Reservación de vuelo"
                                     }
                             )
                     )
@@ -94,8 +96,7 @@ namespace TurismoGlobalArandas.Controllers
         }
 
         [HttpPost("AllReservations")]
-        public ActionResult ObtenerDatosDesdeVista(
-        )
+        public ActionResult ObtenerDatosDesdeVista()
         {
             var datosVista = _context.GetAllReservationsViews
                 .FromSqlRaw("SELECT * FROM Get_All_Reservations")
@@ -103,26 +104,36 @@ namespace TurismoGlobalArandas.Controllers
                 .ToList();
 
             return Ok(datosVista);
-
         }
+
         [HttpGet("EmployeeWithMostReservations")]
         public async Task<ActionResult> GetEmployeeWithMostReservations()
         {
             var employeeWithMostReservations = await (
                 from employee in _context.Employees
-                let hotelReservations = _context.ReservationHotels.Where(r => r.EmployeeId == employee.EmployeeId).ToList()
-                let flightReservations = _context.ReservationFlights.Where(r => r.EmployeeId == employee.EmployeeId).ToList()
-                let vehicleReservations = _context.ReservationVehicles.Where(r => r.EmployeeId == employee.EmployeeId).ToList()
-                let tourReservations = _context.ReservationTours.Where(r => r.EmployeeId == employee.EmployeeId).ToList()
+                let hotelReservations = _context.ReservationHotels
+                    .Where(r => r.EmployeeId == employee.EmployeeId)
+                    .ToList()
+                let flightReservations = _context.ReservationFlights
+                    .Where(r => r.EmployeeId == employee.EmployeeId)
+                    .ToList()
+                let vehicleReservations = _context.ReservationVehicles
+                    .Where(r => r.EmployeeId == employee.EmployeeId)
+                    .ToList()
+                let tourReservations = _context.ReservationTours
+                    .Where(r => r.EmployeeId == employee.EmployeeId)
+                    .ToList()
                 select new
                 {
                     EmployeeId = employee.EmployeeId,
                     EmployeeName = employee.Name,
                     EmployeeLastName = employee.Lastname,
-                    TotalReservations = hotelReservations.Count + flightReservations.Count + vehicleReservations.Count + tourReservations.Count
-                })
-                .OrderByDescending(e => e.TotalReservations)
-                .FirstOrDefaultAsync();
+                    TotalReservations = hotelReservations.Count
+                        + flightReservations.Count
+                        + vehicleReservations.Count
+                        + tourReservations.Count
+                }
+            ).OrderByDescending(e => e.TotalReservations).FirstOrDefaultAsync();
 
             if (employeeWithMostReservations == null)
             {
@@ -131,25 +142,32 @@ namespace TurismoGlobalArandas.Controllers
 
             return Ok(employeeWithMostReservations);
         }
+
         [HttpGet("MostPopularDestination")]
         public async Task<ActionResult> GetMostPopularDestination()
         {
             var mostPopularDestination = await (
                 from reservation in _context.ReservationHotels
                 where reservation.DateSale.Value.Year == DateTime.Now.Year
-                join destination in _context.Destinations on reservation.DestinationId equals destination.DestinationId into destinationsGroup
+                join destination in _context.Destinations
+                    on reservation.DestinationId equals destination.DestinationId
+                    into destinationsGroup
                 from destination in destinationsGroup.DefaultIfEmpty() // Left join
                 select new
                 {
                     DestinationName = destination != null ? destination.Name : "Unknown",
                     ReservationCount = destination != null ? 1 : 0
-                })
+                }
+            )
                 .GroupBy(x => new { x.DestinationName })
-                .Select(group => new
-                {
-                    Destination = group.Key.DestinationName,
-                    ReservationsCount = group.Sum(x => x.ReservationCount)
-                })
+                .Select(
+                    group =>
+                        new
+                        {
+                            Destination = group.Key.DestinationName,
+                            ReservationsCount = group.Sum(x => x.ReservationCount)
+                        }
+                )
                 .OrderByDescending(x => x.ReservationsCount)
                 .FirstOrDefaultAsync();
 
@@ -160,84 +178,143 @@ namespace TurismoGlobalArandas.Controllers
 
             return Ok(mostPopularDestination);
         }
+
         [HttpGet("ReservationsByEmployee")]
         public async Task<ActionResult> GetReservationsByEmployee()
         {
             var employees = await _context.Employees.ToListAsync();
 
-            var reservationsByEmployee = employees.Select(employee =>
-            {
-                var hotelReservationsCount = _context.ReservationHotels
-                    .Count(r => r.EmployeeId == employee.EmployeeId);
-
-                var flightReservationsCount = _context.ReservationFlights
-                    .Count(r => r.EmployeeId == employee.EmployeeId);
-
-                var vehicleReservationsCount = _context.ReservationVehicles
-                    .Count(r => r.EmployeeId == employee.EmployeeId);
-
-                var tourReservationsCount = _context.ReservationTours
-                    .Count(r => r.EmployeeId == employee.EmployeeId);
-
-                return new
+            var reservationsByEmployee = employees
+                .Select(employee =>
                 {
-                    EmployeeId = employee.EmployeeId,
-                    EmployeeName = employee.Name,
-                    HotelReservationsCount = hotelReservationsCount,
-                    FlightReservationsCount = flightReservationsCount,
-                    VehicleReservationsCount = vehicleReservationsCount,
-                    TourReservationsCount = tourReservationsCount,
-                    TotalReservationsCount = hotelReservationsCount + flightReservationsCount + vehicleReservationsCount + tourReservationsCount
-                };
-            }).ToList();
+                    var hotelReservationsCount = _context.ReservationHotels.Count(
+                        r => r.EmployeeId == employee.EmployeeId
+                    );
+
+                    var flightReservationsCount = _context.ReservationFlights.Count(
+                        r => r.EmployeeId == employee.EmployeeId
+                    );
+
+                    var vehicleReservationsCount = _context.ReservationVehicles.Count(
+                        r => r.EmployeeId == employee.EmployeeId
+                    );
+
+                    var tourReservationsCount = _context.ReservationTours.Count(
+                        r => r.EmployeeId == employee.EmployeeId
+                    );
+
+                    return new
+                    {
+                        EmployeeId = employee.EmployeeId,
+                        EmployeeName = employee.Name,
+                        HotelReservationsCount = hotelReservationsCount,
+                        FlightReservationsCount = flightReservationsCount,
+                        VehicleReservationsCount = vehicleReservationsCount,
+                        TourReservationsCount = tourReservationsCount,
+                        TotalReservationsCount = hotelReservationsCount
+                            + flightReservationsCount
+                            + vehicleReservationsCount
+                            + tourReservationsCount
+                    };
+                })
+                .ToList();
 
             return Ok(reservationsByEmployee);
         }
 
-        [HttpGet("TotalRevenue")]
-        public async Task<ActionResult> GetTotalRevenue([FromQuery] List<DateTime> dateRange)
+        [HttpPost("TotalRevenue")]
+        public async Task<ActionResult> GetTotalRevenue()
         {
-            if (dateRange == null || dateRange.Count != 2)
+            decimal? Revenue = 0;
+            #region reservacion hoteleria individual
+            var individualRates = await _context.IndividualRates
+                .Include(i => i.reservationHotel)
+                .Where(r => r.reservationHotel.DateSale.Value.Year == DateTime.Now.Year)
+                .Where(w => !w.IsDeleted)
+                .ToListAsync();
+            foreach (var item in individualRates)
             {
-                return BadRequest("Se requiere una lista de dos fechas.");
+                var ReservationHotel = await _context.ReservationHotels
+                    .Include(i => i.Providers)
+                    .FirstOrDefaultAsync(f => f.ReservationHotelId == item.ReservationHotelId);
+                var service = await _context.ServicesProviders.FirstOrDefaultAsync(
+                    f => f.ProviderId == ReservationHotel.ProviderId
+                );
+
+                var commisionAgency = (decimal)item.PublicRate * (service.CommissionAgency / 100);
+                var commisionClient = (decimal)item.PublicRate * (service.CommissionClient / 100);
+                commisionAgency = (decimal)item.PublicRate - commisionAgency;
+                commisionClient = (decimal)item.PublicRate - commisionClient;
+                Revenue += (commisionAgency - commisionClient) * -1;
             }
-
-            DateTime startDate = dateRange[0];
-            DateTime endDate = dateRange[1];
-
-            if (startDate > endDate)
+            #endregion
+            #region Flights 
+            var reservationFlights = await _context.ReservationFlights
+                .Where(r => r.DateSale.Value.Year == DateTime.Now.Year)
+                .Where(w => !w.IsDeleted)
+                .ToListAsync();
+            foreach (var item in reservationFlights)
             {
-                return BadRequest("La fecha de inicio no puede ser mayor que la fecha de fin.");
+                Revenue += (item.PriceNeto - item.PricePublic);
             }
+            #endregion
+            #region Vehicles
+            var reservationVehicles = await _context.ReservationVehicles
+                .Where(r => r.DateSale.Value.Year == DateTime.Now.Year)
+                .Where(w => !w.IsDeleted)
+                .ToListAsync();
+            foreach (var item in reservationVehicles)
+            {
+                Revenue += (item.PriceNeto - item.PricePublic);
+            }
+            #endregion
+            #region Tours
+            var reservationTours = await _context.ReservationTours
+                .Where(r => r.DateSale.Value.Year == DateTime.Now.Year)
+                .Where(w => !w.IsDeleted)
+                .ToListAsync();
+            foreach (var item in reservationTours)
+            {
+                Revenue += (item.NetPrice - item.PublicRate);
+            }
+            #endregion
+            return Ok(Revenue);
 
-            var totalRevenue = await (
-                from hotelReservation in _context.ReservationHotels
-                where hotelReservation.DateSale >= startDate && hotelReservation.DateSale <= endDate
-                select hotelReservation.TotalCost
-            )
-            .Concat(
-                from flightReservation in _context.ReservationFlights
-                where flightReservation.DateSale >= startDate && flightReservation.DateSale <= endDate
-                select flightReservation.PriceNeto
-            )
-            .Concat(
-                from vehicleReservation in _context.ReservationVehicles
-                where vehicleReservation.DateSale >= startDate && vehicleReservation.DateSale <= endDate
-                select vehicleReservation.PriceNeto
-            )
-            .Concat(
-                from tourReservation in _context.ReservationTours
-                where tourReservation.DateSale >= startDate && tourReservation.DateSale <= endDate
-                select tourReservation.NetPrice
-            )
-            .SumAsync();
-
-            return Ok(totalRevenue);
         }
+        [HttpGet("ReservationCount")]
+        public async Task<ActionResult> GetCountReservations()
+        {
+            var mostPopularDestination = await (
+                from reservation in _context.ReservationHotels
+                where reservation.DateSale.Value.Year == DateTime.Now.Year
+                join destination in _context.Destinations
+                    on reservation.DestinationId equals destination.DestinationId
+                    into destinationsGroup
+                from destination in destinationsGroup.DefaultIfEmpty() // Left join
+                select new
+                {
+                    DestinationName = destination != null ? destination.Name : "Unknown",
+                    ReservationCount = destination != null ? 1 : 0
+                }
+            )
+                .GroupBy(x => new { x.DestinationName })
+                .Select(
+                    group =>
+                        new
+                        {
+                            Destination = group.Key.DestinationName,
+                            ReservationsCount = group.Sum(x => x.ReservationCount)
+                        }
+                )
+                .OrderByDescending(x => x.ReservationsCount)
+                .FirstOrDefaultAsync();
 
+            if (mostPopularDestination == null)
+            {
+                return NotFound("No se encontraron reservaciones de hotelería");
+            }
 
-
-
+            return Ok(mostPopularDestination);
+        }
     }
 }
-

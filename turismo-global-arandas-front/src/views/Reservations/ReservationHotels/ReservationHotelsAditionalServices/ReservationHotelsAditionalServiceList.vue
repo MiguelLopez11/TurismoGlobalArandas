@@ -151,7 +151,6 @@ export default {
         .then(result => {
           if (result.isConfirmed) {
             getReservationHotelAditionalService(id, data => {
-              // console.log(data)
               if (data.reservationFlightId) {
                 deleteReservationFlight(data.reservationFlightId, data => {})
                 getPaymentProviderByReservationFlight(

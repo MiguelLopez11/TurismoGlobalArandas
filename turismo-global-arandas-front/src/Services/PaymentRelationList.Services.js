@@ -11,6 +11,13 @@ export default function PaymentsRelationListServices () {
       callback(response.data)
     })
   }
+  const downloadPayment = (paymentId, callback) => {
+    axiosPrivate.get(`/PaymentRelationList/DescargarReciboEnPDF/${paymentId}`, {
+      responseType: 'blob'
+    }).then((response) => {
+      callback(response.data)
+    })
+  }
   const createPaymentRelationList = (data, callback) => {
     axiosPrivate.post('/PaymentRelationList', data).then((response) => {
       callback(response.data)
@@ -29,6 +36,7 @@ export default function PaymentsRelationListServices () {
   return {
     getPaymentRelationListByPaymentReservationHotel,
     getPaymentRelationList,
+    downloadPayment,
     createPaymentRelationList,
     updatePaymentRelationList,
     deletePaymentRelationList

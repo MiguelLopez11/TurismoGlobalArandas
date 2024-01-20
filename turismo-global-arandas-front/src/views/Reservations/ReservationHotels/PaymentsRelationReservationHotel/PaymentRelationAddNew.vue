@@ -211,8 +211,8 @@ export default {
               text: 'El pago se ha registrado correctamente',
               icon: 'success'
             })
+            store.commit('setRefreshPaymentRelation', true)
           })
-          store.commit('setRefreshPaymentRelation', true)
           isOpenDialog.value = false
           paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
           paymentFormRef.value.resetForm()

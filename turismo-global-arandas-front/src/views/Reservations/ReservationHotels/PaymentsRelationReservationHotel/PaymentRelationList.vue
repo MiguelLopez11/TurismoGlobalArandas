@@ -49,6 +49,10 @@
                 <span class="bi bi-three-dots-vertical"> </span>
                 <template #dropdown>
                   <el-dropdown-menu>
+                    <el-dropdown-item
+                      @click="onDownloadPayment(items.paymentId)"
+                      >Descargar Pago</el-dropdown-item
+                    >
                     <el-dropdown-item @click="onEditPayment(items.paymentId)"
                       >Editar</el-dropdown-item
                     >
@@ -76,10 +80,12 @@ import { useStore } from 'vuex'
 
 export default {
   components: { PaymentRelationListAddNew, PaymentRealtionEdit },
-  setup () {
+  emits: ['refresh-payment-relation'],
+  setup (props, { emit }) {
     const {
       getPaymentRelationListByPaymentReservationHotel,
-      deletePaymentRelationList
+      deletePaymentRelationList,
+      downloadPayment
     } = PaymentsRelationListServices()
     const { getPaymentRelation } = PaymentsRelationReservationServices()
     const store = useStore()
@@ -124,18 +130,34 @@ export default {
 
     const refreshTable = () => {
       isloading.value = true
-      getPaymentRelationListByPaymentReservationHotel(
-        paymentReservationId.value,
-        data => {
-          paymentsRelationList.value = data
-          isloading.value = false
+      setTimeout(() => {
+        getPaymentRelationListByPaymentReservationHotel(
+          paymentReservationId.value,
+          data => {
+            paymentsRelationList.value = data
+            isloading.value = false
+            emit('refresh-payment-relation')
+          }
+        )
+      }, 2000)
+    }
+    const onDownloadPayment = paymentId => {
+      downloadPayment(paymentId, async data => {
+        try {
+          const blob = new Blob([data], { type: 'application/pdf' })
+          const pdfUrl = URL.createObjectURL(blob)
+          window.open(pdfUrl, '_blank')
+        } catch (error) {
+          console.error('Error al procesar el PDF', error)
         }
-      )
+      })
     }
     watch(
       [isAddPaymentRelation, isEditPaymentRelation],
       ([newValueA, newValueB]) => {
-        refreshTable()
+        if (!newValueA && !newValueB) {
+          refreshTable()
+        }
       }
     )
     const onEditPayment = paymentId => {
@@ -182,6 +204,7 @@ export default {
       isAddPaymentRelation,
       paymentReservationId,
       paymenRelationtId,
+      onDownloadPayment,
       refreshTable,
       onEditPayment,
       onDeletePayment

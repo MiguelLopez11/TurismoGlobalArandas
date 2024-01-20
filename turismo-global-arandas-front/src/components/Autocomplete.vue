@@ -67,7 +67,6 @@ export default {
     }
 
     const handleSelect = item => {
-      console.log(item.origin)
       switch (true) {
         case item.origin.includes('Reservación hoteleria'):
           route.push({

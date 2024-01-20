@@ -30,7 +30,7 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <payment-provider-detail-list />
+        <payment-provider-detail-list @refresh-payment-provider="OnRefreshPayment" />
       </el-col>
     </el-row>
   </el-card>
@@ -40,7 +40,7 @@
 import PaymentProviders from '@/Services/paymentProviders.Services'
 import PaymentProviderDetailList from './PaymentProviderDetailList.vue'
 import { useRoute } from 'vue-router'
-import { ref, watch, computed } from 'vue'
+import { ref } from 'vue'
 import { useStore } from 'vuex'
 export default {
   components: { PaymentProviderDetailList },
@@ -55,9 +55,6 @@ export default {
     const router = useRoute()
     const store = useStore()
     const payment = ref([])
-    const refreshPaymentProvider = computed(
-      () => store.getters.getRefreshPaymentProvider
-    )
     const onPaymentProvider = () => {
       getPaymentProvider(router.params.PaymentProviderId, data => {
         payment.value = data
@@ -117,23 +114,22 @@ export default {
     } else if (router.params.ReservationVehicleId) {
       onPaymentProviderByReservationVehicle()
     }
-    watch(refreshPaymentProvider, NewValue => {
-      if (NewValue) {
-        if (router.params.PaymentProviderId) {
-          location.reload()
-        } else if (router.params.ReservationHotelId) {
-          location.reload()
-        } else if (router.params.ReservationTourId) {
-          location.reload()
-        } else if (router.params.ReservationVehicleId) {
-          location.reload()
-        } else if (router.params.ReservationFlightId) {
-          location.reload()
-        }
+    const OnRefreshPayment = () => {
+      if (router.params.PaymentProviderId) {
+        onPaymentProvider()
+      } else if (router.params.ReservationHotelId) {
+        onPaymentProviderByReservationHotel()
+      } else if (router.params.ReservationTourId) {
+        onPaymentProviderByReservationTour()
+      } else if (router.params.ReservationFlightId) {
+        onPaymentProviderByReservationFlight()
+      } else if (router.params.ReservationVehicleId) {
+        onPaymentProviderByReservationVehicle()
       }
-    })
+    }
     return {
-      payment
+      payment,
+      OnRefreshPayment
     }
   }
 }

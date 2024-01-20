@@ -16,6 +16,11 @@ export default function HomeServices () {
       callback(response.data)
     })
   }
+  const getTotalRevenue = (callback) => {
+    axiosPrivate.post('/Home/TotalRevenue').then((response) => {
+      callback(response.data)
+    })
+  }
   const MostPopularDestination = (callback) => {
     axiosPrivate.get('/Home/MostPopularDestination').then((response) => {
       callback(response.data)
@@ -31,6 +36,7 @@ export default function HomeServices () {
     getReservationsByMonth,
     getAllReservations,
     EmployeeWithMostReservations,
+    getTotalRevenue,
     MostPopularDestination,
     getReservationsByEmployee
   }

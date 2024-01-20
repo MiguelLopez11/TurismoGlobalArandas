@@ -218,7 +218,6 @@ export default {
               icon: 'success'
             })
           })
-          store.commit('setRefreshPaymentProvider', true)
           isOpenDialog.value = false
           paymentFields.value = JSON.parse(JSON.stringify(paymentFieldsBlank))
           paymentFormRef.value.resetForm()

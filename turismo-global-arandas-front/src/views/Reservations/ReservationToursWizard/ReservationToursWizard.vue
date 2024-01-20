@@ -464,8 +464,7 @@ export default {
       return new Promise((resolve, reject) => {
         if (
           reservationTour.value.tourName &&
-          reservationTour.value.destinationId &&
-          reservationTour.value.dateActivity
+          reservationTour.value.destinationId
         ) {
           onUpdateReservation()
           resolve(true)

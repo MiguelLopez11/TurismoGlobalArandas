@@ -150,7 +150,7 @@ export default {
 
     const pieChartSeries = ref([25, 30, 45])
 
-    onMounted(async () => {
+    onMounted(() => {
       getReservationsByMonth(data => {
         reservations.value = data
         reservations.value.forEach(item => {
