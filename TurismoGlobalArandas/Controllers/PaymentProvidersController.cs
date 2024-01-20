@@ -12,10 +12,12 @@ namespace TurismoGlobalArandas.Controllers
     public class PaymentProvidersController : ControllerBase
     {
         private readonly TurismoGlobalContext _context;
+
         public PaymentProvidersController(TurismoGlobalContext context)
         {
             _context = context;
         }
+
         [HttpGet]
         public async Task<ActionResult<PaymentProviders>> getPaymentProviders()
         {
@@ -27,21 +29,23 @@ namespace TurismoGlobalArandas.Controllers
                 .ToListAsync();
             return Ok(Payments);
         }
-        [HttpGet("{PaymentId}")]
-        public async Task<ActionResult> getPaymentProvider(int PaymentId)
+
+        [HttpGet("{PaymentProviderId}")]
+        public async Task<ActionResult> getPaymentProvider(int PaymentProviderId)
         {
             var Payment = await _context.PaymentProviders
                 .Include(i => i.ReservationHotels)
                 .Include(i => i.reservationFlight)
                 .Include(i => i.ReservationVehicles)
                 .Include(i => i.ReservationTours)
-                .FirstOrDefaultAsync(f => f.PaymentId == PaymentId);
+                .FirstOrDefaultAsync(f => f.PaymentProviderId == PaymentProviderId);
             if (Payment == null)
             {
                 return NotFound();
             }
             return Ok(Payment);
         }
+
         [HttpGet("ReservacionHotel/{ReservationHotelId}")]
         public async Task<ActionResult> getPaymentProviderByReservationHotel(int ReservationHotelId)
         {
@@ -57,6 +61,7 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(Payment);
         }
+
         [HttpGet("ReservacionTour/{ReservationTourId}")]
         public async Task<ActionResult> getPaymentProviderByReservationTour(int ReservationTourId)
         {
@@ -72,9 +77,12 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(Payment);
         }
+
         [Authorize]
         [HttpGet("ReservacionVuelo/{ReservationFlightId}")]
-        public async Task<ActionResult> getPaymentProviderByReservationFlight(int ReservationFlightId)
+        public async Task<ActionResult> getPaymentProviderByReservationFlight(
+            int ReservationFlightId
+        )
         {
             var Payment = await _context.PaymentProviders
                 .Include(i => i.ReservationHotels)
@@ -88,8 +96,11 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(Payment);
         }
+
         [HttpGet("ReservacionVehiculo/{ReservationVehicleId}")]
-        public async Task<ActionResult> getPaymentProviderByReservationVehicle(int ReservationVehicleId)
+        public async Task<ActionResult> getPaymentProviderByReservationVehicle(
+            int ReservationVehicleId
+        )
         {
             var Payment = await _context.PaymentProviders
                 .Include(i => i.ReservationHotels)
@@ -103,56 +114,79 @@ namespace TurismoGlobalArandas.Controllers
             }
             return Ok(Payment);
         }
+
         [HttpPost]
-        public async Task<ActionResult<PaymentProviders>> PostPaymentProvider(PaymentProviders payment)
+        public async Task<ActionResult<PaymentProviders>> PostPaymentProvider(
+            PaymentProviders payment
+        )
         {
-            var Invoice = _context.GetInvoice();
-            payment.Invoice = Invoice;
-            payment.PaymentDate = DateTime.Today;
+            //var Invoice = _context.GetInvoice();
+            //payment.Invoice = Invoice;
+            //payment.PaymentDate = DateTime.Today;
             _context.PaymentProviders.Add(payment);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("getPaymentProvider", new { PaymentId = payment.PaymentId }, payment);
+            return CreatedAtAction(
+                "getPaymentProvider",
+                new { PaymentProviderId = payment.PaymentProviderId },
+                payment
+            );
         }
-        [HttpPut("{PaymentId}")]
-        public async Task<ActionResult> PutPaymentProvider(int PaymentId, PaymentProviders payment)
+
+        [HttpPut("{PaymentProviderId}")]
+        public async Task<ActionResult> PutPaymentProvider(
+            int PaymentProviderId,
+            PaymentProviders payment
+        )
         {
-            if (payment.PaymentId != PaymentId)
+            if (payment.PaymentProviderId != PaymentProviderId)
             {
                 return Ok("Los Id ingresados no coinciden");
             }
-            var paymentOld = await _context.PaymentProviders
-                .FirstOrDefaultAsync(f => f.PaymentId == PaymentId);
+            var paymentOld = await _context.PaymentProviders.FirstOrDefaultAsync(
+                f => f.PaymentProviderId == PaymentProviderId
+            );
             if (paymentOld == null)
             {
-                return BadRequest($"El pago con el ID {PaymentId} no existe");
+                return BadRequest($"El pago con el ID {PaymentProviderId} no existe");
             }
-            paymentOld.PaymentId = payment.PaymentId;
-            paymentOld.Invoice = payment.Invoice;
-            paymentOld.PaymentDate = payment.PaymentDate;
+            paymentOld.PaymentProviderId = payment.PaymentProviderId;
+            paymentOld.AmountTotal = payment.AmountTotal;
+            paymentOld.AmountMissing = payment.AmountMissing;
+            paymentOld.ReservationDate = payment.ReservationDate;
             paymentOld.ReservationHotelId = payment.ReservationHotelId;
+            paymentOld.ReservationFlightId = payment.ReservationFlightId;
             paymentOld.ReservationTourId = payment.ReservationTourId;
             paymentOld.ReservationVehicleId = payment.ReservationVehicleId;
-            paymentOld.Observations = payment.Observations;
             paymentOld.IsDeleted = payment.IsDeleted;
 
             _context.PaymentProviders.Update(paymentOld);
             await _context.SaveChangesAsync();
             return Ok("El cliente se actualizo correctamente");
         }
-        [HttpDelete("{PaymentId}")]
-        public async Task<IActionResult> DeletePaymentProvider(int PaymentId)
+
+        [HttpDelete("{PaymentProviderId}")]
+        public async Task<IActionResult> DeletePaymentProvider(int PaymentProviderId)
         {
-            var payment = await _context.PaymentProviders
-                .FirstOrDefaultAsync(f => f.PaymentId == PaymentId);
+            var payment = await _context.PaymentProviders.FirstOrDefaultAsync(
+                f => f.PaymentProviderId == PaymentProviderId
+            );
             if (payment == null)
             {
                 return NotFound();
             }
-
+            var payments = await _context.PaymentProviderLists
+                .Where(w => w.PaymentProviderId == PaymentProviderId)
+                .ToListAsync();
+            foreach (var item in payments)
+            {
+                item.IsDeleted = true;
+                _context.PaymentProviderLists.Update(item);
+                await _context.SaveChangesAsync();
+            }
             payment.IsDeleted = true;
             _context.PaymentProviders.Update(payment);
             await _context.SaveChangesAsync();
-            return Ok("Cliente archivado");
+            return Ok("PAGO archivado");
         }
     }
 }

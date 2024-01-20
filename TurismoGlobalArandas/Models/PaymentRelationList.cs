@@ -19,11 +19,14 @@ namespace TurismoGlobalArandas.Models
         public int PaymentMethodId { get; set; }
         public string? DetailsPayment { get; set; }
         public int? PaymentReservationId { get; set; }
+        public int? EmployeeId { get; set; }
         public bool IsDeleted { get; set; }
 
         [ForeignKey("PaymentMethodId")]
         public PaymentMethods? PaymentMethods { get; set; }
         [ForeignKey("PaymentReservationId")]
         public PaymentsRelationReservations? PaymentsRelationReservations { get; set; }
+        [ForeignKey("EmployeeId")]
+        public Employees? Employees { get; set; }
     }
 }

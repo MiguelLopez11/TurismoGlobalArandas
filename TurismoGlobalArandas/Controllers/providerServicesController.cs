@@ -89,6 +89,7 @@ namespace TurismoGlobalArandas.Controllers
             ServiceOld.CommissionAgency = service.CommissionAgency;
             ServiceOld.CommissionClient = service.CommissionClient;
             ServiceOld.CommissionEmployee = service.CommissionEmployee;
+            ServiceOld.DiscountExtra = service.DiscountExtra;
             ServiceOld.Description = service.Description;
             ServiceOld.IsDeleted = service.IsDeleted;
 

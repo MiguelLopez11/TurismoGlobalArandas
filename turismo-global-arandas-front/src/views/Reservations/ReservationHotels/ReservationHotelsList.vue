@@ -28,6 +28,7 @@
         </el-button>
       </el-col>
     </el-row>
+    {{ isDisabledItem }}
     <el-row class="mt-3">
       <el-col :span="24">
         <div class="table-scroll">
@@ -75,8 +76,11 @@
                       "
                       >Cancelar reservación</el-dropdown-item
                     >
+                    <!-- :disabled="isDisabledItem" -->
                     <el-dropdown-item
-                      v-if="userRole.includes('ADMINISTRADOR')"
+                      v-if="
+                        userRole.includes('administrador' || 'GERENTE GENERAL')
+                      "
                       @click="
                         onRemoveReservationHotel(items.reservationHotelId)
                       "
@@ -206,7 +210,7 @@
 </template>
 
 <script>
-import { ref, watch, provide, inject, computed } from 'vue'
+import { ref, watch, provide, inject, computed, onMounted } from 'vue'
 import ReservationServices from '@/Services/ReservationHotel.Services'
 export default {
   setup () {
@@ -228,6 +232,7 @@ export default {
     const statusPaymentCriteria = ref(null)
     const showStatusReservationFilter = ref(false)
     const showStatusPaymentFilter = ref(false)
+    const isDisabledItem = ref(false)
     const userRole = window.sessionStorage.getItem('Role')
     provide('AddEmployee', isAddedEmployee)
     const fields = ref([
@@ -287,10 +292,6 @@ export default {
         value: null
       }
     ])
-    getReservationHotels(data => {
-      reservationHotels.value = data
-      isloading.value = false
-    })
     const refreshTable = () => {
       isloading.value = true
       getReservationHotels(data => {
@@ -298,6 +299,20 @@ export default {
         isloading.value = false
       })
     }
+    onMounted(() => {
+      getReservationHotels(data => {
+        reservationHotels.value = data
+        isloading.value = false
+        // Dates
+        // const fechaActual = new Date()
+        // const fechaRegistroParsed = new Date(data.travelDateStart)
+        // // Ajustar la fecha actual a la misma zona horaria que la fecha de registro
+        // fechaActual.setMinutes(
+        //   fechaActual.getMinutes() - fechaActual.getTimezoneOffset()
+        // )
+        // isDisabledItem.value = fechaActual > fechaRegistroParsed
+      })
+    })
     watch(
       [isAddedEmployee, statusReservationCriteria, statusPaymentCriteria],
       (newValueA, newValueB, newValueC) => {
@@ -374,6 +389,7 @@ export default {
       statusPaymentCriteria,
       filterStatusReservation,
       filterStatusPayment,
+      isDisabledItem,
       refreshTable,
       onRemoveReservationHotel,
       onDeleteReservationHotel,

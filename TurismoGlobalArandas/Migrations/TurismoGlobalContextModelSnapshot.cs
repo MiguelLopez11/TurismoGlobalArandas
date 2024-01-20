@@ -721,8 +721,8 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<decimal?>("ClientRate")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<int?>("ExtraDiscount")
-                        .HasColumnType("int");
+                    b.Property<string>("ExtraDiscount")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -810,13 +810,16 @@ namespace TurismoGlobalArandas.Migrations
                     b.ToTable("PaymentMethods");
                 });
 
-            modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentProviders", b =>
+            modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentProviderList", b =>
                 {
                     b.Property<int>("PaymentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentId"));
+
+                    b.Property<decimal?>("Amount")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Invoice")
                         .HasColumnType("nvarchar(max)");
@@ -827,7 +830,53 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("Observations")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("PaymentDate")
+                    b.Property<int?>("PaymentConceptId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("PaymentMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PaymentProviderId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PaymentId");
+
+                    b.HasIndex("PaymentConceptId");
+
+                    b.HasIndex("PaymentMethodId");
+
+                    b.HasIndex("PaymentProviderId");
+
+                    b.ToTable("PaymentProviderLists");
+                });
+
+            modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentProviders", b =>
+                {
+                    b.Property<int>("PaymentProviderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentProviderId"));
+
+                    b.Property<decimal?>("AmountMissing")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<decimal?>("AmountTotal")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("PaymentConceptId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PaymentMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReservationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("ReservationFlightId")
@@ -842,7 +891,11 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<int?>("ReservationVehicleId")
                         .HasColumnType("int");
 
-                    b.HasKey("PaymentId");
+                    b.HasKey("PaymentProviderId");
+
+                    b.HasIndex("PaymentConceptId");
+
+                    b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("ReservationFlightId");
 
@@ -875,6 +928,9 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("DetailsPayment")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("EmployeeId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Invoice")
                         .HasColumnType("nvarchar(max)");
 
@@ -894,6 +950,8 @@ namespace TurismoGlobalArandas.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("PaymentId");
+
+                    b.HasIndex("EmployeeId");
 
                     b.HasIndex("PaymentMethodId");
 
@@ -1540,6 +1598,9 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("DiscountExtra")
+                        .HasColumnType("decimal(18, 2)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -1563,6 +1624,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 15m,
                             CommissionClient = 10m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "Hotelería",
                             ProviderId = 1
@@ -1573,6 +1635,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 15m,
                             CommissionClient = 0m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "Traslados",
                             ProviderId = 1
@@ -1583,6 +1646,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 15m,
                             CommissionClient = 10m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "Hoteleria",
                             ProviderId = 2
@@ -1593,6 +1657,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 10m,
                             CommissionClient = 0m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "Renta de autos",
                             ProviderId = 2
@@ -1603,6 +1668,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 18m,
                             CommissionClient = 13m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "Hoteleria",
                             ProviderId = 3
@@ -1613,6 +1679,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 18m,
                             CommissionClient = 10m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "Circuitos",
                             ProviderId = 3
@@ -1623,6 +1690,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 5m,
                             CommissionClient = 0m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "Entradas a disney",
                             ProviderId = 3
@@ -1633,6 +1701,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 15m,
                             CommissionClient = 8m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "Parques",
                             ProviderId = 4
@@ -1643,6 +1712,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 17m,
                             CommissionClient = 12m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "Hoteleria",
                             ProviderId = 4
@@ -1653,6 +1723,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 10m,
                             CommissionClient = 5m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "",
                             ProviderId = 5
@@ -1663,6 +1734,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 10m,
                             CommissionClient = 0m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "",
                             ProviderId = 6
@@ -1673,6 +1745,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 20m,
                             CommissionClient = 0m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "",
                             ProviderId = 7
@@ -1683,6 +1756,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 5m,
                             CommissionClient = 0m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "Traslados",
                             ProviderId = 8
@@ -1693,6 +1767,7 @@ namespace TurismoGlobalArandas.Migrations
                             CommissionAgency = 15m,
                             CommissionClient = 10m,
                             CommissionEmployee = 5m,
+                            DiscountExtra = 0m,
                             IsDeleted = false,
                             Name = "",
                             ProviderId = 9
@@ -1893,8 +1968,39 @@ namespace TurismoGlobalArandas.Migrations
                     b.Navigation("reservationHotel");
                 });
 
+            modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentProviderList", b =>
+                {
+                    b.HasOne("TurismoGlobalArandas.Models.PaymentConcept", "PaymentConcept")
+                        .WithMany()
+                        .HasForeignKey("PaymentConceptId");
+
+                    b.HasOne("TurismoGlobalArandas.Models.PaymentMethods", "PaymentMethods")
+                        .WithMany()
+                        .HasForeignKey("PaymentMethodId");
+
+                    b.HasOne("TurismoGlobalArandas.Models.PaymentProviders", "PaymentProviders")
+                        .WithMany()
+                        .HasForeignKey("PaymentProviderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PaymentConcept");
+
+                    b.Navigation("PaymentMethods");
+
+                    b.Navigation("PaymentProviders");
+                });
+
             modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentProviders", b =>
                 {
+                    b.HasOne("TurismoGlobalArandas.Models.PaymentConcept", "PaymentConcept")
+                        .WithMany()
+                        .HasForeignKey("PaymentConceptId");
+
+                    b.HasOne("TurismoGlobalArandas.Models.PaymentMethods", "PaymentMethod")
+                        .WithMany()
+                        .HasForeignKey("PaymentMethodId");
+
                     b.HasOne("TurismoGlobalArandas.Models.ReservationFlight", "reservationFlight")
                         .WithMany()
                         .HasForeignKey("ReservationFlightId");
@@ -1911,6 +2017,10 @@ namespace TurismoGlobalArandas.Migrations
                         .WithMany()
                         .HasForeignKey("ReservationVehicleId");
 
+                    b.Navigation("PaymentConcept");
+
+                    b.Navigation("PaymentMethod");
+
                     b.Navigation("ReservationHotels");
 
                     b.Navigation("ReservationTours");
@@ -1922,6 +2032,10 @@ namespace TurismoGlobalArandas.Migrations
 
             modelBuilder.Entity("TurismoGlobalArandas.Models.PaymentRelationList", b =>
                 {
+                    b.HasOne("TurismoGlobalArandas.Models.Employees", "Employees")
+                        .WithMany()
+                        .HasForeignKey("EmployeeId");
+
                     b.HasOne("TurismoGlobalArandas.Models.PaymentMethods", "PaymentMethods")
                         .WithMany()
                         .HasForeignKey("PaymentMethodId")
@@ -1931,6 +2045,8 @@ namespace TurismoGlobalArandas.Migrations
                     b.HasOne("TurismoGlobalArandas.Models.PaymentsRelationReservations", "PaymentsRelationReservations")
                         .WithMany()
                         .HasForeignKey("PaymentReservationId");
+
+                    b.Navigation("Employees");
 
                     b.Navigation("PaymentMethods");
 

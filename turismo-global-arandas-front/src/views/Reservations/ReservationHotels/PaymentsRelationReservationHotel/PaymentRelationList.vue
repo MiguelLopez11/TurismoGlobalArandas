@@ -44,11 +44,18 @@
             <template #header-actions="header">
               {{ header.text }}
             </template>
+            <template #item-employee="items">
+              {{ items.employees ? items.employees.name + ' ' + items.employees.lastname : '' }}
+            </template>
             <template #item-actions="items">
               <el-dropdown>
                 <span class="bi bi-three-dots-vertical"> </span>
                 <template #dropdown>
                   <el-dropdown-menu>
+                    <el-dropdown-item
+                      @click="onDownloadPayment(items.paymentId)"
+                      >Descargar Pago</el-dropdown-item
+                    >
                     <el-dropdown-item @click="onEditPayment(items.paymentId)"
                       >Editar</el-dropdown-item
                     >
@@ -76,10 +83,12 @@ import { useStore } from 'vuex'
 
 export default {
   components: { PaymentRelationListAddNew, PaymentRealtionEdit },
-  setup () {
+  emits: ['refresh-payment-relation'],
+  setup (props, { emit }) {
     const {
       getPaymentRelationListByPaymentReservationHotel,
-      deletePaymentRelationList
+      deletePaymentRelationList,
+      downloadPayment
     } = PaymentsRelationListServices()
     const { getPaymentRelation } = PaymentsRelationReservationServices()
     const store = useStore()
@@ -93,7 +102,7 @@ export default {
     const paymenRelationtId = ref(0)
     const isloading = ref(true)
     const searchValue = ref('')
-    const searchField = ref('name')
+    const searchField = ref('invoice')
     const isAddPaymentRelation = ref(false)
     const isEditPaymentRelation = ref(false)
     const paymentReservationId = ref(0)
@@ -119,23 +128,40 @@ export default {
       { value: 'amount', text: 'Monto' },
       { value: 'paymentDate', text: 'Fecha de pago' },
       { value: 'observations', text: 'Observaciones' },
+      { value: 'employee', text: 'Empleado receptor' },
       { value: 'actions', text: 'Acciones' }
     ])
 
     const refreshTable = () => {
       isloading.value = true
-      getPaymentRelationListByPaymentReservationHotel(
-        paymentReservationId.value,
-        data => {
-          paymentsRelationList.value = data
-          isloading.value = false
+      setTimeout(() => {
+        getPaymentRelationListByPaymentReservationHotel(
+          paymentReservationId.value,
+          data => {
+            paymentsRelationList.value = data
+            isloading.value = false
+            emit('refresh-payment-relation')
+          }
+        )
+      }, 2000)
+    }
+    const onDownloadPayment = paymentId => {
+      downloadPayment(paymentId, async data => {
+        try {
+          const blob = new Blob([data], { type: 'application/pdf' })
+          const pdfUrl = URL.createObjectURL(blob)
+          window.open(pdfUrl, '_blank')
+        } catch (error) {
+          console.error('Error al procesar el PDF', error)
         }
-      )
+      })
     }
     watch(
       [isAddPaymentRelation, isEditPaymentRelation],
       ([newValueA, newValueB]) => {
-        refreshTable()
+        if (!newValueA && !newValueB) {
+          refreshTable()
+        }
       }
     )
     const onEditPayment = paymentId => {
@@ -182,6 +208,7 @@ export default {
       isAddPaymentRelation,
       paymentReservationId,
       paymenRelationtId,
+      onDownloadPayment,
       refreshTable,
       onEditPayment,
       onDeletePayment

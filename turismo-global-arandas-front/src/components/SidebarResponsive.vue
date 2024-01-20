@@ -5,7 +5,7 @@
     active-text-color="#FFF"
     class="menu"
   >
-    <el-header>
+    <!-- <el-header>
       <el-row align="middle" :gutter="30">
         <el-col :span="6">
           <el-image style="width: 40px; height: 40px" :src="logo" />
@@ -15,7 +15,7 @@
         </el-col>
       </el-row>
     </el-header>
-    <el-divider class="m-0"></el-divider>
+    <el-divider class="m-0"></el-divider> -->
     <template v-for="item in menuItems" :key="item.index">
       <el-sub-menu v-if="item.submenu" :index="item.index">
         <template #title>
@@ -264,6 +264,12 @@ export default {
             title: 'Pagos proveedores',
             path: '/PagosProveedor',
             icon: 'bi bi-currency-dollar'
+          },
+          {
+            index: '6-6',
+            title: 'Resumen y gráficos',
+            path: '/ResumenVentas',
+            icon: 'bi bi-briefcase'
           }
         ]
       }

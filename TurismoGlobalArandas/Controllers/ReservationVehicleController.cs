@@ -83,16 +83,22 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.IsSoldOut = reservationVehicle.IsSoldOut;
             ReservationOld.IsDeleted = reservationVehicle.IsDeleted;
             var ReservationPaymentRelation = await _context.PaymentsRelationReservations
-                .Include(i => i.ReservationHotels)
+                .Include(i => i.ReservationVehicles)
                 .FirstOrDefaultAsync(f => f.ReservationVehicleId == ReservationVehicleId);
-            if (ReservationPaymentRelation.AmountTotal == null && reservationVehicle.PriceNeto != null)
+            var PaymentProvider = await _context.PaymentProviders
+                .Include(i => i.ReservationVehicles)
+                .FirstOrDefaultAsync(f => f.ReservationVehicleId == ReservationVehicleId);
+            if (ReservationPaymentRelation.AmountTotal == null && PaymentProvider.AmountTotal == null &&  reservationVehicle.PriceNeto != null)
             {
-                if (ReservationPaymentRelation.AmountMissing == null)
+                if (ReservationPaymentRelation.AmountMissing == null && PaymentProvider.AmountMissing == null)
                 {
                     ReservationPaymentRelation.AmountMissing = reservationVehicle.PriceNeto;
+                    PaymentProvider.AmountMissing = reservationVehicle.PriceNeto;
                 }
                 ReservationPaymentRelation.AmountTotal = reservationVehicle.PriceNeto;
+                PaymentProvider.AmountTotal = reservationVehicle.PriceNeto;
                 _context.PaymentsRelationReservations.Update(ReservationPaymentRelation);
+                _context.PaymentProviders.Update(PaymentProvider);
                 await _context.SaveChangesAsync();
             }
             _context.ReservationVehicles.Update(ReservationOld);

@@ -42,7 +42,7 @@
                           $router.push({
                             name: 'PaymentProvider-Details',
                             params: {
-                              PaymentProviderId: items.paymentId
+                              PaymentProviderId: items.paymentProviderId
                             }
                           })
                         }
@@ -96,7 +96,7 @@ import PaymentProviders from '@/Services/paymentProviders.Services'
 export default {
   //   components: { PaymentMethodsAddNew },
   setup () {
-    const { getPaymentProviders, deletePaymentProviderd } = PaymentProviders()
+    const { getPaymentProviders, deletePaymentProvider } = PaymentProviders()
     const paymentProviders = ref([])
     const swal = inject('$swal')
     const filter = ref(null)
@@ -137,7 +137,7 @@ export default {
         })
         .then(result => {
           if (result.isConfirmed) {
-            deletePaymentProviderd(paymentProviderId, data => {
+            deletePaymentProvider(paymentProviderId, data => {
               swal.fire({
                 title: 'Metodo de pago eliminado!',
                 text: 'El metodo de pago ha sido eliminado satisfactoriamente .',

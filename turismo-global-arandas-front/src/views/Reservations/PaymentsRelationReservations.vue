@@ -28,7 +28,7 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <payment-relation-list />
+        <payment-relation-list @refresh-payment-relation="OnRefreshPayment" />
       </el-col>
     </el-row>
     <el-divider />
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { ref, computed, watch } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 import PaymentRelationList from './ReservationHotels/PaymentsRelationReservationHotel/PaymentRelationList.vue'
@@ -57,9 +57,6 @@ export default {
       getPaymentsRelationByReservationVehicle,
       getPaymentsRelationByReservationFlight
     } = PaymentsRelationReservationServices()
-    const refreshPaymentRelation = computed(
-      () => store.getters.getRefreshPaymentRelation
-    )
     const onPaymentReservationHotels = () => {
       getPaymentsRelationByReservationHotel(
         router.params.ReservationHotelId,
@@ -109,22 +106,21 @@ export default {
     } else if (router.params.ReservationFlightId) {
       onPaymentReservationFlights()
     }
-    watch(refreshPaymentRelation, NewValue => {
-      if (NewValue) {
-        if (router.params.ReservationHotelId) {
-          location.reload()
-        } else if (router.params.ReservationTourId) {
-          location.reload()
-        } else if (router.params.ReservationVehicleId) {
-          location.reload()
-        } else if (router.params.ReservationFlightId) {
-          location.reload()
-        }
+    const OnRefreshPayment = () => {
+      if (router.params.ReservationHotelId) {
+        onPaymentReservationHotels()
+      } else if (router.params.ReservationTourId) {
+        onPaymentReservationTours()
+      } else if (router.params.ReservationVehicleId) {
+        onPaymentReservationVehicles()
+      } else if (router.params.ReservationFlightId) {
+        onPaymentReservationFlights()
       }
-    })
+    }
     return {
       paymentsRelation,
-      paymentsRelationFormRef
+      paymentsRelationFormRef,
+      OnRefreshPayment
     }
   }
 }

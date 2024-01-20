@@ -10,6 +10,14 @@ const routes = [
     }
   },
   {
+    path: '/Unauthorized',
+    name: 'Unauthorized',
+    component: () => import('../views/Unauthorized/Unauthorized'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/Login',
     name: 'Login',
     component: () => import('../views/Authenticate/AuthenticateUser'),
@@ -22,7 +30,8 @@ const routes = [
     name: 'Employees',
     component: () => import('../views/Employees/EmployeesList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL']
     }
   },
   {
@@ -30,7 +39,8 @@ const routes = [
     name: 'Edit-Employees',
     component: () => import('../views/Employees/EmployeesEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL']
     }
   },
   {
@@ -46,7 +56,8 @@ const routes = [
     name: 'Users',
     component: () => import('../views/Users/UserList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL']
     }
   },
   {
@@ -54,7 +65,8 @@ const routes = [
     name: 'Edit-User',
     component: () => import('../views/Users/UserEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL']
     }
   },
   {
@@ -62,7 +74,8 @@ const routes = [
     name: 'Customers',
     component: () => import('../views/Customers/CustomersList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -70,7 +83,8 @@ const routes = [
     name: 'Edit-Customer',
     component: () => import('../views/Customers/CustomersEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -78,7 +92,8 @@ const routes = [
     name: 'Providers',
     component: () => import('../views/Providers/ProviderList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -86,7 +101,8 @@ const routes = [
     name: 'Edit-Provider',
     component: () => import('../views/Providers/ProviderEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -94,7 +110,8 @@ const routes = [
     name: 'Destinations',
     component: () => import('../views/Destinations/DestinationList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -102,7 +119,8 @@ const routes = [
     name: 'Edit-Destination',
     component: () => import('../views/Destinations/DestinationEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -110,7 +128,8 @@ const routes = [
     name: 'Hotels',
     component: () => import('../views/Hotels/HotelsList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -118,7 +137,8 @@ const routes = [
     name: 'Edit-Hotel',
     component: () => import('../views/Hotels/HotelsEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -142,7 +162,8 @@ const routes = [
     name: 'ReservationHotels',
     component: () => import('../views/Reservations/ReservationHotels/ReservationHotelsList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -150,7 +171,8 @@ const routes = [
     name: 'Edit-ReservationHotels',
     component: () => import('../views/Reservations/ReservationHotels/ReservationHotelsEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -158,7 +180,8 @@ const routes = [
     name: 'ReservacionesHoteleria-AddNew',
     component: () => import('../views/Reservations/ReservationHotels/ReservationHotelsAddNew'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -166,7 +189,8 @@ const routes = [
     name: 'TypeReservations',
     component: () => import('../views/TypeReservations/TypeReservationList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -174,7 +198,8 @@ const routes = [
     name: 'Edit-TypeReservation',
     component: () => import('../views/TypeReservations/TypeReservationEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -182,7 +207,8 @@ const routes = [
     name: 'CategoryReservations',
     component: () => import('../views/CategoryReservations/CategoryReservationList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -190,7 +216,8 @@ const routes = [
     name: 'Edit-CategoryReservation',
     component: () => import('../views/CategoryReservations/CategoryReservationEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -198,7 +225,8 @@ const routes = [
     name: 'ServicesProvider',
     component: () => import('../views/ServicesProviders/ServiceProviderList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -206,7 +234,8 @@ const routes = [
     name: 'Edit-ServicesProvider',
     component: () => import('../views/ServicesProviders/ServiceProviderEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -214,7 +243,8 @@ const routes = [
     name: 'ReservationFlight',
     component: () => import('../views/Reservations/ReservationFlights/ReservationFlightList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -222,7 +252,8 @@ const routes = [
     name: 'Edit-ReservationFlight',
     component: () => import('../views/Reservations/ReservationFlights/ReservationFlightEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -230,7 +261,8 @@ const routes = [
     name: 'ReservationFlight-ReservationHotel',
     component: () => import('../views/Reservations/ReservationFlights/ReservationFlightReservadedByReservationHotelList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -238,7 +270,8 @@ const routes = [
     name: 'TypeReservationsGroup',
     component: () => import('../views/TypeReservationsGroup/TypeReservationsGroupList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -246,7 +279,8 @@ const routes = [
     name: 'Edit-TypeReservationsGroup',
     component: () => import('../views/TypeReservationsGroup/TypeReservationsGroupEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -254,7 +288,8 @@ const routes = [
     name: 'PaymentsRelationReservatioHotel',
     component: () => import('../views/Reservations/PaymentsRelationReservations'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -262,7 +297,8 @@ const routes = [
     name: 'PaymentsRelationReservatioTour',
     component: () => import('../views/Reservations/PaymentsRelationReservations'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -270,7 +306,8 @@ const routes = [
     name: 'PaymentsRelationReservatioVehicle',
     component: () => import('../views/Reservations/PaymentsRelationReservations'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -278,7 +315,8 @@ const routes = [
     name: 'PaymentsRelationReservatioFlight',
     component: () => import('../views/Reservations/PaymentsRelationReservations'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -286,7 +324,8 @@ const routes = [
     name: 'ReservationsTour',
     component: () => import('../views/Reservations/ReservationTours/ReservationTourList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -294,7 +333,8 @@ const routes = [
     name: 'ReservationsTour-AddNew',
     component: () => import('../views/Reservations/ReservationTours/ReservationTourAddNew'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -302,7 +342,8 @@ const routes = [
     name: 'ReservationsTour-Edit',
     component: () => import('../views/Reservations/ReservationTours/ReservationTourEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -310,7 +351,8 @@ const routes = [
     name: 'PaymentMethods',
     component: () => import('../views/PaymentMethods/PaymentMethodsList.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -318,7 +360,8 @@ const routes = [
     name: 'Edit-PaymentMethods',
     component: () => import('../views/PaymentMethods/PaymentMethodsEdit.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -326,7 +369,8 @@ const routes = [
     name: 'Paymentconcepts',
     component: () => import('../views/PaymentConcepts/PaymentConceptsList.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -334,7 +378,8 @@ const routes = [
     name: 'Edit-Paymentconcepts',
     component: () => import('../views/PaymentConcepts/PaymentConceptsEdit.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -342,7 +387,8 @@ const routes = [
     name: 'Routes',
     component: () => import('../views/Routes/RoutesList.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -350,7 +396,8 @@ const routes = [
     name: 'Edit-Routes',
     component: () => import('../views/Routes/RoutesEdit.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -358,7 +405,8 @@ const routes = [
     name: 'ReservationVehicles',
     component: () => import('../views/Reservations/ReservationVehicles/ReservationVehiclesList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -366,7 +414,8 @@ const routes = [
     name: 'Edit-ReservationVehicles',
     component: () => import('../views/Reservations/ReservationVehicles/ReservationVehiclesEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -374,7 +423,8 @@ const routes = [
     name: 'AditionalServices',
     component: () => import('../views/AditionalServices/AditionalServicesList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -382,7 +432,8 @@ const routes = [
     name: 'Edit-AditionalServices',
     component: () => import('../views/AditionalServices/AditionalServiceEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -390,7 +441,8 @@ const routes = [
     name: 'ExpensesEventual',
     component: () => import('../views/ExpensesEventual/ExpensesEventualList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -398,7 +450,8 @@ const routes = [
     name: 'Edit-ExpensesEventual',
     component: () => import('../views/ExpensesEventual/ExpensesEventualEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -406,7 +459,8 @@ const routes = [
     name: 'ExpensesFixed',
     component: () => import('../views/ExpensesFixed/ExpensesFixedList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -414,7 +468,8 @@ const routes = [
     name: 'Edit-ExpensesFixed',
     component: () => import('../views/ExpensesFixed/ExpensesFixedEdit'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -422,7 +477,8 @@ const routes = [
     name: 'PaymentProvider',
     component: () => import('../views/PaymentProviders/PaymentProviderList'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -430,7 +486,8 @@ const routes = [
     name: 'PaymentProvider-Details',
     component: () => import('../views/PaymentProviders/PaymentDetails'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -438,7 +495,8 @@ const routes = [
     name: 'PaymentProvider-Details-ReservationHotel',
     component: () => import('../views/PaymentProviders/PaymentDetails'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -446,7 +504,8 @@ const routes = [
     name: 'PaymentProvider-Details-ReservationTour',
     component: () => import('../views/PaymentProviders/PaymentDetails'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -454,7 +513,8 @@ const routes = [
     name: 'PaymentProvider-Details-ReservationFlight',
     component: () => import('../views/PaymentProviders/PaymentDetails'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -462,7 +522,17 @@ const routes = [
     name: 'PaymentProvider-Details-ReservationVehicle',
     component: () => import('../views/PaymentProviders/PaymentDetails'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
+    }
+  },
+  {
+    path: '/PagosProveedor/Documentos/:PaymentProviderId',
+    name: 'PaymentProvider-Documents',
+    component: () => import('../views/PaymentProviders/PaymentProviderDocuments'),
+    meta: {
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -470,7 +540,8 @@ const routes = [
     name: 'Airlines',
     component: () => import('../views/Airlines/AirlineList.vue'),
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   },
   {
@@ -479,7 +550,16 @@ const routes = [
     component: () => import('../views/Airlines/AirlineEdit.vue'),
     meta: {
       requiresAuth: true,
-      roles: ['ADMINISTRADOR']
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
+    }
+  },
+  {
+    path: '/ResumenVentas',
+    name: 'Resume',
+    component: () => import('../components/FinancialSummary'),
+    meta: {
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
   }
 ]
@@ -521,8 +601,8 @@ router.beforeEach(async (to, from, next) => {
 function obtenerRolesUsuario () {
   // Obtén los roles del usuario desde donde sea que los almacenes (localStorage, sessionStorage, etc.)
   // Devuelve un array de roles (por ejemplo, ['Admin', 'User'])
-  const roles = window.sessionStorage.getItem('Roles')
-  return roles ? JSON.parse(roles) : []
+  const role = window.sessionStorage.getItem('Role')
+  return role ? [role] : []
 }
 
 export default router

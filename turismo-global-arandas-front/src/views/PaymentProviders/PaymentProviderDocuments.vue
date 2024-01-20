@@ -165,7 +165,7 @@ export default {
           }
         })
     }
-    const handleSuccess = async () => {
+    const handleSuccess = () => {
       const formData = new FormData()
       uploadFiles.value.forEach(file => {
         formData.append('files', file.raw)

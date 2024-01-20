@@ -104,6 +104,7 @@ export default {
       { value: 'commissionAgency', text: 'Comisión de la agencia' },
       { value: 'commissionClient', text: 'Comision al cliente' },
       { value: 'commissionEmployee', text: 'Comision al empleado' },
+      { value: 'discountExtra', text: 'Descuento extra' },
       { value: 'description', text: 'Descripción' },
       { value: 'actions', text: 'Acciones' }
     ])
@@ -112,6 +113,7 @@ export default {
         item.commissionAgency = (item.commissionAgency / 100).toFixed(2)
         item.commissionClient = (item.commissionClient / 100).toFixed(2)
         item.commissionEmployee = (item.commissionEmployee / 100).toFixed(2)
+        item.discountExtra = (item.discountExtra / 100).toFixed(2)
       })
       servicesProvider.value = data
       isloading.value = false
