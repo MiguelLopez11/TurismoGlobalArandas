@@ -92,7 +92,7 @@ export default {
     const searchValue = ref('')
     const searchField = ref('name')
     const isAddAirline = ref(false)
-    provide('AddCategoryReservation', isAddAirline)
+    provide('addAirline', isAddAirline)
     const fields = ref([
       { value: 'name', text: 'Nombre' },
       { value: 'phoneNumber', text: 'Numero de telefono' },

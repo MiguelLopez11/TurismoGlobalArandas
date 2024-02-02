@@ -52,6 +52,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<GroupRate>> PostGroupRate(GroupRate GroupRate)
         {
+            GroupRate.DateSale = DateTime.Now;
             _context.GroupRates.Add(GroupRate);
             await _context.SaveChangesAsync();
             return CreatedAtAction("getGroupRateById", new { GroupRateId = GroupRate.GroupRateId }, GroupRate);
@@ -78,6 +79,7 @@ namespace TurismoGlobalArandas.Controllers
             GroupRateOld.AgesMinors = GroupRate.AgesMinors;
             GroupRateOld.RangeNight = GroupRate.RangeNight;
             GroupRateOld.RangeTotal = GroupRate.RangeTotal;
+            GroupRateOld.RangeAgency = GroupRate.RangeAgency;
             GroupRateOld.Observations = GroupRate.Observations;
             GroupRateOld.ReservationHotelGroupId = GroupRate.ReservationHotelGroupId;
             GroupRateOld.IsDeleted = GroupRate.IsDeleted;

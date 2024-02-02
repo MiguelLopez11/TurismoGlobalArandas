@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Models;
@@ -222,6 +220,278 @@ namespace TurismoGlobalArandas.Controllers
             return Ok(reservationsByEmployee);
         }
 
+        [HttpGet("ReservationsCount")]
+        public async Task<ActionResult> GetReservationsCount()
+        {
+            var reservaciones = (
+                await _context.ReservationHotels
+                    .Where(w => !w.IsDeleted)
+                    .Select(r => new { Tipo = "Reservación de hoteleria" })
+                    .Concat(
+                        _context.ReservationFlights
+                            .Where(w => !w.IsReservadedByHotel)
+                            .Where(w => !w.IsDeleted)
+                            .Select(r => new { Tipo = "Reservación de vuelo" })
+                    )
+                    .Concat(
+                        _context.ReservationVehicles
+                            .Where(w => !w.IsDeleted)
+                            .Select(r => new { Tipo = "Reservación de Vehiculos" })
+                    )
+                    .Concat(
+                        _context.ReservationTours
+                            .Where(w => !w.IsDeleted)
+                            .Select(r => new { Tipo = "Reservación de Tours" })
+                    )
+                    .ToListAsync()
+            )
+                .GroupBy(r => new { r.Tipo })
+                .Select(group => new { Tipo = group.Key.Tipo, Cantidad = group.Count() })
+                .ToArray();
+
+            return Ok(reservaciones);
+        }
+
+        [HttpPost("CommissionsEmployee")]
+        public async Task<ActionResult> GetCommissionsEmployee([FromBody] List<DateTime> dates)
+        {
+            List<CommisionsEmployee> commisions = new List<CommisionsEmployee>();
+            #region reservacion hoteleria individual
+            var individualRates = _context.IndividualRates
+                .Include(i => i.reservationHotel)
+                .AsEnumerable()
+                .Where(
+                            r =>
+                                dates == null
+                                || dates.Count == 0
+                                || (
+                                    dates.Any(date => r.reservationHotel.DateSale == date.Date)
+                                    || (
+                                        r.reservationHotel.DateSale >= dates[0].Date
+                                        && r.reservationHotel.DateSale <= dates[dates.Count - 1].Date
+                                    )
+                                )
+                        )
+                .Where(w => !w.IsDeleted)
+                .ToList();
+            foreach (var item in individualRates)
+            {
+                var ReservationHotel = await _context.ReservationHotels
+                    .Include(i => i.Providers)
+                    .FirstOrDefaultAsync(f => f.ReservationHotelId == item.ReservationHotelId);
+                var service = await _context.ServicesProviders.FirstOrDefaultAsync(
+                    f => f.ProviderId == ReservationHotel.ProviderId
+                );
+                var employee = await _context.Employees.FirstOrDefaultAsync(
+                    f => f.EmployeeId == ReservationHotel.EmployeeId
+                );
+                if (item.PublicRate != null)
+                {
+                    decimal RevenueHotel = 0;
+                    var commisionAgency =
+                        (decimal)item.PublicRate * (service.CommissionAgency / 100);
+                    var commisionClient =
+                        (decimal)item.PublicRate * (service.CommissionClient / 100);
+                    commisionAgency = (decimal)item.PublicRate - commisionAgency;
+                    commisionClient = (decimal)item.PublicRate - commisionClient;
+                    RevenueHotel += (commisionAgency - commisionClient) * -1;
+                    var commisionEmployee = RevenueHotel * (service.CommissionEmployee / 100);
+                    commisions.Add(
+                        new CommisionsEmployee
+                        {
+                            Commission = commisionEmployee,
+                            EmployeeName = employee.Name + " " + employee.Lastname,
+                            InvoiceReservation = ReservationHotel.Invoice,
+                            DateSale = ReservationHotel.DateSale,
+                            TypeReservation = "Reservación hoteleria individual"
+                        }
+                    );
+                }
+            }
+            #endregion
+            #region reservacion hoteleria grupal
+            var GroupRate = _context.GroupRates
+                .Include(i => i.ReservationHotelGroup)
+                .AsEnumerable()
+                .Where(
+                            r =>
+                                dates == null
+                                || dates.Count == 0
+                                || (
+                                    dates.Any(date => r.DateSale == date.Date)
+                                    || (
+                                        r.DateSale >= dates[0].Date
+                                        && r.DateSale <= dates[dates.Count - 1].Date
+                                    )
+                                )
+                        )
+                .Where(w => !w.IsDeleted)
+                .ToList();
+            foreach (var item in GroupRate)
+            {
+                if (item.RangeTotal != null)
+                {
+                    decimal? RevenueGroupRate = 0;
+                    var ReservationHotel = await _context.ReservationHotels
+                        .Include(i => i.Providers)
+                        .FirstOrDefaultAsync(
+                            f =>
+                                f.ReservationHotelId
+                                == item.ReservationHotelGroup.ReservationHotelId
+                        );
+                    var service = await _context.ServicesProviders.FirstOrDefaultAsync(
+                        f => f.ProviderId == ReservationHotel.ProviderId
+                    );
+                    var employee = await _context.Employees.FirstOrDefaultAsync(
+                    f => f.EmployeeId == ReservationHotel.EmployeeId
+                    );
+                    RevenueGroupRate += (item.RangeTotal - item.RangeAgency);
+                    var commisionEmployee = RevenueGroupRate * (service.CommissionEmployee / 100);
+                    commisions.Add(
+                        new CommisionsEmployee
+                        {
+                            Commission = commisionEmployee,
+                            EmployeeName = employee.Name + " " + employee.Lastname,
+                            InvoiceReservation = ReservationHotel.Invoice,
+                            DateSale = ReservationHotel.DateSale,
+                            TypeReservation = "Reservación hoteleria grupal"
+                        }
+                    );
+                }
+            }
+            #endregion
+            #region Flights
+            var reservationFlights = _context.ReservationFlights
+                .AsEnumerable()
+                .Where(
+                            r =>
+                                dates == null
+                                || dates.Count == 0
+                                || (
+                                    dates.Any(date => r.DateSale == date.Date)
+                                    || (
+                                        r.DateSale >= dates[0].Date
+                                        && r.DateSale <= dates[dates.Count - 1].Date
+                                    )
+                                )
+                        )
+                .Where(w => !w.IsDeleted)
+                .ToList();
+            foreach (var item in reservationFlights)
+            {
+                if (item.PriceNeto != null)
+                {
+                    decimal? RevenueFlight = 0;
+                    var service = await _context.ServicesProviders.FirstOrDefaultAsync(
+                        f => f.ProviderId == item.ProviderId
+                    );
+                    var employee = await _context.Employees.FirstOrDefaultAsync(
+                    f => f.EmployeeId == item.EmployeeId
+                    );
+                    RevenueFlight += (item.PriceNeto - item.PricePublic);
+                    var commisionEmployee = RevenueFlight * (service.CommissionEmployee / 100);
+                    commisions.Add(
+                        new CommisionsEmployee
+                        {
+                            Commission = commisionEmployee,
+                            EmployeeName = employee.Name + " " + employee.Lastname,
+                            InvoiceReservation = item.Invoice,
+                            DateSale = item.DateSale,
+                            TypeReservation = "Reservación Vuelos"
+                        }
+                    );
+                }
+            }
+            #endregion
+            #region Vehicles
+            var reservationVehicles = _context.ReservationVehicles
+                .AsEnumerable()
+                .Where(
+                            r =>
+                                dates == null
+                                || dates.Count == 0
+                                || (
+                                    dates.Any(date => r.DateSale == date.Date)
+                                    || (
+                                        r.DateSale >= dates[0].Date
+                                        && r.DateSale <= dates[dates.Count - 1].Date
+                                    )
+                                )
+                        )
+                .Where(w => !w.IsDeleted)
+                .ToList();
+            foreach (var item in reservationVehicles)
+            {
+                if (item.PriceNeto != null)
+                {
+                    decimal? RevenueVehicle = 0;
+                    var service = await _context.ServicesProviders.FirstOrDefaultAsync(
+                        f => f.ProviderId == item.ProviderId
+                    );
+                    var employee = await _context.Employees.FirstOrDefaultAsync(
+                    f => f.EmployeeId == item.EmployeeId
+                    );
+                    RevenueVehicle += (item.PriceNeto - item.PricePublic);
+                    var commisionEmployee = RevenueVehicle * (service.CommissionEmployee / 100);
+                    commisions.Add(
+                        new CommisionsEmployee
+                        {
+                            Commission = commisionEmployee,
+                            EmployeeName = employee.Name + employee.Lastname,
+                            InvoiceReservation = item.Invoice,
+                            DateSale = item.DateSale,
+                            TypeReservation = "Reservación Vuelos"
+                        }
+                    );
+                }
+            }
+            #endregion
+            #region Tours
+            var reservationTours = _context.ReservationTours
+                .AsEnumerable()
+                .Where(
+                            r =>
+                                dates == null
+                                || dates.Count == 0
+                                || (
+                                    dates.Any(date => r.DateSale == date.Date)
+                                    || (
+                                        r.DateSale >= dates[0].Date
+                                        && r.DateSale <= dates[dates.Count - 1].Date
+                                    )
+                                )
+                        )
+                .Where(w => !w.IsDeleted)
+                .ToList();
+            foreach (var item in reservationTours)
+            {
+                if (item.NetPrice != null)
+                {
+                    decimal? RevenueVehicle = 0;
+                    var service = await _context.ServicesProviders.FirstOrDefaultAsync(
+                        f => f.ProviderId == item.ProviderId
+                    );
+                    var employee = await _context.Employees.FirstOrDefaultAsync(
+                    f => f.EmployeeId == item.EmployeeId
+                    );
+                    RevenueVehicle += (item.NetPrice - item.PublicRate);
+                    var commisionEmployee = RevenueVehicle * (service.CommissionEmployee / 100);
+                    commisions.Add(
+                        new CommisionsEmployee
+                        {
+                            Commission = commisionEmployee,
+                            EmployeeName = employee.Name + " " + employee.Lastname,
+                            InvoiceReservation = item.Invoice,
+                            DateSale = item.DateSale,
+                            TypeReservation = "Reservación Tours"
+                        }
+                    );
+                }
+            }
+            #endregion
+            return Ok(commisions);
+        }
+
         [HttpPost("TotalRevenue")]
         public async Task<ActionResult> GetTotalRevenue()
         {
@@ -240,22 +510,65 @@ namespace TurismoGlobalArandas.Controllers
                 var service = await _context.ServicesProviders.FirstOrDefaultAsync(
                     f => f.ProviderId == ReservationHotel.ProviderId
                 );
-
-                var commisionAgency = (decimal)item.PublicRate * (service.CommissionAgency / 100);
-                var commisionClient = (decimal)item.PublicRate * (service.CommissionClient / 100);
-                commisionAgency = (decimal)item.PublicRate - commisionAgency;
-                commisionClient = (decimal)item.PublicRate - commisionClient;
-                Revenue += (commisionAgency - commisionClient) * -1;
+                if (item.PublicRate != null)
+                {
+                    decimal RevenueHotel = 0;
+                    var commisionAgency =
+                        (decimal)item.PublicRate * (service.CommissionAgency / 100);
+                    var commisionClient =
+                        (decimal)item.PublicRate * (service.CommissionClient / 100);
+                    commisionAgency = (decimal)item.PublicRate - commisionAgency;
+                    commisionClient = (decimal)item.PublicRate - commisionClient;
+                    RevenueHotel += (commisionAgency - commisionClient) * -1;
+                    var commisionEmployee = RevenueHotel * (service.CommissionEmployee / 100);
+                    Revenue += RevenueHotel - commisionEmployee;
+                }
             }
             #endregion
-            #region Flights 
+            #region reservacion hoteleria grupal
+            var GroupRate = await _context.GroupRates
+                .Include(i => i.ReservationHotelGroup)
+                .Where(r => r.DateSale.Year == DateTime.Now.Year)
+                .Where(w => !w.IsDeleted)
+                .ToListAsync();
+            foreach (var item in GroupRate)
+            {
+                if (item.RangeTotal != null)
+                {
+                    decimal? RevenueGroupRate = 0;
+                    var ReservationHotel = await _context.ReservationHotels
+                        .Include(i => i.Providers)
+                        .FirstOrDefaultAsync(
+                            f =>
+                                f.ReservationHotelId
+                                == item.ReservationHotelGroup.ReservationHotelId
+                        );
+                    var service = await _context.ServicesProviders.FirstOrDefaultAsync(
+                        f => f.ProviderId == ReservationHotel.ProviderId
+                    );
+                    RevenueGroupRate += (item.RangeTotal - item.RangeAgency);
+                    var commisionEmployee = RevenueGroupRate * (service.CommissionEmployee / 100);
+                    Revenue += RevenueGroupRate - commisionEmployee;
+                }
+            }
+            #endregion
+            #region Flights
             var reservationFlights = await _context.ReservationFlights
                 .Where(r => r.DateSale.Value.Year == DateTime.Now.Year)
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
             foreach (var item in reservationFlights)
             {
-                Revenue += (item.PriceNeto - item.PricePublic);
+                if (item.PriceNeto != null)
+                {
+                    decimal? RevenueFlight = 0;
+                    var service = await _context.ServicesProviders.FirstOrDefaultAsync(
+                        f => f.ProviderId == item.ProviderId
+                    );
+                    RevenueFlight += (item.PriceNeto - item.PricePublic);
+                    var commisionEmployee = RevenueFlight * (service.CommissionEmployee / 100);
+                    Revenue += RevenueFlight - commisionEmployee;
+                }
             }
             #endregion
             #region Vehicles
@@ -265,7 +578,16 @@ namespace TurismoGlobalArandas.Controllers
                 .ToListAsync();
             foreach (var item in reservationVehicles)
             {
-                Revenue += (item.PriceNeto - item.PricePublic);
+                if (item.PriceNeto != null)
+                {
+                    decimal? RevenueVehicle = 0;
+                    var service = await _context.ServicesProviders.FirstOrDefaultAsync(
+                        f => f.ProviderId == item.ProviderId
+                    );
+                    RevenueVehicle += (item.PriceNeto - item.PricePublic);
+                    var commisionEmployee = RevenueVehicle * (service.CommissionEmployee / 100);
+                    Revenue += RevenueVehicle - commisionEmployee;
+                }
             }
             #endregion
             #region Tours
@@ -275,12 +597,21 @@ namespace TurismoGlobalArandas.Controllers
                 .ToListAsync();
             foreach (var item in reservationTours)
             {
-                Revenue += (item.NetPrice - item.PublicRate);
+                if (item.NetPrice != null)
+                {
+                    decimal? RevenueVehicle = 0;
+                    var service = await _context.ServicesProviders.FirstOrDefaultAsync(
+                        f => f.ProviderId == item.ProviderId
+                    );
+                    RevenueVehicle += (item.NetPrice - item.PublicRate);
+                    var commisionEmployee = RevenueVehicle * (service.CommissionEmployee / 100);
+                    Revenue += RevenueVehicle - commisionEmployee;
+                }
             }
             #endregion
             return Ok(Revenue);
-
         }
+
         [HttpGet("ReservationCount")]
         public async Task<ActionResult> GetCountReservations()
         {

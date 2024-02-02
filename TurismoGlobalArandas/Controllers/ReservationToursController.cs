@@ -88,6 +88,8 @@ namespace TurismoGlobalArandas.Controllers
             ReservationOld.IsNational = reservationTours.IsNational;
             ReservationOld.IncludeTransportation = reservationTours.IncludeTransportation;
             ReservationOld.IsSoldOut = reservationTours.IsSoldOut;
+            ReservationOld.EmployeeId = reservationTours.EmployeeId;
+            ReservationOld.ProviderId = reservationTours.ProviderId;
             ReservationOld.IsDeleted = reservationTours.IsDeleted;
             var ReservationPaymentRelation = await _context.PaymentsRelationReservations
                 .Include(i => i.ReservationTours)

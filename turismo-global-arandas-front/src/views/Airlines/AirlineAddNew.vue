@@ -79,7 +79,7 @@ import * as yup from 'yup'
 
 export default {
   setup () {
-    const isOpenDialog = inject('AddCategoryReservation')
+    const isOpenDialog = inject('addAirline')
     const swal = inject('$swal')
     const AirlineFormRef = ref(null)
     const { createAirline } = AirlineServices()

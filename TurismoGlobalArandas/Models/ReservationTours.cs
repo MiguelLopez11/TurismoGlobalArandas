@@ -33,6 +33,7 @@ namespace TurismoGlobalArandas.Models
         public bool IncludeTransportation { get; set; }
         public bool IsSoldOut { get; set; }
         public int? EmployeeId { get; set; } = null;
+        public int? ProviderId { get; set; } = null;
         public bool IsDeleted { get; set; }
 
         [ForeignKey("CustomerId")]
@@ -42,6 +43,8 @@ namespace TurismoGlobalArandas.Models
 
         [ForeignKey("DestinationId")]
         public Destinations? Destinations { get; set; }
+        [ForeignKey("ProviderId")]
+        public Providers? Providers { get; set; }
 
     }
 }

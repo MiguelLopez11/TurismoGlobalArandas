@@ -198,6 +198,19 @@
       <el-col :span="8">
         <el-form-item>
           <div>
+            <label>Tarifa pública total</label>
+          </div>
+          <el-input
+            placeholder="Ingresa la tarifa total para la agencia"
+            size="large"
+            v-model="groupRate.rangeAgency"
+            type="number"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="8">
+        <el-form-item>
+          <div>
             <label>Observaciones</label>
           </div>
           <el-input

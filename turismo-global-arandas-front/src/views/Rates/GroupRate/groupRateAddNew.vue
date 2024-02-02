@@ -198,6 +198,19 @@
       <el-col :span="8">
         <el-form-item>
           <div>
+            <label>Tarifa pública total</label>
+          </div>
+          <el-input
+            placeholder="Ingresa la tarifa total para la agencia"
+            size="large"
+            v-model="groupRateFields.rangeAgency"
+            type="number"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="8">
+        <el-form-item>
+          <div>
             <label>Observaciones</label>
           </div>
           <el-input
@@ -262,6 +275,7 @@ export default {
       agesMinors: null,
       rangeNight: null,
       rangeTotal: null,
+      rangeAgency: null,
       observations: null,
       reservationHotelGroupId: reservationHotelGroupId.value,
       isDeleted: false

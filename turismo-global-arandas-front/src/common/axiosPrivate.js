@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { memoizedRefreshToken } from './refreshToken'
 
-axios.defaults.baseURL = 'https://turismoglobalarandasservices.somee.com/api/'
+axios.defaults.baseURL = 'https://localhost:7207/api/'
 
 axios.interceptors.request.use(
   async (config) => {

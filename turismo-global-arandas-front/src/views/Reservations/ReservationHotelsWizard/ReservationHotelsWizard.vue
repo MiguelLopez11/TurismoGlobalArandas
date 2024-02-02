@@ -826,7 +826,6 @@ export default {
     const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     const reservationHotelGroupId = ref(0)
     const paymentReservationId = ref(0)
-    // const costAditionalServices = ref(null)
     let dateArrival = new Date()
     provide('AddTypeReservation', isAddedTypeReservation)
     provide('addDestination', isAddDestination)

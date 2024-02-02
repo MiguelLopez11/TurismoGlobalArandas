@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TurismoGlobalArandas.Context;
 
@@ -11,9 +12,11 @@ using TurismoGlobalArandas.Context;
 namespace TurismoGlobalArandas.Migrations
 {
     [DbContext(typeof(TurismoGlobalContext))]
-    partial class TurismoGlobalContextModelSnapshot : ModelSnapshot
+    [Migration("20240129232423_reservation_providers_relations")]
+    partial class reservation_providers_relations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -503,9 +506,6 @@ namespace TurismoGlobalArandas.Migrations
                     b.Property<string>("AgesMinors")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateSale")
-                        .HasColumnType("datetime2");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -523,9 +523,6 @@ namespace TurismoGlobalArandas.Migrations
 
                     b.Property<string>("Observations")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal?>("RangeAgency")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<decimal?>("RangeNight")
                         .HasColumnType("decimal(18, 2)");

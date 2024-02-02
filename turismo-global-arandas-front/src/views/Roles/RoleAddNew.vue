@@ -66,7 +66,7 @@ export default {
     Field
   },
   setup () {
-    const isOpenDialog = inject('addDestination')
+    const isOpenDialog = inject('addRole')
     const swal = inject('$swal')
     const roleFormRef = ref(null)
     const { createRole } = RoleServices()

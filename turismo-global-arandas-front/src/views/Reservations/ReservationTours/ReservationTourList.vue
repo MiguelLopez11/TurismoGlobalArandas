@@ -68,7 +68,7 @@
                     >
                     <el-dropdown-item
                       @click="onDeleteReservationTour(items.reservationTourId)"
-                      >Eliminar</el-dropdown-item
+                      >Cancelar reservación</el-dropdown-item
                     >
                     <el-dropdown-item
                       @click="

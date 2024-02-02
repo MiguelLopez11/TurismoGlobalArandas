@@ -92,7 +92,7 @@ export default {
     const searchValue = ref('')
     const searchField = ref('name')
     const isAddRoute = ref(false)
-    provide('addPaymentMethod', isAddRoute)
+    provide('addRoute', isAddRoute)
     const fields = ref([
       { value: 'routeName', text: 'Nombre' },
       { value: 'description', text: 'Descripción' },

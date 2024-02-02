@@ -116,6 +116,12 @@ export default {
             title: 'Reservaciones del empleado',
             path: '/ReservacionesEmpleados',
             icon: 'bi bi-bar-chart-steps'
+          },
+          {
+            index: '3-3',
+            title: 'comisiones del empleado',
+            path: '/Empleados/Comisiones',
+            icon: 'bi bi-bounding-box'
           }
         ]
       },

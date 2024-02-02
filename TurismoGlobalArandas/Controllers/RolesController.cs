@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
@@ -44,9 +43,8 @@ namespace UConnect.Controllers
         [HttpPost("{Name}")]
         public async Task<IActionResult> postRole(string Name)
         {
-            if (!await _roleManager.RoleExistsAsync(Name))
-                await _roleManager.CreateAsync(new IdentityRole(Name));
-            return Ok("Role creado correctamente"); 
+            await _roleManager.CreateAsync(new IdentityRole(Name));
+            return Ok("Role creado correctamente");
         }
         [HttpPut("{Name}/{newRoleName}")]
         public async Task<IActionResult> putRole(string Name, string newRoleName)
@@ -56,7 +54,7 @@ namespace UConnect.Controllers
                 return NotFound();
             }
             var role = await _roleManager.FindByNameAsync(Name);
-               role.Name= newRoleName;
+            role.Name = newRoleName;
             await _roleManager.UpdateAsync(role);
 
             return Ok("Role modificado correctamente");

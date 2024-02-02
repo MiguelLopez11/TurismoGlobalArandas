@@ -46,8 +46,8 @@
                   <template #selected-option="{ name, lastname }">
                     <label>{{ name }} {{ lastname }}</label>
                   </template>
-                  <template #option="{ name, lastname }">
-                    <label>{{ name }} {{ lastname }}</label>
+                  <template #option="{ name, lastname, phoneNumber }">
+                    <label>{{ name }} {{ lastname }} ({{ phoneNumber }})</label>
                   </template>
                   <template #header>
                     <span class="text-danger">*</span>
@@ -132,6 +132,49 @@
                   placeholder="Selecciona la fecha limite del pago"
                   size="large"
                 />
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item>
+                <v-select
+                  class="w-100"
+                  label="name"
+                  v-model="reservationTour.providerId"
+                  :options="providers"
+                  :reduce="provider => provider.providerId"
+                >
+                  <template #selected-option="{ name, lastname }">
+                    <label>{{ name }} {{ lastname }}</label>
+                  </template>
+                  <template #option="{ name, lastname }">
+                    <label>{{ name }} {{ lastname }}</label>
+                  </template>
+                  <template #header>
+                    <span class="text-danger">*</span>
+                    <label>Promotora</label>
+                  </template>
+                  <template #search="{ attributes, events }">
+                    <input
+                      class="vs__search"
+                      :required="!reservationTour.providerId"
+                      v-bind="attributes"
+                      v-on="events"
+                    />
+                  </template>
+                  <template #list-footer>
+                    <el-button
+                      v-if="!reservationTour.providerId"
+                      class="w-100"
+                      @click="
+                        () => {
+                          isAddProvider = !isAddProvider
+                        }
+                      "
+                    >
+                      agregar nuevo promotor</el-button
+                    >
+                  </template>
+                </v-select>
               </el-form-item>
             </el-col>
           </el-row>
@@ -309,6 +352,7 @@
     </form-wizard>
   </el-card>
   <destination-add-new />
+  <provider-add-new />
   <el-dialog v-model="isAddedCustomer">
     <customers-add-new @add-customer="onAddedCustomer" />
   </el-dialog>
@@ -322,9 +366,11 @@ import DestinationServices from '@/Services/Destinations.Services'
 import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
 import PaymentProviders from '@/Services/paymentProviders.Services'
 import CustomerServices from '@/Services/Customers.Services'
+import ProviderServices from '@/Services/Provider.Services'
 // COMPONENTS
 import DestinationAddNew from '@/views/Destinations/DestinationAddNew.vue'
 import CustomersAddNew from '@/views/Customers/CustomersAddNew.vue'
+import ProviderAddNew from '@/views/Providers/ProviderAddNew.vue'
 // LIBRARIES
 import { useRouter } from 'vue-router'
 export default {
@@ -336,7 +382,8 @@ export default {
   },
   components: {
     DestinationAddNew,
-    CustomersAddNew
+    CustomersAddNew,
+    ProviderAddNew
   },
   setup (props) {
     const { getReservationTour, createReservationTour, updateReservationTour } =
@@ -350,22 +397,26 @@ export default {
     } = PaymentsRelationReservationServices()
     const { createPaymentProvider } = PaymentProviders()
     const { getCustomers } = CustomerServices()
+    const { getProviders } = ProviderServices()
     const redirect = useRouter()
     //   DATA
     const reservationTour = ref([])
     const destinations = ref([])
     const customers = ref([])
+    const providers = ref([])
     const isAddDestination = ref(false)
     const isAddedCustomer = ref(false)
+    const isAddProvider = ref(false)
     const reservationTourId = ref(0)
     const paymentReservationId = ref(0)
     const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
+    provide('addProvider', isAddProvider)
     // OPEN CLOSE COMPONENT
     provide('addDestination', isAddDestination)
     const swal = inject('$swal')
     // WATCH
-    watch(isAddDestination, newValue => {
-      if (!newValue) {
+    watch([isAddDestination, isAddProvider], ([newValueA, NewValueB]) => {
+      if (!newValueA || !NewValueB) {
         refreshDataSelect()
       }
     })
@@ -426,6 +477,9 @@ export default {
     getCustomers(data => {
       customers.value = data
     })
+    getProviders(data => {
+      providers.value = data
+    })
     const refreshReservationTour = () => {
       getReservationTour(
         props.ReservationTourId || reservationTourId.value,
@@ -437,6 +491,9 @@ export default {
     const refreshDataSelect = () => {
       getDestinations(data => {
         destinations.value = data
+      })
+      getProviders(data => {
+        providers.value = data
       })
     }
     const onUpdateReservation = () => {
@@ -524,8 +581,10 @@ export default {
       reservationTour,
       destinations,
       customers,
+      providers,
       isAddDestination,
       isAddedCustomer,
+      isAddProvider,
       validationGeneralData,
       validationClientData,
       validationCloseReservation,

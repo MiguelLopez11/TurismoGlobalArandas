@@ -150,6 +150,36 @@
           </Field>
         </el-col>
         <el-col :span="8">
+          <el-form-item>
+            <v-select
+              class="w-100"
+              label="name"
+              v-model="reservationFlight.providerId"
+              :options="providers"
+              :reduce="provider => provider.providerId"
+            >
+              <template #selected-option="{ name, lastname }">
+                <label>{{ name }} {{ lastname }}</label>
+              </template>
+              <template #option="{ name, lastname }">
+                <label>{{ name }} {{ lastname }}</label>
+              </template>
+              <template #header>
+                <span class="text-danger">*</span>
+                <label>Promotora</label>
+              </template>
+              <template #search="{ attributes, events }">
+                <input
+                  class="vs__search"
+                  :required="!reservationFlight.providerId"
+                  v-bind="attributes"
+                  v-on="events"
+                />
+              </template>
+            </v-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <Field name="pricePublic" :rules="validatePricePublic">
             <el-form-item :error="errors.pricePublic" required>
               <div>
@@ -272,6 +302,7 @@
                 size="large"
                 v-model="reservationFlight.contactPhone"
                 type="number"
+                minlength="10"
               />
             </el-form-item>
           </Field>
@@ -434,7 +465,7 @@ import RouteServices from '@/Services/Routes.Services'
 import ReservationFlightDestinationsServices from '@/Services/ReservationFlightDestinations.Services'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject, provide, watch } from 'vue'
-
+import ProviderServices from '@/Services/Provider.Services'
 export default {
   setup () {
     const { getReservationFlight, updateReservationFlight } =
@@ -448,11 +479,13 @@ export default {
       updateReservationFlightDestination,
       deleteReservationFlightDestination
     } = ReservationFlightDestinationsServices()
+    const { getProviders } = ProviderServices()
     const customers = ref([])
     const reservationFlight = ref([])
     const airlines = ref([])
     const routes = ref([])
     const destinationsFlight = ref([])
+    const providers = ref([])
     const destinationsNumber = ref(null)
     const router = useRoute()
     const redirect = useRouter()
@@ -474,6 +507,9 @@ export default {
     })
     getRoutes(data => {
       routes.value = data
+    })
+    getProviders(data => {
+      providers.value = data
     })
     watch(reservationFlight, NewValue => {})
     const refreshDestinations = () => {
@@ -618,6 +654,7 @@ export default {
       customers,
       routes,
       airlines,
+      providers,
       destinationsFlight,
       destinationsNumber,
       isAddedCustomer,

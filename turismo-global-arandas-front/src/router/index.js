@@ -561,6 +561,15 @@ const routes = [
       requiresAuth: true,
       roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
     }
+  },
+  {
+    path: '/Empleados/Comisiones',
+    name: 'CommissionsEmployee',
+    component: () => import('../views/CommissionsEmployee/CommissionsEmployeeList'),
+    meta: {
+      requiresAuth: true,
+      roles: ['administrador', 'GERENTE GENERAL', 'AGENTE DE VENTAS', 'CONTABLE ADMINISTRATIVO']
+    }
   }
 ]
 

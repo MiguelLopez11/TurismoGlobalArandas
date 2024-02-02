@@ -96,6 +96,9 @@ namespace TurismoGlobalArandas.Controllers
             FlightOld.PaymentMethodClient = reservationFlight.PaymentMethodClient;
             FlightOld.ContactPhone = reservationFlight.ContactPhone;
             FlightOld.IsSoldOut = reservationFlight.IsSoldOut;
+            FlightOld.IsReservadedByHotel = reservationFlight.IsReservadedByHotel;
+            FlightOld.EmployeeId = reservationFlight.EmployeeId;
+            FlightOld.ProviderId = reservationFlight.ProviderId;
             FlightOld.IsDeleted = reservationFlight.IsDeleted;
 
             var ReservationPaymentRelation = await _context.PaymentsRelationReservations

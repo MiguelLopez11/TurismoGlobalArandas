@@ -91,7 +91,7 @@ export default {
     const searchValue = ref('')
     const searchField = ref('name')
     const isAddRole = ref(false)
-    provide('addDestination', isAddRole)
+    provide('addRole', isAddRole)
     const fields = ref([
       { value: 'name', text: 'Nombre' },
       { value: 'actions', text: 'Acciones' }

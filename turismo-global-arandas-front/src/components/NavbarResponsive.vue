@@ -15,11 +15,11 @@
       <!-- Columna de información de la empresa -->
       <el-col :span="7">
         <el-row justify="end">
-          <el-col :span="16">
-            <strong>TURISMO GLOBAL ARANDAS</strong>
-          </el-col>
           <el-col :span="8">
             <img src="@/Images/logo.png" alt="" width="50" />
+          </el-col>
+          <el-col :span="16">
+            <strong>TURISMO GLOBAL ARANDAS</strong>
           </el-col>
         </el-row>
       </el-col>

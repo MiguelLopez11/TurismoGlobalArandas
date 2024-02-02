@@ -78,7 +78,7 @@ export default {
     Field
   },
   setup () {
-    const isOpenDialog = inject('addPaymentMethod')
+    const isOpenDialog = inject('addRoute')
     const swal = inject('$swal')
     const routeFormRef = ref(null)
     const { createRoute } = RouteServices()

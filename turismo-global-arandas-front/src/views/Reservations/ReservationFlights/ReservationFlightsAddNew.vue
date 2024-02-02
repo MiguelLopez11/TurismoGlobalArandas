@@ -46,6 +46,19 @@
                   v-on="events"
                 />
               </template>
+              <template #list-footer>
+                <el-button
+                  v-if="!reservationFlightFields.routeDepartureAirportId"
+                  class="w-100"
+                  @click="
+                    () => {
+                      isAddRoute = !isAddRoute
+                    }
+                  "
+                >
+                  agregar nueva ruta</el-button
+                >
+              </template>
             </v-select>
           </el-form-item>
         </el-col>
@@ -69,6 +82,19 @@
                   v-bind="attributes"
                   v-on="events"
                 />
+              </template>
+              <template #list-footer>
+                <el-button
+                  v-if="!reservationFlightFields.routeArrivalAirportId"
+                  class="w-100"
+                  @click="
+                    () => {
+                      isAddRoute = !isAddRoute
+                    }
+                  "
+                >
+                  agregar nueva ruta</el-button
+                >
               </template>
             </v-select>
           </el-form-item>
@@ -99,6 +125,19 @@
                   v-bind="attributes"
                   v-on="events"
                 />
+              </template>
+              <template #list-footer>
+                <el-button
+                  v-if="!reservationFlightFields.providerId"
+                  class="w-100"
+                  @click="
+                    () => {
+                      isAddAirline = !isAddAirline
+                    }
+                  "
+                >
+                  agregar nueva aerolinea</el-button
+                >
               </template>
             </v-select>
           </el-form-item>
@@ -160,6 +199,49 @@
               />
             </el-form-item>
           </Field>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <v-select
+              class="w-100"
+              label="name"
+              v-model="reservationFlightFields.providerId"
+              :options="providers"
+              :reduce="provider => provider.providerId"
+            >
+              <template #selected-option="{ name, lastname }">
+                <label>{{ name }} {{ lastname }}</label>
+              </template>
+              <template #option="{ name, lastname }">
+                <label>{{ name }} {{ lastname }}</label>
+              </template>
+              <template #header>
+                <span class="text-danger">*</span>
+                <label>Promotora</label>
+              </template>
+              <template #search="{ attributes, events }">
+                <input
+                  class="vs__search"
+                  :required="!reservationFlightFields.providerId"
+                  v-bind="attributes"
+                  v-on="events"
+                />
+              </template>
+              <template #list-footer>
+                <el-button
+                  v-if="!reservationFlightFields.providerId"
+                  class="w-100"
+                  @click="
+                    () => {
+                      isAddProvider = !isAddProvider
+                    }
+                  "
+                >
+                  agregar nuevo promotor</el-button
+                >
+              </template>
+            </v-select>
+          </el-form-item>
         </el-col>
         <el-col :span="8">
           <Field name="pricePublic" v-slot="{ value, field, errorMessage }">
@@ -303,6 +385,7 @@
                 v-bind="field"
                 :validate-event="false"
                 :model-value="value"
+                minlength="10"
               />
             </el-form-item>
           </Field>
@@ -454,10 +537,13 @@
   <el-dialog v-model="isAddedCustomer">
     <customers-add-new @add-customer="onAddedCustomer" />
   </el-dialog>
+  <provider-add-new />
+  <routes-add-new />
+  <airline-add-new />
 </template>
 
 <script>
-import { ref, inject, watch } from 'vue'
+import { ref, inject, watch, provide } from 'vue'
 import CustomerServices from '@/Services/Customers.Services'
 import ReservationFlightServices from '@/Services/ReservationFlights.Services'
 import CustomersAddNew from '@/views/Customers/CustomersAddNew.vue'
@@ -467,10 +553,17 @@ import AirlineServices from '@/Services/Airline.Services'
 import RouteServices from '@/Services/Routes.Services'
 import ReservationFlightDestinationsServices from '@/Services/ReservationFlightDestinations.Services'
 import * as yup from 'yup'
+import ProviderServices from '@/Services/Provider.Services'
+import ProviderAddNew from '@/views/Providers/ProviderAddNew.vue'
+import RoutesAddNew from '@/views/Routes/RoutesAddNew.vue'
+import AirlineAddNew from '@/views/Airlines/AirlineAddNew.vue'
 
 export default {
   components: {
-    CustomersAddNew
+    CustomersAddNew,
+    ProviderAddNew,
+    RoutesAddNew,
+    AirlineAddNew
   },
   setup () {
     const isOpenDialog = inject('addReservationFlight')
@@ -479,15 +572,23 @@ export default {
     const customers = ref([])
     const airlines = ref([])
     const routes = ref([])
+    const providers = ref([])
     const destinationsNumber = ref(1)
     const isAddedCustomer = ref(false)
+    const isAddProvider = ref(false)
+    const isAddRoute = ref(false)
+    const isAddAirline = ref(false)
     const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
+    provide('addProvider', isAddProvider)
+    provide('addRoute', isAddRoute)
+    provide('addAirline', isAddAirline)
     const { getCustomers } = CustomerServices()
     const { createReservationFlight } = ReservationFlightServices()
     const { createPaymentRelation } = PaymentsRelationReservationServices()
     const { createPaymentProvider } = PaymentProviders()
     const { getAirlines } = AirlineServices()
     const { getRoutes } = RouteServices()
+    const { getProviders } = ProviderServices()
     const { createReservationFlightDestination } =
       ReservationFlightDestinationsServices()
     const validationSchema = yup.object({
@@ -528,23 +629,38 @@ export default {
       contactPhone: null,
       statusFlightId: null,
       employeeId: employeeId,
+      providerId: null,
       isDeleted: false
     })
     const destinationsFlightFields = ref([])
 
-    watch(destinationsNumber, newNumber => {
-      destinationsFlightFields.value = Array.from(
-        { length: newNumber },
-        () => ({
-          reservationFlightDestinationId: 0,
-          routeDepartureAirportId: null,
-          routeArrivalAirportId: null,
-          airlineId: null,
-          reservationFlightId: null,
-          dateTravel: null
-        })
-      )
-    })
+    watch(
+      [destinationsNumber, isAddProvider, isAddRoute, isAddAirline],
+      ([newNumber, NewValueA, newValueB, NewValueC]) => {
+        destinationsFlightFields.value = Array.from(
+          { length: newNumber },
+          () => ({
+            reservationFlightDestinationId: 0,
+            routeDepartureAirportId: null,
+            routeArrivalAirportId: null,
+            airlineId: null,
+            reservationFlightId: null,
+            dateTravel: null
+          })
+        )
+        if (!NewValueA || !newValueB || !NewValueC) {
+          getProviders(data => {
+            providers.value = data
+          })
+          getRoutes(data => {
+            routes.value = data
+          })
+          getAirlines(data => {
+            airlines.value = data
+          })
+        }
+      }
+    )
     const reservationFlightFieldsBlank = ref(
       JSON.parse(JSON.stringify(reservationFlightFields.value))
     )
@@ -559,6 +675,9 @@ export default {
     })
     getRoutes(data => {
       routes.value = data
+    })
+    getProviders(data => {
+      providers.value = data
     })
     const onAddedCustomer = value => {
       isAddedCustomer.value = !isAddedCustomer.value
@@ -575,8 +694,7 @@ export default {
         ) {
           destinationsFlightFields.value.forEach(item => {
             item.reservationFlightId = data.flightId
-            createReservationFlightDestination(item, response => {
-            })
+            createReservationFlightDestination(item, response => {})
           })
         }
         createPaymentRelation(
@@ -628,7 +746,11 @@ export default {
       customers,
       airlines,
       routes,
+      providers,
       isAddedCustomer,
+      isAddProvider,
+      isAddRoute,
+      isAddAirline,
       onSubmit,
       reservationFlightFields,
       destinationsFlightFields,

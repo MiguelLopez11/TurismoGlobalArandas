@@ -7,6 +7,7 @@ namespace TurismoGlobalArandas.Models
     {
         [Key]
         public int GroupRateId { get; set; }
+        public DateTime DateSale { get; set; }
         public string? NamesCompanions { get; set; }
         public int? Adults { get; set; }
         public int? Juniors { get; set; }
@@ -17,6 +18,8 @@ namespace TurismoGlobalArandas.Models
         public decimal? RangeNight { get; set; }
         [Column(TypeName = "decimal(18, 2)")]
         public decimal? RangeTotal { get; set; }
+        [Column(TypeName = "decimal(18, 2)")]
+        public decimal? RangeAgency { get; set; }
         public string? Observations { get; set; }
         public int ReservationHotelGroupId { get; set; }
         public bool IsDeleted { get; set; }

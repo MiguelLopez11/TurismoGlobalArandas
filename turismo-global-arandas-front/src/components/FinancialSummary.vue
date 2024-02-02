@@ -1,5 +1,5 @@
 <template>
-  <el-row :gutter="25">
+  <el-row :gutter="15" align="middle">
     <el-col :span="12">
       <el-card>
         <el-row>
@@ -39,23 +39,28 @@
         </el-row>
       </el-card>
     </el-col>
-
-    <el-col :span="14" v-for="item in reservationsByEmployee" :key="item" class="mt-2">
+    <el-col
+      :span="12"
+      v-for="employee in reservationsByEmployee"
+      :key="employee.employeeId"
+    >
       <el-card>
         <el-row>
           <el-col :span="8">
             <strong>Informes de Empleados</strong>
           </el-col>
           <el-col :span="8">
-            <span>Empleado: {{item.employeeName}}</span>
+            <span>Empleado: {{ employee.employeeName }}</span>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="8">
-            <label>Total de reservaciones Hoteleria:  <strong>{{item.hotelReservationsCount}}</strong></label>
-            <label>Total de reservaciones Vuelos:  <strong>{{item.flightReservationsCount}}</strong></label>
-            <label>Total de reservaciones Vehiculos:  <strong>{{item.vehicleReservationsCount}}</strong></label>
-            <label>Total de reservaciones Tours:  <strong>{{item.tourReservationsCount}}</strong></label>
+          <el-col :span="24">
+            <apexchart
+              ref="chartInstance"
+              type="pie"
+              :options="getPieChartOptions(employee)"
+              :series="getPieChartSeries(employee)"
+            />
           </el-col>
         </el-row>
       </el-card>
@@ -66,21 +71,28 @@
 <script>
 import HomeServices from '@/Services/Home.Services'
 import { ref, onMounted } from 'vue'
+
 export default {
   setup () {
-    const { getTotalRevenue, getReservationsByMonth, getReservationsByEmployee } = HomeServices()
+    const {
+      getTotalRevenue,
+      getReservationsByMonth,
+      getReservationsByEmployee
+    } = HomeServices()
+
     const totalRevenue = ref()
     const reservationsByMonth = ref([])
     const reservationsByEmployee = ref([])
+    const pieChartOptions = ref({
+      chart: {
+        type: 'pie'
+      },
+      labels: []
+    })
 
-    getTotalRevenue(data => {
-      totalRevenue.value = data
-    })
-    getReservationsByEmployee(data => {
-      reservationsByEmployee.value = data
-    })
+    const pieChartSeries = ref([25, 30, 45])
     const chartSeries = ref([])
-
+    const chartInstance = ref(null)
     const chartOptions = ref({
       chart: {
         height: 300,
@@ -101,7 +113,7 @@ export default {
       },
       grid: {
         row: {
-          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+          colors: ['#f3f3f3', 'transparent'],
           opacity: 0.5
         }
       },
@@ -122,6 +134,25 @@ export default {
         ]
       }
     })
+
+    const getPieChartOptions = employee => {
+      return {
+        chart: {
+          type: 'pie'
+        },
+        labels: ['Hotel', 'Vuelo', 'Vehículo', 'Tour']
+      }
+    }
+
+    const getPieChartSeries = employee => {
+      return [
+        employee.hotelReservationsCount,
+        employee.flightReservationsCount,
+        employee.vehicleReservationsCount,
+        employee.tourReservationsCount
+      ]
+    }
+
     onMounted(() => {
       getReservationsByMonth(data => {
         reservationsByMonth.value = data
@@ -132,12 +163,30 @@ export default {
           }
         ]
       })
+      getTotalRevenue(data => {
+        totalRevenue.value = data
+      })
+      getReservationsByEmployee(data => {
+        reservationsByEmployee.value = data
+        const pieChartData = data.map(employee => ({
+          name: employee.employeeName,
+          data: employee.totalReservationsCount
+        }))
+        pieChartOptions.value.labels = pieChartData.map(item => item.name)
+        pieChartSeries.value = pieChartData.map(item => item.data)
+      })
     })
+
     return {
       totalRevenue,
       reservationsByEmployee,
       chartSeries,
-      chartOptions
+      chartOptions,
+      pieChartOptions,
+      chartInstance,
+      pieChartSeries,
+      getPieChartOptions,
+      getPieChartSeries
     }
   }
 }

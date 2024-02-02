@@ -34,5 +34,6 @@ namespace TurismoGlobalArandas.Models
 
         [ForeignKey("ProviderId")]
         public Providers? Providers { get; set; }
+
     }
 }
