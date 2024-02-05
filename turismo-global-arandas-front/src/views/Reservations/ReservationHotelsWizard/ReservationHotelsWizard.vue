@@ -526,7 +526,7 @@
                 <label> Numero de contacto </label>
               </div>
               <el-input
-                placeholder="Ingresa una clave de confirmación"
+                placeholder="Ingresa un numero de contacto"
                 size="large"
                 v-model="reservationHotelGroup.phoneNumber"
               />

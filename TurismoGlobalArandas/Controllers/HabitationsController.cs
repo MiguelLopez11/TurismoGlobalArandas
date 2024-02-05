@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Models;
@@ -59,6 +58,7 @@ namespace TurismoGlobalArandas.Controllers
             }
             habitationOld.HabitationId = habitation.HabitationId;
             habitationOld.Invoice = habitation.Invoice;
+            habitationOld.TypeHabitation = habitation.TypeHabitation;
             habitationOld.Ages = habitation.Ages;
             habitationOld.Adults = habitation.Adults;
             habitationOld.Minors = habitation.Minors;

@@ -109,6 +109,9 @@
                       >Relación de pagos a proveedores</el-dropdown-item
                     >
                   </el-dropdown-menu>
+                  <el-dropdown-item @click="onDownloadFile(items.reservationHotelId)"
+                    >Descargar reporte</el-dropdown-item
+                  >
                 </template>
               </el-dropdown>
             </template>
@@ -217,7 +220,8 @@ export default {
     const {
       getReservationHotels,
       deleteReservationHotel,
-      RemoveReservationHotel
+      RemoveReservationHotel,
+      downloadPDF
     } = ReservationServices()
     const reservationHotels = ref([])
     const swal = inject('$swal')
@@ -322,6 +326,17 @@ export default {
         refreshTable()
       }
     )
+    const onDownloadFile = reservationHotelId => {
+      downloadPDF(reservationHotelId, data => {
+        try {
+          const blob = new Blob([data], { type: 'application/pdf' })
+          const pdfUrl = URL.createObjectURL(blob)
+          window.open(pdfUrl, '_blank')
+        } catch (error) {
+          console.error('Error al procesar el PDF', error)
+        }
+      })
+    }
     const onRemoveReservationHotel = reservationHotelId => {
       swal
         .fire({
@@ -393,6 +408,7 @@ export default {
       refreshTable,
       onRemoveReservationHotel,
       onDeleteReservationHotel,
+      onDownloadFile,
       userRole
     }
   }

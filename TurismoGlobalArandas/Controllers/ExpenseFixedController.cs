@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Models;
@@ -19,7 +18,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpGet]
         public async Task<ActionResult<ExpensesFixed>> getExpensesFixed()
         {
-            var expenses = await _context.ExpensesFixeds 
+            var expenses = await _context.ExpensesFixeds
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
             return Ok(expenses);
@@ -39,6 +38,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ExpensesFixed>> PostExpenseFixed(ExpensesFixed expense)
         {
+            expense.CreatedDate = DateTime.Now;
             _context.ExpensesFixeds.Add(expense);
             await _context.SaveChangesAsync();
             return CreatedAtAction("getExpenseFixedById", new { ExpensesFixedId = expense.ExpensesFixedId }, expense);

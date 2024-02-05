@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Models;
@@ -39,6 +38,7 @@ namespace TurismoGlobalArandas.Controllers
         [HttpPost]
         public async Task<ActionResult<ExpensesEventual>> PostExpense(ExpensesEventual expense)
         {
+            expense.CreatedDate = DateTime.Now;
             _context.ExpensesEventuals.Add(expense);
             await _context.SaveChangesAsync();
             return CreatedAtAction("getExpenseById", new { ExpenseId = expense.ExpenseId }, expense);

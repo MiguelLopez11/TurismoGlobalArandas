@@ -499,7 +499,16 @@ namespace TurismoGlobalArandas.Controllers
             #region reservacion hoteleria individual
             var individualRates = await _context.IndividualRates
                 .Include(i => i.reservationHotel)
-                .Where(r => r.reservationHotel.DateSale.Value.Year == DateTime.Now.Year)
+                .Where(r => r.reservationHotel.DateSale.Value.Month == DateTime.Now.Month)
+                .Where(w => !w.IsDeleted)
+                .ToListAsync();
+
+            var ExpensesEventual = await _context.ExpensesEventuals
+                .Where(r => r.CreatedDate.Month == DateTime.Now.Month)
+                .Where(w => !w.IsDeleted)
+                .ToListAsync();
+            var ExpensesFixed = await _context.ExpensesFixeds
+                .Where(r => r.CreatedDate.Month == DateTime.Now.Month)
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
             foreach (var item in individualRates)
@@ -528,7 +537,7 @@ namespace TurismoGlobalArandas.Controllers
             #region reservacion hoteleria grupal
             var GroupRate = await _context.GroupRates
                 .Include(i => i.ReservationHotelGroup)
-                .Where(r => r.DateSale.Year == DateTime.Now.Year)
+                .Where(r => r.DateSale.Month == DateTime.Now.Month)
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
             foreach (var item in GroupRate)
@@ -554,7 +563,7 @@ namespace TurismoGlobalArandas.Controllers
             #endregion
             #region Flights
             var reservationFlights = await _context.ReservationFlights
-                .Where(r => r.DateSale.Value.Year == DateTime.Now.Year)
+                .Where(r => r.DateSale.Value.Month == DateTime.Now.Month)
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
             foreach (var item in reservationFlights)
@@ -573,7 +582,7 @@ namespace TurismoGlobalArandas.Controllers
             #endregion
             #region Vehicles
             var reservationVehicles = await _context.ReservationVehicles
-                .Where(r => r.DateSale.Value.Year == DateTime.Now.Year)
+                .Where(r => r.DateSale.Value.Month == DateTime.Now.Month)
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
             foreach (var item in reservationVehicles)
@@ -592,7 +601,7 @@ namespace TurismoGlobalArandas.Controllers
             #endregion
             #region Tours
             var reservationTours = await _context.ReservationTours
-                .Where(r => r.DateSale.Value.Year == DateTime.Now.Year)
+                .Where(r => r.DateSale.Value.Month == DateTime.Now.Month)
                 .Where(w => !w.IsDeleted)
                 .ToListAsync();
             foreach (var item in reservationTours)
@@ -607,6 +616,14 @@ namespace TurismoGlobalArandas.Controllers
                     var commisionEmployee = RevenueVehicle * (service.CommissionEmployee / 100);
                     Revenue += RevenueVehicle - commisionEmployee;
                 }
+            }
+            foreach (var item in ExpensesEventual)
+            {
+                Revenue -= item.Cost;
+            }
+            foreach (var item in ExpensesFixed)
+            {
+                Revenue -= item.Cost;
             }
             #endregion
             return Ok(Revenue);

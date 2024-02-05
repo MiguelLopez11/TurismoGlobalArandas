@@ -11,6 +11,13 @@ export default function ReservationHotelServices () {
       callback(response.data)
     })
   }
+  const downloadPDF = (reservationHotelId, callback) => {
+    axiosPrivate.get(`/ReservationHotel/DescargarDatosEnPDF/${reservationHotelId}`, {
+      responseType: 'blob'
+    }).then((response) => {
+      callback(response.data)
+    })
+  }
   const createReservationHotel = (data, callback) => {
     axiosPrivate.post('/ReservationHotel', data).then((response) => {
       callback(response.data)
@@ -34,6 +41,7 @@ export default function ReservationHotelServices () {
   return {
     getReservationHotels,
     getReservationHotel,
+    downloadPDF,
     createReservationHotel,
     updateReservationHotel,
     deleteReservationHotel,
