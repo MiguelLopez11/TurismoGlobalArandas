@@ -55,33 +55,23 @@
             <template #header-actions="header">
               {{ header.text }}
             </template>
-            <template #item-actions="items">
-              <el-dropdown>
-                <span class="bi bi-three-dots-vertical"> </span>
-                <template #dropdown>
-                  <el-dropdown-menu>
-                    <el-dropdown-item
-                      @click="
-                        () => {
-                          $router.push({
-                            name: 'Edit-CategoryReservation',
-                            params: {
-                              CategoryReservationId: items.categoryReservationId
-                            }
-                          })
-                        }
-                      "
-                      >Editar</el-dropdown-item
-                    >
-                    <el-dropdown-item
-                      @click="
-                        onDeleteCategoryReservation(items.categoryReservationId)
-                      "
-                      >Eliminar</el-dropdown-item
-                    >
-                  </el-dropdown-menu>
-                </template>
-              </el-dropdown>
+            <template #item-isSouldOut="items">
+              <el-tag
+                effect="dark"
+                class="ml-2"
+                :type="items.isSoldOut === false ? 'warning' : 'success'"
+              >
+                {{ items.isSoldOut === false ? 'Pendiente' : 'Liquidado' }}
+              </el-tag>
+            </template>
+            <template #item-isDeleted="items">
+              <el-tag
+                effect="dark"
+                class="ml-2"
+                :type="items.isDeleted === false ? 'success' : 'danger'"
+              >
+                {{ items.isDeleted === false ? 'Activo' : 'Cancelado' }}
+              </el-tag>
             </template>
           </EasyDataTable>
         </div>
@@ -116,7 +106,8 @@ export default {
       { value: 'invoiceReservation', text: 'Folio de reserva' },
       { value: 'commission', text: 'Commision' },
       { value: 'dateSale', text: 'Fecha de venta' },
-      { value: 'actions', text: 'Acciones' }
+      { value: 'isSouldOut', text: 'Estado' },
+      { value: 'isDeleted', text: 'Estado reservación' }
     ])
     const filterOptions = computed(() => {
       const filterOptionsArray = []

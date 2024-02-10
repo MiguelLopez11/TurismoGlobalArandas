@@ -18,6 +18,48 @@
           </Field>
         </el-col>
         <el-col :span="8">
+          <el-form-item>
+            <v-select
+              class="w-100"
+              v-model="reservationVehicle.customerId"
+              label="name"
+              :options="customers"
+              :reduce="customer => customer.customerId"
+            >
+              <template #selected-option="{ name, lastname }">
+                <label>{{ name }} {{ lastname }}</label>
+              </template>
+              <template #option="{ name, lastname, phoneNumber }">
+                <label>{{ name }} {{ lastname }} ({{ phoneNumber }})</label>
+              </template>
+              <template #header>
+                <span class="text-danger">*</span>
+                <label> Cliente</label>
+              </template>
+              <template #list-footer>
+                <el-button
+                  class="w-100"
+                  @click="
+                    () => {
+                      isAddedCustomer = !isAddedCustomer
+                    }
+                  "
+                >
+                  Agregar nuevo cliente</el-button
+                >
+              </template>
+              <template #search="{ attributes, events }">
+                <input
+                  class="vs__search"
+                  :required="!reservationVehicle.customerId"
+                  v-bind="attributes"
+                  v-on="events"
+                />
+              </template>
+            </v-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <Field name="dateTravel" :rules="validateDateTravel">
             <el-form-item :error="errors.dateTravel">
               <div>
@@ -139,11 +181,38 @@
         <el-col :span="8">
           <el-form-item>
             <div>
+              <span>Plazo de pago cliente </span>
+            </div>
+            <el-date-picker
+              v-model="reservationVehicle.paymentLimitDate"
+              class="w-100"
+              size="large"
+              placeholder="Selecciona la fecha limite del pago al cliente"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <div>
+              <span>Plazo de pago proveedor </span>
+            </div>
+            <el-date-picker
+              v-model="reservationVehicle.paymentLimitDateProvider"
+              class="w-100"
+              size="large"
+              placeholder="Selecciona la fecha limite del pago al proveedor"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <div>
               <label>Descripción</label>
             </div>
             <el-input
+              type="textarea"
               placeholder="Ingresa una descripción de la reservación"
-              size="large"
+              rows="4"
               v-model="reservationVehicle.description"
             />
           </el-form-item>
@@ -180,6 +249,7 @@
 
 <script>
 import ReservationVehicleServices from '@/Services/ReservationVehicle.Services'
+import CustomerServices from '@/Services/Customers.Services'
 import ProviderServices from '@/Services/Provider.Services'
 import { useRoute, useRouter } from 'vue-router'
 import { ref, inject } from 'vue'
@@ -189,7 +259,9 @@ export default {
     const { getReservationVehicle, updateReservationVehicle } =
       ReservationVehicleServices()
     const { getProviders } = ProviderServices()
+    const { getCustomers } = CustomerServices()
     const providers = ref([])
+    const customers = ref([])
     const reservationVehicle = ref([])
     const router = useRoute()
     const redirect = useRouter()
@@ -199,6 +271,9 @@ export default {
     })
     getProviders(data => {
       providers.value = data
+    })
+    getCustomers(data => {
+      customers.value = data
     })
     const onUpdateCommission = () => {
       updateReservationVehicle(reservationVehicle.value, data => {
@@ -255,6 +330,7 @@ export default {
     return {
       reservationVehicle,
       providers,
+      customers,
       onUpdateCommission,
       validateInvoice,
       validateDateTravel,

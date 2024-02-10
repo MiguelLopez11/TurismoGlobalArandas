@@ -17,6 +17,7 @@ namespace TurismoGlobalArandas.Models
         public DateTime? PaymentLimitDate { get; set; } = null;
         public DateTime? PaymentLimitDateProvider { get; set; } = null;
         public string? OwnerName { get; set; } = null;
+        public string? Transportations { get; set; } = null;
         public int? NumberAdults { get; set; } = null;
         public int? NumberMinors { get; set; } = null;
         [Column(TypeName = "decimal(18, 2)")]

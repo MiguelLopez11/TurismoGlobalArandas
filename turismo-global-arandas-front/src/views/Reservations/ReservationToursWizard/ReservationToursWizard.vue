@@ -267,6 +267,20 @@
                 </el-switch>
               </el-form-item>
             </el-col>
+            <el-col :span="8" v-if="reservationTour.includeTransportation">
+              <el-form-item>
+                <div>
+                  <span class="text-danger">*</span>
+                  <label> transporte </label>
+                </div>
+                <el-input
+                  type="textarea"
+                  placeholder="Ingresa cual es el transporte"
+                  rows="4"
+                  v-model="reservationTour.transportations"
+                />
+              </el-form-item>
+            </el-col>
           </el-row>
         </el-card>
       </tab-content>

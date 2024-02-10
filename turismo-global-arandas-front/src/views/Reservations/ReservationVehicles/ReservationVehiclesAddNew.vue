@@ -31,6 +31,48 @@
           </Field>
         </el-col>
         <el-col :span="8">
+          <el-form-item>
+            <v-select
+              class="w-100"
+              v-model="reservationVehiclesFields.customerId"
+              label="name"
+              :options="customers"
+              :reduce="customer => customer.customerId"
+            >
+              <template #selected-option="{ name, lastname }">
+                <label>{{ name }} {{ lastname }}</label>
+              </template>
+              <template #option="{ name, lastname, phoneNumber }">
+                <label>{{ name }} {{ lastname }} ({{ phoneNumber }})</label>
+              </template>
+              <template #header>
+                <span class="text-danger">*</span>
+                <label> Cliente</label>
+              </template>
+              <template #list-footer>
+                <el-button
+                  class="w-100"
+                  @click="
+                    () => {
+                      isAddedCustomer = !isAddedCustomer
+                    }
+                  "
+                >
+                  Agregar nuevo cliente</el-button
+                >
+              </template>
+              <template #search="{ attributes, events }">
+                <input
+                  class="vs__search"
+                  :required="!reservationVehiclesFields.customerId"
+                  v-bind="attributes"
+                  v-on="events"
+                />
+              </template>
+            </v-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <Field name="dateTravel" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
@@ -168,11 +210,38 @@
         <el-col :span="8">
           <el-form-item>
             <div>
+              <span>Plazo de pago cliente </span>
+            </div>
+            <el-date-picker
+              v-model="reservationVehiclesFields.paymentLimitDate"
+              class="w-100"
+              size="large"
+              placeholder="Selecciona la fecha limite del pago al cliente"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <div>
+              <span>Plazo de pago proveedor </span>
+            </div>
+            <el-date-picker
+              v-model="reservationVehiclesFields.paymentLimitDateProvider"
+              class="w-100"
+              size="large"
+              placeholder="Selecciona la fecha limite del pago al proveedor"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <div>
               <label>Descripción</label>
             </div>
             <el-input
+              type="textarea"
               placeholder="Ingresa una descripción de la reservación"
-              size="large"
+              rows="4"
               v-model="reservationVehiclesFields.description"
             />
           </el-form-item>
@@ -213,6 +282,8 @@ import { Field, Form } from 'vee-validate'
 import ProviderServices from '@/Services/Provider.Services'
 import ReservationVehicleServices from '@/Services/ReservationVehicle.Services'
 import PaymentProviders from '@/Services/paymentProviders.Services'
+import PaymentsRelationReservationServices from '@/Services/PaymentRelationReservationHotel.Services'
+import CustomerServices from '@/Services/Customers.Services'
 import * as yup from 'yup'
 
 export default {
@@ -225,9 +296,12 @@ export default {
     const swal = inject('$swal')
     const reservationVehicleFormRef = ref(null)
     const providers = ref([])
+    const customers = ref([])
     const { getProviders } = ProviderServices()
     const { createPaymentProvider } = PaymentProviders()
     const { createReservationVehicle } = ReservationVehicleServices()
+    const { createPaymentRelation } = PaymentsRelationReservationServices()
+    const { getCustomers } = CustomerServices()
     const employeeId = parseInt(window.sessionStorage.getItem('EmployeeId'))
     const validationSchema = yup.object({
       invoice: yup.string().required('Este campo es requerido'),
@@ -249,9 +323,12 @@ export default {
     })
     const reservationVehiclesFields = ref({
       reservationVehicleId: 0,
+      customerId: null,
       invoice: null,
       dateSale: null,
       dateTravel: null,
+      paymentLimitDate: null,
+      paymentLimitDateProvider: null,
       departureLocation: null,
       arrivalLocation: null,
       proveedorId: null,
@@ -267,8 +344,20 @@ export default {
     getProviders(data => {
       providers.value = data
     })
+    getCustomers(data => {
+      customers.value = data
+    })
     const onSubmit = () => {
       createReservationVehicle(reservationVehiclesFields.value, data => {
+        createPaymentRelation(
+          {
+            amountTotal: reservationVehiclesFields.value.priceNeto,
+            amountMissing: null,
+            reservationVehicleId: data.reservationVehicleId,
+            isDeleted: false
+          },
+          data => {}
+        )
         createPaymentProvider(
           { reservationVehicleId: data.reservationVehicleId, isDeleted: false },
           data => {}
@@ -290,6 +379,7 @@ export default {
       isOpenDialog,
       reservationVehicleFormRef,
       providers,
+      customers,
       onSubmit,
       reservationVehiclesFields,
       validationSchema

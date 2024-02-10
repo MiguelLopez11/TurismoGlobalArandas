@@ -101,9 +101,13 @@ export default {
     provide('editHabitation', isEditHabitation)
     const fields = ref([
       { value: 'habitations.invoice', text: 'Folio de la habitación' },
+      { value: 'habitations.typeHabitation', text: 'Tipo de habitación' },
+      { value: 'habitations.advancePayment', text: 'Anticipo' },
       { value: 'habitations.cost', text: 'Costo' },
       { value: 'habitations.adults', text: 'Adultos' },
       { value: 'habitations.minors', text: 'Menores' },
+      { value: 'habitations.ages', text: 'Edades de los menores' },
+      { value: 'habitations.observations', text: 'Observaciones' },
       { value: 'actions', text: 'Acciones' }
     ])
     getHabitationReservationsHotel(reservationHotelId.value, data => {

@@ -244,6 +244,32 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
+          <el-form-item>
+            <div>
+              <span>Plazo de pago cliente </span>
+            </div>
+            <el-date-picker
+              v-model="reservationFlightFields.paymentLimitDate"
+              class="w-100"
+              size="large"
+              placeholder="Selecciona la fecha limite del pago al cliente"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <div>
+              <span>Plazo de pago proveedor </span>
+            </div>
+            <el-date-picker
+              v-model="reservationFlightFields.paymentLimitDateProvider"
+              class="w-100"
+              size="large"
+              placeholder="Selecciona la fecha limite del pago al proveedor"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <Field name="pricePublic" v-slot="{ value, field, errorMessage }">
             <el-form-item :error="errorMessage" required>
               <div>
@@ -337,7 +363,7 @@
                 <label>Metodo de pago de la agencia</label>
               </div>
               <el-input
-                placeholder="Ingresa una descripcion"
+                placeholder="Ingresa el metodo de pago que usó la agencia"
                 size="large"
                 v-model="reservationFlightFields.paymentMethodAgency"
                 v-bind="field"
@@ -359,7 +385,7 @@
                 <label>Metodo de pago del cliente</label>
               </div>
               <el-input
-                placeholder="Ingresa una descripcion"
+                placeholder="Ingresa el metodo de pago que usó el cliente"
                 size="large"
                 v-model="reservationFlightFields.paymentMethodClient"
                 v-bind="field"
@@ -607,7 +633,7 @@ export default {
         .required('Este campo es requerido'),
       paymentMethodAgency: yup.string().required('Este campo es requerido'),
       paymentMethodClient: yup.string().required('Este campo es requerido'),
-      contactPhone: yup.string().required('Este campo es requerido')
+      contactPhone: yup.string().min(10).required('Este campo es requerido')
     })
     const reservationFlightFields = ref({
       flightId: 0,
@@ -702,7 +728,6 @@ export default {
             amountTotal: reservationFlightFields.value.priceNeto,
             amountMissing: null,
             reservationFlightId: data.flightId,
-            statusPaymentRelationId: 1,
             isDeleted: false
           },
           data => {}
@@ -712,8 +737,8 @@ export default {
           data => {}
         )
         swal.fire({
-          title: '¡Nueva comisión registrada!',
-          text: 'La nueva comisión se ha registrado correctamente',
+          title: '¡Nuevo vuelo registrado!',
+          text: 'El vuelo se ha registrado correctamente',
           icon: 'success'
         })
         isOpenDialog.value = false

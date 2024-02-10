@@ -34,7 +34,6 @@
           </el-form-item>
         </el-col>
         <el-col
-          v-if="reservationHotel.typeReservation.typeReservationId !== 1"
           :span="8"
         >
           <el-form-item>
@@ -105,7 +104,6 @@
           </el-form-item>
         </el-col>
         <el-col
-          v-if="reservationHotel.typeReservation.typeReservationId !== 1"
           :span="8"
         >
           <el-form-item>

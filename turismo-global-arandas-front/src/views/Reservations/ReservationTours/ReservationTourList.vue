@@ -64,11 +64,23 @@
                           })
                         }
                       "
+                      :disabled="isPastDate(items.dateActivity) && !userRole.includes('administrador' || 'GERENTE GENERAL')"
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
                       @click="onDeleteReservationTour(items.reservationTourId)"
                       >Cancelar reservación</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      v-if="
+                        userRole.includes('administrador' || 'GERENTE GENERAL')
+                      "
+                      @click="onRemoveReservationTour(items.reservationTourId)"
+                      >Eliminar reservación</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      @click="onDownloadPDF(items.reservationTourId)"
+                      >Descargar reporte</el-dropdown-item
                     >
                     <el-dropdown-item
                       @click="
@@ -155,10 +167,11 @@ import ReservationTourServices from '@/Services/ReservationTours.Services'
 
 export default {
   setup () {
-    const { getReservationTours, deleteReservationTour } =
+    const { getReservationTours, deleteReservationTour, downloadPDFReport, RemoveReservationTour } =
       ReservationTourServices()
     const reservationTours = ref([])
     const swal = inject('$swal')
+    const userRole = window.sessionStorage.getItem('Role')
     const filter = ref(null)
     const perPage = ref(5)
     const currentPage = ref(1)
@@ -213,6 +226,50 @@ export default {
         isloading.value = false
       })
     }
+    const isPastDate = date => {
+      const currentDate = new Date()
+      const apiDate = new Date(date)
+      const apiDateISO = apiDate.toISOString()
+      const currentDateISO = currentDate.toISOString()
+
+      return apiDateISO < currentDateISO
+    }
+    const onDownloadPDF = (reservationTourId) => {
+      downloadPDFReport(reservationTourId, data => {
+        try {
+          const blob = new Blob([data], { type: 'application/pdf' })
+          const pdfUrl = URL.createObjectURL(blob)
+          window.open(pdfUrl, '_blank')
+        } catch (error) {
+          console.error('Error al procesar el PDF', error)
+        }
+      })
+    }
+    const onRemoveReservationTour = reservationTourId => {
+      swal
+        .fire({
+          title: 'Estás a punto de cancelar una reservación, ¿Estas seguro?',
+          text: '¡No podrás revertir esto!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Si, cancelar reservación',
+          cancelButtonText: 'Cancelar'
+        })
+        .then(result => {
+          if (result.isConfirmed) {
+            RemoveReservationTour(reservationTourId, data => {
+              swal.fire({
+                title: 'Reservación eliminada!',
+                text: 'La reservación ha sido eliminada satisfactoriamente .',
+                icon: 'success'
+              })
+              refreshTable()
+            })
+          } else {
+            isloading.value = false
+          }
+        })
+    }
     const onDeleteReservationTour = reservationTourId => {
       swal
         .fire({
@@ -251,7 +308,11 @@ export default {
       statusReservationCriteria,
       showStatusReservationFilter,
       reservationTours,
+      userRole,
+      isPastDate,
       refreshTable,
+      onDownloadPDF,
+      onRemoveReservationTour,
       onDeleteReservationTour
     }
   }

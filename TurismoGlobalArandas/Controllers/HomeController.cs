@@ -97,7 +97,7 @@ namespace TurismoGlobalArandas.Controllers
         public ActionResult ObtenerDatosDesdeVista()
         {
             var datosVista = _context.GetAllReservationsViews
-                .FromSqlRaw("SELECT * FROM Get_All_Reservations")
+                .FromSqlRaw("SELECT * FROM Get_All_Reservations WHERE IsDeleted = 0;")
                 .AsEnumerable()
                 .ToList();
 
@@ -111,15 +111,19 @@ namespace TurismoGlobalArandas.Controllers
                 from employee in _context.Employees
                 let hotelReservations = _context.ReservationHotels
                     .Where(r => r.EmployeeId == employee.EmployeeId)
+                    .Where(w => !w.IsDeleted)
                     .ToList()
                 let flightReservations = _context.ReservationFlights
                     .Where(r => r.EmployeeId == employee.EmployeeId)
+                    .Where(w => !w.IsDeleted)
                     .ToList()
                 let vehicleReservations = _context.ReservationVehicles
                     .Where(r => r.EmployeeId == employee.EmployeeId)
+                    .Where(w => !w.IsDeleted)
                     .ToList()
                 let tourReservations = _context.ReservationTours
                     .Where(r => r.EmployeeId == employee.EmployeeId)
+                    .Where(w => !w.IsDeleted)
                     .ToList()
                 select new
                 {
@@ -147,6 +151,7 @@ namespace TurismoGlobalArandas.Controllers
             var mostPopularDestination = await (
                 from reservation in _context.ReservationHotels
                 where reservation.DateSale.Value.Year == DateTime.Now.Year
+                where reservation.IsDeleted == false
                 join destination in _context.Destinations
                     on reservation.DestinationId equals destination.DestinationId
                     into destinationsGroup
@@ -167,6 +172,7 @@ namespace TurismoGlobalArandas.Controllers
                         }
                 )
                 .OrderByDescending(x => x.ReservationsCount)
+
                 .FirstOrDefaultAsync();
 
             if (mostPopularDestination == null)
@@ -180,7 +186,9 @@ namespace TurismoGlobalArandas.Controllers
         [HttpGet("ReservationsByEmployee")]
         public async Task<ActionResult> GetReservationsByEmployee()
         {
-            var employees = await _context.Employees.ToListAsync();
+            var employees = await _context.Employees
+               .Where(w => !w.IsDeleted)
+                .ToListAsync();
 
             var reservationsByEmployee = employees
                 .Select(employee =>
@@ -303,7 +311,9 @@ namespace TurismoGlobalArandas.Controllers
                             EmployeeName = employee.Name + " " + employee.Lastname,
                             InvoiceReservation = ReservationHotel.Invoice,
                             DateSale = ReservationHotel.DateSale,
-                            TypeReservation = "Reservación hoteleria individual"
+                            TypeReservation = "Reservación hoteleria individual",
+                            isDeleted = ReservationHotel.IsDeleted,
+                            isSoldOut = ReservationHotel.IsSoldOut,
                         }
                     );
                 }
@@ -354,7 +364,9 @@ namespace TurismoGlobalArandas.Controllers
                             EmployeeName = employee.Name + " " + employee.Lastname,
                             InvoiceReservation = ReservationHotel.Invoice,
                             DateSale = ReservationHotel.DateSale,
-                            TypeReservation = "Reservación hoteleria grupal"
+                            TypeReservation = "Reservación hoteleria grupal",
+                            isDeleted = ReservationHotel.IsDeleted,
+                            isSoldOut = ReservationHotel.IsSoldOut,
                         }
                     );
                 }
@@ -397,7 +409,9 @@ namespace TurismoGlobalArandas.Controllers
                             EmployeeName = employee.Name + " " + employee.Lastname,
                             InvoiceReservation = item.Invoice,
                             DateSale = item.DateSale,
-                            TypeReservation = "Reservación Vuelos"
+                            TypeReservation = "Reservación Vuelos",
+                            isDeleted = item.IsDeleted,
+                            isSoldOut = item.IsSoldOut,
                         }
                     );
                 }
@@ -440,7 +454,9 @@ namespace TurismoGlobalArandas.Controllers
                             EmployeeName = employee.Name + employee.Lastname,
                             InvoiceReservation = item.Invoice,
                             DateSale = item.DateSale,
-                            TypeReservation = "Reservación Vuelos"
+                            TypeReservation = "Reservación Vuelos",
+                            isDeleted = item.IsDeleted,
+                            isSoldOut = item.IsSoldOut,
                         }
                     );
                 }
@@ -483,7 +499,9 @@ namespace TurismoGlobalArandas.Controllers
                             EmployeeName = employee.Name + " " + employee.Lastname,
                             InvoiceReservation = item.Invoice,
                             DateSale = item.DateSale,
-                            TypeReservation = "Reservación Tours"
+                            TypeReservation = "Reservación Tours",
+                            isDeleted = item.IsDeleted,
+                            isSoldOut = item.IsSoldOut,
                         }
                     );
                 }

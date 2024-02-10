@@ -26,11 +26,25 @@ export default function ReservationVehicleServices () {
       callback(response.data)
     })
   }
+  const downloadPDFReport = (reservationVehicleId, callback) => {
+    axiosPrivate.get(`/ReservationVehicle/DescargarDatosEnPDF/${reservationVehicleId}`, {
+      responseType: 'blob'
+    }).then((response) => {
+      callback(response.data)
+    })
+  }
+  const RemoveReservationVehicle = (reservationTourId, callback) => {
+    axiosPrivate.delete(`/ReservationVehicle/Delete/${reservationTourId}`).then((response) => {
+      callback(response.data)
+    })
+  }
   return {
     getReservationVehicles,
     getReservationVehicle,
     createReservationVehicle,
     updateReservationVehicle,
-    deleteReservationVehicle
+    deleteReservationVehicle,
+    downloadPDFReport,
+    RemoveReservationVehicle
   }
 }

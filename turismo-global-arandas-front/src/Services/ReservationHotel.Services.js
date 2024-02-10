@@ -11,8 +11,15 @@ export default function ReservationHotelServices () {
       callback(response.data)
     })
   }
-  const downloadPDF = (reservationHotelId, callback) => {
+  const downloadIndividualPDF = (reservationHotelId, callback) => {
     axiosPrivate.get(`/ReservationHotel/DescargarDatosEnPDF/${reservationHotelId}`, {
+      responseType: 'blob'
+    }).then((response) => {
+      callback(response.data)
+    })
+  }
+  const downloadGrupalPDF = (reservationHotelId, callback) => {
+    axiosPrivate.get(`/ReservationHotel/DescargarDatosEnPDF/Grupal/${reservationHotelId}`, {
       responseType: 'blob'
     }).then((response) => {
       callback(response.data)
@@ -41,7 +48,8 @@ export default function ReservationHotelServices () {
   return {
     getReservationHotels,
     getReservationHotel,
-    downloadPDF,
+    downloadIndividualPDF,
+    downloadGrupalPDF,
     createReservationHotel,
     updateReservationHotel,
     deleteReservationHotel,

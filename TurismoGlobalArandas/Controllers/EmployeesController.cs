@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TurismoGlobalArandas.Context;
 using TurismoGlobalArandas.Entities;
-using TurismoGlobalArandas.Migrations;
 using TurismoGlobalArandas.Models;
 using TurismoGlobalArandas.Models.Identity;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace UConnect.Controllers
 {

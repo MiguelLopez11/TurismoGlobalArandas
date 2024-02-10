@@ -31,12 +31,26 @@ export default function ReservationFlightServices () {
       callback(response.data)
     })
   }
+  const downloadPDFReport = (reservationFlightId, callback) => {
+    axiosPrivate.get(`/ReservationFlight/DescargarDatosEnPDF/${reservationFlightId}`, {
+      responseType: 'blob'
+    }).then((response) => {
+      callback(response.data)
+    })
+  }
+  const RemoveReservationFlight = (reservationFlightId, callback) => {
+    axiosPrivate.delete(`/ReservationFlight/Delete/${reservationFlightId}`).then((response) => {
+      callback(response.data)
+    })
+  }
   return {
     getReservationFlights,
     getReservationFlightsReservadedByReservationHotel,
     getReservationFlight,
     createReservationFlight,
     updateReservationFlight,
-    deleteReservationFlight
+    deleteReservationFlight,
+    downloadPDFReport,
+    RemoveReservationFlight
   }
 }

@@ -28,7 +28,6 @@
         </el-button>
       </el-col>
     </el-row>
-    {{ isDisabledItem }}
     <el-row class="mt-3">
       <el-col :span="24">
         <div class="table-scroll">
@@ -68,6 +67,7 @@
                           })
                         }
                       "
+                      :disabled="isPastDate(items.travelDateStart) && !userRole.includes('administrador' || 'GERENTE GENERAL')"
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
@@ -109,7 +109,7 @@
                       >Relación de pagos a proveedores</el-dropdown-item
                     >
                   </el-dropdown-menu>
-                  <el-dropdown-item @click="onDownloadFile(items.reservationHotelId)"
+                  <el-dropdown-item @click="onDownloadFile(items)"
                     >Descargar reporte</el-dropdown-item
                   >
                 </template>
@@ -221,7 +221,8 @@ export default {
       getReservationHotels,
       deleteReservationHotel,
       RemoveReservationHotel,
-      downloadPDF
+      downloadIndividualPDF,
+      downloadGrupalPDF
     } = ReservationServices()
     const reservationHotels = ref([])
     const swal = inject('$swal')
@@ -307,14 +308,6 @@ export default {
       getReservationHotels(data => {
         reservationHotels.value = data
         isloading.value = false
-        // Dates
-        // const fechaActual = new Date()
-        // const fechaRegistroParsed = new Date(data.travelDateStart)
-        // // Ajustar la fecha actual a la misma zona horaria que la fecha de registro
-        // fechaActual.setMinutes(
-        //   fechaActual.getMinutes() - fechaActual.getTimezoneOffset()
-        // )
-        // isDisabledItem.value = fechaActual > fechaRegistroParsed
       })
     })
     watch(
@@ -326,16 +319,39 @@ export default {
         refreshTable()
       }
     )
-    const onDownloadFile = reservationHotelId => {
-      downloadPDF(reservationHotelId, data => {
-        try {
-          const blob = new Blob([data], { type: 'application/pdf' })
-          const pdfUrl = URL.createObjectURL(blob)
-          window.open(pdfUrl, '_blank')
-        } catch (error) {
-          console.error('Error al procesar el PDF', error)
-        }
-      })
+    const isPastDate = date => {
+      const currentDate = new Date()
+      const apiDate = new Date(date)
+      const apiDateISO = apiDate.toISOString()
+      const currentDateISO = currentDate.toISOString()
+
+      return apiDateISO < currentDateISO
+    }
+    const onDownloadFile = reservation => {
+      if (
+        reservation.typeReservationId === 2 &&
+        reservation.typeReservationGroupId === 1
+      ) {
+        downloadGrupalPDF(reservation.reservationHotelId, data => {
+          try {
+            const blob = new Blob([data], { type: 'application/pdf' })
+            const pdfUrl = URL.createObjectURL(blob)
+            window.open(pdfUrl, '_blank')
+          } catch (error) {
+            console.error('Error al procesar el PDF', error)
+          }
+        })
+      } else {
+        downloadIndividualPDF(reservation.reservationHotelId, data => {
+          try {
+            const blob = new Blob([data], { type: 'application/pdf' })
+            const pdfUrl = URL.createObjectURL(blob)
+            window.open(pdfUrl, '_blank')
+          } catch (error) {
+            console.error('Error al procesar el PDF', error)
+          }
+        })
+      }
     }
     const onRemoveReservationHotel = reservationHotelId => {
       swal
@@ -409,7 +425,8 @@ export default {
       onRemoveReservationHotel,
       onDeleteReservationHotel,
       onDownloadFile,
-      userRole
+      userRole,
+      isPastDate
     }
   }
 }

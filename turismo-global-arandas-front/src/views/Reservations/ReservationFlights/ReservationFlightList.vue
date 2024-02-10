@@ -57,11 +57,22 @@
                           })
                         }
                       "
+                      :disabled="isPastDate(items.dateTravel) && !userRole.includes('administrador' || 'GERENTE GENERAL')"
                       >Editar</el-dropdown-item
                     >
                     <el-dropdown-item
                       @click="onDeleteReservationFlight(items.flightId)"
                       >Cancelar vuelo</el-dropdown-item
+                    >
+                    <el-dropdown-item
+                      v-if="
+                        userRole.includes('administrador' || 'GERENTE GENERAL')
+                      "
+                      @click="onRemoveReservationFlight(items.flightId)"
+                      >Eliminar reservación</el-dropdown-item
+                    >
+                    <el-dropdown-item @click="onDownloadFile(items.flightId)"
+                      >Descargar reporte</el-dropdown-item
                     >
                     <el-dropdown-item
                       @click="
@@ -149,10 +160,15 @@ import ReservationFlightsAddNew from './ReservationFlightsAddNew.vue'
 export default {
   components: { ReservationFlightsAddNew },
   setup () {
-    const { getReservationFlights, deleteReservationFlight } =
-      reservationFlightservices()
+    const {
+      getReservationFlights,
+      deleteReservationFlight,
+      downloadPDFReport,
+      RemoveReservationFlight
+    } = reservationFlightservices()
     const reservationFlights = ref([])
     const swal = inject('$swal')
+    const userRole = window.sessionStorage.getItem('Role')
     const filter = ref(null)
     const perPage = ref(5)
     const currentPage = ref(1)
@@ -215,6 +231,50 @@ export default {
         refreshTable()
       }
     })
+    const isPastDate = date => {
+      const currentDate = new Date()
+      const apiDate = new Date(date)
+      const apiDateISO = apiDate.toISOString()
+      const currentDateISO = currentDate.toISOString()
+
+      return apiDateISO < currentDateISO
+    }
+    const onDownloadFile = reservationFlightId => {
+      downloadPDFReport(reservationFlightId, data => {
+        try {
+          const blob = new Blob([data], { type: 'application/pdf' })
+          const pdfUrl = URL.createObjectURL(blob)
+          window.open(pdfUrl, '_blank')
+        } catch (error) {
+          console.error('Error al procesar el PDF', error)
+        }
+      })
+    }
+    const onRemoveReservationFlight = reservationHotelId => {
+      swal
+        .fire({
+          title: 'Estás a punto de cancelar una reservación, ¿Estas seguro?',
+          text: '¡No podrás revertir esto!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Si, cancelar reservación',
+          cancelButtonText: 'Cancelar'
+        })
+        .then(result => {
+          if (result.isConfirmed) {
+            RemoveReservationFlight(reservationHotelId, data => {
+              swal.fire({
+                title: 'Reservación eliminada!',
+                text: 'La reservación ha sido eliminada satisfactoriamente .',
+                icon: 'success'
+              })
+              refreshTable()
+            })
+          } else {
+            isloading.value = false
+          }
+        })
+    }
     const onDeleteReservationFlight = reservationFlightId => {
       swal
         .fire({
@@ -256,7 +316,11 @@ export default {
       reservationFlights,
       isAddReservationFlight,
       refreshTable,
-      onDeleteReservationFlight
+      onDeleteReservationFlight,
+      onRemoveReservationFlight,
+      onDownloadFile,
+      userRole,
+      isPastDate
     }
   }
 }

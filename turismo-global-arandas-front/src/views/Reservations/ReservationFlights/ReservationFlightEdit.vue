@@ -180,6 +180,32 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
+          <el-form-item>
+            <div>
+              <span>Plazo de pago cliente </span>
+            </div>
+            <el-date-picker
+              v-model="reservationFlight.paymentLimitDate"
+              class="w-100"
+              size="large"
+              placeholder="Selecciona la fecha limite del pago al cliente"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item>
+            <div>
+              <span>Plazo de pago proveedor </span>
+            </div>
+            <el-date-picker
+              v-model="reservationFlight.paymentLimitDateProvider"
+              class="w-100"
+              size="large"
+              placeholder="Selecciona la fecha limite del pago al proveedor"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <Field name="pricePublic" :rules="validatePricePublic">
             <el-form-item :error="errors.pricePublic" required>
               <div>

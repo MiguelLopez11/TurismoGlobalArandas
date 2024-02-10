@@ -26,11 +26,25 @@ export default function ReservationTourServices () {
       callback(response.data)
     })
   }
+  const downloadPDFReport = (reservationTourId, callback) => {
+    axiosPrivate.get(`/ReservationTours/DescargarDatosEnPDF/${reservationTourId}`, {
+      responseType: 'blob'
+    }).then((response) => {
+      callback(response.data)
+    })
+  }
+  const RemoveReservationTour = (reservationTourId, callback) => {
+    axiosPrivate.delete(`/ReservationTours/Delete/${reservationTourId}`).then((response) => {
+      callback(response.data)
+    })
+  }
   return {
     getReservationTours,
     getReservationTour,
     createReservationTour,
     updateReservationTour,
-    deleteReservationTour
+    deleteReservationTour,
+    downloadPDFReport,
+    RemoveReservationTour
   }
 }
