@@ -4,7 +4,7 @@
       <Sidebar />
     </el-aside>
     <el-container>
-      <el-main class="main-content">
+      <el-main class="main-content" :class="{ noPadding: $route.meta.noPadding }">
         <el-header v-if="Token" class="mb-5 p-0">
           <Navbar />
         </el-header>
@@ -90,7 +90,6 @@ body.swal2-shown.swal2-height-auto {
   min-height: 0;
   overflow-y: auto;
 }
-/* ... (other styles) */
 
 /* Media query for smaller screens */
 @media (max-width: 768px) {
@@ -99,5 +98,8 @@ body.swal2-shown.swal2-height-auto {
     width: 0;
     flex: 0 0 0;
   }
+}
+.noPadding {
+  padding: 0 !important;
 }
 </style>
